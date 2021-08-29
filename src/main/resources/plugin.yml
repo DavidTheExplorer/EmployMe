@@ -1,0 +1,6 @@
+name: EmployMe
+main: com.pseudonova.employme.EmployMe
+version: 1.0
+description: Automate resources gathering by employing players.
+softdepend: [Vault]
+api-version: 1.16
