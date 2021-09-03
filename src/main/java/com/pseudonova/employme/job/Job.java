@@ -11,16 +11,6 @@ public interface Job
 	OfflinePlayer getEmployer();
 	Goal getGoal();
 	Reward getReward();
-	
-	//TODO: move all the default methods to SimpleJob
-	
-	default void onComplete(Player completer) 
-	{
-		getReward().giveTo(completer);
-	}
-	
-	default boolean hasFinished(Player player) 
-	{
-		return getGoal().hasReached(player);
-	}
+	boolean hasFinished(Player player);
+	void onComplete(Player completer);
 }
