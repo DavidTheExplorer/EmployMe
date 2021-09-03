@@ -18,31 +18,31 @@ public class JobPostedMessagePrompt extends MessagePrompt
 {
 	private final JobBoardService jobBoardService;
 	private final JobBoard jobBoard;
-	
+
 	public JobPostedMessagePrompt(JobBoardService jobBoardService, JobBoard jobBoard) 
 	{
 		this.jobBoardService = jobBoardService;
 		this.jobBoard = jobBoard;
 	}
-	
+
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
 		Player employer = (Player) context.getForWhom();
 		ItemStack goal = (ItemStack) context.getSessionData("goal");
 		Reward reward = (Reward) context.getSessionData("reward");
-		
+
 		Job job = new SimpleJob.Builder()
 				.by(employer)
 				.ofItem(goal)
 				.thatOffers(reward)
 				.build();
-		
-		reward.accept(new RewardTaker(() -> employer));
-		
+
+		reward.accept(new RewardTaker(employer));
+
 		//to allow messages to be sent to the player
 		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> this.jobBoardService.addJob(this.jobBoard, job));
-		
+
 		return "";
 	}
 

@@ -30,11 +30,12 @@ public class JobInventoryListener implements Listener
 			inventoryBoard.getJobID(item)
 			.flatMap(inventoryBoard::getJobByID)
 			.filter(job -> job.getGoal().hasReached(player))
+			
 			.ifPresent(job ->
 			{
 				player.closeInventory();
 				inventoryBoard.onComplete(job, player);
-
+				
 				player.sendMessage(ChatColor.GREEN + "You successfully completed a Job!");
 			});
 		});

@@ -12,6 +12,8 @@ public interface Job
 	Goal getGoal();
 	Reward getReward();
 	
+	//TODO: move all the default methods to SimpleJob
+	
 	default void onComplete(Player completer) 
 	{
 		getReward().giveTo(completer);

@@ -32,8 +32,8 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, String input) 
 	{
-		String[] data = input.split(":");
-		context.setSessionData("goal", new ItemStack(Material.matchMaterial(data[0]), Integer.valueOf(data[1])));
+		String[] materialAndAmount = input.split(":");
+		context.setSessionData("goal", new ItemStack(Material.matchMaterial(materialAndAmount[0]), Integer.valueOf(materialAndAmount[1])));
 		
 		return this.nextPrompt;
 	}

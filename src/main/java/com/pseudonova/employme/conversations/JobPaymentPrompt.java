@@ -1,7 +1,6 @@
 package com.pseudonova.employme.conversations;
 
 import static com.pseudonova.employme.utils.ChatColorUtils.colorize;
-import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -10,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.pseudonova.employme.board.JobBoard;
 import com.pseudonova.employme.board.service.JobBoardService;
+import com.pseudonova.employme.messages.Message;
 import com.pseudonova.employme.reward.MoneyReward;
 
 import net.milkbowl.vault.economy.Economy;
@@ -38,9 +38,7 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) 
 	{
-		MoneyReward moneyReward = MoneyReward.of(input.doubleValue());
-		
-		context.setSessionData("reward", moneyReward);
+		context.setSessionData("reward", new MoneyReward(input.doubleValue()));
 		
 		return new JobPostedMessagePrompt(this.jobBoardService, this.jobBoard);
 	}
@@ -48,18 +46,28 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected boolean isNumberValid(ConversationContext context, Number input) 
 	{
-		return this.economy.has((Player) context.getForWhom(), input.doubleValue());
+		double payment = input.doubleValue();
+		
+		return payment > 0 && this.economy.has((Player) context.getForWhom(), payment);
 	}
 	
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return RED + "You can't afford to pay such an amount!";
+		double payment = invalidInput.doubleValue();
+		
+		if(payment <= 0)
+			return Message.MONEY_REWARD_ERROR_NEGATIVE.getTemplate();
+		
+		else if(!this.economy.has((Player) context.getForWhom(), payment))
+			return Message.MONEY_REWARD_NOT_ENOUGH.getTemplate();
+		
+		throw new IllegalStateException("Can't create a Money Reward from the provided input.");
 	}
 	
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return RED + "Payment has to be a Positive Integer!";
+		return Message.MONEY_REWARD_NOT_A_NUMBER.getTemplate();
 	}
 }

@@ -4,7 +4,6 @@ import static org.bukkit.ChatColor.YELLOW;
 
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
 import com.pseudonova.employme.EmployMe;
@@ -36,8 +35,12 @@ public class JobsCommand extends BaseCommand
 	public JobsCommand(JobBoard jobBoard, Economy economy, JobBoardService jobBoardService) 
 	{
 		this.jobBoard = jobBoard;
-		this.moneyJobConversationFactory = createConversationFactory(new JobGoalPrompt(new JobPaymentPrompt(jobBoardService, jobBoard, economy)));
-		this.itemsJobConversationFactory = createConversationFactory(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, jobBoard)));
+		
+		this.moneyJobConversationFactory = createConversationFactory()
+				.withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(jobBoardService, jobBoard, economy)));
+		
+		this.itemsJobConversationFactory = createConversationFactory()
+				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, jobBoard)));
 	}
 
 	@HelpCommand
@@ -71,10 +74,9 @@ public class JobsCommand extends BaseCommand
 		conversation.begin();
 	}
 
-	private static ConversationFactory createConversationFactory(Prompt firstPrompt) 
+	private static ConversationFactory createConversationFactory() 
 	{
 		return new ConversationFactory(EmployMe.getInstance())
-				.withFirstPrompt(firstPrompt)
 				.withLocalEcho(false)
 				.withModality(false)
 				.withPrefix(context -> YELLOW + "> ");

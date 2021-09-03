@@ -1,30 +1,21 @@
 package com.pseudonova.employme.reward;
 
+import java.util.List;
+
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.google.common.collect.Lists;
 import com.pseudonova.employme.reward.visitor.RewardVisitor;
-import com.pseudonova.employme.utils.IterableUtils;
 
 public class ItemsReward implements Reward
 {
 	private final ItemStack[] items;
 	
-	private ItemsReward(ItemStack[] items) 
+	public ItemsReward(ItemStack... items) 
 	{
-		this.items = items;
-	}
-	
-	public static ItemsReward of(Iterable<ItemStack> iterable) 
-	{
-		if(!iterable.iterator().hasNext())
-			throw new IllegalArgumentException("Can't create an Item Reward of no items!");
-		
-		ItemStack[] itemsArray = IterableUtils.stream(iterable)
-				.map(ItemStack::new)
-				.toArray(ItemStack[]::new);
-		
-		return new ItemsReward(itemsArray);
+		this.items = Validate.notEmpty(items, "Can't create an Item Reward of no items!");
 	}
 	
 	@Override
@@ -33,9 +24,9 @@ public class ItemsReward implements Reward
 		whoCompleted.getInventory().addItem(this.items);
 	}
 	
-	public ItemStack[] getItems() 
+	public List<ItemStack> getItems() 
 	{
-		return this.items.clone();
+		return Lists.newArrayList(this.items);
 	}
 
 	@Override
