@@ -36,7 +36,7 @@ import com.pseudonova.employme.utils.items.builder.ItemBuilder;
 
 public class InventoryJobBoard extends AbstractJobBoard
 {
-	private final BiMap<String, Job> jobByID = HashBiMap.create();
+	private final BiMap<String, Job> jobByID = HashBiMap.create(); //TODO: put this map in AbstractJobBoard
 
 	private static final Map<Inventory, InventoryJobBoard> INVENTORIES_BOARDS = new HashMap<>();
 

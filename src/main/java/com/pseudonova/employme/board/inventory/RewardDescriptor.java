@@ -2,8 +2,6 @@ package com.pseudonova.employme.board.inventory;
 
 import static com.pseudonova.employme.utils.ChatColorUtils.colorize;
 
-import java.util.Arrays;
-
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
 
 import com.pseudonova.employme.reward.ItemsReward;
@@ -31,7 +29,7 @@ public class RewardDescriptor implements RewardVisitor<String[]>
 	@Override
 	public String[] visit(ItemsReward itemsReward)
 	{
-		String[] itemsDescription = Arrays.stream(itemsReward.getItems())
+		String[] itemsDescription = itemsReward.getItems().stream()
 				.map(item -> colorize(String.format("&f&o%s - &6%d", EnumUtils.fixEnumName(item.getType()), item.getAmount())))
 				.toArray(String[]::new);
 		

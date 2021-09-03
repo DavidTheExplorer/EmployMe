@@ -18,7 +18,5 @@ public class GoalDescriptor implements GoalVisitor<String>
 		ItemStack item = itemGoal.getItem();
 		
 		return colorize(String.format("&b%d %s&f.", item.getAmount(), EnumUtils.fixEnumName(item.getType())));
-		
-		//return AQUA.toString() + item.getAmount() + " " + EnumUtils.fixEnumName(item.getType()) + WHITE + ".";
 	}
 }

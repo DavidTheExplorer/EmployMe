@@ -14,10 +14,10 @@ public interface JobBoard extends Iterable<Job>
 {
 	void addJob(Job job);
 	void removeJob(Job job);
-	List<Job> getOfferedJobs();
 	void showTo(Player player);
+	List<Job> getOfferedJobs();
 	
-	default void onComplete(Job job, Player completer) 
+	default void onComplete(Job job, Player completer)
 	{
 		removeJob(job);
 		job.onComplete(completer);
@@ -31,7 +31,7 @@ public interface JobBoard extends Iterable<Job>
 	}
 	
 	@Override
-	default Iterator<Job> iterator() 
+	default Iterator<Job> iterator()
 	{
 		return getOfferedJobs().iterator();
 	}
