@@ -44,11 +44,17 @@ public class SimpleJob implements Job
 	{
 		return this.reward;
 	}
-
+	
+	@Override
+	public boolean hasFinished(Player player)
+	{
+		return getGoal().hasReached(player);
+	}
+	
 	@Override
 	public void onComplete(Player completer) 
 	{
-		Job.super.onComplete(completer);
+		getReward().giveTo(completer);
 		
 		this.onComplete.accept(completer);
 	}
