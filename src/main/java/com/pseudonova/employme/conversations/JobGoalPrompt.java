@@ -1,16 +1,12 @@
 package com.pseudonova.employme.conversations;
 
-import static com.pseudonova.employme.utils.ChatColorUtils.italic;
-import static org.bukkit.ChatColor.AQUA;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
-
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.RegexPrompt;
 import org.bukkit.inventory.ItemStack;
+
+import com.pseudonova.employme.messages.Message;
 
 public class JobGoalPrompt extends RegexPrompt
 {
@@ -26,7 +22,7 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		return WHITE + "Which " + GREEN + "item" + WHITE + " do you need? Reply in this format: " + italic(AQUA) + "itemName:amount";
+		return Message.ITEM_GOAL_FORMAT_QUESTION.getTemplate();
 	}
 
 	@Override
@@ -53,6 +49,6 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return RED + "Invalid Format!";
+		return Message.ITEM_GOAL_INVALID_FORMAT.getTemplate();
 	}
 }

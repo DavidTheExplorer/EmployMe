@@ -99,7 +99,7 @@ public class EmployMe extends ModernJavaPlugin
 			Player player = context.getPlayer();
 
 			if(player.isConversing())
-				throw new InvalidCommandArgument("You have to finish your current conversation.", false);
+				throw new InvalidCommandArgument(Message.MUST_NOT_BE_CONVERSING.getTemplate(), false);
 		});
 
 		//register contexts
