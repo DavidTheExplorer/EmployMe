@@ -15,8 +15,7 @@ public class ItemsReward implements Reward
 	
 	public ItemsReward(ItemStack... items) 
 	{
-		//TODO: clone the array
-		this.items = Validate.notEmpty(items, "Can't create an Item Reward of no items!");
+		this.items = Validate.notEmpty(items, "Can't create an Item Reward of no items!").clone();
 	}
 	
 	@Override
