@@ -1,4 +1,4 @@
-package com.pseudonova.employme.board.inventory;
+package com.pseudonova.employme.board;
 
 import static com.pseudonova.employme.utils.ChatColorUtils.bold;
 import static com.pseudonova.employme.utils.ChatColorUtils.colorize;
@@ -19,15 +19,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.pseudonova.employme.board.AbstractJobBoard;
+import com.pseudonova.employme.board.inventory.GoalDescriptor;
+import com.pseudonova.employme.board.inventory.RewardDescriptor;
 import com.pseudonova.employme.goal.Goal;
 import com.pseudonova.employme.goal.ItemGoal;
 import com.pseudonova.employme.job.Job;
@@ -36,44 +34,21 @@ import com.pseudonova.employme.utils.items.builder.ItemBuilder;
 
 public class InventoryJobBoard extends AbstractJobBoard
 {
-	private final BiMap<String, Job> jobByID = HashBiMap.create(); //TODO: put this map in AbstractJobBoard
-
 	private static final Map<Inventory, InventoryJobBoard> INVENTORIES_BOARDS = new HashMap<>();
-
-	@Override
-	public void addJob(Job job) 
-	{
-		super.addJob(job);
-
-		this.jobByID.put(generateID(), job);
-	}
-
-	@Override
-	public void removeJob(Job job) 
-	{
-		super.removeJob(job);
-
-		this.jobByID.inverse().remove(job);
-	}
 
 	@Override
 	public void showTo(Player player) 
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, "Available Jobs");
-		InventoryUtils.buildWalls(inventory, new ItemStack(Material.GRAY_STAINED_GLASS_PANE));
+		InventoryUtils.buildWalls(inventory, new ItemStack(Material.GRAY_STAINED_GLASS_PANE)); //TODO: replace with InventoryUtils::createWall
 		INVENTORIES_BOARDS.put(inventory, this);
 
 		//add the jobs to the inventory; the icons depend on whether the player finished the job
-		this.offeredJobs.stream()
+		getOfferedJobs().stream()
 		.map(job -> createIconFor(job, player))
 		.forEach(inventory::addItem);
 
 		player.openInventory(inventory);
-	}
-
-	public Optional<Job> getJobByID(String id)
-	{
-		return Optional.ofNullable(this.jobByID.get(id));
 	}
 
 	public Optional<String> getJobID(ItemStack jobItem)
@@ -91,25 +66,7 @@ public class InventoryJobBoard extends AbstractJobBoard
 	{
 		return Optional.ofNullable(INVENTORIES_BOARDS.get(inventory));
 	}
-
-	private String generateID() 
-	{
-		String id;
-
-		do 
-		{
-			id = RandomStringUtils.randomAlphanumeric(22);
-		}
-		while(this.jobByID.containsKey(id));
-
-		return id;
-	}
-
-
-
-	/*
-	 * Job Icon Creation 
-	 */
+	
 	private ItemStack createIconFor(Job job, Player player) 
 	{
 		//lore
@@ -120,7 +77,7 @@ public class InventoryJobBoard extends AbstractJobBoard
 		lore = ArrayUtils.addAll(lore, job.getReward().accept(RewardDescriptor.INSTANCE));
 		lore = ArrayUtils.add(lore, " ");
 		lore = ArrayUtils.addAll(lore, createStatusLore(job, player));
-		lore = ArrayUtils.add(lore, colorize(String.format("&7ID: %s", this.jobByID.inverse().get(job))));
+		lore = ArrayUtils.add(lore, colorize(String.format("&7ID: %s", getJobID(job).get())));
 
 		return new ItemBuilder(getJobMaterial(job), GREEN + job.getEmployer().getName() + "'s Offer")
 				.newLore(lore)

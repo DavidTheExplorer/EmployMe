@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.pseudonova.employme.board.InventoryJobBoard;
 import com.pseudonova.employme.board.JobBoard;
-import com.pseudonova.employme.board.inventory.InventoryJobBoard;
 import com.pseudonova.employme.board.service.JobBoardService;
 import com.pseudonova.employme.board.service.SimpleJobBoardService;
 import com.pseudonova.employme.commands.JobsCommand;
