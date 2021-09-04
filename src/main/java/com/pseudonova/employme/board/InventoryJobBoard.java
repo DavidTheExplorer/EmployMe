@@ -40,10 +40,10 @@ public class InventoryJobBoard extends AbstractJobBoard
 	public void showTo(Player player) 
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, "Available Jobs");
-		InventoryUtils.buildWalls(inventory, new ItemStack(Material.GRAY_STAINED_GLASS_PANE)); //TODO: replace with InventoryUtils::createWall
+		InventoryUtils.buildWalls(inventory, InventoryUtils.createWall(Material.GRAY_STAINED_GLASS_PANE));
 		INVENTORIES_BOARDS.put(inventory, this);
 
-		//add the jobs to the inventory; the icons depend on whether the player finished the job
+		//add the jobs to the inventory
 		getOfferedJobs().stream()
 		.map(job -> createIconFor(job, player))
 		.forEach(inventory::addItem);
