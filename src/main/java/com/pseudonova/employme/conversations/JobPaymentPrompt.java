@@ -1,7 +1,5 @@
 package com.pseudonova.employme.conversations;
 
-import static com.pseudonova.employme.utils.ChatColorUtils.colorize;
-
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
@@ -32,7 +30,7 @@ public class JobPaymentPrompt extends NumericPrompt
 	{
 		double employerMoney = this.economy.getBalance((Player) context.getForWhom());
 		
-		return colorize(String.format("&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%.2f&6$&f)", employerMoney));
+		return Message.MONEY_PAYMENT_AMOUNT_QUESTION.inject(employerMoney);
 	}
 
 	@Override

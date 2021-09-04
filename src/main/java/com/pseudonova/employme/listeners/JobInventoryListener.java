@@ -1,6 +1,5 @@
 package com.pseudonova.employme.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +8,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.pseudonova.employme.board.InventoryJobBoard;
+import com.pseudonova.employme.messages.Message;
+import com.pseudonova.employme.reward.visitor.RewardNameVisitor;
 
 public class JobInventoryListener implements Listener
 {
@@ -36,7 +37,7 @@ public class JobInventoryListener implements Listener
 				player.closeInventory();
 				inventoryBoard.onComplete(job, player);
 				
-				player.sendMessage(ChatColor.GREEN + "You successfully completed a Job!");
+				Message.JOB_SUCCESSFULLY_COMPLETED.sendTo(player, job.getReward().accept(RewardNameVisitor.INSTANCE));
 			});
 		});
 	}
