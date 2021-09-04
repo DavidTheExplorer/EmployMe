@@ -1,6 +1,7 @@
 package com.pseudonova.employme.board;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -14,8 +15,12 @@ public interface JobBoard extends Iterable<Job>
 	void removeJob(Job job);
 	List<Job> getOfferedJobs();
 	List<Job> getJobsOfferedBy(UUID employerUUID);
-	void onComplete(Job job, Player completer);
+	Optional<Job> getJobByID(String id);
+	Optional<String> getJobID(Job job);
 	
-	//Visualization
+	//Display
 	void showTo(Player player);
+	
+	//General
+	void onComplete(Job job, Player completer);
 }
