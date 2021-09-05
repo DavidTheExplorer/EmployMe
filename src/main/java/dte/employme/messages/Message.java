@@ -56,7 +56,7 @@ public enum Message
 	
 	public static void sendGeneralMessage(CommandSender sender, String message) 
 	{
-		sender.sendMessage(String.format("%s %s", GENERAL_PREFIX, message));
+		sender.sendMessage(String.format("%s%s", GENERAL_PREFIX, message));
 	}
 	
 	public static void sendGeneralMessage(CommandSender sender, Message message, Object... args) 
