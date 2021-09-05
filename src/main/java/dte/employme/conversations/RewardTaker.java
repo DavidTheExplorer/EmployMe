@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import dte.employme.EmployMe;
 import dte.employme.reward.ItemsReward;
 import dte.employme.reward.MoneyReward;
-import dte.employme.reward.visitor.RewardVisitor;
 import dte.employme.utils.InventoryUtils;
+import dte.employme.visitors.reward.RewardVisitor;
 
 public class RewardTaker implements RewardVisitor<Void>
 {

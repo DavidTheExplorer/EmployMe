@@ -1,4 +1,4 @@
-package dte.employme.reward.visitor;
+package dte.employme.visitors.reward;
 
 import dte.employme.reward.ItemsReward;
 import dte.employme.reward.MoneyReward;

@@ -3,7 +3,7 @@ package dte.employme.reward;
 import org.bukkit.entity.Player;
 
 import dte.employme.EmployMe;
-import dte.employme.reward.visitor.RewardVisitor;
+import dte.employme.visitors.reward.RewardVisitor;
 
 public class MoneyReward implements Reward
 {

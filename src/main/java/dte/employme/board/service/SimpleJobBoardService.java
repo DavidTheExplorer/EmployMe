@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.messages.Message;
-import dte.employme.reward.visitor.RewardNameVisitor;
+import dte.employme.visitors.reward.RewardNameVisitor;
 
 public class SimpleJobBoardService implements JobBoardService
 {

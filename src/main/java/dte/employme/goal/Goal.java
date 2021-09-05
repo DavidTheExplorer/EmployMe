@@ -2,7 +2,7 @@ package dte.employme.goal;
 
 import org.bukkit.entity.Player;
 
-import dte.employme.goal.visitor.GoalVisitor;
+import dte.employme.visitors.goal.GoalVisitor;
 
 public interface Goal
 {

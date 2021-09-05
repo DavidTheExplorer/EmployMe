@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.reward.visitor.RewardVisitor;
+import dte.employme.visitors.reward.RewardVisitor;
 
 public class ItemsReward implements Reward
 {

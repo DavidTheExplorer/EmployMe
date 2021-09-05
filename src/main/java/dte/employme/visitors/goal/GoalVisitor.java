@@ -1,4 +1,4 @@
-package dte.employme.goal.visitor;
+package dte.employme.visitors.goal;
 
 import dte.employme.goal.ItemGoal;
 

@@ -3,7 +3,7 @@ package dte.employme.goal;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.goal.visitor.GoalVisitor;
+import dte.employme.visitors.goal.GoalVisitor;
 
 public class ItemGoal implements Goal
 {

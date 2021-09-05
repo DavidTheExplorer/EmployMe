@@ -1,4 +1,4 @@
-package dte.employme.board.inventory;
+package dte.employme.visitors.reward;
 
 import static dte.employme.utils.ChatColorUtils.colorize;
 
@@ -6,12 +6,11 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
 
 import dte.employme.reward.ItemsReward;
 import dte.employme.reward.MoneyReward;
-import dte.employme.reward.visitor.RewardVisitor;
 import dte.employme.utils.EnumUtils;
 
-public class RewardDescriptor implements RewardVisitor<String[]>
+public class RewardInventoryDescriptor implements RewardVisitor<String[]>
 {
-	public static final RewardDescriptor INSTANCE = new RewardDescriptor();
+	public static final RewardInventoryDescriptor INSTANCE = new RewardInventoryDescriptor();
 	
 	private static final String[] BASE = {colorize(String.format("&6&n&lPayment&6:"))};
 	
