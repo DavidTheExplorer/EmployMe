@@ -71,13 +71,13 @@ public abstract class AbstractJobBoard implements JobBoard
 		return this.jobByID.values().iterator();
 	}
 	
-	protected String generateID() 
+	protected String generateID()
 	{
 		String id;
 
 		do 
 		{
-			id = RandomStringUtils.randomAlphanumeric(22);
+			id = RandomStringUtils.randomAlphanumeric(4);
 		}
 		while(this.jobByID.containsKey(id));
 
