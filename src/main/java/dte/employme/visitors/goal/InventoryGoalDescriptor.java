@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.goal.ItemGoal;
 import dte.employme.utils.EnumUtils;
 
-public class GoalInventoryDescriptor implements GoalVisitor<String>
+public class InventoryGoalDescriptor implements GoalVisitor<String>
 {
-	public static final GoalInventoryDescriptor INSTANCE = new GoalInventoryDescriptor();
+	public static final InventoryGoalDescriptor INSTANCE = new InventoryGoalDescriptor();
 	
 	@Override
 	public String visit(ItemGoal itemGoal) 

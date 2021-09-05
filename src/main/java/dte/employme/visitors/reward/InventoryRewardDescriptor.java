@@ -8,9 +8,9 @@ import dte.employme.reward.ItemsReward;
 import dte.employme.reward.MoneyReward;
 import dte.employme.utils.EnumUtils;
 
-public class RewardInventoryDescriptor implements RewardVisitor<String[]>
+public class InventoryRewardDescriptor implements RewardVisitor<String[]>
 {
-	public static final RewardInventoryDescriptor INSTANCE = new RewardInventoryDescriptor();
+	public static final InventoryRewardDescriptor INSTANCE = new InventoryRewardDescriptor();
 	
 	private static final String[] BASE = {colorize(String.format("&6&n&lPayment&6:"))};
 	
