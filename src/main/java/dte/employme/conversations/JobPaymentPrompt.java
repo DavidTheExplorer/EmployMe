@@ -54,10 +54,10 @@ public class JobPaymentPrompt extends NumericPrompt
 		double payment = invalidInput.doubleValue();
 		
 		if(payment <= 0)
-			return Message.MONEY_REWARD_ERROR_NEGATIVE.getTemplate();
+			return Message.MONEY_REWARD_ERROR_NEGATIVE.toString();
 		
 		else if(!this.economy.has((Player) context.getForWhom(), payment))
-			return Message.MONEY_REWARD_NOT_ENOUGH.getTemplate();
+			return Message.MONEY_REWARD_NOT_ENOUGH.toString();
 		
 		throw new IllegalStateException("Can't create a Money Reward from the provided input.");
 	}
@@ -65,6 +65,6 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return Message.MONEY_REWARD_NOT_A_NUMBER.getTemplate();
+		return Message.MONEY_REWARD_NOT_A_NUMBER.toString();
 	}
 }
