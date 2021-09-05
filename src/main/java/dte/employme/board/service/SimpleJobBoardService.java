@@ -21,7 +21,10 @@ public class SimpleJobBoardService implements JobBoardService
 	{
 		Player employer = job.getEmployer().getPlayer();
 		
-		if(employer != null)
-			Message.JOB_ADDED_TO_BOARD.sendTo(employer, job.getReward().accept(RewardNameVisitor.INSTANCE));
+		if(employer != null) 
+		{
+			String rewardName = job.getReward().accept(RewardNameVisitor.INSTANCE);
+			Message.sendGeneralMessage(employer, Message.JOB_ADDED_TO_BOARD, rewardName);
+		}
 	}
 }
