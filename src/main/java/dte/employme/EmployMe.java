@@ -2,12 +2,8 @@ package dte.employme;
 
 import static org.bukkit.ChatColor.RED;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import co.aikar.commands.BukkitCommandManager;
@@ -17,19 +13,20 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.service.JobBoardService;
 import dte.employme.board.service.SimpleJobBoardService;
 import dte.employme.commands.JobsCommand;
+import dte.employme.job.service.JobService;
+import dte.employme.job.service.SimpleJobService;
+import dte.employme.listeners.JobCreationInventoriesListener;
 import dte.employme.listeners.JobInventoryListener;
 import dte.employme.messages.Message;
-import dte.employme.reward.ItemsReward;
-import dte.employme.reward.MoneyReward;
 import dte.employme.utils.ModernJavaPlugin;
-import dte.employme.utils.NumberUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class EmployMe extends ModernJavaPlugin
 {
-	private JobBoard jobBoard;
 	private Economy economy;
+	private JobBoard jobBoard;
 	private JobBoardService jobBoardService;
+	private JobService jobService;
 
 	private static EmployMe INSTANCE;
 
@@ -46,9 +43,10 @@ public class EmployMe extends ModernJavaPlugin
 		}
 		this.jobBoard = new InventoryJobBoard();
 		this.jobBoardService = new SimpleJobBoardService();
+		this.jobService = new SimpleJobService(this.jobBoardService, this.jobBoard, this.economy);
 
 		registerCommands();
-		registerListeners(new JobInventoryListener());
+		registerListeners(new JobInventoryListener(), new JobCreationInventoriesListener(this.jobService));
 	}
 
 	public static EmployMe getInstance()
@@ -82,51 +80,21 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.enableUnstableAPI("help");
 
 		//register dependencies
-		commandManager.registerDependency(JobBoard.class, this.jobBoard);
 		commandManager.registerDependency(Economy.class, this.economy);
+		commandManager.registerDependency(JobBoard.class, this.jobBoard);
 		commandManager.registerDependency(JobBoardService.class, this.jobBoardService);
+		commandManager.registerDependency(JobService.class, this.jobService);
 
 		//register conditions
-		commandManager.getCommandConditions().addCondition(MoneyReward.class, "payment", (handler, context, payment) -> 
-		{
-			if(!this.economy.has(context.getPlayer(), payment.getPayment()))
-				throw new InvalidCommandArgument(Message.MONEY_REWARD_NOT_ENOUGH.getTemplate(), false);
-		});
-
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
 			Player player = context.getPlayer();
-
+			
 			if(player.isConversing())
 				throw new InvalidCommandArgument(Message.MUST_NOT_BE_CONVERSING.toString(), false);
 		});
 
-		//register contexts
-		commandManager.getCommandContexts().registerContext(MoneyReward.class, context -> 
-		{
-			String paymentText = context.popFirstArg();
-			
-			return NumberUtils.parseDouble(paymentText)
-					.map(MoneyReward::new)
-					.orElseThrow(() -> new InvalidCommandArgument(Message.MONEY_REWARD_ERROR_NEGATIVE.getTemplate(), false));
-		});
-
-		commandManager.getCommandContexts().registerIssuerOnlyContext(ItemsReward.class, context -> 
-		{
-			if(!context.hasFlag("Items In Inventory"))
-				return null;
-
-			ItemStack[] inventoryItems = Arrays.stream(context.getPlayer().getInventory().getStorageContents())
-					.filter(Objects::nonNull)
-					.toArray(ItemStack[]::new);
-
-			if(inventoryItems.length == 0)
-				throw new InvalidCommandArgument(Message.ONE_INVENTORY_REWARD_NEEDED.getTemplate(), false);
-
-			return new ItemsReward(inventoryItems);
-		});
-
 		//register commands
-		commandManager.registerCommand(new JobsCommand(this.jobBoard, this.economy, this.jobBoardService));
+		commandManager.registerCommand(new JobsCommand());
 	}
 }
