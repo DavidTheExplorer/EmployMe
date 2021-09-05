@@ -92,7 +92,7 @@ public class InventoryUtils
 
 	public static boolean isEmpty(Inventory inventory) 
 	{
-		return itemsStream(inventory).count() == 0;
+		return itemsStream(inventory, true).count() == 0;
 	}
 	
 	//TODO: make my own version and release to my utils
@@ -266,11 +266,11 @@ public class InventoryUtils
 
 		return IntStream.range(0, inventory.getSize());
 	}
-	public static Stream<ItemStack> itemsStream(Inventory inventory)
+	public static Stream<ItemStack> itemsStream(Inventory inventory, boolean includeSpecialSlots)
 	{
 		Validate.notNull(inventory);
 
-		return Arrays.stream(inventory.getContents())
+		return Arrays.stream(includeSpecialSlots ? inventory.getContents() : inventory.getStorageContents())
 				.filter(Objects::nonNull);
 	}
 	public static IntStream takenSlotsStream(Inventory inventory) 
