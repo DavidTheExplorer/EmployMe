@@ -22,7 +22,7 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		return Message.ITEM_GOAL_FORMAT_QUESTION.getTemplate();
+		return Message.ITEM_GOAL_FORMAT_QUESTION.toString();
 	}
 
 	@Override
@@ -49,6 +49,6 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return Message.ITEM_GOAL_INVALID_FORMAT.getTemplate();
+		return Message.ITEM_GOAL_INVALID_FORMAT.toString();
 	}
 }
