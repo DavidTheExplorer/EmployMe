@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.InventoryJobBoard;
 import dte.employme.messages.Message;
-import dte.employme.reward.visitor.RewardNameVisitor;
+import dte.employme.visitors.reward.RewardNameVisitor;
 
 public class JobInventoryListener implements Listener
 {

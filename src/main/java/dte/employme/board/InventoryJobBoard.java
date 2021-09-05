@@ -24,13 +24,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.board.inventory.GoalDescriptor;
-import dte.employme.board.inventory.RewardDescriptor;
 import dte.employme.goal.Goal;
 import dte.employme.goal.ItemGoal;
 import dte.employme.job.Job;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.items.builder.ItemBuilder;
+import dte.employme.visitors.goal.InventoryGoalDescriptor;
+import dte.employme.visitors.reward.InventoryRewardDescriptor;
 
 public class InventoryJobBoard extends AbstractJobBoard
 {
@@ -72,9 +72,9 @@ public class InventoryJobBoard extends AbstractJobBoard
 		//lore
 		String[] lore = {};
 		lore = ArrayUtils.add(lore, underlined(AQUA) + "Description" + AQUA + ":");
-		lore = ArrayUtils.add(lore, WHITE + "I need " + job.getGoal().accept(GoalDescriptor.INSTANCE));
+		lore = ArrayUtils.add(lore, WHITE + "I need " + job.getGoal().accept(InventoryGoalDescriptor.INSTANCE));
 		lore = ArrayUtils.add(lore, " ");
-		lore = ArrayUtils.addAll(lore, job.getReward().accept(RewardDescriptor.INSTANCE));
+		lore = ArrayUtils.addAll(lore, job.getReward().accept(InventoryRewardDescriptor.INSTANCE));
 		lore = ArrayUtils.add(lore, " ");
 		lore = ArrayUtils.addAll(lore, createStatusLore(job, player));
 		lore = ArrayUtils.add(lore, colorize(String.format("&7ID: %s", getJobID(job).get())));
