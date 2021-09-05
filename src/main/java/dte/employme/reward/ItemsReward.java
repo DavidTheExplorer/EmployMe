@@ -1,8 +1,8 @@
 package dte.employme.reward;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +16,10 @@ public class ItemsReward implements Reward
 	
 	public ItemsReward(ItemStack... items) 
 	{
-		this.items = Validate.notEmpty(items, "Can't create an Item Reward of no items!").clone();
+		//TODO: move this to its own branch
+		this.items = Arrays.stream(items)
+				.map(ItemStack::new) //clone the items using the copy constructor
+				.toArray(ItemStack[]::new);
 	}
 	
 	@Override
