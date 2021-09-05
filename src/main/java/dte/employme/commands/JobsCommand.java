@@ -15,7 +15,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.job.service.JobService;
 
 @CommandAlias("job")
-@Description("Get or view the Available Jobs!")
+@Description("Get a job or view the Available Jobs!")
 public class JobsCommand extends BaseCommand
 {
 	@Dependency
@@ -33,7 +33,7 @@ public class JobsCommand extends BaseCommand
 
 	@CommandAlias("jobs")
 	@Subcommand("view")
-	@Description("Search through all the available jobs.")
+	@Description("Search through all the Available Jobs.")
 	public void view(Player player) 
 	{
 		this.jobBoard.showTo(player);
