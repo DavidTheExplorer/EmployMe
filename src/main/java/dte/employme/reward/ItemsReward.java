@@ -1,6 +1,7 @@
 package dte.employme.reward;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -25,7 +26,9 @@ public class ItemsReward implements Reward
 	@Override
 	public void giveTo(Player player) 
 	{
-		player.getInventory().addItem(this.items);
+		Collection<ItemStack> remainingItems = player.getInventory().addItem(this.items).values();
+		
+		remainingItems.forEach(item -> player.getWorld().dropItem(player.getLocation(), item));
 	}
 	
 	public List<ItemStack> getItems() 
