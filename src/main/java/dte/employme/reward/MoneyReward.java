@@ -15,9 +15,9 @@ public class MoneyReward implements Reward
 	}
 
 	@Override
-	public void giveTo(Player whoCompleted) 
+	public void giveTo(Player player) 
 	{
-		EmployMe.getInstance().getEconomy().depositPlayer(whoCompleted, this.payment);
+		EmployMe.getInstance().getEconomy().depositPlayer(player, this.payment);
 	}
 
 	public double getPayment() 
