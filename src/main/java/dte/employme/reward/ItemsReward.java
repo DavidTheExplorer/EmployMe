@@ -23,9 +23,9 @@ public class ItemsReward implements Reward
 	}
 	
 	@Override
-	public void giveTo(Player whoCompleted) 
+	public void giveTo(Player player) 
 	{
-		whoCompleted.getInventory().addItem(this.items);
+		player.getInventory().addItem(this.items);
 	}
 	
 	public List<ItemStack> getItems() 
