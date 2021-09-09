@@ -220,9 +220,8 @@ public class ItemBuilder
 	 */
 	public ItemStack createCopy()
 	{
-		if(!this.item.hasItemMeta())
-			this.item.setItemMeta(this.im);
-
+		this.item.setItemMeta(this.im);
+		
 		return new ItemStack(this.item);
 	}
 
