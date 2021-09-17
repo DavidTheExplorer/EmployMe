@@ -24,7 +24,7 @@ import net.milkbowl.vault.economy.Economy;
 public class EmployMe extends ModernJavaPlugin
 {
 	private Economy economy;
-	private JobBoard jobBoard;
+	private JobBoard globalJobBoard;
 	private JobBoardService jobBoardService;
 	private JobService jobService;
 
@@ -41,10 +41,10 @@ public class EmployMe extends ModernJavaPlugin
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		this.jobBoard = new InventoryJobBoard();
+		this.globalJobBoard = new InventoryJobBoard();
 		this.jobBoardService = new SimpleJobBoardService();
-		this.jobService = new SimpleJobService(this.jobBoardService, this.jobBoard, this.economy);
-
+		this.jobService = new SimpleJobService(this.jobBoardService, this.globalJobBoard, this.economy);
+		
 		registerCommands();
 		registerListeners(new JobInventoryListener(), new JobCreationInventoriesListener(this.jobService));
 	}
@@ -81,7 +81,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register dependencies
 		commandManager.registerDependency(Economy.class, this.economy);
-		commandManager.registerDependency(JobBoard.class, this.jobBoard);
+		commandManager.registerDependency(JobBoard.class, this.globalJobBoard);
 		commandManager.registerDependency(JobBoardService.class, this.jobBoardService);
 		commandManager.registerDependency(JobService.class, this.jobService);
 

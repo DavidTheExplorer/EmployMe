@@ -19,7 +19,7 @@ import dte.employme.job.service.JobService;
 public class JobsCommand extends BaseCommand
 {
 	@Dependency
-	private JobBoard jobBoard;
+	private JobBoard globalJobBoard;
 	
 	@Dependency
 	private JobService jobService;
@@ -36,7 +36,7 @@ public class JobsCommand extends BaseCommand
 	@Description("Search through all the Available Jobs.")
 	public void view(Player player) 
 	{
-		this.jobBoard.showTo(player);
+		this.globalJobBoard.showTo(player);
 	}
 	
 	@Subcommand("offer")
