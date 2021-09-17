@@ -57,18 +57,17 @@ public class SimpleJobService implements JobService
 	}
 
 	@Override
-	public Inventory getDeletionInventory(Player employer) 
+	public Inventory getDeletionInventory(Player employer)
 	{
-		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Select Jobs to Delete");
+		Inventory inventory = Bukkit.createInventory(null, 27, "Select Jobs to Delete");
 		
-		//add the jobs icons to the inventory
-		this.globalJobBoard.getJobsOfferedBy(employer.getUniqueId()).stream()
-		.map(job -> ItemFactory.createDeletionIcon(this.globalJobBoard, job))
-		.forEach(inventory::addItem);
-		
-		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
-
-		return inventory;
+        this.globalJobBoard.getJobsOfferedBy(employer.getUniqueId()).stream()
+        .map(job -> ItemFactory.createDeletionIcon(this.globalJobBoard, job))
+        .forEach(inventory::addItem);
+        
+        InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));
+        
+        return inventory;
 	}
 
 	private Inventory createCreationInventory() 
