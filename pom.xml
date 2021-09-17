@@ -6,6 +6,10 @@
 	<artifactId>employeme</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
+	<properties>
+		<shade.base>dte.employme.shaded</shade.base>
+	</properties>
+
 	<build>
 		<finalName>EmployMe ${project.version}</finalName>
 
@@ -30,17 +34,17 @@
 				<configuration>
 					<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
 					<relocations>
-					
+
 						<relocation>
 							<pattern>co.aikar.commands</pattern>
-							<shadedPattern>com.pseudonova.employme.shaded.acf</shadedPattern>
+							<shadedPattern>${shade.base}.acf</shadedPattern>
 						</relocation>
-						
+
 						<relocation>
 							<pattern>co.aikar.locales</pattern>
-							<shadedPattern>com.pseudonova.employme.shaded.locales</shadedPattern>
+							<shadedPattern>${shade.base}.locales</shadedPattern>
 						</relocation>
-						
+
 					</relocations>
 				</configuration>
 				<executions>
