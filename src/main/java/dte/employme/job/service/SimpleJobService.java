@@ -1,13 +1,11 @@
 package dte.employme.job.service;
 
+import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.WHITE;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -23,6 +21,7 @@ import dte.employme.board.service.JobBoardService;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.conversations.JobPaymentPrompt;
 import dte.employme.conversations.JobPostedMessagePrompt;
+import dte.employme.items.ItemFactory;
 import dte.employme.messages.Message;
 import dte.employme.reward.ItemsReward;
 import dte.employme.utils.InventoryUtils;
@@ -31,53 +30,63 @@ import net.milkbowl.vault.economy.Economy;
 
 public class SimpleJobService implements JobService
 {
-	private final Map<UUID, Inventory> playersContainers = new HashMap<>();
-	
+	private final JobBoard globalJobBoard;
+
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
-	
+
 	private Inventory creationInventory;
-	
-	public SimpleJobService(JobBoardService jobBoardService, JobBoard jobBoard, Economy economy) 
+
+	public SimpleJobService(JobBoard globalJobBoard, JobBoardService jobBoardService, Economy economy) 
 	{
+		this.globalJobBoard = globalJobBoard;
+
 		this.moneyJobConversationFactory = createConversationFactory()
-				.withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(jobBoardService, jobBoard, economy)));
-		
+				.withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(jobBoardService, globalJobBoard, economy)));
+
 		this.itemsJobConversationFactory = createConversationFactory()
-				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, jobBoard)));
+				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, globalJobBoard)));
 	}
-	
+
 	@Override
-	public Inventory getContainerOf(Player player) 
-	{
-		return this.playersContainers.get(player.getUniqueId());
-	}
-	
-	@Override
-	public Inventory getCreationInventory() 
+	public Inventory getCreationInventory(Player employer) 
 	{
 		if(this.creationInventory == null)
 			this.creationInventory = createCreationInventory();
-		
+
 		return this.creationInventory;
 	}
-	
+
+	@Override
+	public Inventory getDeletionInventory(Player employer)
+	{
+		Inventory inventory = Bukkit.createInventory(null, 27, "Select Jobs to Delete");
+		
+        this.globalJobBoard.getJobsOfferedBy(employer.getUniqueId()).stream()
+        .map(job -> ItemFactory.createDeletionIcon(this.globalJobBoard, job))
+        .forEach(inventory::addItem);
+        
+        InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));
+        
+        return inventory;
+	}
+
 	private Inventory createCreationInventory() 
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
-		
+
 		inventory.setItem(11, new ItemBuilder(Material.GOLD_INGOT, GOLD + "Money Job")
 				.newLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
 				.createCopy());
-		
+
 		inventory.setItem(15, new ItemBuilder(Material.CHEST, AQUA + "Items Job")
 				.newLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
 				.createCopy());
-		
-		InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));
-		
+
+		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
+
 		return inventory;
 	}
-	
+
 	@Override
 	public Optional<Conversation> buildMoneyJobConversation(Player employer)
 	{
