@@ -31,31 +31,30 @@ import net.milkbowl.vault.economy.Economy;
 public class SimpleJobService implements JobService
 {
 	private final JobBoard globalJobBoard;
-
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
-
+	
 	private Inventory creationInventory;
-
+	
 	public SimpleJobService(JobBoard globalJobBoard, JobBoardService jobBoardService, Economy economy) 
 	{
 		this.globalJobBoard = globalJobBoard;
-
+		
 		this.moneyJobConversationFactory = createConversationFactory()
 				.withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(jobBoardService, globalJobBoard, economy)));
-
+		
 		this.itemsJobConversationFactory = createConversationFactory()
 				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, globalJobBoard)));
 	}
-
+	
 	@Override
 	public Inventory getCreationInventory(Player employer) 
 	{
 		if(this.creationInventory == null)
 			this.creationInventory = createCreationInventory();
-
+		
 		return this.creationInventory;
 	}
-
+	
 	@Override
 	public Inventory getDeletionInventory(Player employer)
 	{
@@ -69,24 +68,24 @@ public class SimpleJobService implements JobService
         
         return inventory;
 	}
-
+	
 	private Inventory createCreationInventory() 
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
-
+		
 		inventory.setItem(11, new ItemBuilder(Material.GOLD_INGOT, GOLD + "Money Job")
 				.newLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
 				.createCopy());
-
+		
 		inventory.setItem(15, new ItemBuilder(Material.CHEST, AQUA + "Items Job")
 				.newLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
 				.createCopy());
-
+		
 		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
-
+		
 		return inventory;
 	}
-
+	
 	@Override
 	public Optional<Conversation> buildMoneyJobConversation(Player employer)
 	{

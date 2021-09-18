@@ -2,36 +2,42 @@ package dte.employme.visitors.reward;
 
 import static dte.employme.utils.ChatColorUtils.colorize;
 
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import dte.employme.reward.ItemsReward;
 import dte.employme.reward.MoneyReward;
 import dte.employme.utils.EnumUtils;
 
-public class InventoryRewardDescriptor implements RewardVisitor<String[]>
+public class InventoryRewardDescriptor implements RewardVisitor<List<String>>
 {
 	public static final InventoryRewardDescriptor INSTANCE = new InventoryRewardDescriptor();
 	
-	private static final String[] BASE = {colorize(String.format("&6&n&lPayment&6:"))};
+	private static final List<String> BASE = Lists.newArrayList(colorize(String.format("&6&n&lPayment&6:")));
 	
 	@Override
-	public String[] visit(MoneyReward moneyReward)
+	public List<String> visit(MoneyReward moneyReward)
 	{
-		String[] base = BASE.clone();
-		
-		//add the payment amount
-		base[0] += colorize(String.format(" &f%.2f$", moneyReward.getPayment()));
-		
-		return base;
+		List<String> lore = new ArrayList<>(BASE);
+
+		//add the payment's amount
+		lore.set(0, lore.get(0) + colorize(String.format(" &f%.2f$", moneyReward.getPayment())));
+
+		return lore;
 	}
-	
+
 	@Override
-	public String[] visit(ItemsReward itemsReward)
+	public List<String> visit(ItemsReward itemsReward)
 	{
-		String[] itemsDescription = itemsReward.getItems().stream()
-				.map(item -> colorize(String.format("&f&o%s - &6%d", EnumUtils.fixEnumName(item.getType()), item.getAmount())))
-				.toArray(String[]::new);
+		List<String> lore = new ArrayList<>(BASE);
 		
-		return ArrayUtils.addAll(BASE, itemsDescription);
+		//add the items' descriptions
+		itemsReward.getItems().stream()
+		.map(item -> colorize(String.format("&f&o%s - &6%d", EnumUtils.fixEnumName(item.getType()), item.getAmount())))
+		.forEach(lore::add);
+		
+		return lore;
 	}
 }

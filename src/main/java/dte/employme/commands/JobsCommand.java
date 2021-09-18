@@ -34,7 +34,7 @@ public class JobsCommand extends BaseCommand
 	@CommandAlias("jobs")
 	@Subcommand("view")
 	@Description("Search through all the Available Jobs.")
-	public void view(Player player) 
+	public void view(Player player)
 	{
 		this.globalJobBoard.showTo(player);
 	}
@@ -43,6 +43,13 @@ public class JobsCommand extends BaseCommand
 	@Description("Offer a new Job to the public.")
 	public void createJob(@Conditions("Not Conversing") Player employer) 
 	{
-		employer.openInventory(this.jobService.getCreationInventory());
+		employer.openInventory(this.jobService.getCreationInventory(employer));
+	}
+	
+	@Subcommand("delete")
+	@Description("Delete one of your offered Jobs.")
+	public void deleteJob(@Conditions("Employer") Player employer) 
+	{
+		employer.openInventory(this.jobService.getDeletionInventory(employer));
 	}
 }
