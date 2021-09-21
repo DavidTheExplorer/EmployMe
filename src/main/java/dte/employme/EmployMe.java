@@ -15,8 +15,7 @@ import dte.employme.board.service.SimpleJobBoardService;
 import dte.employme.commands.JobsCommand;
 import dte.employme.job.service.JobService;
 import dte.employme.job.service.SimpleJobService;
-import dte.employme.listeners.JobCreationInventoriesListener;
-import dte.employme.listeners.JobInventoryListener;
+import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.messages.Message;
 import dte.employme.utils.ModernJavaPlugin;
 import net.milkbowl.vault.economy.Economy;
@@ -34,7 +33,7 @@ public class EmployMe extends ModernJavaPlugin
 	public void onEnable()
 	{
 		INSTANCE = this;
-
+		
 		if(!setupEconomy()) 
 		{
 			logToConsole(RED + "Economy wasn't found! Shutting Down...");
@@ -43,10 +42,10 @@ public class EmployMe extends ModernJavaPlugin
 		}
 		this.globalJobBoard = new InventoryJobBoard();
 		this.jobBoardService = new SimpleJobBoardService();
-		this.jobService = new SimpleJobService(this.jobBoardService, this.globalJobBoard, this.economy);
+		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobBoardService, this.economy);
 		
 		registerCommands();
-		registerListeners(new JobInventoryListener(), new JobCreationInventoriesListener(this.jobService));
+		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard));
 	}
 
 	public static EmployMe getInstance()
@@ -92,6 +91,14 @@ public class EmployMe extends ModernJavaPlugin
 			
 			if(player.isConversing())
 				throw new InvalidCommandArgument(Message.MUST_NOT_BE_CONVERSING.toString(), false);
+		});
+		
+		commandManager.getCommandConditions().addCondition(Player.class, "Employer", (handler, context, payment) -> 
+		{
+			Player player = context.getPlayer();
+			
+			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
+				throw new InvalidCommandArgument(Message.MUST_HAVE_JOBS.toString(), false);
 		});
 
 		//register commands

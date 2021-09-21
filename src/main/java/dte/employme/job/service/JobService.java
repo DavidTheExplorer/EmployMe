@@ -8,9 +8,8 @@ import org.bukkit.inventory.Inventory;
 
 public interface JobService 
 {
-	Inventory getContainerOf(Player player);
-	
-	Inventory getCreationInventory();
+	Inventory getCreationInventory(Player employer);
+	Inventory getDeletionInventory(Player employer);
 	
 	Optional<Conversation> buildMoneyJobConversation(Player employer);
 	Optional<Conversation> buildItemsJobConversation(Player employer);

@@ -6,6 +6,7 @@ import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.YELLOW;
 
 import org.bukkit.command.CommandSender;
 
@@ -14,6 +15,7 @@ public enum Message
 	//Jobs
 	JOB_ADDED_TO_BOARD("&aYour &e%s &aOffer was added to the &eJobs Board&a."),
 	JOB_SUCCESSFULLY_COMPLETED(GREEN + "You successfully completed a %s Job!"),
+	JOB_SUCCESSFULLY_DELETED(YELLOW + "You successfully deleted this Job!"),
 
 	//Rewards
 	ONE_INVENTORY_REWARD_NEEDED(RED + "You have to put at least 1 reward in your Inventory!"),
@@ -30,7 +32,8 @@ public enum Message
 
 	//General
 	GENERAL_PREFIX(DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "] "),
-	MUST_NOT_BE_CONVERSING(RED + "You have to finish your current conversation.");
+	MUST_NOT_BE_CONVERSING(RED + "You have to finish your current conversation."),
+	MUST_HAVE_JOBS(RED + "You must have offered at least one Job!");
 
 	private final String template;
 
