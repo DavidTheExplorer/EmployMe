@@ -1,4 +1,4 @@
-package dte.employme.utils.items.builder;
+package dte.employme.utils.items;
 
 import org.bukkit.Material;
 
