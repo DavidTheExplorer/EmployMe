@@ -14,15 +14,15 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.utils.items.builder.ItemBuilder;
+import dte.employme.utils.items.ItemBuilder;
 
 //README: Some methods do partial parameters validation, because they validate only what the methods they depend on didn't validate.
 public class InventoryUtils
 {
 	//Container of static methods
 	private InventoryUtils(){}
-
-
+	
+	
 	/*
 	 * General
 	 */
@@ -45,10 +45,10 @@ public class InventoryUtils
 	public static int toSlot(int line, int index)
 	{
 		int slot = (index-1);
-
+		
 		if(line >= 1)
 			slot += (9 * (line-1));
-
+		
 		return slot;
 	}
 
@@ -171,7 +171,7 @@ public class InventoryUtils
 	public static void fillColumn(Inventory inventory, int column, ItemStack with)
 	{
 		validateColumn(column);
-
+		
 		fillRange(inventory, column, inventory.getSize(), 9, with);
 	}
 	public static void fillEmptySlots(Inventory inventory, ItemStack with)
@@ -222,7 +222,7 @@ public class InventoryUtils
 	{
 		replace(inventory, item -> item.getType() == target, newItem);
 	}
-
+	
 
 	/*
 	 * Slot Searching
@@ -230,7 +230,7 @@ public class InventoryUtils
 	public static int firstSlotThat(Inventory inventory, Predicate<ItemStack> itemMatcher)
 	{
 		Validate.notNull(itemMatcher);
-
+		
 		return allSlotsThat(inventory, itemMatcher)
 				.min()
 				.orElse(-1);
@@ -238,7 +238,7 @@ public class InventoryUtils
 	public static int lastSlotThat(Inventory inventory, Predicate<ItemStack> itemMatcher) 
 	{
 		Validate.notNull(itemMatcher);
-
+		
 		return allSlotsThat(inventory, itemMatcher)
 				.max()
 				.orElse(-1);
@@ -255,8 +255,8 @@ public class InventoryUtils
 
 		return matchingSlots.length == 0 ? -1 : RandomUtils.randomElement(matchingSlots);
 	}
-
-
+	
+	
 	/*
 	 * Items/Slots Streams
 	 */
@@ -297,7 +297,7 @@ public class InventoryUtils
 				.mapToObj(slot -> Pair.of(slot, inventory.getItem(slot)));
 	}
 
-
+	
 	/*
 	 * Decoration of certain areas(walls, etc)
 	 */
@@ -320,7 +320,7 @@ public class InventoryUtils
 		fillRange(inventory, 1, 8, with);
 		fillRange(inventory, size-8, size-1, with);
 	}
-
+	
 
 	/*
 	 * Validation
@@ -344,6 +344,8 @@ public class InventoryUtils
 	 */
 	public static ItemStack createWall(Material material) 
 	{
-		return new ItemBuilder(material, ChatColor.BLACK + ".").createCopy();
+		return new ItemBuilder(material)
+				.named(ChatColor.BLACK + ".")
+				.createCopy();
 	}
 }

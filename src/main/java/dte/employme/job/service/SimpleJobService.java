@@ -25,7 +25,7 @@ import dte.employme.items.ItemFactory;
 import dte.employme.messages.Message;
 import dte.employme.reward.ItemsReward;
 import dte.employme.utils.InventoryUtils;
-import dte.employme.utils.items.builder.ItemBuilder;
+import dte.employme.utils.items.ItemBuilder;
 import net.milkbowl.vault.economy.Economy;
 
 public class SimpleJobService implements JobService
@@ -59,27 +59,29 @@ public class SimpleJobService implements JobService
 	@Override
 	public Inventory getDeletionInventory(Player employer)
 	{
-		Inventory inventory = Bukkit.createInventory(null, 27, "Select Jobs to Delete");
-		
-        this.globalJobBoard.getJobsOfferedBy(employer.getUniqueId()).stream()
-        .map(job -> ItemFactory.createDeletionIcon(this.globalJobBoard, job))
-        .forEach(inventory::addItem);
-        
-        InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));
-        
-        return inventory;
+		Inventory inventory = Bukkit.createInventory(null, 9 * 6, "Select Jobs to Delete");
+
+		this.globalJobBoard.getJobsOfferedBy(employer.getUniqueId()).stream()
+		.map(job -> ItemFactory.createDeletionIcon(this.globalJobBoard, job))
+		.forEach(inventory::addItem);
+
+		InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));
+
+		return inventory;
 	}
 
 	private Inventory createCreationInventory() 
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
 
-		inventory.setItem(11, new ItemBuilder(Material.GOLD_INGOT, GOLD + "Money Job")
-				.newLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
+		inventory.setItem(11, new ItemBuilder(Material.GOLD_INGOT)
+				.named(GOLD + "Money Job")
+				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
 				.createCopy());
 
-		inventory.setItem(15, new ItemBuilder(Material.CHEST, AQUA + "Items Job")
-				.newLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
+		inventory.setItem(15, new ItemBuilder(Material.CHEST)
+				.named(AQUA + "Items Job")
+				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
 				.createCopy());
 
 		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
@@ -97,7 +99,7 @@ public class SimpleJobService implements JobService
 	public Optional<Conversation> buildItemsJobConversation(Player employer) 
 	{
 		ItemStack[] inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).toArray(ItemStack[]::new);
-		
+
 		if(inventoryItems.length == 0) 
 		{
 			Message.ONE_INVENTORY_REWARD_NEEDED.sendTo(employer);
@@ -105,10 +107,10 @@ public class SimpleJobService implements JobService
 		}
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
 		conversation.getContext().setSessionData("reward", new ItemsReward(inventoryItems));
-		
+
 		return Optional.of(conversation);
 	}
-	
+
 	private static ConversationFactory createConversationFactory() 
 	{
 		return new ConversationFactory(EmployMe.getInstance())
