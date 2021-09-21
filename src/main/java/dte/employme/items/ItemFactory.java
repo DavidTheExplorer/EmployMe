@@ -10,6 +10,7 @@ import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
@@ -28,7 +28,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.goal.Goal;
 import dte.employme.goal.ItemGoal;
 import dte.employme.job.Job;
-import dte.employme.utils.items.builder.ItemBuilder;
+import dte.employme.utils.items.ItemBuilder;
 import dte.employme.visitors.goal.InventoryGoalDescriptor;
 import dte.employme.visitors.reward.InventoryRewardDescriptor;
 
@@ -49,9 +49,10 @@ public class ItemFactory
 		lore.add(" ");
 		lore.addAll(job.getReward().accept(InventoryRewardDescriptor.INSTANCE));
 
-		return new ItemBuilder(getJobMaterial(job), GREEN + job.getEmployer().getName() + "'s Offer")
-				.itemFlags(ItemFlag.HIDE_ATTRIBUTES)
-				.newLore(lore.toArray(new String[0]))
+		return new ItemBuilder(getJobMaterial(job))
+				.named(GREEN + job.getEmployer().getName() + "'s Offer")
+				.withItemFlags(HIDE_ATTRIBUTES)
+				.withLore(lore.toArray(new String[0]))
 				.createCopy();
 	}
 
@@ -65,14 +66,15 @@ public class ItemFactory
 		lore.addAll(createJobStatusLore(job, player));
 		lore.add(createIDLine(job, jobBoard));
 
-		return new ItemBuilder(basicIcon, false)
-				.newLore(lore.toArray(new String[0]))
+		return new ItemBuilder(basicIcon)
+				.withLore(lore.toArray(new String[0]))
 				.createCopy();
 	}
 
 	public static ItemStack createDeletionIcon(JobBoard jobBoard, Job job) 
 	{
-		return new ItemBuilder(createBasicIcon(job), false)
+		return new ItemBuilder(createBasicIcon(job))
+				.ofType(Material.BARRIER)
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
 						bold(DARK_RED) + "Click to Delete!",
@@ -117,7 +119,7 @@ public class ItemFactory
 		}
 		return Material.BOOK;
 	}
-	
+
 	private static String createIDLine(Job job, JobBoard jobBoard)
 	{
 		return colorize(String.format("&7ID: %s", jobBoard.getJobID(job).get()));
