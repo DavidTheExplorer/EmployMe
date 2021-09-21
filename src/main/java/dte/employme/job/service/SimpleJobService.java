@@ -114,8 +114,9 @@ public class SimpleJobService implements JobService
 	private static ConversationFactory createConversationFactory() 
 	{
 		return new ConversationFactory(EmployMe.getInstance())
-				.withLocalEcho(false)
+				.withLocalEcho(true)
 				.withModality(false)
+				.withEscapeSequence("stop")
 				.withPrefix(context -> Message.GENERAL_PREFIX.toString());
 	}
 }
