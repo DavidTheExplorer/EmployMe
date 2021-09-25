@@ -1,5 +1,6 @@
 package dte.employme;
 
+import static dte.employme.board.InventoryJobBoard.ORDER_BY_EMPLOYER_NAME;
 import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.Bukkit;
@@ -41,7 +42,7 @@ public class EmployMe extends ModernJavaPlugin
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		this.globalJobBoard = new InventoryJobBoard();
+		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_EMPLOYER_NAME);
 		this.jobBoardService = new SimpleJobBoardService();
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobBoardService, this.economy);
 		ItemFactory.setup(this.jobService);
