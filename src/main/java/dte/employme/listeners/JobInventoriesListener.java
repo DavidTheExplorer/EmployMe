@@ -105,7 +105,7 @@ public class JobInventoriesListener implements Listener
 			.ifPresent(job ->
 			{
 				player.closeInventory();
-				inventoryBoard.onComplete(job, player);
+				this.jobService.onComplete(job, player);
 				
 				Message.JOB_SUCCESSFULLY_COMPLETED.sendTo(player, job.getReward().accept(RewardNameVisitor.INSTANCE));
 			});

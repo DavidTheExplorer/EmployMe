@@ -21,7 +21,9 @@ import dte.employme.board.service.JobBoardService;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.conversations.JobPaymentPrompt;
 import dte.employme.conversations.JobPostedMessagePrompt;
+import dte.employme.goal.FunctionalGoal;
 import dte.employme.items.ItemFactory;
+import dte.employme.job.Job;
 import dte.employme.messages.Message;
 import dte.employme.reward.ItemsReward;
 import dte.employme.utils.InventoryUtils;
@@ -44,6 +46,23 @@ public class SimpleJobService implements JobService
 		
 		this.itemsJobConversationFactory = createConversationFactory()
 				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, globalJobBoard)));
+	}
+	
+	@Override
+	public void onComplete(Job job, Player completer) 
+	{
+		this.globalJobBoard.removeJob(job);
+		
+		job.getReward().giveTo(completer);
+		
+		if(job.getGoal() instanceof FunctionalGoal)
+			((FunctionalGoal) job.getGoal()).onReach(completer);
+	}
+	
+	@Override
+	public boolean hasFinished(Job job, Player player) 
+	{
+		return job.getGoal().hasReached(player);
 	}
 	
 	@Override
@@ -93,7 +112,7 @@ public class SimpleJobService implements JobService
 	{
 		return Optional.of(this.moneyJobConversationFactory.buildConversation(employer));
 	}
-
+	
 	@Override
 	public Optional<Conversation> buildItemsJobConversation(Player employer) 
 	{

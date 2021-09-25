@@ -10,7 +10,6 @@ import dte.employme.job.Job;
 
 public interface JobBoard extends Iterable<Job>
 {
-	//Jobs
 	void addJob(Job job);
 	void removeJob(Job job);
 	List<Job> getOfferedJobs();
@@ -18,9 +17,6 @@ public interface JobBoard extends Iterable<Job>
 	Optional<Job> getJobByID(String id);
 	Optional<String> getJobID(Job job);
 	
-	//Display
+	//display
 	void showTo(Player player);
-	
-	//General
-	void onComplete(Job job, Player completer);
 }

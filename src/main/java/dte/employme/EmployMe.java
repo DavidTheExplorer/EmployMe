@@ -13,6 +13,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.service.JobBoardService;
 import dte.employme.board.service.SimpleJobBoardService;
 import dte.employme.commands.JobsCommand;
+import dte.employme.items.ItemFactory;
 import dte.employme.job.service.JobService;
 import dte.employme.job.service.SimpleJobService;
 import dte.employme.listeners.JobInventoriesListener;
@@ -43,6 +44,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard = new InventoryJobBoard();
 		this.jobBoardService = new SimpleJobBoardService();
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobBoardService, this.economy);
+		ItemFactory.setup(this.jobService);
 		
 		registerCommands();
 		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard));

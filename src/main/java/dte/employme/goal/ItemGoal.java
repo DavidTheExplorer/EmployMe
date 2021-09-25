@@ -3,9 +3,10 @@ package dte.employme.goal;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import dte.employme.utils.InventoryUtils;
 import dte.employme.visitors.goal.GoalVisitor;
 
-public class ItemGoal implements Goal
+public class ItemGoal implements FunctionalGoal
 {
 	private final ItemStack item;
 	
@@ -23,6 +24,12 @@ public class ItemGoal implements Goal
 	public boolean hasReached(Player player) 
 	{
 		return player.getInventory().containsAtLeast(this.item, this.item.getAmount());
+	}
+	
+	@Override
+	public void onReach(Player completer)
+	{
+		InventoryUtils.remove(completer.getInventory(), this.item);
 	}
 	
 	@Override
