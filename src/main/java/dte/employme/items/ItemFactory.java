@@ -59,7 +59,7 @@ public class ItemFactory
 		lore.add(" ");
 		lore.addAll(job.getReward().accept(InventoryRewardDescriptor.INSTANCE));
 
-		return new ItemBuilder(getJobMaterial(job))
+		return new ItemBuilder(getGoalMaterial(job))
 				.named(GREEN + job.getEmployer().getName() + "'s Offer")
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.withLore(lore.toArray(new String[0]))
@@ -125,8 +125,10 @@ public class ItemFactory
 				);
 	}
 
-	private static Material getJobMaterial(Job job) 
+	public static Material getGoalMaterial(Job job) 
 	{
+		verifySetup();
+		
 		if(job.getGoal() instanceof ItemGoal)
 			return ((ItemGoal) job.getGoal()).getItem().getType();
 		
