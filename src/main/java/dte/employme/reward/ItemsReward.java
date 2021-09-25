@@ -17,9 +17,8 @@ public class ItemsReward implements Reward
 	
 	public ItemsReward(ItemStack... items) 
 	{
-		//TODO: move this to its own branch
 		this.items = Arrays.stream(items)
-				.map(ItemStack::new) //clone the items using the copy constructor
+				.map(ItemStack::new) //clone using the copy constructor
 				.toArray(ItemStack[]::new);
 	}
 	
