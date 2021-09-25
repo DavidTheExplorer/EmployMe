@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.service.JobBoardService;
+import dte.employme.goal.ItemGoal;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.reward.Reward;
@@ -34,7 +35,7 @@ public class JobPostedMessagePrompt extends MessagePrompt
 
 		Job job = new SimpleJob.Builder()
 				.by(employer)
-				.ofItem(goal)
+				.of(new ItemGoal(goal))
 				.thatOffers(reward)
 				.build();
 

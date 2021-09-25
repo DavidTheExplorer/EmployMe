@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.RandomStringUtils;
-import org.bukkit.entity.Player;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -56,13 +55,6 @@ public abstract class AbstractJobBoard implements JobBoard
 	public Optional<String> getJobID(Job job) 
 	{
 		return Optional.ofNullable(this.jobByID.inverse().get(job));
-	}
-	
-	@Override
-	public void onComplete(Job job, Player completer) 
-	{
-		removeJob(job);
-		job.onComplete(completer);
 	}
 
 	@Override
