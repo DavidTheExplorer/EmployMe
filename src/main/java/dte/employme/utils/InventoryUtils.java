@@ -1,7 +1,11 @@
 package dte.employme.utils;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
@@ -95,61 +99,36 @@ public class InventoryUtils
 		return itemsStream(inventory, true).count() == 0;
 	}
 	
-	//TODO: make my own version and release to my utils
-	public static void remove(Inventory inventory, ItemStack item) 
+	public static int remove(Inventory inventory, ItemStack item) 
 	{
-		int amount = item.getAmount();
-		int size = inventory.getSize();
-
-		for (int slot = 0; slot < size; slot++) 
+		Map<Integer, ItemStack> similarItems = dataStream(inventory)
+				.filter(itemData -> itemData.getValue().isSimilar(item))
+				.collect(toMap(Entry::getKey, Entry::getValue));
+		
+		int amountLeft = item.getAmount();
+		
+		for(Map.Entry<Integer, ItemStack> entry : similarItems.entrySet())
 		{
-			ItemStack is = inventory.getItem(slot);
+			int slot = entry.getKey();
+			ItemStack similarItem = entry.getValue();
 			
-			if(is == null)
-				continue;
-			
-			if(item.getType() == is.getType())
+			int newAmount = similarItem.getAmount() - amountLeft;
+
+			if(newAmount > 0)
 			{
-				int newAmount = is.getAmount() - amount;
-				
-				if(newAmount > 0)
-				{
-					is.setAmount(newAmount);
+				similarItem.setAmount(newAmount);
+				break;
+			}
+			else
+			{
+				inventory.clear(slot);
+				amountLeft = -newAmount;
+
+				if(amountLeft == 0) 
 					break;
-				} 
-				else
-				{
-					inventory.clear(slot);
-					amount = -newAmount;
-					
-					if(amount == 0) 
-						break;
-				}
 			}
 		}
-
-		/*List<ItemStack> matchingItems = InventoryUtils.dataStream(inventory)
-				.filter(data -> data.getValue().isSimilar(item))
-				.map(Pair::getValue)
-				.collect(toList());
-
-		int amountLeft = item.getAmount();
-
-		for(ItemStack matchingItem : matchingItems) 
-		{
-			if(matchingItem.getAmount() > amountLeft) 
-			{
-				matchingItem.setAmount(0);
-				break;
-			}
-
-			int newAmount = Math.max(0, matchingItem.getAmount() - amountLeft);
-			matchingItem.setAmount(newAmount);
-			amountLeft -= newAmount;
-
-			if(amountLeft == 0)
-				break;
-		}*/
+		return amountLeft;
 	}
 
 
