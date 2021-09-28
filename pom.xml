@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dte</groupId>
 	<artifactId>employeme</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 
 	<properties>
 		<shade.base>dte.employme.shaded</shade.base>
@@ -12,6 +12,13 @@
 
 	<build>
 		<finalName>EmployMe ${project.version}</finalName>
+		
+		<resources>
+			<resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+			</resource>
+		</resources>
 
 		<plugins>
 			<plugin>
