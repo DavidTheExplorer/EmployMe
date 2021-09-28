@@ -1,5 +1,7 @@
 package dte.employme.commands;
 
+import static org.bukkit.ChatColor.RED;
+
 import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
@@ -18,6 +20,8 @@ import dte.employme.job.service.JobService;
 @Description("Get a job or view the Available Jobs!")
 public class JobsCommand extends BaseCommand
 {
+	private static final int MAX_JOBS = ((6*9)-26);
+	
 	@Dependency
 	private JobBoard globalJobBoard;
 	
@@ -43,6 +47,11 @@ public class JobsCommand extends BaseCommand
 	@Description("Offer a new Job to the public.")
 	public void createJob(@Conditions("Not Conversing") Player employer) 
 	{
+		if(this.globalJobBoard.getOfferedJobs().size() == MAX_JOBS) 
+		{
+			employer.sendMessage(RED + "Not enough room for additional Jobs.");
+			return;
+		}
 		employer.openInventory(this.jobService.getCreationInventory(employer));
 	}
 	
