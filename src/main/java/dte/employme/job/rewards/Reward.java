@@ -1,4 +1,4 @@
-package dte.employme.reward;
+package dte.employme.job.rewards;
 
 import org.bukkit.entity.Player;
 

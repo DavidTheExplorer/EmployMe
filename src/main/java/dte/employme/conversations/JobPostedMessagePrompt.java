@@ -10,10 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.service.JobBoardService;
-import dte.employme.goal.ItemGoal;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
-import dte.employme.reward.Reward;
+import dte.employme.job.goals.ItemGoal;
+import dte.employme.job.rewards.Reward;
 
 public class JobPostedMessagePrompt extends MessagePrompt
 {

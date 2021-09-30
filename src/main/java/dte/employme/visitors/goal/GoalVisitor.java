@@ -1,6 +1,6 @@
 package dte.employme.visitors.goal;
 
-import dte.employme.goal.ItemGoal;
+import dte.employme.job.goals.ItemGoal;
 
 public interface GoalVisitor<R>
 {

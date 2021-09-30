@@ -1,7 +1,7 @@
 package dte.employme.visitors.reward;
 
-import dte.employme.reward.ItemsReward;
-import dte.employme.reward.MoneyReward;
+import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.rewards.MoneyReward;
 
 public class RewardNameVisitor implements RewardVisitor<String>
 {

@@ -1,4 +1,4 @@
-package dte.employme.goal;
+package dte.employme.job.goals;
 
 import org.bukkit.entity.Player;
 

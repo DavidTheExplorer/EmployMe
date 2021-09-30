@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.reward.ItemsReward;
-import dte.employme.reward.MoneyReward;
+import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.rewards.MoneyReward;
 import dte.employme.utils.java.EnumUtils;
 
 public class InventoryRewardDescriptor implements RewardVisitor<List<String>>

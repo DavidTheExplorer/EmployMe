@@ -26,8 +26,8 @@ import org.bukkit.inventory.ItemStack;
 import com.google.common.collect.Lists;
 
 import dte.employme.board.JobBoard;
-import dte.employme.goal.ItemGoal;
 import dte.employme.job.Job;
+import dte.employme.job.goals.ItemGoal;
 import dte.employme.job.service.JobService;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.visitors.goal.InventoryGoalDescriptor;
