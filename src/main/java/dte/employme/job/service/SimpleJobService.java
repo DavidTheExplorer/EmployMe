@@ -21,7 +21,6 @@ import dte.employme.board.service.JobBoardService;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.conversations.JobPaymentPrompt;
 import dte.employme.conversations.JobPostedMessagePrompt;
-import dte.employme.goal.FunctionalGoal;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.Job;
 import dte.employme.messages.Message;
@@ -49,24 +48,22 @@ public class SimpleJobService implements JobService
 	}
 	
 	@Override
-	public void onComplete(Job job, Player completer) 
+	public void onComplete(Job job, Player completer)
 	{
 		this.globalJobBoard.removeJob(job);
 		
+		job.getGoal().onReach(completer);
 		job.getReward().giveTo(completer);
-		
-		if(job.getGoal() instanceof FunctionalGoal)
-			((FunctionalGoal) job.getGoal()).onReach(completer);
 	}
 	
 	@Override
-	public boolean hasFinished(Job job, Player player) 
+	public boolean hasFinished(Job job, Player player)
 	{
 		return job.getGoal().hasReached(player);
 	}
 	
 	@Override
-	public Inventory getCreationInventory(Player employer) 
+	public Inventory getCreationInventory(Player employer)
 	{
 		if(this.creationInventory == null)
 			this.creationInventory = createCreationInventory();
@@ -88,7 +85,7 @@ public class SimpleJobService implements JobService
 		return inventory;
 	}
 	
-	private Inventory createCreationInventory() 
+	private Inventory createCreationInventory()
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
 
@@ -114,7 +111,7 @@ public class SimpleJobService implements JobService
 	}
 	
 	@Override
-	public Optional<Conversation> buildItemsJobConversation(Player employer) 
+	public Optional<Conversation> buildItemsJobConversation(Player employer)
 	{
 		ItemStack[] inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).toArray(ItemStack[]::new);
 
@@ -129,7 +126,7 @@ public class SimpleJobService implements JobService
 		return Optional.of(conversation);
 	}
 
-	private static ConversationFactory createConversationFactory() 
+	private static ConversationFactory createConversationFactory()
 	{
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)

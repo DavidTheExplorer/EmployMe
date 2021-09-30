@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.visitors.goal.GoalVisitor;
 
-public class ItemGoal implements FunctionalGoal
+public class ItemGoal implements Goal
 {
 	private final ItemStack item;
 	
