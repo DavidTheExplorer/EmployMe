@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.RandomUtils;
 
 //README: Some methods do partial parameters validation, because they validate only what the methods they depend on didn't validate.
 public class InventoryUtils
