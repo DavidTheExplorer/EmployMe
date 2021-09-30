@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import org.bukkit.OfflinePlayer;
 
-import dte.employme.goal.Goal;
-import dte.employme.reward.Reward;
+import dte.employme.job.goals.Goal;
+import dte.employme.job.rewards.Reward;
 
 public class SimpleJob implements Job
 {

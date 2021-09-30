@@ -4,7 +4,7 @@ import static dte.employme.utils.ChatColorUtils.colorize;
 
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.goal.ItemGoal;
+import dte.employme.job.goals.ItemGoal;
 import dte.employme.utils.java.EnumUtils;
 
 public class InventoryGoalDescriptor implements GoalVisitor<String>
