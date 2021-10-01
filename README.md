@@ -1,5 +1,6 @@
 # EmployMe
-Allow players to make your server interesting by adding competitive jobs - Anyone can post a job within a Jobs Board, and the fastest player to complete it gets rewarded by the Employer.
+A [Spigot Plugin](https://www.spigotmc.org/resources/employme.96513/) that boosts the economy by adding competitive jobs - Anyone can post a job within a Jobs Board, and the fastest player to complete it gets rewarded by the Employer.
+
 
 * **Without** an Economy plugin, EmployMe would disable itself.
 
