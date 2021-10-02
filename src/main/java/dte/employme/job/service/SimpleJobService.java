@@ -32,6 +32,7 @@ import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.visitors.goal.GoalReachHandler;
 import dte.employme.visitors.goal.TextGoalDescriptor;
 import dte.employme.visitors.reward.TextRewardDescriptor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -66,8 +67,8 @@ public class SimpleJobService implements JobService
 	{
 		this.globalJobBoard.removeJob(job);
 		
-		job.getGoal().onReach(completer);
 		job.getReward().giveTo(completer);
+		job.getGoal().accept(new GoalReachHandler(job, completer, this));
 		
 		//message the completer
 		Message.sendGeneralMessage(completer, Message.JOB_SUCCESSFULLY_COMPLETED);
