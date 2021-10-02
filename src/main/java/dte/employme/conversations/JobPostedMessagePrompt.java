@@ -14,6 +14,7 @@ import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.goals.ItemGoal;
 import dte.employme.job.rewards.Reward;
+import dte.employme.visitors.reward.RewardTaker;
 
 public class JobPostedMessagePrompt extends MessagePrompt
 {

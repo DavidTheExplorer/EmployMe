@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.messages.Message;
-import dte.employme.visitors.reward.RewardNameVisitor;
 
 public class SimpleJobBoardService implements JobBoardService
 {
@@ -22,9 +21,6 @@ public class SimpleJobBoardService implements JobBoardService
 		Player employer = job.getEmployer().getPlayer();
 		
 		if(employer != null) 
-		{
-			String rewardName = job.getReward().accept(RewardNameVisitor.INSTANCE);
-			Message.sendGeneralMessage(employer, Message.JOB_ADDED_TO_BOARD, rewardName);
-		}
+			Message.sendGeneralMessage(employer, Message.JOB_ADDED_TO_BOARD);
 	}
 }

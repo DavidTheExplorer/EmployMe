@@ -57,8 +57,22 @@ public class JobsCommand extends BaseCommand
 	
 	@Subcommand("delete")
 	@Description("Delete one of your offered Jobs.")
-	public void deleteJob(@Conditions("Employer") Player employer) 
+	public void deleteJob(@Conditions("Employing") Player employer) 
 	{
 		employer.openInventory(this.jobService.getDeletionInventory(employer));
+	}
+	
+	@Subcommand("myitems")
+	@Description("Claim the items that people gathered for you.")
+	public void openContainer(Player employer) 
+	{
+		employer.openInventory(this.jobService.getItemsContainer(employer.getUniqueId()));
+	}
+	
+	@Subcommand("myrewards")
+	@Description("Claim the rewards you got from Jobs your completed.")
+	public void openRewardsContainer(Player player) 
+	{
+		player.openInventory(this.jobService.getRewardsContainer(player.getUniqueId()));
 	}
 }

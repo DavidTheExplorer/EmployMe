@@ -13,7 +13,6 @@ import dte.employme.board.JobBoard;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.service.JobService;
 import dte.employme.messages.Message;
-import dte.employme.visitors.reward.RewardNameVisitor;
 
 public class JobInventoriesListener implements Listener
 {
@@ -106,8 +105,6 @@ public class JobInventoriesListener implements Listener
 			{
 				player.closeInventory();
 				this.jobService.onComplete(job, player);
-				
-				Message.JOB_SUCCESSFULLY_COMPLETED.sendTo(player, job.getReward().accept(RewardNameVisitor.INSTANCE));
 			});
 		});
 	}
