@@ -54,6 +54,14 @@ public class SimpleJobService implements JobService
 		
 		job.getGoal().onReach(completer);
 		job.getReward().giveTo(completer);
+		
+		//message the completer
+		Message.sendGeneralMessage(completer, Message.JOB_SUCCESSFULLY_COMPLETED);
+		
+		//notify the employer
+		OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> employer.spigot().sendMessage(new ComponentBuilder(Message.GENERAL_PREFIX + Message.PLAYER_COMPLETED_YOUR_JOB.inject(completer.getName()))
+				.event(new HoverEvent(Action.SHOW_TEXT, new Text(describe(job))))
+				.create()));
 	}
 	
 	@Override
@@ -125,7 +133,13 @@ public class SimpleJobService implements JobService
 
 		return Optional.of(conversation);
 	}
-
+	
+	private static String describe(Job job) 
+	{
+		return ChatColorUtils.colorize(String.format("&6Goal: &f%s &8&l| &6Reward: &f%s", 
+				job.getGoal().accept(TextGoalDescriptor.INSTANCE), 
+				job.getReward().accept(TextRewardDescriptor.INSTANCE)));
+	}
 	private static ConversationFactory createConversationFactory()
 	{
 		return new ConversationFactory(EmployMe.getInstance())

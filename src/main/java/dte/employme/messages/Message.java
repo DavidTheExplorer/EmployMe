@@ -16,6 +16,7 @@ public enum Message
 	JOB_ADDED_TO_BOARD("&aYour &e%s &aOffer was added to the &eJobs Board&a."),
 	JOB_SUCCESSFULLY_COMPLETED(GREEN + "You successfully completed a Job!"),
 	JOB_SUCCESSFULLY_DELETED(YELLOW + "You successfully deleted this Job!"),
+	PLAYER_COMPLETED_YOUR_JOB("&b%s &djust completed one of your Jobs!"),
 
 	//Rewards
 	ONE_INVENTORY_REWARD_NEEDED(RED + "You have to put at least 1 reward in your Inventory!"),
