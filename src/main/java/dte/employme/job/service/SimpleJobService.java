@@ -136,7 +136,7 @@ public class SimpleJobService implements JobService
 			return Optional.empty();
 		}
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("reward", new ItemsReward(inventoryItems));
+		conversation.getContext().setSessionData("reward", ItemsReward.of(inventoryItems));
 
 		return Optional.of(conversation);
 	}
