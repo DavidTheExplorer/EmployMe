@@ -71,7 +71,7 @@ public class SimpleJobService implements JobService
 		job.getGoal().accept(new GoalReachHandler(job, completer, this));
 		
 		//message the completer
-		Message.sendGeneralMessage(completer, Message.JOB_SUCCESSFULLY_COMPLETED);
+		Message.sendGeneralMessage(completer, (job.getReward() instanceof ItemsReward ? Message.ITEMS_JOB_COMPLETED : Message.JOB_COMPLETED));
 		
 		//notify the employer
 		OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> employer.spigot().sendMessage(new ComponentBuilder(Message.GENERAL_PREFIX + Message.PLAYER_COMPLETED_YOUR_JOB.inject(completer.getName()))
