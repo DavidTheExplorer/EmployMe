@@ -117,15 +117,6 @@ public class SimpleJobService implements JobService
 	public Inventory getItemsContainer(UUID playerUUID) 
 	{
 		return this.itemsContainers.computeIfAbsent(playerUUID, u -> Bukkit.createInventory(null, 9 * 6, "Your Items"));
-
-		inventory.setItem(15, new ItemBuilder(Material.CHEST)
-				.named(AQUA + "Items Job")
-				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
-				.createCopy());
-		
-		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
-		
-		return inventory;
 	}
 	
 	@Override
@@ -156,6 +147,26 @@ public class SimpleJobService implements JobService
 				job.getGoal().accept(TextGoalDescriptor.INSTANCE), 
 				job.getReward().accept(TextRewardDescriptor.INSTANCE)));
 	}
+	
+	private Inventory createCreationInventory()
+	{
+		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
+
+		inventory.setItem(11, new ItemBuilder(Material.GOLD_INGOT)
+				.named(GOLD + "Money Job")
+				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
+				.createCopy());
+
+		inventory.setItem(15, new ItemBuilder(Material.CHEST)
+				.named(AQUA + "Items Job")
+				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
+				.createCopy());
+		
+		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
+		
+		return inventory;
+	}
+
 	private static ConversationFactory createConversationFactory()
 	{
 		return new ConversationFactory(EmployMe.getInstance())
