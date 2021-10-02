@@ -5,7 +5,10 @@ import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.WHITE;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,6 +44,9 @@ public class SimpleJobService implements JobService
 {
 	private final JobBoard globalJobBoard;
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
+	
+	private final Map<UUID, Inventory> rewardsContainers = new HashMap<>();
+	private final Map<UUID, Inventory> itemsContainers = new HashMap<>();
 	
 	private Inventory creationInventory;
 	
@@ -101,14 +107,16 @@ public class SimpleJobService implements JobService
 		return inventory;
 	}
 	
-	private Inventory createCreationInventory()
+	@Override
+	public Inventory getRewardsContainer(UUID playerUUID)
 	{
-		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
-
-		inventory.setItem(11, new ItemBuilder(Material.GOLD_INGOT)
-				.named(GOLD + "Money Job")
-				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
-				.createCopy());
+		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> Bukkit.createInventory(null, 9 * 6, "Personal Container"));
+	}
+	
+	@Override
+	public Inventory getItemsContainer(UUID playerUUID) 
+	{
+		return this.itemsContainers.computeIfAbsent(playerUUID, u -> Bukkit.createInventory(null, 9 * 6, "Your Items"));
 
 		inventory.setItem(15, new ItemBuilder(Material.CHEST)
 				.named(AQUA + "Items Job")
