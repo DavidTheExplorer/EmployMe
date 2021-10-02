@@ -1,11 +1,13 @@
 package dte.employme.job.service;
 
 import static dte.employme.utils.InventoryUtils.createWall;
+import static java.util.stream.Collectors.toList;
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -129,15 +131,15 @@ public class SimpleJobService implements JobService
 	@Override
 	public Optional<Conversation> buildItemsJobConversation(Player employer)
 	{
-		ItemStack[] inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).toArray(ItemStack[]::new);
+		List<ItemStack> inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).collect(toList());
 
-		if(inventoryItems.length == 0) 
+		if(inventoryItems.isEmpty()) 
 		{
 			Message.ONE_INVENTORY_REWARD_NEEDED.sendTo(employer);
 			return Optional.empty();
 		}
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("reward", ItemsReward.of(inventoryItems));
+		conversation.getContext().setSessionData("reward", new ItemsReward(inventoryItems));
 
 		return Optional.of(conversation);
 	}
