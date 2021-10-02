@@ -25,8 +25,16 @@ import dte.employme.items.ItemFactory;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.Message;
+import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.InventoryUtils;
+import dte.employme.utils.OfflinePlayerUtils;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.visitors.goal.TextGoalDescriptor;
+import dte.employme.visitors.reward.TextRewardDescriptor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.HoverEvent.Action;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import net.milkbowl.vault.economy.Economy;
 
 public class SimpleJobService implements JobService
