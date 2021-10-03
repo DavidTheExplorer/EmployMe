@@ -25,7 +25,7 @@ public enum Message
 
 	//Goals
 	ITEM_GOAL_FORMAT_QUESTION(WHITE + "Which " + GREEN + "item" + WHITE + " do you need? Reply with the following format: " + AQUA + "itemName:amount"),
-	ITEM_GOAL_INVALID_FORMAT(RED + "Invalid Format!"),
+	ITEM_GOAL_INVALID(RED + "The specified goal is either: Icorrectly formatted, Illegal, or the amount is beyond the max size!"),
 
 	//Rewards
 	MONEY_REWARD_ERROR_NEGATIVE(RED + "Can't create a Money Reward that pays nothing or less!"),

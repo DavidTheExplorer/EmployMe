@@ -1,5 +1,7 @@
 package dte.employme.conversations;
 
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -7,6 +9,7 @@ import org.bukkit.conversations.RegexPrompt;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.messages.Message;
+import dte.employme.utils.java.NumberUtils;
 
 public class JobGoalPrompt extends RegexPrompt
 {
@@ -41,14 +44,21 @@ public class JobGoalPrompt extends RegexPrompt
 		if(!super.isInputValid(context, input)) 
 			return false;
 		
-		String materialName = input.split(":")[0];
+		Material material = Material.matchMaterial(input.split(":")[0]);
 		
-		return Material.matchMaterial(materialName) != null;
+		if(material == null || material.isAir())
+			return false;
+		
+		Optional<Integer> amountHolder = NumberUtils.parseInt(input.split(":")[1]);
+		
+		return amountHolder
+				.filter(amount -> amount > 0 && amount <= material.getMaxStackSize())
+				.isPresent();
 	}
 	
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return Message.ITEM_GOAL_INVALID_FORMAT.toString();
+		return Message.ITEM_GOAL_INVALID.toString();
 	}
 }
