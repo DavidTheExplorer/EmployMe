@@ -1,17 +1,15 @@
 package dte.employme.job.service;
 
 import static dte.employme.utils.InventoryUtils.createWall;
-import static java.util.stream.Collectors.toList;
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -127,25 +125,18 @@ public class SimpleJobService implements JobService
 	}
 	
 	@Override
-	public Optional<Conversation> buildMoneyJobConversation(Player employer)
+	public Conversation buildMoneyJobConversation(Player employer)
 	{
-		return Optional.of(this.moneyJobConversationFactory.buildConversation(employer));
+		return this.moneyJobConversationFactory.buildConversation(employer);
 	}
 	
 	@Override
-	public Optional<Conversation> buildItemsJobConversation(Player employer)
+	public Conversation buildItemsJobConversation(Player employer, Collection<ItemStack> offeredItems)
 	{
-		List<ItemStack> inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).collect(toList());
-
-		if(inventoryItems.isEmpty()) 
-		{
-			Message.ONE_INVENTORY_REWARD_NEEDED.sendTo(employer);
-			return Optional.empty();
-		}
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("reward", new ItemsReward(inventoryItems));
+		conversation.getContext().setSessionData("reward", new ItemsReward(offeredItems));
 
-		return Optional.of(conversation);
+		return conversation;
 	}
 	
 	private static String describe(Job job) 

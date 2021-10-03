@@ -18,9 +18,9 @@ public enum Message
 	JOB_COMPLETED(GREEN + "You successfully completed this Job!"),
 	JOB_SUCCESSFULLY_DELETED(YELLOW + "You successfully deleted this Job!"),
 	PLAYER_COMPLETED_YOUR_JOB("&b%s &djust completed one of your Jobs!"),
+	ITEMS_JOB_NO_ITEMS_WARNING(RED + "Job cancelled because you didn't offer any item."),
 
 	//Rewards
-	ONE_INVENTORY_REWARD_NEEDED(RED + "You have to put at least 1 reward in your Inventory!"),
 	MONEY_PAYMENT_AMOUNT_QUESTION("&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%.2f&6$&f)"),
 
 	//Goals
