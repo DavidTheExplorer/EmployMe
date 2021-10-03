@@ -1,10 +1,15 @@
 package dte.employme.listeners;
 
-import org.bukkit.conversations.Conversation;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,6 +18,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.service.JobService;
 import dte.employme.messages.Message;
+import dte.employme.utils.InventoryUtils;
 
 public class JobInventoriesListener implements Listener
 {
@@ -100,13 +106,31 @@ public class JobInventoriesListener implements Listener
 		switch(event.getCurrentItem().getType())
 		{
 		case GOLD_INGOT:
-			this.jobService.buildMoneyJobConversation(employer).ifPresent(Conversation::begin);
+			this.jobService.buildMoneyJobConversation(employer).begin();
 			break;
 			
 		case CHEST:
-			this.jobService.buildItemsJobConversation(employer).ifPresent(Conversation::begin);
+			employer.openInventory(Bukkit.createInventory(null, 9 * 6, "What would you like to offer?"));
 			break;
 		}
+	}
+	
+	@EventHandler
+	public void onItemsJobOfferingInventory(InventoryCloseEvent event) 
+	{
+		if(!event.getView().getTitle().equals("What would you like to offer?"))
+			return;
+		
+		Player player = (Player) event.getPlayer();
+		List<ItemStack> offeredItems = InventoryUtils.itemsStream(event.getInventory(), true).collect(toList());
+		
+		if(offeredItems.isEmpty()) 
+		{
+			Message.sendGeneralMessage(player, Message.ITEMS_JOB_NO_ITEMS_WARNING);
+			return;
+		}
+		
+		this.jobService.buildItemsJobConversation(player, offeredItems).begin();
 	}
 	
 	@EventHandler

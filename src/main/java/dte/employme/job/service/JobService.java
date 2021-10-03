@@ -1,11 +1,12 @@
 package dte.employme.job.service;
 
-import java.util.Optional;
+import java.util.Collection;
 import java.util.UUID;
 
 import org.bukkit.conversations.Conversation;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.Job;
 
@@ -23,6 +24,6 @@ public interface JobService
 	Inventory getRewardsContainer(UUID playerUUID);
 	
 	//conversations
-	Optional<Conversation> buildMoneyJobConversation(Player employer);
-	Optional<Conversation> buildItemsJobConversation(Player employer);
+	Conversation buildMoneyJobConversation(Player employer);
+	Conversation buildItemsJobConversation(Player employer, Collection<ItemStack> offeredItems);
 }
