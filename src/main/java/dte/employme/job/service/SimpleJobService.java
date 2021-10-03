@@ -1,11 +1,15 @@
 package dte.employme.job.service;
 
 import static dte.employme.utils.InventoryUtils.createWall;
+import static java.util.stream.Collectors.toList;
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,9 +49,7 @@ public class SimpleJobService implements JobService
 {
 	private final JobBoard globalJobBoard;
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
-	
-	private final Map<UUID, Inventory> rewardsContainers = new HashMap<>();
-	private final Map<UUID, Inventory> itemsContainers = new HashMap<>();
+	private final Map<UUID, Inventory> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
 	
 	private Inventory creationInventory;
 	
@@ -111,13 +113,17 @@ public class SimpleJobService implements JobService
 	@Override
 	public Inventory getRewardsContainer(UUID playerUUID)
 	{
-		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> Bukkit.createInventory(null, 9 * 6, "Personal Container"));
+		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> createContainerInventory("Claim your Rewards:", 
+				"This is where Reward Items are stored", 
+				"after you complete a job that pays them."));
 	}
 	
 	@Override
-	public Inventory getItemsContainer(UUID playerUUID) 
+	public Inventory getItemsContainer(UUID playerUUID)
 	{
-		return this.itemsContainers.computeIfAbsent(playerUUID, u -> Bukkit.createInventory(null, 9 * 6, "Your Items"));
+		return this.itemsContainers.computeIfAbsent(playerUUID, u -> createContainerInventory("Claim your Items:",
+				"When someone completes one of your jobs,", 
+				"The items they got for you are stored here."));
 	}
 	
 	@Override
@@ -129,15 +135,15 @@ public class SimpleJobService implements JobService
 	@Override
 	public Optional<Conversation> buildItemsJobConversation(Player employer)
 	{
-		ItemStack[] inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).toArray(ItemStack[]::new);
+		List<ItemStack> inventoryItems = InventoryUtils.itemsStream(employer.getInventory(), false).collect(toList());
 
-		if(inventoryItems.length == 0) 
+		if(inventoryItems.isEmpty()) 
 		{
 			Message.ONE_INVENTORY_REWARD_NEEDED.sendTo(employer);
 			return Optional.empty();
 		}
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("reward", ItemsReward.of(inventoryItems));
+		conversation.getContext().setSessionData("reward", new ItemsReward(inventoryItems));
 
 		return Optional.of(conversation);
 	}
@@ -175,5 +181,21 @@ public class SimpleJobService implements JobService
 				.withModality(false)
 				.withEscapeSequence("stop")
 				.withPrefix(context -> Message.GENERAL_PREFIX.toString());
+	}
+	
+	private static Inventory createContainerInventory(String title, String... bookDescription) 
+	{
+		Inventory inventory = Bukkit.createInventory(null, 9 * 6, title);
+		
+		inventory.setItem(43, createWall(Material.GRAY_STAINED_GLASS_PANE));
+		inventory.setItem(44, createWall(Material.GRAY_STAINED_GLASS_PANE));
+		inventory.setItem(52, createWall(Material.GRAY_STAINED_GLASS_PANE));
+		
+		inventory.setItem(53, new ItemBuilder(Material.BOOK)
+				.named(GREEN + "Help")
+				.withLore(Arrays.stream(bookDescription).map(line -> WHITE + line).toArray(String[]::new))
+				.createCopy());
+		
+		return inventory;
 	}
 }
