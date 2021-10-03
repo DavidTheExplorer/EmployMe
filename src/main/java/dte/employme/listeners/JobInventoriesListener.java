@@ -27,6 +27,32 @@ public class JobInventoriesListener implements Listener
 	}
 	
 	@EventHandler
+	public void onJobComplete(InventoryClickEvent event) 
+	{
+		Inventory inventory = event.getInventory();
+
+		InventoryJobBoard.getRepresentedBoard(inventory).ifPresent(inventoryBoard -> 
+		{
+			event.setCancelled(true);
+			ItemStack item = event.getCurrentItem();
+			
+			if(item == null)
+				return;
+			
+			Player player = (Player) event.getWhoClicked();
+			
+			ItemFactory.getJobID(item)
+			.flatMap(inventoryBoard::getJobByID)
+			.filter(job -> job.getGoal().hasReached(player))
+			.ifPresent(job ->
+			{
+				player.closeInventory();
+				this.jobService.onComplete(job, player);
+			});
+		});
+	}
+	
+	@EventHandler
 	public void onDeletionMark(InventoryClickEvent event) 
 	{
 		if(!event.getView().getTitle().equals("Select Jobs to Delete"))
@@ -84,28 +110,18 @@ public class JobInventoriesListener implements Listener
 	}
 	
 	@EventHandler
-	public void onJobComplete(InventoryClickEvent event) 
+	public void onContainersClick(InventoryClickEvent event) 
 	{
-		Inventory inventory = event.getInventory();
-
-		InventoryJobBoard.getRepresentedBoard(inventory).ifPresent(inventoryBoard -> 
+		if(!event.getView().getTitle().matches("Claim your [a-zA-Z]+:"))
+			return;
+		
+		switch(event.getRawSlot()) 
 		{
+		case 43:
+		case 44:
+		case 52:
+		case 53:
 			event.setCancelled(true);
-			ItemStack item = event.getCurrentItem();
-			
-			if(item == null)
-				return;
-			
-			Player player = (Player) event.getWhoClicked();
-			
-			ItemFactory.getJobID(item)
-			.flatMap(inventoryBoard::getJobByID)
-			.filter(job -> job.getGoal().hasReached(player))
-			.ifPresent(job ->
-			{
-				player.closeInventory();
-				this.jobService.onComplete(job, player);
-			});
-		});
+		}
 	}
 }
