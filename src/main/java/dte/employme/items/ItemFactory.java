@@ -88,6 +88,7 @@ public class ItemFactory
 		verifySetup();
 		
 		return new ItemBuilder(createBasicIcon(job))
+				.named(" ")
 				.ofType(Material.BARRIER)
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
