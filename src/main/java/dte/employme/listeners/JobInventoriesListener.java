@@ -49,7 +49,7 @@ public class JobInventoriesListener implements Listener
 			
 			ItemFactory.getJobID(item)
 			.flatMap(inventoryBoard::getJobByID)
-			.filter(job -> job.getGoal().hasReached(player))
+			.filter(job -> job.getGoal().hasReached(player)) //TODO: replace with JobService#hasFinished
 			.ifPresent(job ->
 			{
 				player.closeInventory();
