@@ -4,6 +4,7 @@ import static dte.employme.board.InventoryJobBoard.ORDER_BY_EMPLOYER_NAME;
 import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -15,11 +16,15 @@ import dte.employme.board.service.JobBoardService;
 import dte.employme.board.service.SimpleJobBoardService;
 import dte.employme.commands.JobsCommand;
 import dte.employme.items.ItemFactory;
+import dte.employme.job.SimpleJob;
+import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.service.JobService;
 import dte.employme.job.service.SimpleJobService;
 import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.messages.Message;
 import dte.employme.utils.ModernJavaPlugin;
+import dte.employme.utils.java.ServiceLocator;
 import net.milkbowl.vault.economy.Economy;
 
 public class EmployMe extends ModernJavaPlugin
@@ -42,13 +47,27 @@ public class EmployMe extends ModernJavaPlugin
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+		
+		registerSerializedClasses();
+		
 		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_EMPLOYER_NAME);
+		
 		this.jobBoardService = new SimpleJobBoardService();
+		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobBoardService, this.economy);
+		ServiceLocator.register(JobService.class, this.jobService);
+		this.jobService.loadJobs();
+		
 		ItemFactory.setup(this.jobService);
 		
 		registerCommands();
 		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard));
+	}
+	
+	@Override
+	public void onDisable() 
+	{
+		this.jobService.saveJobs();
 	}
 
 	public static EmployMe getInstance()
@@ -103,8 +122,15 @@ public class EmployMe extends ModernJavaPlugin
 			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
 				throw new InvalidCommandArgument(Message.MUST_HAVE_JOBS.toString(), false);
 		});
-
+		
 		//register commands
 		commandManager.registerCommand(new JobsCommand());
+	}
+	
+	private void registerSerializedClasses() 
+	{
+		ConfigurationSerialization.registerClass(SimpleJob.class);
+		ConfigurationSerialization.registerClass(ItemsReward.class);
+		ConfigurationSerialization.registerClass(MoneyReward.class);
 	}
 }
