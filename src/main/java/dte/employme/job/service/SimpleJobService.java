@@ -66,16 +66,17 @@ public class SimpleJobService implements JobService
 	{
 		this.globalJobBoard.removeJob(job);
 		
+		//reward the completer
 		job.getReward().giveTo(completer);
 		
+		//transfer the goal to the employer's items container
 		ItemStack goal = job.getGoal();
 		InventoryUtils.remove(completer.getInventory(), goal);
 		getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
 		
-		//message the completer
+		//message the completer & employer
 		Message.sendGeneralMessage(completer, (job.getReward() instanceof ItemsReward ? Message.ITEMS_JOB_COMPLETED : Message.JOB_COMPLETED));
 		
-		//notify the employer
 		OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> employer.spigot().sendMessage(new ComponentBuilder(Message.GENERAL_PREFIX + Message.PLAYER_COMPLETED_YOUR_JOB.inject(completer.getName()))
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text(describe(job))))
 				.create()));
