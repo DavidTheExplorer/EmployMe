@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.InventoryJobBoard;
@@ -23,7 +22,6 @@ import dte.employme.utils.InventoryUtils;
 public class JobInventoriesListener implements Listener
 {
 	private final JobService jobService;
-	
 	private final JobBoard globalJobBoard;
 	
 	public JobInventoriesListener(JobService jobService, JobBoard globalJobBoard) 
@@ -35,9 +33,7 @@ public class JobInventoriesListener implements Listener
 	@EventHandler
 	public void onJobComplete(InventoryClickEvent event) 
 	{
-		Inventory inventory = event.getInventory();
-
-		InventoryJobBoard.getRepresentedBoard(inventory).ifPresent(inventoryBoard -> 
+		InventoryJobBoard.getRepresentedBoard(event.getInventory()).ifPresent(inventoryBoard -> 
 		{
 			event.setCancelled(true);
 			ItemStack item = event.getCurrentItem();
@@ -49,7 +45,7 @@ public class JobInventoriesListener implements Listener
 			
 			ItemFactory.getJobID(item)
 			.flatMap(inventoryBoard::getJobByID)
-			.filter(job -> job.getGoal().hasReached(player)) //TODO: replace with JobService#hasFinished
+			.filter(job -> this.jobService.hasFinished(job, player))
 			.ifPresent(job ->
 			{
 				player.closeInventory();
