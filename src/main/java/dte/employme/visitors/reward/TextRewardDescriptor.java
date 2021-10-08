@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.joining;
 
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.utils.java.EnumUtils;
+import dte.employme.utils.ItemStackUtils;
 
 public class TextRewardDescriptor implements RewardVisitor<String>
 {
@@ -20,7 +20,7 @@ public class TextRewardDescriptor implements RewardVisitor<String>
 	public String visit(ItemsReward itemsReward) 
 	{
 		return itemsReward.getItems().stream()
-				.map(item -> String.format("%d %s", item.getAmount(), EnumUtils.fixEnumName(item.getType())))
+				.map(ItemStackUtils::describe)
 				.collect(joining(", "));
 	}
 }

@@ -1,11 +1,12 @@
 package dte.employme.visitors.goal;
 
-import static dte.employme.utils.ChatColorUtils.colorize;
+import static org.bukkit.ChatColor.AQUA;
+import static org.bukkit.ChatColor.WHITE;
 
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.goals.ItemGoal;
-import dte.employme.utils.java.EnumUtils;
+import dte.employme.utils.ItemStackUtils;
 
 public class InventoryGoalDescriptor implements GoalVisitor<String>
 {
@@ -16,6 +17,6 @@ public class InventoryGoalDescriptor implements GoalVisitor<String>
 	{
 		ItemStack item = itemGoal.getItem();
 		
-		return colorize(String.format("&b%d %s&f.", item.getAmount(), EnumUtils.fixEnumName(item.getType())));
+		return AQUA + ItemStackUtils.describe(item) + WHITE + ".";
 	}
 }

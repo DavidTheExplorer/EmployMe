@@ -3,7 +3,7 @@ package dte.employme.visitors.goal;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.goals.ItemGoal;
-import dte.employme.utils.java.EnumUtils;
+import dte.employme.utils.ItemStackUtils;
 
 public class TextGoalDescriptor implements GoalVisitor<String>
 {
@@ -14,6 +14,6 @@ public class TextGoalDescriptor implements GoalVisitor<String>
 	{
 		ItemStack item = itemGoal.getItem();
 		
-		return "Get " + String.format("%d %s", item.getAmount(), EnumUtils.fixEnumName(item.getType()));
+		return "Get " + ItemStackUtils.describe(item);
 	}
 }
