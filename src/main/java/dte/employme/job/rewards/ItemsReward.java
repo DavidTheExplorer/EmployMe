@@ -15,7 +15,7 @@ public class ItemsReward implements Reward
 {
 	private final Iterable<ItemStack> items;
 	
-	private static JobService jobService;
+	private static JobService jobService; //TODO: remove the static modifier
 	
 	public ItemsReward(Iterable<ItemStack> items) 
 	{

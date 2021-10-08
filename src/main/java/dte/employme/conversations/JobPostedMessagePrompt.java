@@ -12,7 +12,6 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.service.JobBoardService;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
-import dte.employme.job.goals.ItemGoal;
 import dte.employme.job.rewards.Reward;
 import dte.employme.visitors.reward.RewardTaker;
 
@@ -31,12 +30,12 @@ public class JobPostedMessagePrompt extends MessagePrompt
 	public String getPromptText(ConversationContext context) 
 	{
 		Player employer = (Player) context.getForWhom();
-		ItemStack goal = (ItemStack) context.getSessionData("goal");
+		ItemStack goalItem = (ItemStack) context.getSessionData("goal");
 		Reward reward = (Reward) context.getSessionData("reward");
 
 		Job job = new SimpleJob.Builder()
 				.by(employer)
-				.of(new ItemGoal(goal))
+				.of(goalItem)
 				.thatOffers(reward)
 				.build();
 
