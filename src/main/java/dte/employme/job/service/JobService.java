@@ -26,4 +26,8 @@ public interface JobService
 	//conversations
 	Conversation buildMoneyJobConversation(Player employer);
 	Conversation buildItemsJobConversation(Player employer, Collection<ItemStack> offeredItems);
+	
+	//disable & enable
+	void loadJobs();
+	void saveJobs();
 }

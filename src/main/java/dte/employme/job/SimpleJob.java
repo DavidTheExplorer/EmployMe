@@ -1,12 +1,18 @@
 package dte.employme.job;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.rewards.Reward;
+import dte.employme.utils.java.MapBuilder;
 
+@SerializableAs("Job")
 public class SimpleJob implements Job
 {
 	private final OfflinePlayer employer;
@@ -18,6 +24,13 @@ public class SimpleJob implements Job
 		this.employer = builder.employer;
 		this.goal = builder.goal;
 		this.reward = builder.reward;
+	}
+	
+	public SimpleJob(Map<String, Object> serialized) 
+	{
+		this.employer = Bukkit.getOfflinePlayer(UUID.fromString((String) serialized.get("Employer UUID")));
+		this.goal = (ItemStack) serialized.get("Goal");
+		this.reward = (Reward) serialized.get("Reward");
 	}
 
 	@Override
@@ -36,6 +49,16 @@ public class SimpleJob implements Job
 	public Reward getReward() 
 	{
 		return this.reward;
+	}
+	
+	@Override
+	public Map<String, Object> serialize()
+	{
+		return new MapBuilder<String, Object>()
+				.put("Employer UUID", this.employer.getUniqueId().toString())
+				.put("Goal", this.goal)
+				.put("Reward", this.reward)
+				.build();
 	}
 
 
