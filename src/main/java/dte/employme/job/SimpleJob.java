@@ -3,14 +3,14 @@ package dte.employme.job;
 import java.util.Objects;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
 
-import dte.employme.job.goals.Goal;
 import dte.employme.job.rewards.Reward;
 
 public class SimpleJob implements Job
 {
 	private final OfflinePlayer employer;
-	private final Goal goal;
+	private final ItemStack goal;
 	private final Reward reward;
 
 	private SimpleJob(Builder builder) 
@@ -27,9 +27,9 @@ public class SimpleJob implements Job
 	}
 
 	@Override
-	public Goal getGoal() 
+	public ItemStack getGoal() 
 	{
-		return this.goal;
+		return new ItemStack(this.goal);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class SimpleJob implements Job
 	public static class Builder
 	{
 		OfflinePlayer employer;
-		Goal goal;
+		ItemStack goal;
 		Reward reward;
 
 		public Builder by(OfflinePlayer employer) 
@@ -51,7 +51,7 @@ public class SimpleJob implements Job
 			return this;
 		}
 
-		public Builder of(Goal goal) 
+		public Builder of(ItemStack goal) 
 		{
 			this.goal = goal;
 			return this;

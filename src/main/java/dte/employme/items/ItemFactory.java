@@ -27,10 +27,9 @@ import com.google.common.collect.Lists;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
-import dte.employme.job.goals.ItemGoal;
 import dte.employme.job.service.JobService;
+import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.visitors.goal.InventoryGoalDescriptor;
 import dte.employme.visitors.reward.InventoryRewardDescriptor;
 
 public class ItemFactory
@@ -55,11 +54,11 @@ public class ItemFactory
 		//lore
 		List<String> lore = new ArrayList<>();
 		lore.add(underlined(AQUA) + "Description" + AQUA + ":");
-		lore.add(WHITE + "I need " + job.getGoal().accept(InventoryGoalDescriptor.INSTANCE));
+		lore.add(WHITE + "I need " + AQUA + ItemStackUtils.describe(job.getGoal()) + WHITE + ".");
 		lore.add(" ");
 		lore.addAll(job.getReward().accept(InventoryRewardDescriptor.INSTANCE));
 
-		return new ItemBuilder(getGoalMaterial(job))
+		return new ItemBuilder(job.getGoal().getType())
 				.named(GREEN + job.getEmployer().getName() + "'s Offer")
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.withLore(lore.toArray(new String[0]))
@@ -124,16 +123,6 @@ public class ItemFactory
 				finished ? (StringUtils.repeat(' ', 6) + bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job."),
 						createSeparationLine(lineColor, 23)
 				);
-	}
-
-	public static Material getGoalMaterial(Job job) 
-	{
-		verifySetup();
-		
-		if(job.getGoal() instanceof ItemGoal)
-			return ((ItemGoal) job.getGoal()).getItem().getType();
-		
-		return Material.BOOK;
 	}
 
 	private static String createIDLine(Job job, JobBoard jobBoard)

@@ -23,7 +23,7 @@ public class InventoryJobBoard extends AbstractJobBoard
 	
 	public static final Comparator<Job> 
 	ORDER_BY_EMPLOYER_NAME = comparing(job -> job.getEmployer().getName().toLowerCase()),
-	ORDER_BY_GOAL = comparing(job -> ItemFactory.getGoalMaterial(job).name());
+	ORDER_BY_GOAL = comparing(job -> job.getGoal().getType().name());
 	
 	private static final Map<Inventory, InventoryJobBoard> INVENTORIES_BOARDS = new HashMap<>();
 	

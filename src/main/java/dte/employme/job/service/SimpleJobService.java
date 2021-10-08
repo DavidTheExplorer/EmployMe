@@ -32,10 +32,9 @@ import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.Message;
 import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.InventoryUtils;
+import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.visitors.goal.GoalReachHandler;
-import dte.employme.visitors.goal.TextGoalDescriptor;
 import dte.employme.visitors.reward.TextRewardDescriptor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -68,7 +67,10 @@ public class SimpleJobService implements JobService
 		this.globalJobBoard.removeJob(job);
 		
 		job.getReward().giveTo(completer);
-		job.getGoal().accept(new GoalReachHandler(job, completer, this));
+		
+		ItemStack goal = job.getGoal();
+		InventoryUtils.remove(completer.getInventory(), goal);
+		getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
 		
 		//message the completer
 		Message.sendGeneralMessage(completer, (job.getReward() instanceof ItemsReward ? Message.ITEMS_JOB_COMPLETED : Message.JOB_COMPLETED));
@@ -82,7 +84,9 @@ public class SimpleJobService implements JobService
 	@Override
 	public boolean hasFinished(Job job, Player player)
 	{
-		return job.getGoal().hasReached(player);
+		ItemStack goalItem = job.getGoal();
+		
+		return player.getInventory().containsAtLeast(goalItem, goalItem.getAmount());
 	}
 	
 	@Override
@@ -142,7 +146,7 @@ public class SimpleJobService implements JobService
 	private static String describe(Job job) 
 	{
 		return ChatColorUtils.colorize(String.format("&6Goal: &f%s &8&l| &6Reward: &f%s", 
-				job.getGoal().accept(TextGoalDescriptor.INSTANCE), 
+				"Get " + ItemStackUtils.describe(job.getGoal()), 
 				job.getReward().accept(TextRewardDescriptor.INSTANCE)));
 	}
 	
