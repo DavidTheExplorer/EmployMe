@@ -138,7 +138,7 @@ public class SimpleJobService implements JobService
 	public Conversation buildItemsJobConversation(Player employer, Collection<ItemStack> offeredItems)
 	{
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("reward", new ItemsReward(offeredItems));
+		conversation.getContext().setSessionData("reward", new ItemsReward(offeredItems, this));
 
 		return conversation;
 	}
