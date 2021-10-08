@@ -14,20 +14,20 @@ import dte.employme.visitors.reward.RewardVisitor;
 public class ItemsReward implements Reward
 {
 	private final Iterable<ItemStack> items;
+	private final JobService jobService;
 	
-	private static JobService jobService; //TODO: remove the static modifier
-	
-	public ItemsReward(Iterable<ItemStack> items) 
+	public ItemsReward(Iterable<ItemStack> items, JobService jobService) 
 	{
 		this.items = items;
+		this.jobService = jobService;
 	}
 	
 	@Override
 	public void giveTo(Player player)
 	{
-		Inventory playerContainer = jobService.getRewardsContainer(player.getUniqueId());
+		Inventory rewardsContainer = this.jobService.getRewardsContainer(player.getUniqueId());
 		
-		this.items.forEach(playerContainer::addItem);
+		this.items.forEach(rewardsContainer::addItem);
 	}
 	
 	public List<ItemStack> getItems() 
@@ -39,10 +39,5 @@ public class ItemsReward implements Reward
 	public <R> R accept(RewardVisitor<R> visitor) 
 	{
 		return visitor.visit(this);
-	}
-	
-	public static void setup(JobService jobService) 
-	{
-		ItemsReward.jobService = jobService;
 	}
 }
