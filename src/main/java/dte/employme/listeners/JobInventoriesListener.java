@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
+import dte.employme.conversations.Conversations;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.service.JobService;
 import dte.employme.messages.Message;
@@ -22,12 +23,14 @@ import dte.employme.utils.InventoryUtils;
 public class JobInventoriesListener implements Listener
 {
 	private final JobService jobService;
+	private final Conversations conversations;
 	private final JobBoard globalJobBoard;
 	
-	public JobInventoriesListener(JobService jobService, JobBoard globalJobBoard) 
+	public JobInventoriesListener(JobService jobService, JobBoard globalJobBoard, Conversations conversations) 
 	{
 		this.jobService = jobService;
 		this.globalJobBoard = globalJobBoard;
+		this.conversations = conversations;
 	}
 	
 	@EventHandler
@@ -102,7 +105,7 @@ public class JobInventoriesListener implements Listener
 		switch(event.getCurrentItem().getType())
 		{
 		case GOLD_INGOT:
-			this.jobService.buildMoneyJobConversation(employer).begin();
+			this.conversations.buildMoneyJobConversation(employer).begin();
 			break;
 			
 		case CHEST:
@@ -126,7 +129,7 @@ public class JobInventoriesListener implements Listener
 			return;
 		}
 		
-		this.jobService.buildItemsJobConversation(player, offeredItems).begin();
+		this.conversations.buildItemsJobConversation(player, offeredItems).begin();
 	}
 	
 	@EventHandler

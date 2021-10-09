@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.job.service.JobService;
+import dte.employme.inventories.InventoryFactory;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
 import dte.employme.visitors.reward.RewardVisitor;
@@ -19,27 +19,27 @@ import dte.employme.visitors.reward.RewardVisitor;
 public class ItemsReward implements Reward
 {
 	private final Iterable<ItemStack> items;
-	private final JobService jobService;
+	private final InventoryFactory inventoryFactory;
 	
-	public ItemsReward(Iterable<ItemStack> items, JobService jobService) 
+	public ItemsReward(Iterable<ItemStack> items, InventoryFactory inventoryFactory) 
 	{
 		this.items = items;
-		this.jobService = jobService;
+		this.inventoryFactory = inventoryFactory;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static ItemsReward deserialize(Map<String, Object> serialized) 
 	{
 		List<ItemStack> items = (List<ItemStack>) serialized.get("Items");
-		JobService jobService = ServiceLocator.getInstance(JobService.class);
+		InventoryFactory inventoryFactory = ServiceLocator.getInstance(InventoryFactory.class);
 		
-		return new ItemsReward(items, jobService);
+		return new ItemsReward(items, inventoryFactory);
 	}
 	
 	@Override
 	public void giveTo(Player player)
 	{
-		Inventory rewardsContainer = this.jobService.getRewardsContainer(player.getUniqueId());
+		Inventory rewardsContainer = this.inventoryFactory.getRewardsContainer(player.getUniqueId());
 		
 		this.items.forEach(rewardsContainer::addItem);
 	}
