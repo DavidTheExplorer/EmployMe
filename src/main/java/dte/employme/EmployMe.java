@@ -15,6 +15,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.service.JobBoardService;
 import dte.employme.board.service.SimpleJobBoardService;
 import dte.employme.commands.JobsCommand;
+import dte.employme.conversations.Conversations;
+import dte.employme.inventories.InventoryFactory;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.ItemsReward;
@@ -33,6 +35,8 @@ public class EmployMe extends ModernJavaPlugin
 	private JobBoard globalJobBoard;
 	private JobBoardService jobBoardService;
 	private JobService jobService;
+	private InventoryFactory inventoryFactory;
+	private Conversations conversations;
 
 	private static EmployMe INSTANCE;
 
@@ -52,16 +56,20 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_EMPLOYER_NAME);
 		
+		this.inventoryFactory = new InventoryFactory(this.globalJobBoard);
+		ServiceLocator.register(InventoryFactory.class, this.inventoryFactory);
+		
 		this.jobBoardService = new SimpleJobBoardService();
 		
-		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobBoardService, this.economy);
-		ServiceLocator.register(JobService.class, this.jobService);
+		this.jobService = new SimpleJobService(this.globalJobBoard, this.inventoryFactory);
 		this.jobService.loadJobs();
+		
+		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.jobBoardService, this.economy);
 		
 		ItemFactory.setup(this.jobService);
 		
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard));
+		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard, this.conversations));
 	}
 	
 	@Override
@@ -105,6 +113,7 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.registerDependency(JobBoard.class, this.globalJobBoard);
 		commandManager.registerDependency(JobBoardService.class, this.jobBoardService);
 		commandManager.registerDependency(JobService.class, this.jobService);
+		commandManager.registerDependency(InventoryFactory.class, this.inventoryFactory);
 
 		//register conditions
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 

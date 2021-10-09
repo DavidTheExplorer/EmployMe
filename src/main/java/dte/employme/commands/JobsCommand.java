@@ -14,20 +14,24 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.board.JobBoard;
+import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.service.JobService;
 
 @CommandAlias("job")
 @Description("Get a job or view the Available Jobs!")
 public class JobsCommand extends BaseCommand
 {
-	private static final int MAX_JOBS = ((6*9)-26);
-	
 	@Dependency
 	private JobBoard globalJobBoard;
 	
 	@Dependency
 	private JobService jobService;
-
+	
+	@Dependency
+	private InventoryFactory inventoryFactory;
+	
+	private static final int MAX_JOBS = ((6*9)-26);
+	
 	@HelpCommand
 	@CatchUnknown
 	public void sendHelp(CommandHelp help) 
@@ -52,27 +56,27 @@ public class JobsCommand extends BaseCommand
 			employer.sendMessage(RED + "Not enough room for additional Jobs.");
 			return;
 		}
-		employer.openInventory(this.jobService.getCreationInventory(employer));
+		employer.openInventory(this.inventoryFactory.getCreationMenu(employer));
 	}
 	
 	@Subcommand("delete")
 	@Description("Delete one of your offered Jobs.")
 	public void deleteJob(@Conditions("Employing") Player employer) 
 	{
-		employer.openInventory(this.jobService.getDeletionInventory(employer));
+		employer.openInventory(this.inventoryFactory.getDeletionMenu(employer));
 	}
 	
 	@Subcommand("myitems")
 	@Description("Claim the items that people gathered for you.")
 	public void openContainer(Player employer) 
 	{
-		employer.openInventory(this.jobService.getItemsContainer(employer.getUniqueId()));
+		employer.openInventory(this.inventoryFactory.getItemsContainer(employer.getUniqueId()));
 	}
 	
 	@Subcommand("myrewards")
 	@Description("Claim the rewards you got from Jobs your completed.")
 	public void openRewardsContainer(Player player) 
 	{
-		player.openInventory(this.jobService.getRewardsContainer(player.getUniqueId()));
+		player.openInventory(this.inventoryFactory.getRewardsContainer(player.getUniqueId()));
 	}
 }
