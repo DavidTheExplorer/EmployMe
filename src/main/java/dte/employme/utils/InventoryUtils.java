@@ -2,19 +2,19 @@ package dte.employme.utils;
 
 import static java.util.stream.Collectors.toMap;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -268,12 +268,12 @@ public class InventoryUtils
 
 		return dataStream(inventory)
 				.filter(itemData -> itemMatcher.test(itemData.getValue()))
-				.mapToInt(Pair::getKey);
+				.mapToInt(Entry::getKey);
 	}
-	public static Stream<Pair<Integer, ItemStack>> dataStream(Inventory inventory)
+	public static Stream<Entry<Integer, ItemStack>> dataStream(Inventory inventory)
 	{
 		return takenSlotsStream(inventory)
-				.mapToObj(slot -> Pair.of(slot, inventory.getItem(slot)));
+				.mapToObj(slot -> new SimpleEntry<>(slot, inventory.getItem(slot)));
 	}
 
 	
@@ -310,11 +310,13 @@ public class InventoryUtils
 
 		int rowsAmount = (inventory.getSize()/9)-1;
 
-		Validate.inclusiveBetween(0, rowsAmount, row, String.format("Row %d is out of range! (Min: 0, Max: %d)", row, rowsAmount));
+		if(row < 0 || row > rowsAmount)
+			throw new IllegalArgumentException(String.format("Row %d is out of range! (Min: 0, Max: %d)", row, rowsAmount));
 	}
 	private static void validateColumn(int column) 
 	{
-		Validate.inclusiveBetween(0, 8, column, "Column %d is out of range! (Min: 0, Max: 8)", column);
+		if(column < 0 || column > 8)
+			throw new IllegalArgumentException(String.format("Column %d is out of range! (Min: 0, Max: 8)", column));
 	}
 
 

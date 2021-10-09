@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -195,7 +194,8 @@ public class ItemBuilder
 		
 		List<String> lore = this.itemMeta.getLore();
 		
-		Validate.inclusiveBetween(0, lore.size()-1, lineIndex, format("index %d is either below 0 or bigger than the current lore's length(%d)", lineIndex, lore.size()));
+		if(lineIndex < 0 || lineIndex > lore.size()-1)
+			throw new IllegalArgumentException(format("index %d is either below 0 or bigger than the current lore's length(%d)", lineIndex, lore.size()-1));
 		
 		lore.set(lineIndex, newLine);
 		this.itemMeta.setLore(lore);

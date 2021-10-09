@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringUtils;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Validate;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -120,7 +120,7 @@ public class ItemFactory
 
 		return Lists.newArrayList(
 				createSeparationLine(lineColor, 23),
-				finished ? (StringUtils.repeat(' ', 6) + bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job."),
+				finished ? (StringUtils.repeat(" ", 6) + bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job."),
 						createSeparationLine(lineColor, 23)
 				);
 	}

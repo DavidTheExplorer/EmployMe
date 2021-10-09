@@ -5,8 +5,8 @@ import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 import static org.bukkit.ChatColor.UNDERLINE;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringUtils;
 
 public class ChatColorUtils
 {
@@ -20,7 +20,7 @@ public class ChatColorUtils
 	
 	public static String createSeparationLine(ChatColor color, int length) 
 	{
-		return strikeThrough(color) + StringUtils.repeat('-', length);
+		return strikeThrough(color) + StringUtils.repeat("-", length);
 	}
 	
 	public static ChatColor searchFirstColor(String text) 
