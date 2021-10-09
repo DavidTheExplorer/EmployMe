@@ -4,3 +4,4 @@ version: ${project.version}
 description: Automate resources gathering by employing players.
 softdepend: [Vault]
 api-version: 1.16
+author: DavidTheExplorer
