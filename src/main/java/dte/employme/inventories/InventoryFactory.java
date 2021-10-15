@@ -23,12 +23,14 @@ import dte.employme.utils.items.ItemBuilder;
 
 public class InventoryFactory 
 {
+	private final ItemFactory itemFactory;
 	private final JobBoard globalJobBoard;
 	private final Map<UUID, Inventory> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
 	private Inventory jobCreationInventory;
 	
-	public InventoryFactory(JobBoard globalJobBoard) 
+	public InventoryFactory(ItemFactory itemFactory, JobBoard globalJobBoard) 
 	{
+		this.itemFactory = itemFactory;
 		this.globalJobBoard = globalJobBoard;
 	}
 	
@@ -48,7 +50,7 @@ public class InventoryFactory
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, "Select Jobs to Delete");
 
 		this.globalJobBoard.getJobsOfferedBy(employer.getUniqueId()).stream()
-		.map(job -> ItemFactory.createDeletionIcon(this.globalJobBoard, job))
+		.map(job -> this.itemFactory.createDeletionIcon(this.globalJobBoard, job))
 		.forEach(inventory::addItem);
 
 		InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));

@@ -1,5 +1,6 @@
 package dte.employme.board;
 
+import static dte.employme.job.Job.ORDER_BY_EMPLOYER_NAME;
 import static dte.employme.utils.InventoryUtils.createWall;
 
 import java.util.Comparator;
@@ -18,18 +19,21 @@ import dte.employme.utils.InventoryUtils;
 
 public class InventoryJobBoard extends AbstractJobBoard
 {
+	private final ItemFactory itemFactory;
 	private Comparator<Job> orderComparator;
 	
 	private static final Map<Inventory, InventoryJobBoard> INVENTORIES_BOARDS = new HashMap<>();
 	
-	public InventoryJobBoard(Comparator<Job> orderComparator) 
+	public InventoryJobBoard(ItemFactory itemFactory, Comparator<Job> orderComparator) 
 	{
+		this.itemFactory = itemFactory;
 		this.orderComparator = orderComparator;
 	}
 	
-	public InventoryJobBoard() 
+	//TODO: remove
+	public InventoryJobBoard(ItemFactory itemFactory) 
 	{
-		this(Job.ORDER_BY_EMPLOYER_NAME);
+		this(itemFactory, ORDER_BY_EMPLOYER_NAME);
 	}
 	
 	@Override
@@ -41,7 +45,7 @@ public class InventoryJobBoard extends AbstractJobBoard
 		//add the jobs of this board
 		getOfferedJobs().stream()
 		.sorted(this.orderComparator)
-		.map(job -> ItemFactory.createOfferIcon(this, job, player))
+		.map(job -> this.itemFactory.createOfferIcon(this, job, player))
 		.forEach(inventory::addItem);
 		
 		INVENTORIES_BOARDS.put(inventory, this);
