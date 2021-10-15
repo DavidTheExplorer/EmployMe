@@ -1,7 +1,6 @@
 package dte.employme.board;
 
 import static dte.employme.utils.InventoryUtils.createWall;
-import static java.util.Comparator.comparing;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,22 +18,18 @@ import dte.employme.utils.InventoryUtils;
 
 public class InventoryJobBoard extends AbstractJobBoard
 {
-	private Comparator<Job> jobsComparator;
-	
-	public static final Comparator<Job> 
-	ORDER_BY_EMPLOYER_NAME = comparing(job -> job.getEmployer().getName().toLowerCase()),
-	ORDER_BY_GOAL = comparing(job -> job.getGoal().getType().name());
+	private Comparator<Job> orderComparator;
 	
 	private static final Map<Inventory, InventoryJobBoard> INVENTORIES_BOARDS = new HashMap<>();
 	
-	public InventoryJobBoard(Comparator<Job> jobsComparator) 
+	public InventoryJobBoard(Comparator<Job> orderComparator) 
 	{
-		this.jobsComparator = jobsComparator;
+		this.orderComparator = orderComparator;
 	}
 	
 	public InventoryJobBoard() 
 	{
-		this(ORDER_BY_EMPLOYER_NAME);
+		this(Job.ORDER_BY_EMPLOYER_NAME);
 	}
 	
 	@Override
@@ -45,7 +40,7 @@ public class InventoryJobBoard extends AbstractJobBoard
 		
 		//add the jobs of this board
 		getOfferedJobs().stream()
-		.sorted(this.jobsComparator)
+		.sorted(this.orderComparator)
 		.map(job -> ItemFactory.createOfferIcon(this, job, player))
 		.forEach(inventory::addItem);
 		
@@ -53,9 +48,9 @@ public class InventoryJobBoard extends AbstractJobBoard
 		player.openInventory(inventory);
 	}
 	
-	public void setJobsOrder(Comparator<Job> jobsComparator) 
+	public void setOrder(Comparator<Job> orderComparator) 
 	{
-		this.jobsComparator = jobsComparator;
+		this.orderComparator = orderComparator;
 	}
 
 	public static Optional<InventoryJobBoard> getRepresentedBoard(Inventory inventory)

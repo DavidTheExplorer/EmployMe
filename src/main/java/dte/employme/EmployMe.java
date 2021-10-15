@@ -1,6 +1,6 @@
 package dte.employme;
 
-import static dte.employme.board.InventoryJobBoard.ORDER_BY_EMPLOYER_NAME;
+import static dte.employme.job.Job.ORDER_BY_GOAL_NAME;
 import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.Bukkit;
@@ -54,7 +54,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		registerSerializedClasses();
 		
-		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_EMPLOYER_NAME);
+		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_GOAL_NAME);
 		
 		this.inventoryFactory = new InventoryFactory(this.globalJobBoard);
 		ServiceLocator.register(InventoryFactory.class, this.inventoryFactory);
