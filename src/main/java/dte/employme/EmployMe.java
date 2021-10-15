@@ -19,7 +19,6 @@ import dte.employme.board.listeners.JobRewardGiveListener;
 import dte.employme.commands.JobsCommand;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
-import dte.employme.items.ItemFactory;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
@@ -45,35 +44,33 @@ public class EmployMe extends ModernJavaPlugin
 	public void onEnable()
 	{
 		INSTANCE = this;
-		
+
 		if(!setupEconomy()) 
 		{
 			logToConsole(RED + "Economy wasn't found! Shutting Down...");
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		
+
 		registerSerializedClasses();
-		
+
 		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_GOAL_NAME);
-		
+
 		this.inventoryFactory = new InventoryFactory(this.globalJobBoard);
 		ServiceLocator.register(InventoryFactory.class, this.inventoryFactory);
-		
+
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener());
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.inventoryFactory), new JobCompletedMessagesListener());
-		
+
 		this.jobService = new SimpleJobService(this.globalJobBoard);
 		this.jobService.loadJobs();
-		
-		ItemFactory.setup(this.jobService);
-		
+
 		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.economy);
-		
+
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard, this.conversations));
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.conversations));
 	}
-	
+
 	@Override
 	public void onDisable() 
 	{
@@ -120,23 +117,23 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
 			Player player = context.getPlayer();
-			
+
 			if(player.isConversing())
 				throw new InvalidCommandArgument(Message.MUST_NOT_BE_CONVERSING.toString(), false);
 		});
-		
+
 		commandManager.getCommandConditions().addCondition(Player.class, "Employing", (handler, context, payment) -> 
 		{
 			Player player = context.getPlayer();
-			
+
 			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
 				throw new InvalidCommandArgument(Message.MUST_HAVE_JOBS.toString(), false);
 		});
-		
+
 		//register commands
 		commandManager.registerCommand(new JobsCommand());
 	}
-	
+
 	private void registerSerializedClasses() 
 	{
 		ConfigurationSerialization.registerClass(SimpleJob.class);

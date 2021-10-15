@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +26,6 @@ import com.google.common.collect.Lists;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
-import dte.employme.job.service.JobService;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.visitors.reward.InventoryRewardDescriptor;
@@ -36,21 +34,12 @@ public class ItemFactory
 {
 	//Container of factory methods
 	private ItemFactory(){}
-	
-	private static JobService jobService;
-	
-	public static void setup(JobService jobService) 
-	{
-		ItemFactory.jobService = jobService;
-	}
 
 	/*
 	 * Jobs
 	 */
 	public static ItemStack createBasicIcon(Job job) 
 	{
-		verifySetup();
-		
 		//lore
 		List<String> lore = new ArrayList<>();
 		lore.add(underlined(AQUA) + "Description" + AQUA + ":");
@@ -67,8 +56,6 @@ public class ItemFactory
 
 	public static ItemStack createOfferIcon(JobBoard jobBoard, Job job, Player player) 
 	{
-		verifySetup();
-		
 		ItemStack basicIcon = createBasicIcon(job);
 
 		//add the status and ID to the lore
@@ -84,8 +71,6 @@ public class ItemFactory
 
 	public static ItemStack createDeletionIcon(JobBoard jobBoard, Job job) 
 	{
-		verifySetup();
-		
 		return new ItemBuilder(createBasicIcon(job))
 				.named(" ")
 				.ofType(Material.BARRIER)
@@ -99,8 +84,6 @@ public class ItemFactory
 
 	public static Optional<String> getJobID(ItemStack jobIcon)
 	{
-		verifySetup();
-		
 		if(!jobIcon.hasItemMeta() || !jobIcon.getItemMeta().hasLore() || jobIcon.getItemMeta().getLore().isEmpty())
 			return Optional.empty();
 
@@ -113,9 +96,7 @@ public class ItemFactory
 
 	private static List<String> createJobStatusLore(Job job, Player player) 
 	{
-		verifySetup();
-		
-		boolean finished = jobService.hasFinished(job, player);
+		boolean finished = job.hasFinished(player);
 		ChatColor lineColor = finished ? WHITE : DARK_RED;
 
 		return Lists.newArrayList(
@@ -128,10 +109,5 @@ public class ItemFactory
 	private static String createIDLine(Job job, JobBoard jobBoard)
 	{
 		return colorize(String.format("&7ID: %s", jobBoard.getJobID(job).get()));
-	}
-	
-	private static void verifySetup() 
-	{
-		Validate.notNull(jobService, "ItemFactory must be initialized via #setup()");
 	}
 }

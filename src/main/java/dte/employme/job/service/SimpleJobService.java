@@ -2,9 +2,6 @@ package dte.employme.job.service;
 
 import java.io.IOException;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import dte.employme.board.JobBoard;
 import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
@@ -36,13 +33,5 @@ public class SimpleJobService implements JobService
 		this.jobsConfig.getConfig().set("Jobs", this.globalJobBoard.getOfferedJobs());
 		
 		this.jobsConfig.save(IOException::printStackTrace);
-	}
-
-	@Override
-	public boolean hasFinished(Job job, Player player)
-	{
-		ItemStack goalItem = job.getGoal();
-
-		return player.getInventory().containsAtLeast(goalItem, goalItem.getAmount());
 	}
 }

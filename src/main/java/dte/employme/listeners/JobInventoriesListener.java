@@ -16,19 +16,16 @@ import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
 import dte.employme.items.ItemFactory;
-import dte.employme.job.service.JobService;
 import dte.employme.messages.Message;
 import dte.employme.utils.InventoryUtils;
 
 public class JobInventoriesListener implements Listener
 {
-	private final JobService jobService;
 	private final Conversations conversations;
 	private final JobBoard globalJobBoard;
 	
-	public JobInventoriesListener(JobService jobService, JobBoard globalJobBoard, Conversations conversations) 
+	public JobInventoriesListener(JobBoard globalJobBoard, Conversations conversations) 
 	{
-		this.jobService = jobService;
 		this.globalJobBoard = globalJobBoard;
 		this.conversations = conversations;
 	}
@@ -48,7 +45,7 @@ public class JobInventoriesListener implements Listener
 			
 			ItemFactory.getJobID(item)
 			.flatMap(inventoryBoard::getJobByID)
-			.filter(job -> this.jobService.hasFinished(job, player))
+			.filter(job -> job.hasFinished(player))
 			.ifPresent(job ->
 			{
 				player.closeInventory();
