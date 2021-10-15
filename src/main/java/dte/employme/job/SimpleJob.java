@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.rewards.Reward;
@@ -49,6 +50,12 @@ public class SimpleJob implements Job
 	public Reward getReward() 
 	{
 		return this.reward;
+	}
+	
+	@Override
+	public boolean hasFinished(Player player) 
+	{
+		return player.getInventory().containsAtLeast(this.goal, this.goal.getAmount());
 	}
 	
 	@Override
