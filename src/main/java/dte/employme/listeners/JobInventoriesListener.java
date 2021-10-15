@@ -22,11 +22,13 @@ import dte.employme.utils.InventoryUtils;
 public class JobInventoriesListener implements Listener
 {
 	private final Conversations conversations;
+	private final ItemFactory itemFactory;
 	private final JobBoard globalJobBoard;
 	
-	public JobInventoriesListener(JobBoard globalJobBoard, Conversations conversations) 
+	public JobInventoriesListener(JobBoard globalJobBoard, ItemFactory itemFactory, Conversations conversations) 
 	{
 		this.globalJobBoard = globalJobBoard;
+		this.itemFactory = itemFactory;
 		this.conversations = conversations;
 	}
 	
@@ -43,7 +45,7 @@ public class JobInventoriesListener implements Listener
 			
 			Player player = (Player) event.getWhoClicked();
 			
-			ItemFactory.getJobID(item)
+			this.itemFactory.getJobID(item)
 			.flatMap(inventoryBoard::getJobByID)
 			.filter(job -> job.hasFinished(player))
 			.ifPresent(job ->
@@ -69,7 +71,7 @@ public class JobInventoriesListener implements Listener
 		
 		Player employer = (Player) event.getWhoClicked();
 		
-		ItemFactory.getJobID(item)
+		this.itemFactory.getJobID(item)
 		.flatMap(this.globalJobBoard::getJobByID)
 		.ifPresent(job -> 
 		{

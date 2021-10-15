@@ -32,13 +32,10 @@ import dte.employme.visitors.reward.InventoryRewardDescriptor;
 
 public class ItemFactory
 {
-	//Container of factory methods
-	private ItemFactory(){}
-
 	/*
 	 * Jobs
 	 */
-	public static ItemStack createBasicIcon(Job job) 
+	public ItemStack createBasicIcon(Job job) 
 	{
 		//lore
 		List<String> lore = new ArrayList<>();
@@ -54,7 +51,7 @@ public class ItemFactory
 				.createCopy();
 	}
 
-	public static ItemStack createOfferIcon(JobBoard jobBoard, Job job, Player player) 
+	public ItemStack createOfferIcon(JobBoard jobBoard, Job job, Player player) 
 	{
 		ItemStack basicIcon = createBasicIcon(job);
 
@@ -69,7 +66,7 @@ public class ItemFactory
 				.createCopy();
 	}
 
-	public static ItemStack createDeletionIcon(JobBoard jobBoard, Job job) 
+	public ItemStack createDeletionIcon(JobBoard jobBoard, Job job) 
 	{
 		return new ItemBuilder(createBasicIcon(job))
 				.named(" ")
@@ -82,7 +79,7 @@ public class ItemFactory
 				.createCopy();
 	}
 
-	public static Optional<String> getJobID(ItemStack jobIcon)
+	public Optional<String> getJobID(ItemStack jobIcon)
 	{
 		if(!jobIcon.hasItemMeta() || !jobIcon.getItemMeta().hasLore() || jobIcon.getItemMeta().getLore().isEmpty())
 			return Optional.empty();
@@ -94,11 +91,11 @@ public class ItemFactory
 	}
 
 
-	private static List<String> createJobStatusLore(Job job, Player player) 
+	private List<String> createJobStatusLore(Job job, Player player) 
 	{
 		boolean finished = job.hasFinished(player);
 		ChatColor lineColor = finished ? WHITE : DARK_RED;
-
+		
 		return Lists.newArrayList(
 				createSeparationLine(lineColor, 23),
 				finished ? (StringUtils.repeat(" ", 6) + bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job."),

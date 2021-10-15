@@ -19,6 +19,7 @@ import dte.employme.board.listeners.JobRewardGiveListener;
 import dte.employme.commands.JobsCommand;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
+import dte.employme.items.ItemFactory;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
@@ -35,6 +36,7 @@ public class EmployMe extends ModernJavaPlugin
 	private Economy economy;
 	private JobBoard globalJobBoard;
 	private JobService jobService;
+	private ItemFactory itemFactory;
 	private InventoryFactory inventoryFactory;
 	private Conversations conversations;
 
@@ -53,22 +55,25 @@ public class EmployMe extends ModernJavaPlugin
 		}
 
 		registerSerializedClasses();
-
-		this.globalJobBoard = new InventoryJobBoard(ORDER_BY_GOAL_NAME);
-
-		this.inventoryFactory = new InventoryFactory(this.globalJobBoard);
+		
+		this.itemFactory = new ItemFactory();
+		
+		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
+		
+		this.inventoryFactory = new InventoryFactory(this.itemFactory, this.globalJobBoard);
 		ServiceLocator.register(InventoryFactory.class, this.inventoryFactory);
-
+		
+		this.jobService = new SimpleJobService(this.globalJobBoard);
+		
+		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.economy);
+		
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener());
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.inventoryFactory), new JobCompletedMessagesListener());
-
-		this.jobService = new SimpleJobService(this.globalJobBoard);
+		
 		this.jobService.loadJobs();
 
-		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.economy);
-
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.conversations));
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations));
 	}
 
 	@Override
