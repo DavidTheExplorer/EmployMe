@@ -12,8 +12,10 @@ import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
-import dte.employme.board.service.JobBoardService;
-import dte.employme.board.service.SimpleJobBoardService;
+import dte.employme.board.listeners.EmployerNotificationListener;
+import dte.employme.board.listeners.JobCompletedMessagesListener;
+import dte.employme.board.listeners.JobGoalTransferListener;
+import dte.employme.board.listeners.JobRewardGiveListener;
 import dte.employme.commands.JobsCommand;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
@@ -33,7 +35,6 @@ public class EmployMe extends ModernJavaPlugin
 {
 	private Economy economy;
 	private JobBoard globalJobBoard;
-	private JobBoardService jobBoardService;
 	private JobService jobService;
 	private InventoryFactory inventoryFactory;
 	private Conversations conversations;
@@ -59,14 +60,15 @@ public class EmployMe extends ModernJavaPlugin
 		this.inventoryFactory = new InventoryFactory(this.globalJobBoard);
 		ServiceLocator.register(InventoryFactory.class, this.inventoryFactory);
 		
-		this.jobBoardService = new SimpleJobBoardService();
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener());
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.inventoryFactory), new JobCompletedMessagesListener());
 		
-		this.jobService = new SimpleJobService(this.globalJobBoard, this.inventoryFactory);
+		this.jobService = new SimpleJobService(this.globalJobBoard);
 		this.jobService.loadJobs();
 		
-		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.jobBoardService, this.economy);
-		
 		ItemFactory.setup(this.jobService);
+		
+		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.economy);
 		
 		registerCommands();
 		registerListeners(new JobInventoriesListener(this.jobService, this.globalJobBoard, this.conversations));
@@ -111,7 +113,6 @@ public class EmployMe extends ModernJavaPlugin
 		//register dependencies
 		commandManager.registerDependency(Economy.class, this.economy);
 		commandManager.registerDependency(JobBoard.class, this.globalJobBoard);
-		commandManager.registerDependency(JobBoardService.class, this.jobBoardService);
 		commandManager.registerDependency(JobService.class, this.jobService);
 		commandManager.registerDependency(InventoryFactory.class, this.inventoryFactory);
 

@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.board.service.JobBoardService;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.Reward;
@@ -17,12 +16,10 @@ import dte.employme.visitors.reward.RewardTaker;
 
 public class JobPostedMessagePrompt extends MessagePrompt
 {
-	private final JobBoardService jobBoardService;
 	private final JobBoard jobBoard;
 
-	public JobPostedMessagePrompt(JobBoardService jobBoardService, JobBoard jobBoard) 
+	public JobPostedMessagePrompt(JobBoard jobBoard) 
 	{
-		this.jobBoardService = jobBoardService;
 		this.jobBoard = jobBoard;
 	}
 
@@ -42,7 +39,7 @@ public class JobPostedMessagePrompt extends MessagePrompt
 		reward.accept(new RewardTaker(employer));
 
 		//to allow messages to be sent to the player
-		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> this.jobBoardService.addJob(this.jobBoard, job));
+		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> this.jobBoard.addJob(job));
 
 		return "";
 	}
