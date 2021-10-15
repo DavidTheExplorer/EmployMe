@@ -9,6 +9,5 @@ public interface JobService
 	void loadJobs();
 	void saveJobs();
 	
-	void onComplete(Job job, Player completer);
 	boolean hasFinished(Job job, Player player);
 }

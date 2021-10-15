@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.board.service.JobBoardService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.Message;
@@ -20,11 +19,11 @@ public class Conversations
 	private final InventoryFactory inventoryFactory;
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
 	
-	public Conversations(JobBoard globalJobBoard, InventoryFactory inventoryFactory, JobBoardService jobBoardService, Economy economy)
+	public Conversations(JobBoard globalJobBoard, InventoryFactory inventoryFactory, Economy economy)
 	{
 		this.inventoryFactory = inventoryFactory;
-		this.moneyJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(jobBoardService, globalJobBoard, economy)));
-		this.itemsJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(jobBoardService, globalJobBoard)));
+		this.moneyJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(globalJobBoard, economy)));
+		this.itemsJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard)));
 	}
 	
 	public Conversation buildMoneyJobConversation(Player employer)

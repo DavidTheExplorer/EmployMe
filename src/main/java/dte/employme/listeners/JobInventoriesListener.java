@@ -52,7 +52,7 @@ public class JobInventoriesListener implements Listener
 			.ifPresent(job ->
 			{
 				player.closeInventory();
-				this.jobService.onComplete(job, player);
+				this.globalJobBoard.completeJob(job, player);
 			});
 		});
 	}

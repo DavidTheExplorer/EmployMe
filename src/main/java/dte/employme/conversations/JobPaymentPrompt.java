@@ -6,7 +6,6 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
-import dte.employme.board.service.JobBoardService;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.messages.Message;
 import net.milkbowl.vault.economy.Economy;
@@ -14,13 +13,11 @@ import net.milkbowl.vault.economy.Economy;
 public class JobPaymentPrompt extends NumericPrompt
 {
 	private final Economy economy;
-	private final JobBoardService jobBoardService;
 	private final JobBoard jobBoard;
 	
-	public JobPaymentPrompt(JobBoardService jobBoardService, JobBoard jobBoard, Economy economy) 
+	public JobPaymentPrompt(JobBoard jobBoard, Economy economy) 
 	{
 		this.economy = economy;
-		this.jobBoardService = jobBoardService;
 		this.jobBoard = jobBoard;
 	}
 	
@@ -37,7 +34,7 @@ public class JobPaymentPrompt extends NumericPrompt
 	{
 		context.setSessionData("reward", new MoneyReward(input.doubleValue()));
 		
-		return new JobPostedMessagePrompt(this.jobBoardService, this.jobBoard);
+		return new JobPostedMessagePrompt(this.jobBoard);
 	}
 	
 	@Override
