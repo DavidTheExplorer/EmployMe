@@ -74,12 +74,15 @@ public class EmployMe extends ModernJavaPlugin
 
 		registerCommands();
 		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations));
+		
+		this.inventoryFactory.loadPlayersContainers();
 	}
 
 	@Override
 	public void onDisable() 
 	{
 		this.jobService.saveJobs();
+		this.inventoryFactory.savePlayersContainers();
 	}
 
 	public static EmployMe getInstance()

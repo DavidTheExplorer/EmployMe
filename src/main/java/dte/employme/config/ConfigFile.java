@@ -33,8 +33,8 @@ public class ConfigFile
 			pluginFolder.mkdirs();
 		}
 		
-		if(!path.endsWith("yml"))
-			path += "yml";
+		if(!path.endsWith(".yml"))
+			path += ".yml";
 
 		File file = new File(pluginFolder + File.separator + path);
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -56,8 +56,11 @@ public class ConfigFile
 	
 	public void createIfAbsent() throws IOException
 	{
-		if(!this.file.exists()) 
-			this.file.createNewFile();
+		if(this.file.exists()) 
+			return;
+		
+		this.file.getParentFile().mkdirs();
+		this.file.createNewFile();
 	}
 	
 	public void createIfAbsent(Consumer<IOException> exceptionHandler)
