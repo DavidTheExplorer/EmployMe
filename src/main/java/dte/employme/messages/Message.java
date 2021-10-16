@@ -19,6 +19,11 @@ public enum Message
 	JOB_SUCCESSFULLY_DELETED(YELLOW + "You successfully deleted this Job!"),
 	PLAYER_COMPLETED_YOUR_JOB("&b%s &djust completed one of your Jobs!"),
 	ITEMS_JOB_NO_ITEMS_WARNING(RED + "Job cancelled because you didn't offer any item."),
+	SUBSCRIBED_TO_GOAL_NOTIFICATION("&fA Player just posted a &b&l%s &fJob!"),
+	SUCCESSFULLY_SUBSCRIBED_TO_GOAL("&fYou just &asubscribed &fto &e%s &fJobs!"),
+	SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL("&fSuccessfully &4unsubscribed &ffrom &e%s &fJobs."),
+	MUST_BE_SUBSCRIBED_TO_GOAL(RED + "You must be subscribed to this Goal!"),
+	YOUR_SUBSCRIPTIONS_ARE("&fYou are subscribed to: &6%s"),
 
 	//Rewards
 	MONEY_PAYMENT_AMOUNT_QUESTION("&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%.2f&6$&f)"),
@@ -35,7 +40,8 @@ public enum Message
 	//General
 	GENERAL_PREFIX(DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "] "),
 	MUST_NOT_BE_CONVERSING(RED + "You have to finish your current conversation."),
-	MUST_HAVE_JOBS(RED + "You must have offered at least one Job!");
+	MUST_HAVE_JOBS(RED + "You must have offered at least one Job!"),
+	MATERIAL_NOT_FOUND(RED + "The specified Material doesn't exist!");
 
 	private final String template;
 

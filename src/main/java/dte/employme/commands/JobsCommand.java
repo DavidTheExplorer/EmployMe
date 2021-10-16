@@ -1,7 +1,11 @@
 package dte.employme.commands;
 
+import static java.util.stream.Collectors.joining;
+import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
@@ -17,6 +21,9 @@ import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.service.JobService;
+import dte.employme.job.subscription.JobSubscriptionService;
+import dte.employme.messages.Message;
+import dte.employme.utils.java.EnumUtils;
 
 @CommandAlias("job")
 @Description("Get a job or view the Available Jobs!")
@@ -34,6 +41,9 @@ public class JobsCommand extends BaseCommand
 	@Dependency
 	private PlayerContainerService playerContainerService;
 	
+	@Dependency
+	private JobSubscriptionService jobSubscriptionService;
+	
 	private static final int MAX_JOBS = ((6*9)-26);
 	
 	@HelpCommand
@@ -42,9 +52,38 @@ public class JobsCommand extends BaseCommand
 	{
 		help.showHelp();
 	}
-
-	@CommandAlias("jobs")
+	
+	@Subcommand("subscribe")
+	public void subscribe(Player player, Material material) 
+	{
+		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
+		
+		Message.sendGeneralMessage(player, Message.SUCCESSFULLY_SUBSCRIBED_TO_GOAL, EnumUtils.fixEnumName(material));
+	}
+	
+	@Subcommand("unsubscribe")
+	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
+	{
+		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
+		
+		Message.sendGeneralMessage(player, Message.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, EnumUtils.fixEnumName(material));
+	}
+	
+	@Subcommand("mysubscriptions")
+	public void showSubscriptions(Player player) 
+	{
+		String subscriptionsNames = this.jobSubscriptionService.getSubscriptions(player.getUniqueId()).stream()
+				.map(EnumUtils::fixEnumName)
+				.collect(joining(WHITE + ", " + GOLD));
+		
+		subscriptionsNames = subscriptionsNames.isEmpty() ? "None" : subscriptionsNames;
+		subscriptionsNames += WHITE + ".";
+		
+		Message.sendGeneralMessage(player, Message.YOUR_SUBSCRIPTIONS_ARE, subscriptionsNames);
+	}
+	
 	@Subcommand("view")
+	@CommandAlias("jobs")
 	@Description("Search through all the Available Jobs.")
 	public void view(Player player)
 	{
