@@ -4,6 +4,7 @@ import static dte.employme.job.Job.ORDER_BY_GOAL_NAME;
 import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -27,6 +28,8 @@ import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.service.JobService;
 import dte.employme.job.service.SimpleJobService;
+import dte.employme.job.subscription.JobSubscriptionService;
+import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.messages.Message;
 import dte.employme.utils.ModernJavaPlugin;
@@ -41,6 +44,7 @@ public class EmployMe extends ModernJavaPlugin
 	private ItemFactory itemFactory;
 	private InventoryFactory inventoryFactory;
 	private PlayerContainerService playerContainerService;
+	private JobSubscriptionService jobSubscriptionService;
 	private Conversations conversations;
 
 	private static EmployMe INSTANCE;
@@ -50,7 +54,7 @@ public class EmployMe extends ModernJavaPlugin
 	{
 		INSTANCE = this;
 
-		if(!setupEconomy()) 
+		if(!setupEconomy())
 		{
 			logToConsole(RED + "Economy wasn't found! Shutting Down...");
 			Bukkit.getPluginManager().disablePlugin(this);
@@ -60,6 +64,9 @@ public class EmployMe extends ModernJavaPlugin
 		registerSerializedClasses();
 		
 		this.itemFactory = new ItemFactory();
+		
+		this.jobSubscriptionService = new SimpleJobSubscriptionService();
+		this.jobSubscriptionService.loadSubscriptions();
 		
 		this.playerContainerService = new SimplePlayerContainerService();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
@@ -73,10 +80,9 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.economy);
 		
-		this.globalJobBoard.registerAddListener(new EmployerNotificationListener());
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener());
-		
 		this.jobService.loadJobs();
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(), this.jobSubscriptionService);
 
 		registerCommands();
 		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations));
@@ -87,6 +93,7 @@ public class EmployMe extends ModernJavaPlugin
 	{
 		this.jobService.saveJobs();
 		this.playerContainerService.saveContainers();
+		this.jobSubscriptionService.saveSubscriptions();
 	}
 
 	public static EmployMe getInstance()
@@ -125,6 +132,7 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.registerDependency(JobService.class, this.jobService);
 		commandManager.registerDependency(InventoryFactory.class, this.inventoryFactory);
 		commandManager.registerDependency(PlayerContainerService.class, this.playerContainerService);
+		commandManager.registerDependency(JobSubscriptionService.class, this.jobSubscriptionService);
 
 		//register conditions
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
@@ -134,13 +142,30 @@ public class EmployMe extends ModernJavaPlugin
 			if(player.isConversing())
 				throw new InvalidCommandArgument(Message.MUST_NOT_BE_CONVERSING.toString(), false);
 		});
-
-		commandManager.getCommandConditions().addCondition(Player.class, "Employing", (handler, context, payment) -> 
+		
+		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
 		{
 			Player player = context.getPlayer();
+			
+			if(!this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
+				throw new InvalidCommandArgument(Message.MUST_BE_SUBSCRIBED_TO_GOAL.toString(), false);
+		});
 
+		commandManager.getCommandConditions().addCondition(Player.class, "Employing", (handler, context, player) -> 
+		{
 			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
 				throw new InvalidCommandArgument(Message.MUST_HAVE_JOBS.toString(), false);
+		});
+		
+		//register contexts
+		commandManager.getCommandContexts().registerContext(Material.class, context -> 
+		{
+			Material material = Material.matchMaterial(context.popFirstArg());
+			
+			if(material == null) 
+				throw new InvalidCommandArgument(Message.MATERIAL_NOT_FOUND.toString(), false);
+			
+			return material;
 		});
 
 		//register commands
