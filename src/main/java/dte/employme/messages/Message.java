@@ -14,7 +14,7 @@ public enum Message
 {
 	//Jobs
 	JOB_ADDED_TO_BOARD(GREEN + "Your offer was added to the " + YELLOW + "Jobs Board" + GREEN + "!"),
-	ITEMS_JOB_COMPLETED(GREEN + "Job Completed. You can access your items via " + AQUA + "/job myrewards"),
+	ITEMS_JOB_COMPLETED(GREEN + "Job Completed. You can access your items via " + AQUA + "/employment myrewards"),
 	JOB_COMPLETED(GREEN + "You successfully completed this Job!"),
 	JOB_SUCCESSFULLY_DELETED(YELLOW + "You successfully deleted this Job!"),
 	PLAYER_COMPLETED_YOUR_JOB("&b%s &djust completed one of your Jobs!"),
