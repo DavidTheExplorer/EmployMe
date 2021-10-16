@@ -25,8 +25,8 @@ import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.Message;
 import dte.employme.utils.java.EnumUtils;
 
-@CommandAlias("job")
-@Description("Get a job or view the Available Jobs!")
+@CommandAlias("employment")
+@Description("The general competitive employment command - View or Manage them!")
 public class JobsCommand extends BaseCommand
 {
 	@Dependency
@@ -83,7 +83,6 @@ public class JobsCommand extends BaseCommand
 	}
 	
 	@Subcommand("view")
-	@CommandAlias("jobs")
 	@Description("Search through all the Available Jobs.")
 	public void view(Player player)
 	{
