@@ -26,8 +26,8 @@ import dte.employme.messages.Message;
 import dte.employme.utils.java.EnumUtils;
 
 @CommandAlias("employment")
-@Description("The general competitive employment command - View or Manage them!")
-public class JobsCommand extends BaseCommand
+@Description("The general employment command - View or Manage them!")
+public class EmploymentCommand extends BaseCommand
 {
 	@Dependency
 	private JobBoard globalJobBoard;
@@ -54,6 +54,7 @@ public class JobsCommand extends BaseCommand
 	}
 	
 	@Subcommand("subscribe")
+	@Description("Get a notification once a job that rewards a desired item is posted.")
 	public void subscribe(Player player, Material material) 
 	{
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
@@ -62,6 +63,7 @@ public class JobsCommand extends BaseCommand
 	}
 	
 	@Subcommand("unsubscribe")
+	@Description("Stop receiving notifications for an item.")
 	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
 	{
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
@@ -70,6 +72,7 @@ public class JobsCommand extends BaseCommand
 	}
 	
 	@Subcommand("mysubscriptions")
+	@Description("See your reward subscriptions.")
 	public void showSubscriptions(Player player) 
 	{
 		String subscriptionsNames = this.jobSubscriptionService.getSubscriptions(player.getUniqueId()).stream()

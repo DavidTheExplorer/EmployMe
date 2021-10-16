@@ -103,6 +103,7 @@ public class JobInventoriesListener implements Listener
 		{
 		case GOLD_INGOT:
 			this.conversations.buildMoneyJobConversation(employer).begin();
+			employer.closeInventory();
 			break;
 			
 		case CHEST:

@@ -17,7 +17,7 @@ import dte.employme.board.listeners.EmployerNotificationListener;
 import dte.employme.board.listeners.JobCompletedMessagesListener;
 import dte.employme.board.listeners.JobGoalTransferListener;
 import dte.employme.board.listeners.JobRewardGiveListener;
-import dte.employme.commands.JobsCommand;
+import dte.employme.commands.EmploymentCommand;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.conversations.Conversations;
@@ -169,7 +169,7 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new JobsCommand());
+		commandManager.registerCommand(new EmploymentCommand());
 	}
 
 	private void registerSerializedClasses() 
