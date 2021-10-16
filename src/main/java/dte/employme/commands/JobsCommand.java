@@ -14,6 +14,7 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.board.JobBoard;
+import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.service.JobService;
 
@@ -29,6 +30,9 @@ public class JobsCommand extends BaseCommand
 	
 	@Dependency
 	private InventoryFactory inventoryFactory;
+	
+	@Dependency
+	private PlayerContainerService playerContainerService;
 	
 	private static final int MAX_JOBS = ((6*9)-26);
 	
@@ -70,13 +74,13 @@ public class JobsCommand extends BaseCommand
 	@Description("Claim the items that people gathered for you.")
 	public void openContainer(Player employer) 
 	{
-		employer.openInventory(this.inventoryFactory.getItemsContainer(employer.getUniqueId()));
+		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()).getInventory());
 	}
 	
 	@Subcommand("myrewards")
 	@Description("Claim the rewards you got from Jobs your completed.")
 	public void openRewardsContainer(Player player) 
 	{
-		player.openInventory(this.inventoryFactory.getRewardsContainer(player.getUniqueId()));
+		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()).getInventory());
 	}
 }

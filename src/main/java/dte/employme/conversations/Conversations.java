@@ -9,19 +9,19 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.inventories.InventoryFactory;
+import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.Message;
 import net.milkbowl.vault.economy.Economy;
 
 public class Conversations
 {
-	private final InventoryFactory inventoryFactory;
+	private final PlayerContainerService playerContainerService;
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
 	
-	public Conversations(JobBoard globalJobBoard, InventoryFactory inventoryFactory, Economy economy)
+	public Conversations(JobBoard globalJobBoard, PlayerContainerService playerContainerService, Economy economy)
 	{
-		this.inventoryFactory = inventoryFactory;
+		this.playerContainerService = playerContainerService;
 		this.moneyJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(globalJobBoard, economy)));
 		this.itemsJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard)));
 	}
@@ -34,7 +34,7 @@ public class Conversations
 	public Conversation buildItemsJobConversation(Player employer, Collection<ItemStack> offeredItems)
 	{
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("reward", new ItemsReward(offeredItems, this.inventoryFactory));
+		conversation.getContext().setSessionData("reward", new ItemsReward(offeredItems, this.playerContainerService));
 		
 		return conversation;
 	}

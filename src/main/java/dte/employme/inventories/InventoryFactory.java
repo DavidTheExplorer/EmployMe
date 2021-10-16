@@ -3,13 +3,7 @@ package dte.employme.inventories;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,15 +19,16 @@ public class InventoryFactory
 {
 	private final ItemFactory itemFactory;
 	private final JobBoard globalJobBoard;
-	private final Map<UUID, Inventory> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
+
+	//cached menus
 	private Inventory jobCreationInventory;
-	
+
 	public InventoryFactory(ItemFactory itemFactory, JobBoard globalJobBoard) 
 	{
 		this.itemFactory = itemFactory;
 		this.globalJobBoard = globalJobBoard;
 	}
-	
+
 	/*
 	 * Menus
 	 */
@@ -57,7 +52,7 @@ public class InventoryFactory
 
 		return inventory;
 	}
-	
+
 	private Inventory createJobCreationMenu()
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 3, "Create a new Job");
@@ -73,41 +68,6 @@ public class InventoryFactory
 				.createCopy());
 
 		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
-
-		return inventory;
-	}
-	
-	
-	/*
-	 * Players Containers
-	 */
-	public Inventory getRewardsContainer(UUID playerUUID)
-	{
-		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> createContainer("Claim your Rewards:", 
-				"This is where Reward Items are stored", 
-				"after you complete a job that pays them."));
-	}
-
-
-	public Inventory getItemsContainer(UUID playerUUID)
-	{
-		return this.itemsContainers.computeIfAbsent(playerUUID, u -> createContainer("Claim your Items:",
-				"When someone completes one of your jobs,", 
-				"The items they got for you are stored here."));
-	}
-
-	private static Inventory createContainer(String title, String... bookDescription) 
-	{
-		Inventory inventory = Bukkit.createInventory(null, 9 * 6, title);
-
-		inventory.setItem(43, createWall(Material.GRAY_STAINED_GLASS_PANE));
-		inventory.setItem(44, createWall(Material.GRAY_STAINED_GLASS_PANE));
-		inventory.setItem(52, createWall(Material.GRAY_STAINED_GLASS_PANE));
-
-		inventory.setItem(53, new ItemBuilder(Material.BOOK)
-				.named(GREEN + "Help")
-				.withLore(Arrays.stream(bookDescription).map(line -> WHITE + line).toArray(String[]::new))
-				.createCopy());
 
 		return inventory;
 	}
