@@ -99,8 +99,6 @@ public class JobInventoriesListener implements Listener
 		
 		Player employer = (Player) event.getWhoClicked();
 		
-		employer.closeInventory();
-		
 		switch(event.getCurrentItem().getType())
 		{
 		case GOLD_INGOT:

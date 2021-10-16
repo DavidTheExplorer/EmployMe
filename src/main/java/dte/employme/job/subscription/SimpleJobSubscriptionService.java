@@ -19,11 +19,8 @@ import java.util.function.Function;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
@@ -47,6 +44,7 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 		
 		itemsReward.getItems().stream()
 		.map(ItemStack::getType)
+		.distinct()
 		.forEach(this::notifySubscribersOf);
 	}
 
@@ -59,7 +57,11 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 	@Override
 	public void unsubscribe(UUID playerUUID, Material goalMaterial) 
 	{
-		this.subscriptions.getOrDefault(playerUUID, new HashSet<>()).remove(goalMaterial);
+		Set<Material> materials = this.subscriptions.getOrDefault(playerUUID, new HashSet<>());
+		materials.remove(goalMaterial);
+		
+		if(materials.isEmpty())
+			this.subscriptions.remove(playerUUID);
 	}
 
 	@Override
@@ -105,31 +107,12 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 		.filter(player -> isSubscribedTo(player.getUniqueId(), rewardMaterial))
 		.forEach(player -> 
 		{
-			playTickSound(player);
+			player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 
 			player.sendMessage(createSeparationLine(GRAY, 45));
 			Message.sendGeneralMessage(player, Message.SUBSCRIBED_TO_GOAL_NOTIFICATION, EnumUtils.fixEnumName(rewardMaterial));
 			player.sendMessage(createSeparationLine(GRAY, 45));
 		});
-	}
-
-	private static void playTickSound(Player player) 
-	{
-		new BukkitRunnable()
-		{
-			private int timesLeft = 3;
-
-			@Override
-			public void run()
-			{
-				this.timesLeft--;
-
-				player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-
-				if(this.timesLeft == 0)
-					cancel();
-			}
-		}.runTaskTimer(EmployMe.getInstance(), 0, 5);
 	}
 
 	private String getSubscribedMaterialsNames(UUID playerUUID) 
