@@ -17,6 +17,8 @@ import dte.employme.board.listeners.JobCompletedMessagesListener;
 import dte.employme.board.listeners.JobGoalTransferListener;
 import dte.employme.board.listeners.JobRewardGiveListener;
 import dte.employme.commands.JobsCommand;
+import dte.employme.containers.service.PlayerContainerService;
+import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.items.ItemFactory;
@@ -38,6 +40,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobService jobService;
 	private ItemFactory itemFactory;
 	private InventoryFactory inventoryFactory;
+	private PlayerContainerService playerContainerService;
 	private Conversations conversations;
 
 	private static EmployMe INSTANCE;
@@ -58,31 +61,32 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.itemFactory = new ItemFactory();
 		
+		this.playerContainerService = new SimplePlayerContainerService();
+		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
+		this.playerContainerService.loadContainers();
+		
 		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
 		
 		this.inventoryFactory = new InventoryFactory(this.itemFactory, this.globalJobBoard);
-		ServiceLocator.register(InventoryFactory.class, this.inventoryFactory);
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard);
 		
-		this.conversations = new Conversations(this.globalJobBoard, this.inventoryFactory, this.economy);
+		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.economy);
 		
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener());
-		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.inventoryFactory), new JobCompletedMessagesListener());
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener());
 		
 		this.jobService.loadJobs();
 
 		registerCommands();
 		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations));
-		
-		this.inventoryFactory.loadPlayersContainers();
 	}
 
 	@Override
 	public void onDisable() 
 	{
 		this.jobService.saveJobs();
-		this.inventoryFactory.savePlayersContainers();
+		this.playerContainerService.saveContainers();
 	}
 
 	public static EmployMe getInstance()
@@ -120,6 +124,7 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.registerDependency(JobBoard.class, this.globalJobBoard);
 		commandManager.registerDependency(JobService.class, this.jobService);
 		commandManager.registerDependency(InventoryFactory.class, this.inventoryFactory);
+		commandManager.registerDependency(PlayerContainerService.class, this.playerContainerService);
 
 		//register conditions
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 

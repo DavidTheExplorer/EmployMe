@@ -4,17 +4,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.JobBoard;
-import dte.employme.inventories.InventoryFactory;
+import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.Job;
 import dte.employme.utils.InventoryUtils;
 
 public class JobGoalTransferListener implements JobCompleteListener
 {
-	private final InventoryFactory inventoryFactory;
+	private final PlayerContainerService playerContainerService;
 	
-	public JobGoalTransferListener(InventoryFactory inventoryFactory) 
+	public JobGoalTransferListener(PlayerContainerService playerContainerService) 
 	{
-		this.inventoryFactory = inventoryFactory;
+		this.playerContainerService = playerContainerService;
 	}
 	
 	@Override
@@ -23,6 +23,6 @@ public class JobGoalTransferListener implements JobCompleteListener
 		ItemStack goal = job.getGoal();
 		
 		InventoryUtils.remove(whoCompleted.getInventory(), goal);
-		this.inventoryFactory.getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
+		this.playerContainerService.getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
 	}
 }

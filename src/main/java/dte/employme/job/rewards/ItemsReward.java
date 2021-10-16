@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.inventories.InventoryFactory;
+import dte.employme.containers.PlayerContainer;
+import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
 import dte.employme.visitors.reward.RewardVisitor;
@@ -19,27 +19,27 @@ import dte.employme.visitors.reward.RewardVisitor;
 public class ItemsReward implements Reward
 {
 	private final Iterable<ItemStack> items;
-	private final InventoryFactory inventoryFactory;
+	private final PlayerContainerService playerContainerService;
 	
-	public ItemsReward(Iterable<ItemStack> items, InventoryFactory inventoryFactory) 
+	public ItemsReward(Iterable<ItemStack> items, PlayerContainerService playerContainerService) 
 	{
 		this.items = items;
-		this.inventoryFactory = inventoryFactory;
+		this.playerContainerService = playerContainerService;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static ItemsReward deserialize(Map<String, Object> serialized) 
 	{
 		List<ItemStack> items = (List<ItemStack>) serialized.get("Items");
-		InventoryFactory inventoryFactory = ServiceLocator.getInstance(InventoryFactory.class);
+		PlayerContainerService playerContainerService = ServiceLocator.getInstance(PlayerContainerService.class);
 		
-		return new ItemsReward(items, inventoryFactory);
+		return new ItemsReward(items, playerContainerService);
 	}
 	
 	@Override
 	public void giveTo(Player player)
 	{
-		Inventory rewardsContainer = this.inventoryFactory.getRewardsContainer(player.getUniqueId());
+		PlayerContainer rewardsContainer = this.playerContainerService.getRewardsContainer(player.getUniqueId());
 		
 		this.items.forEach(rewardsContainer::addItem);
 	}
