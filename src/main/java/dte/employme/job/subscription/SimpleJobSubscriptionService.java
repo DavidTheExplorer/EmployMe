@@ -59,7 +59,11 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 	@Override
 	public void unsubscribe(UUID playerUUID, Material goalMaterial) 
 	{
-		this.subscriptions.getOrDefault(playerUUID, new HashSet<>()).remove(goalMaterial);
+		Set<Material> materials = this.subscriptions.getOrDefault(playerUUID, new HashSet<>());
+		materials.remove(goalMaterial);
+		
+		if(materials.isEmpty())
+			this.subscriptions.remove(playerUUID);
 	}
 
 	@Override
