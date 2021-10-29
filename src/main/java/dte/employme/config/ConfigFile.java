@@ -42,13 +42,6 @@ public class ConfigFile
 		return new ConfigFile(file, config);
 	}
 	
-	public <T> List<T> getList(String path, Class<T> type)
-	{
-		return this.config.getList(path, new ArrayList<>()).stream()
-				.map(type::cast)
-				.collect(toList());
-	}
-
 	public YamlConfiguration getConfig() 
 	{
 		return this.config;
@@ -57,6 +50,18 @@ public class ConfigFile
 	public File getFile() 
 	{
 		return this.file;
+	}
+	
+	public <T> List<T> getList(String path, Class<T> type)
+	{
+		return this.config.getList(path, new ArrayList<>()).stream()
+				.map(type::cast)
+				.collect(toList());
+	}
+
+	public boolean exists() 
+	{
+		return this.file.exists();
 	}
 	
 	public void createIfAbsent() throws IOException
