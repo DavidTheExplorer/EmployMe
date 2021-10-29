@@ -24,8 +24,13 @@ public class ConfigFile
 		this.file = file;
 		this.config = config;
 	}
-
+	
 	public static ConfigFile byPath(String path) 
+	{
+		return byPath(path, false);
+	}
+
+	public static ConfigFile byPath(String path, boolean isResource)
 	{
 		if(pluginFolder == null)
 		{
@@ -36,7 +41,11 @@ public class ConfigFile
 		if(!path.endsWith(".yml"))
 			path += ".yml";
 
-		File file = new File(pluginFolder + File.separator + path);
+		File file = new File(pluginFolder, path);
+		
+		if(isResource && !file.exists())
+			EmployMe.getInstance().saveResource(path, false);
+		
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 		return new ConfigFile(file, config);
