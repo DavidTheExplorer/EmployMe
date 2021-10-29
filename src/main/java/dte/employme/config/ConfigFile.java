@@ -54,6 +54,11 @@ public class ConfigFile
 		return this.config;
 	}
 	
+	public File getFile() 
+	{
+		return this.file;
+	}
+	
 	public void createIfAbsent() throws IOException
 	{
 		if(this.file.exists()) 
