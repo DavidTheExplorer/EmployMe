@@ -13,31 +13,32 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Sets;
 
 import dte.employme.config.ConfigFile;
-import dte.employme.containers.PlayerContainer;
+import dte.employme.containers.PlayerContainerBuilder;
 
 public class SimplePlayerContainerService implements PlayerContainerService
 {
-	private final Map<UUID, PlayerContainer> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
+	private final Map<UUID, Inventory> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
 
 	private ConfigFile itemsContainersConfig, rewardsContainersConfig;
 	
 	private static final Set<Integer> INVALID_SLOTS = Sets.newHashSet(43, 44, 52, 53);
 	
 	@Override
-	public PlayerContainer getItemsContainer(UUID playerUUID)
+	public Inventory getItemsContainer(UUID playerUUID)
 	{
-		return this.itemsContainers.computeIfAbsent(playerUUID, u -> PlayerContainer.ofItems());
+		return this.itemsContainers.computeIfAbsent(playerUUID, u -> createItemsContainer());
 	}
 
 	@Override
-	public PlayerContainer getRewardsContainer(UUID playerUUID)
+	public Inventory getRewardsContainer(UUID playerUUID)
 	{
-		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> PlayerContainer.ofRewards());
+		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> createRewardsContainer());
 	}
 
 	@Override
@@ -46,12 +47,12 @@ public class SimplePlayerContainerService implements PlayerContainerService
 		//items containers
 		this.itemsContainersConfig = ConfigFile.byPath("containers" + File.separator + "items containers");
 		this.itemsContainersConfig.createIfAbsent(IOException::printStackTrace);
-		loadContainers(this.itemsContainersConfig, this.itemsContainers, PlayerContainer::ofItems);
+		loadContainers(this.itemsContainersConfig, this.itemsContainers, SimplePlayerContainerService::createItemsContainer);
 
 		//rewards containers
 		this.rewardsContainersConfig = ConfigFile.byPath("containers" + File.separator + "rewards containers");
 		this.rewardsContainersConfig.createIfAbsent(IOException::printStackTrace);
-		loadContainers(this.rewardsContainersConfig, this.rewardsContainers, PlayerContainer::ofRewards);
+		loadContainers(this.rewardsContainersConfig, this.rewardsContainers, SimplePlayerContainerService::createRewardsContainer);
 	}
 
 	@Override
@@ -60,8 +61,24 @@ public class SimplePlayerContainerService implements PlayerContainerService
 		saveContainers(this.itemsContainers, this.itemsContainersConfig);
 		saveContainers(this.rewardsContainers, this.rewardsContainersConfig);
 	}
+	
+	private static Inventory createItemsContainer() 
+	{
+		return new PlayerContainerBuilder()
+				.of("Items")
+				.withHelp("When someone completes one of your jobs,", "The items they got for you are stored here.")
+				.build();
+	}
+	
+	public static Inventory createRewardsContainer() 
+	{
+		return new PlayerContainerBuilder()
+				.of("Rewards")
+				.withHelp("This is where Reward Items are stored", "after you complete a job that pays them.")
+				.build();
+	}
 
-	private static void loadContainers(ConfigFile containersConfig, Map<UUID, PlayerContainer> containersMap, Supplier<PlayerContainer> containerCreator) 
+	private static void loadContainers(ConfigFile containersConfig, Map<UUID, Inventory> containersMap, Supplier<Inventory> containerCreator) 
 	{
 		containersConfig.getConfig().getKeys(false).stream()
 		.map(UUID::fromString)
@@ -73,21 +90,21 @@ public class SimplePlayerContainerService implements PlayerContainerService
 					.collect(toMap(Function.identity(), index -> containersConfig.getConfig().getItemStack(playerUUID + "." + index)));
 			
 			
-			PlayerContainer container = containerCreator.get();
+			Inventory container = containerCreator.get();
 			playerItems.forEach(container::setItem);
 
 			containersMap.put(playerUUID, container);
 		});
 	}
 
-	private static void saveContainers(Map<UUID, PlayerContainer> containersMap, ConfigFile containersConfig) 
+	private static void saveContainers(Map<UUID, Inventory> containersMap, ConfigFile containersConfig) 
 	{
 		Map<UUID, Map<Integer, ItemStack>> playersItems = containersMap.entrySet().stream()
 				.collect(toMap(Entry::getKey, entry -> 
 				{
-					PlayerContainer container = entry.getValue();
+					Inventory container = entry.getValue();
 
-					return IntStream.range(0, container.size())
+					return IntStream.range(0, container.getSize())
 							.filter(i -> !INVALID_SLOTS.contains(i))
 							.filter(i -> container.getItem(i) != null)
 							.boxed()

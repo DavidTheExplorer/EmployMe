@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
+import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.items.ItemFactory;
 import dte.employme.messages.MessageService;
@@ -137,7 +138,7 @@ public class JobInventoriesListener implements Listener
 	@EventHandler
 	public void onContainersClick(InventoryClickEvent event) 
 	{
-		if(!event.getView().getTitle().matches("Claim your [a-zA-Z]+:"))
+		if(!PlayerContainerService.isContainer(event.getView()))
 			return;
 		
 		switch(event.getRawSlot()) 
