@@ -125,13 +125,13 @@ public class EmploymentCommand extends BaseCommand
 	@Description("Claim the items that people gathered for you.")
 	public void openContainer(Player employer) 
 	{
-		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()).getInventory());
+		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()));
 	}
 	
 	@Subcommand("myrewards")
 	@Description("Claim the rewards you got from Jobs your completed.")
 	public void openRewardsContainer(Player player) 
 	{
-		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()).getInventory());
+		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
 	}
 }

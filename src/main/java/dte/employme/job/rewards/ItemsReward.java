@@ -5,11 +5,11 @@ import java.util.Map;
 
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.containers.PlayerContainer;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
@@ -39,7 +39,7 @@ public class ItemsReward implements Reward
 	@Override
 	public void giveTo(Player player)
 	{
-		PlayerContainer rewardsContainer = this.playerContainerService.getRewardsContainer(player.getUniqueId());
+		Inventory rewardsContainer = this.playerContainerService.getRewardsContainer(player.getUniqueId());
 		
 		this.items.forEach(rewardsContainer::addItem);
 	}
