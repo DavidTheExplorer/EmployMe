@@ -36,6 +36,7 @@ import dte.employme.job.service.SimpleJobService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.JobInventoriesListener;
+import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.MessageService;
 import dte.employme.messages.TranslatedMessageService;
 import dte.employme.messages.translation.ConfigTranslationService;
@@ -101,7 +102,9 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), this.jobSubscriptionService);
 
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService));
+		registerListeners(
+				new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService), 
+				new PlayerContainerAbuseListener());
 	}
 
 	@Override
