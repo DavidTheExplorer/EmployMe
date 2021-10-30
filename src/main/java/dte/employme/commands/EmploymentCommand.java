@@ -1,5 +1,11 @@
 package dte.employme.commands;
 
+import static dte.employme.messages.MessageKey.NONE;
+import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
+import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
+import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
+import static dte.employme.messages.Placeholders.GOAL;
+import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
 import static java.util.stream.Collectors.joining;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RED;
@@ -22,7 +28,8 @@ import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.service.JobService;
 import dte.employme.job.subscription.JobSubscriptionService;
-import dte.employme.messages.Message;
+import dte.employme.messages.MessageService;
+import dte.employme.messages.Placeholders;
 import dte.employme.utils.java.EnumUtils;
 
 @CommandAlias("employment")
@@ -44,6 +51,9 @@ public class EmploymentCommand extends BaseCommand
 	@Dependency
 	private JobSubscriptionService jobSubscriptionService;
 	
+	@Dependency
+	private MessageService messageService;
+	
 	private static final int MAX_JOBS = ((6*9)-26);
 	
 	@HelpCommand
@@ -58,8 +68,7 @@ public class EmploymentCommand extends BaseCommand
 	public void subscribe(Player player, Material material) 
 	{
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
-		
-		Message.sendGeneralMessage(player, Message.SUCCESSFULLY_SUBSCRIBED_TO_GOAL, EnumUtils.fixEnumName(material));
+		this.messageService.sendGeneralMessage(player, SUCCESSFULLY_SUBSCRIBED_TO_GOAL, new Placeholders().put(GOAL, EnumUtils.fixEnumName(material)));
 	}
 	
 	@Subcommand("unsubscribe")
@@ -67,8 +76,7 @@ public class EmploymentCommand extends BaseCommand
 	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
 	{
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
-		
-		Message.sendGeneralMessage(player, Message.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, EnumUtils.fixEnumName(material));
+		this.messageService.sendGeneralMessage(player, SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, new Placeholders().put(GOAL, EnumUtils.fixEnumName(material)));
 	}
 	
 	@Subcommand("mysubscriptions")
@@ -79,10 +87,12 @@ public class EmploymentCommand extends BaseCommand
 				.map(EnumUtils::fixEnumName)
 				.collect(joining(WHITE + ", " + GOLD));
 		
-		subscriptionsNames = subscriptionsNames.isEmpty() ? "None" : subscriptionsNames;
+		if(subscriptionsNames.isEmpty())
+			subscriptionsNames = this.messageService.createMessage(NONE);
+		
 		subscriptionsNames += WHITE + ".";
 		
-		Message.sendGeneralMessage(player, Message.YOUR_SUBSCRIPTIONS_ARE, subscriptionsNames);
+		this.messageService.sendGeneralMessage(player, YOUR_SUBSCRIPTIONS_ARE, new Placeholders().put(GOAL_SUBSCRIPTIONS, subscriptionsNames));
 	}
 	
 	@Subcommand("view")

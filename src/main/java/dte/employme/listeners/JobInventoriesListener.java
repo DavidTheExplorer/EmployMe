@@ -1,5 +1,7 @@
 package dte.employme.listeners;
 
+import static dte.employme.messages.MessageKey.ITEMS_JOB_NO_ITEMS_WARNING;
+import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_DELETED;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
 import dte.employme.items.ItemFactory;
-import dte.employme.messages.Message;
+import dte.employme.messages.MessageService;
 import dte.employme.utils.InventoryUtils;
 
 public class JobInventoriesListener implements Listener
@@ -24,12 +26,14 @@ public class JobInventoriesListener implements Listener
 	private final Conversations conversations;
 	private final ItemFactory itemFactory;
 	private final JobBoard globalJobBoard;
+	private final MessageService messageService;
 	
-	public JobInventoriesListener(JobBoard globalJobBoard, ItemFactory itemFactory, Conversations conversations) 
+	public JobInventoriesListener(JobBoard globalJobBoard, ItemFactory itemFactory, Conversations conversations, MessageService messageService) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.itemFactory = itemFactory;
 		this.conversations = conversations;
+		this.messageService = messageService;
 	}
 	
 	@EventHandler
@@ -79,7 +83,7 @@ public class JobInventoriesListener implements Listener
 			this.globalJobBoard.removeJob(job);
 			job.getReward().giveTo(employer);
 			
-			Message.JOB_SUCCESSFULLY_DELETED.sendTo(employer);
+			this.messageService.sendTo(employer, JOB_SUCCESSFULLY_DELETED);
 		});
 	}
 	
@@ -123,7 +127,7 @@ public class JobInventoriesListener implements Listener
 		
 		if(offeredItems.isEmpty()) 
 		{
-			Message.sendGeneralMessage(player, Message.ITEMS_JOB_NO_ITEMS_WARNING);
+			this.messageService.sendGeneralMessage(player, ITEMS_JOB_NO_ITEMS_WARNING);
 			return;
 		}
 		
