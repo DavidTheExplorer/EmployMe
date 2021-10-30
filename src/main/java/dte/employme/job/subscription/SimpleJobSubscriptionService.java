@@ -1,5 +1,7 @@
 package dte.employme.job.subscription;
 
+import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOAL_NOTIFICATION;
+import static dte.employme.messages.Placeholders.GOAL;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
@@ -25,14 +27,22 @@ import dte.employme.board.JobBoard;
 import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.messages.Message;
+import dte.employme.messages.MessageService;
+import dte.employme.messages.Placeholders;
 import dte.employme.utils.java.EnumUtils;
 
 public class SimpleJobSubscriptionService implements JobSubscriptionService
 {
 	private final Map<UUID, Set<Material>> subscriptions = new HashMap<>();
+	
+	private final MessageService messageService;
 
 	private ConfigFile subscriptionsConfig;
+	
+	public SimpleJobSubscriptionService(MessageService messageService) 
+	{
+		this.messageService = messageService;
+	}
 
 	@Override
 	public void onJobAdded(JobBoard jobBoard, Job job) 
@@ -110,7 +120,7 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 			player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 
 			player.sendMessage(createSeparationLine(GRAY, 45));
-			Message.sendGeneralMessage(player, Message.SUBSCRIBED_TO_GOAL_NOTIFICATION, EnumUtils.fixEnumName(rewardMaterial));
+			this.messageService.sendGeneralMessage(player, SUBSCRIBED_TO_GOAL_NOTIFICATION, new Placeholders().put(GOAL, EnumUtils.fixEnumName(rewardMaterial)));
 			player.sendMessage(createSeparationLine(GRAY, 45));
 		});
 	}

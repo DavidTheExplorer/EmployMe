@@ -11,7 +11,7 @@ import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.messages.Message;
+import dte.employme.messages.MessageService;
 import net.milkbowl.vault.economy.Economy;
 
 public class Conversations
@@ -19,11 +19,11 @@ public class Conversations
 	private final PlayerContainerService playerContainerService;
 	private final ConversationFactory moneyJobConversationFactory, itemsJobConversationFactory;
 	
-	public Conversations(JobBoard globalJobBoard, PlayerContainerService playerContainerService, Economy economy)
+	public Conversations(JobBoard globalJobBoard, PlayerContainerService playerContainerService, MessageService messageService, Economy economy)
 	{
 		this.playerContainerService = playerContainerService;
-		this.moneyJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(globalJobBoard, economy)));
-		this.itemsJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard)));
+		this.moneyJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(globalJobBoard, economy, messageService), messageService));
+		this.itemsJobConversationFactory = createConversationFactory().withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard), messageService));
 	}
 	
 	public Conversation buildMoneyJobConversation(Player employer)
@@ -45,6 +45,6 @@ public class Conversations
 				.withLocalEcho(true)
 				.withModality(false)
 				.withEscapeSequence("stop")
-				.withPrefix(context -> Message.GENERAL_PREFIX.toString());
+				.withPrefix(context -> MessageService.PLUGIN_PREFIX + " ");
 	}
 }

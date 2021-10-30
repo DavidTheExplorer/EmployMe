@@ -1,5 +1,8 @@
 package dte.employme.conversations;
 
+import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
+import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
+
 import java.util.Optional;
 
 import org.bukkit.Material;
@@ -8,24 +11,26 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.RegexPrompt;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.messages.Message;
+import dte.employme.messages.MessageService;
 import dte.employme.utils.java.NumberUtils;
 
 public class JobGoalPrompt extends RegexPrompt
 {
 	private final Prompt nextPrompt;
+	private final MessageService messageService;
 	
-	public JobGoalPrompt(Prompt nextPrompt) 
+	public JobGoalPrompt(Prompt nextPrompt, MessageService messageService) 
 	{
 		super("[A-Za-z_]+:\\d+");
 		
 		this.nextPrompt = nextPrompt;
+		this.messageService = messageService;
 	}
 
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		return Message.ITEM_GOAL_FORMAT_QUESTION.toString();
+		return this.messageService.createMessage(ITEM_GOAL_FORMAT_QUESTION);
 	}
 
 	@Override
@@ -59,6 +64,6 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return Message.ITEM_GOAL_INVALID.toString();
+		return this.messageService.createMessage(ITEM_GOAL_INVALID);
 	}
 }

@@ -1,5 +1,11 @@
 package dte.employme.conversations;
 
+import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
+import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
+import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_A_NUMBER;
+import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_ENOUGH;
+import static dte.employme.messages.Placeholders.PLAYER_MONEY;
+
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
@@ -7,18 +13,21 @@ import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.messages.Message;
+import dte.employme.messages.MessageService;
+import dte.employme.messages.Placeholders;
 import net.milkbowl.vault.economy.Economy;
 
 public class JobPaymentPrompt extends NumericPrompt
 {
 	private final Economy economy;
 	private final JobBoard jobBoard;
+	private final MessageService messageService;
 	
-	public JobPaymentPrompt(JobBoard jobBoard, Economy economy) 
+	public JobPaymentPrompt(JobBoard jobBoard, Economy economy, MessageService messageService) 
 	{
 		this.economy = economy;
 		this.jobBoard = jobBoard;
+		this.messageService = messageService;
 	}
 	
 	@Override
@@ -26,7 +35,7 @@ public class JobPaymentPrompt extends NumericPrompt
 	{
 		double employerMoney = this.economy.getBalance((Player) context.getForWhom());
 		
-		return Message.MONEY_PAYMENT_AMOUNT_QUESTION.inject(employerMoney);
+		return this.messageService.createMessage(MONEY_PAYMENT_AMOUNT_QUESTION, new Placeholders().put(PLAYER_MONEY, employerMoney));
 	}
 
 	@Override
@@ -51,10 +60,10 @@ public class JobPaymentPrompt extends NumericPrompt
 		double payment = invalidInput.doubleValue();
 		
 		if(payment <= 0)
-			return Message.MONEY_REWARD_ERROR_NEGATIVE.toString();
+			return this.messageService.createMessage(MONEY_REWARD_ERROR_NEGATIVE);
 		
 		else if(!this.economy.has((Player) context.getForWhom(), payment))
-			return Message.MONEY_REWARD_NOT_ENOUGH.toString();
+			return this.messageService.createMessage(MONEY_REWARD_NOT_ENOUGH);
 		
 		throw new IllegalStateException("Can't create a Money Reward from the provided input.");
 	}
@@ -62,6 +71,6 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return Message.MONEY_REWARD_NOT_A_NUMBER.toString();
+		return this.messageService.createMessage(MONEY_REWARD_NOT_A_NUMBER);
 	}
 }
