@@ -48,12 +48,12 @@ public class Conversations
 				.addConversationAbandonedListener(RETURN_REWARD_TO_PLAYER);
 	}
 
-	public Conversation buildMoneyJobConversation(Player employer)
+	public Conversation ofMoneyJobCreation(Player employer)
 	{
 		return this.moneyJobConversationFactory.buildConversation(employer);
 	}
 
-	public Conversation buildItemsJobConversation(Player employer, Collection<ItemStack> offeredItems)
+	public Conversation ofItemsJobCreation(Player employer, Collection<ItemStack> offeredItems)
 	{
 		Conversation conversation = this.itemsJobConversationFactory.buildConversation(employer);
 		conversation.getContext().setSessionData("reward", new ItemsReward(offeredItems, this.playerContainerService));

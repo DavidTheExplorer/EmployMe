@@ -107,7 +107,7 @@ public class JobInventoriesListener implements Listener
 		switch(event.getCurrentItem().getType())
 		{
 		case GOLD_INGOT:
-			this.conversations.buildMoneyJobConversation(employer).begin();
+			this.conversations.ofMoneyJobCreation(employer).begin();
 			employer.closeInventory();
 			break;
 			
@@ -132,7 +132,7 @@ public class JobInventoriesListener implements Listener
 			return;
 		}
 		
-		this.conversations.buildItemsJobConversation(player, offeredItems).begin();
+		this.conversations.ofItemsJobCreation(player, offeredItems).begin();
 	}
 	
 	@EventHandler
