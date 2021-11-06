@@ -12,7 +12,7 @@ Messages:
     Your Subscriptions Are: '&fYou are subscribed to: &6%goal subscriptions%'
     Money Payment Amount Question: '&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%player money%&6$&f)'   
     Item Goal Format Question: '&fWhich &aitem &fdo you need? Reply with the following format: &bitemName:amount'   
-    Item Goal Invalid: '&cThe specified goal is either: Incorrectly formatted, Illegal, or the amount is beyond the max size!'   
+    Item Goal Invalid: '&cThe specified goal is either incorrectly formatted or unachievable!'   
     Money Reward Error Negative: '&cCan''t create a Money Reward that pays nothing or less!'   
     Money Reward Not Enough: '&cYou can''t offer an amount of money that you don''t have!'   
     Money Reward Not A Number: '&cPayment has to be a Positive Integer!'    

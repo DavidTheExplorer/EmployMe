@@ -3,8 +3,6 @@ package dte.employme.conversations;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 
-import java.util.Optional;
-
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -45,8 +43,7 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected boolean isInputValid(ConversationContext context, String input)
 	{
-		//check the format
-		if(!super.isInputValid(context, input)) 
+		if(!super.isInputValid(context, input))
 			return false;
 		
 		Material material = Material.matchMaterial(input.split(":")[0]);
@@ -54,11 +51,7 @@ public class JobGoalPrompt extends RegexPrompt
 		if(material == null || material.isAir())
 			return false;
 		
-		Optional<Integer> amountHolder = NumberUtils.parseInt(input.split(":")[1]);
-		
-		return amountHolder
-				.filter(amount -> amount > 0 && amount <= material.getMaxStackSize())
-				.isPresent();
+		return NumberUtils.parseInt(input.split(":")[1]).isPresent();
 	}
 	
 	@Override
