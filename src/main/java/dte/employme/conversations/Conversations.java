@@ -63,7 +63,7 @@ public class Conversations
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)
 				.withModality(false)
-				.withEscapeSequence("stop")
+				.withEscapeSequence("cancel")
 				.withPrefix(context -> MessageService.PLUGIN_PREFIX + " ");
 	}
 }
