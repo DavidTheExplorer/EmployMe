@@ -1,4 +1,4 @@
-package dte.employme.conversations;
+package dte.employme.job.prompts;
 
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.ConversationContext;

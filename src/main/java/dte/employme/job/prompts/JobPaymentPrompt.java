@@ -1,4 +1,4 @@
-package dte.employme.conversations;
+package dte.employme.job.prompts;
 
 import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
