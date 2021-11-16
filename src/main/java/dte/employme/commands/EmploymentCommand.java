@@ -28,8 +28,8 @@ import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.service.JobService;
 import dte.employme.job.subscription.JobSubscriptionService;
-import dte.employme.messages.MessageService;
 import dte.employme.messages.Placeholders;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 
 @CommandAlias("employment")

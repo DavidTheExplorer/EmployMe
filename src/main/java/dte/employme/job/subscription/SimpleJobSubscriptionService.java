@@ -27,8 +27,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.messages.MessageService;
 import dte.employme.messages.Placeholders;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 
 public class SimpleJobSubscriptionService implements JobSubscriptionService

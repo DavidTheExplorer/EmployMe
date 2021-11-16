@@ -16,7 +16,7 @@ import dte.employme.job.prompts.JobPaymentPrompt;
 import dte.employme.job.prompts.JobPostedMessagePrompt;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.Reward;
-import dte.employme.messages.MessageService;
+import dte.employme.messages.service.MessageService;
 import net.milkbowl.vault.economy.Economy;
 
 public class Conversations

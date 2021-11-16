@@ -1,8 +1,10 @@
-package dte.employme.messages;
+package dte.employme.messages.service;
 
 import org.bukkit.command.CommandSender;
 
 import dte.employme.EmployMe;
+import dte.employme.messages.MessageKey;
+import dte.employme.messages.Placeholders;
 
 @FunctionalInterface
 public interface MessageService

@@ -1,7 +1,9 @@
-package dte.employme.messages;
+package dte.employme.messages.service;
 
 import static dte.employme.utils.ChatColorUtils.colorize;
 
+import dte.employme.messages.MessageKey;
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.translation.TranslationService;
 
 public class TranslatedMessageService implements MessageService

@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.messages.MessageService;
 import dte.employme.messages.Placeholders;
+import dte.employme.messages.service.MessageService;
 import net.milkbowl.vault.economy.Economy;
 
 public class JobPaymentPrompt extends NumericPrompt

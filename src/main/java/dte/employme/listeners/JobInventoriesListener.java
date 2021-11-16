@@ -19,7 +19,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.items.ItemFactory;
-import dte.employme.messages.MessageService;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
 
 public class JobInventoriesListener implements Listener

@@ -9,7 +9,7 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.RegexPrompt;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.messages.MessageService;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.NumberUtils;
 
 public class JobGoalPrompt extends RegexPrompt
