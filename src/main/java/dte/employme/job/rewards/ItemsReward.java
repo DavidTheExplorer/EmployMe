@@ -62,4 +62,10 @@ public class ItemsReward implements Reward
 				.put("Items", this.items)
 				.build();
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("ItemsReward [items=%s]", this.items);
+	}
 }

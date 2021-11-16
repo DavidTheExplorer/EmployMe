@@ -67,6 +67,14 @@ public class SimpleJob implements Job
 				.put("Reward", this.reward)
 				.build();
 	}
+	
+	@Override
+	public String toString() 
+	{
+		return String.format("SimpleJob [employer=%s, goal=%s, reward=%s]", this.employer.getUniqueId().toString(), this.goal, this.reward);
+	}
+
+
 
 
 	public static class Builder
