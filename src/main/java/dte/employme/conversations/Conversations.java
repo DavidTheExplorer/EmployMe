@@ -67,6 +67,6 @@ public class Conversations
 				.withLocalEcho(true)
 				.withModality(false)
 				.withEscapeSequence("cancel")
-				.withPrefix(context -> MessageService.PLUGIN_PREFIX + " ");
+				.withPrefix(context -> EmployMe.CHAT_PREFIX + " ");
 	}
 }

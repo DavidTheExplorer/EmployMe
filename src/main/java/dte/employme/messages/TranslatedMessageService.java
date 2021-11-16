@@ -2,6 +2,7 @@ package dte.employme.messages;
 
 import static dte.employme.utils.ChatColorUtils.colorize;
 
+import dte.employme.EmployMe;
 import dte.employme.messages.translation.TranslationService;
 
 public class TranslatedMessageService implements MessageService
@@ -28,6 +29,6 @@ public class TranslatedMessageService implements MessageService
 	@Override
 	public String getGeneralMessage(MessageKey key, Placeholders placeholders) 
 	{
-		return String.format("%s %s", PLUGIN_PREFIX, getMessage(key, placeholders));
+		return String.format("%s %s", EmployMe.CHAT_PREFIX, getMessage(key, placeholders));
 	}
 }

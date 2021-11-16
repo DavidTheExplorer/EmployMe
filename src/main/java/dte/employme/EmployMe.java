@@ -5,6 +5,8 @@ import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_HAVE_JOBS;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.Bukkit;
@@ -55,7 +57,9 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private MessageService messageService;
 	private Conversations conversations;
-
+	
+	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
+	
 	private static EmployMe INSTANCE;
 
 	@Override

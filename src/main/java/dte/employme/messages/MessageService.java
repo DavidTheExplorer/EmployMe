@@ -1,8 +1,5 @@
 package dte.employme.messages;
 
-import static org.bukkit.ChatColor.DARK_GREEN;
-import static org.bukkit.ChatColor.GREEN;
-
 import org.bukkit.command.CommandSender;
 
 public interface MessageService
@@ -47,6 +44,4 @@ public interface MessageService
 	{
 		sendGeneralMessage(sender, key, Placeholders.NONE);
 	}
-	
-	String PLUGIN_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 }
