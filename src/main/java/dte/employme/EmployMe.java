@@ -5,6 +5,9 @@ import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_HAVE_JOBS;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
+import static org.apache.commons.lang.StringUtils.repeat;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.Bukkit;
@@ -37,9 +40,8 @@ import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.listeners.PlayerContainerAbuseListener;
-import dte.employme.messages.MessageService;
-import dte.employme.messages.TranslatedMessageService;
-import dte.employme.messages.translation.ConfigTranslationService;
+import dte.employme.messages.service.MessageService;
+import dte.employme.messages.service.TranslatedMessageService;
 import dte.employme.utils.ModernJavaPlugin;
 import dte.employme.utils.java.ServiceLocator;
 import net.milkbowl.vault.economy.Economy;
@@ -55,7 +57,9 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private MessageService messageService;
 	private Conversations conversations;
-
+	
+	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
+	
 	private static EmployMe INSTANCE;
 
 	@Override
@@ -77,9 +81,14 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//create the default(english) language file
 		ConfigFile.byPath("languages/english.yml", true);
-		String configLanguage = config.getConfig().getString("Language");
-		this.messageService = new TranslatedMessageService(new ConfigTranslationService(configLanguage));
 		
+		ConfigFile languageConfig = getLanguageConfig(config.getConfig().getString("Language"));
+		
+		//if the language defined in the config doesn't have a file, the plugin was disabled by getLanguageConfig() + null was returned
+		if(languageConfig == null)
+			return;
+		
+		this.messageService = new TranslatedMessageService(languageConfig);
 		this.itemFactory = new ItemFactory();
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.messageService);
@@ -90,11 +99,8 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		
 		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
-		
 		this.inventoryFactory = new InventoryFactory(this.itemFactory, this.globalJobBoard);
-		
 		this.jobService = new SimpleJobService(this.globalJobBoard);
-		
 		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
 		
 		this.jobService.loadJobs();
@@ -110,6 +116,9 @@ public class EmployMe extends ModernJavaPlugin
 	@Override
 	public void onDisable() 
 	{
+		if(!isEnabled())
+			return;
+		
 		this.jobService.saveJobs();
 		this.playerContainerService.saveContainers();
 		this.jobSubscriptionService.saveSubscriptions();
@@ -138,6 +147,23 @@ public class EmployMe extends ModernJavaPlugin
 		this.economy = economyProvider.getProvider();
 		return true;
 	}
+	
+	private ConfigFile getLanguageConfig(String language) 
+	{
+		ConfigFile languageConfig = ConfigFile.byPath(String.format("languages/%s.yml", language));
+		
+		if(!languageConfig.exists()) 
+		{
+			logToConsole(repeat("-", 55));
+			logToConsole(RED + String.format("The messages file for language '%s' is missing!", language));
+			logToConsole(RED + "Please close the server to create it. Shutting down until this is fixed!");
+			logToConsole(repeat("-", 55));
+			
+			Bukkit.getPluginManager().disablePlugin(this);
+			return null;
+		}
+		return languageConfig;
+	}
 
 	@SuppressWarnings("deprecation")
 	private void registerCommands() 
@@ -159,7 +185,7 @@ public class EmployMe extends ModernJavaPlugin
 			Player player = context.getPlayer();
 
 			if(player.isConversing())
-				throw new InvalidCommandArgument(this.messageService.createMessage(MUST_NOT_BE_CONVERSING), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING), false);
 		});
 		
 		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
@@ -167,13 +193,13 @@ public class EmployMe extends ModernJavaPlugin
 			Player player = context.getPlayer();
 			
 			if(!this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
-				throw new InvalidCommandArgument(this.messageService.createMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
 		});
 
 		commandManager.getCommandConditions().addCondition(Player.class, "Employing", (handler, context, player) -> 
 		{
 			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
-				throw new InvalidCommandArgument(this.messageService.createMessage(MUST_HAVE_JOBS), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_HAVE_JOBS), false);
 		});
 		
 		//register contexts
@@ -182,7 +208,7 @@ public class EmployMe extends ModernJavaPlugin
 			Material material = Material.matchMaterial(context.popFirstArg());
 			
 			if(material == null) 
-				throw new InvalidCommandArgument(this.messageService.createMessage(MATERIAL_NOT_FOUND), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND), false);
 			
 			return material;
 		});

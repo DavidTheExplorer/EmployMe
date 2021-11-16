@@ -9,7 +9,7 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.RegexPrompt;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.messages.MessageService;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.NumberUtils;
 
 public class JobGoalPrompt extends RegexPrompt
@@ -28,7 +28,7 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		return this.messageService.createMessage(ITEM_GOAL_FORMAT_QUESTION);
+		return this.messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION);
 	}
 
 	@Override
@@ -57,6 +57,6 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.createMessage(ITEM_GOAL_INVALID);
+		return this.messageService.getMessage(ITEM_GOAL_INVALID);
 	}
 }

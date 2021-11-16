@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.messages.MessageService;
 import dte.employme.messages.Placeholders;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
@@ -36,7 +36,7 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 		this.messageService.sendGeneralMessage(whoCompleted, (job.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : JOB_COMPLETED));
 
 		OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> employer.spigot().sendMessage(
-				new ComponentBuilder(this.messageService.createGeneralMessage(PLAYER_COMPLETED_YOUR_JOB, new Placeholders().put(COMPLETER, whoCompleted.getName())))
+				new ComponentBuilder(this.messageService.getGeneralMessage(PLAYER_COMPLETED_YOUR_JOB, new Placeholders().put(COMPLETER, whoCompleted.getName())))
 				.event(new HoverEvent(Action.SHOW_TEXT, new Text(describe(job))))
 				.create()));
 	}

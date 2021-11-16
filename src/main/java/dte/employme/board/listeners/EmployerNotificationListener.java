@@ -4,7 +4,7 @@ import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
-import dte.employme.messages.MessageService;
+import dte.employme.messages.service.MessageService;
 
 public class EmployerNotificationListener implements JobAddListener
 {
