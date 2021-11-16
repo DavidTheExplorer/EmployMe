@@ -50,4 +50,10 @@ public class MoneyReward implements Reward
 				.put("Payment", this.payment)
 				.build();
 	}
+
+	@Override
+	public String toString() 
+	{
+		return String.format("MoneyReward [payment=%s]", this.payment);
+	}
 }
