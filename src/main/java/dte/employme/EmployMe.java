@@ -159,7 +159,7 @@ public class EmployMe extends ModernJavaPlugin
 			Player player = context.getPlayer();
 
 			if(player.isConversing())
-				throw new InvalidCommandArgument(this.messageService.createMessage(MUST_NOT_BE_CONVERSING), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING), false);
 		});
 		
 		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
@@ -167,13 +167,13 @@ public class EmployMe extends ModernJavaPlugin
 			Player player = context.getPlayer();
 			
 			if(!this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
-				throw new InvalidCommandArgument(this.messageService.createMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
 		});
 
 		commandManager.getCommandConditions().addCondition(Player.class, "Employing", (handler, context, player) -> 
 		{
 			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
-				throw new InvalidCommandArgument(this.messageService.createMessage(MUST_HAVE_JOBS), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_HAVE_JOBS), false);
 		});
 		
 		//register contexts
@@ -182,7 +182,7 @@ public class EmployMe extends ModernJavaPlugin
 			Material material = Material.matchMaterial(context.popFirstArg());
 			
 			if(material == null) 
-				throw new InvalidCommandArgument(this.messageService.createMessage(MATERIAL_NOT_FOUND), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND), false);
 			
 			return material;
 		});

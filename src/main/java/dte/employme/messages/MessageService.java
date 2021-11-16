@@ -7,37 +7,45 @@ import org.bukkit.command.CommandSender;
 
 public interface MessageService
 {
-	String createMessage(MessageKey messageKey, Placeholders placeholders);
-	String createGeneralMessage(MessageKey messageKey, Placeholders placeholders);
+	String getMessage(MessageKey key, Placeholders placeholders);
+	String getGeneralMessage(MessageKey key, Placeholders placeholders);
 	
-	default String createMessage(MessageKey messageKey) 
+	
+	/*
+	 * Delegation methods without placeholders
+	 */
+	default String getMessage(MessageKey key) 
 	{
-		return createMessage(messageKey, Placeholders.NONE);
+		return getMessage(key, Placeholders.NONE);
 	}
 	
-	default String createGeneralMessage(MessageKey messageKey)
+	default String getGeneralMessage(MessageKey key)
 	{
-		return createGeneralMessage(messageKey, Placeholders.NONE);
+		return getGeneralMessage(key, Placeholders.NONE);
 	}
 	
-	default void sendTo(CommandSender sender, MessageKey messageKey, Placeholders placeholders) 
+	
+	/*
+	 * Methods that simply send messages
+	 */
+	default void sendTo(CommandSender sender, MessageKey key, Placeholders placeholders) 
 	{
-		sender.sendMessage(createMessage(messageKey, placeholders));
+		sender.sendMessage(getMessage(key, placeholders));
 	}
 	
-	default void sendTo(CommandSender sender, MessageKey messageKey) 
+	default void sendTo(CommandSender sender, MessageKey key) 
 	{
-		sendTo(sender, messageKey, Placeholders.NONE);
+		sendTo(sender, key, Placeholders.NONE);
 	}
 	
-	default void sendGeneralMessage(CommandSender sender, MessageKey messageKey, Placeholders placeholders) 
+	default void sendGeneralMessage(CommandSender sender, MessageKey key, Placeholders placeholders) 
 	{
-		sender.sendMessage(createGeneralMessage(messageKey, placeholders));
+		sender.sendMessage(getGeneralMessage(key, placeholders));
 	}
 	
-	default void sendGeneralMessage(CommandSender sender, MessageKey messageKey) 
+	default void sendGeneralMessage(CommandSender sender, MessageKey key) 
 	{
-		sendGeneralMessage(sender, messageKey, Placeholders.NONE);
+		sendGeneralMessage(sender, key, Placeholders.NONE);
 	}
 	
 	String PLUGIN_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";

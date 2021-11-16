@@ -14,11 +14,11 @@ public class TranslatedMessageService implements MessageService
 	}
 
 	@Override
-	public String createMessage(MessageKey messageKey, Placeholders placeholders) 
+	public String getMessage(MessageKey key, Placeholders placeholders) 
 	{
 		String finalMessage;
 		
-		finalMessage = this.translationService.translate(messageKey);
+		finalMessage = this.translationService.translate(key);
 		finalMessage = colorize(finalMessage);
 		finalMessage = placeholders.apply(finalMessage);
 		
@@ -26,8 +26,8 @@ public class TranslatedMessageService implements MessageService
 	}
 
 	@Override
-	public String createGeneralMessage(MessageKey messageKey, Placeholders placeholders) 
+	public String getGeneralMessage(MessageKey key, Placeholders placeholders) 
 	{
-		return String.format("%s %s", PLUGIN_PREFIX, createMessage(messageKey, placeholders));
+		return String.format("%s %s", PLUGIN_PREFIX, getMessage(key, placeholders));
 	}
 }

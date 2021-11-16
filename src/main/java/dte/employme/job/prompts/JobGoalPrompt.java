@@ -28,7 +28,7 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		return this.messageService.createMessage(ITEM_GOAL_FORMAT_QUESTION);
+		return this.messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION);
 	}
 
 	@Override
@@ -57,6 +57,6 @@ public class JobGoalPrompt extends RegexPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.createMessage(ITEM_GOAL_INVALID);
+		return this.messageService.getMessage(ITEM_GOAL_INVALID);
 	}
 }

@@ -88,7 +88,7 @@ public class EmploymentCommand extends BaseCommand
 				.collect(joining(WHITE + ", " + GOLD));
 		
 		if(subscriptionsNames.isEmpty())
-			subscriptionsNames = this.messageService.createMessage(NONE);
+			subscriptionsNames = this.messageService.getMessage(NONE);
 		
 		subscriptionsNames += WHITE + ".";
 		
