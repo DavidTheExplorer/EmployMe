@@ -5,6 +5,7 @@ import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_HAVE_JOBS;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
+import static org.apache.commons.lang.StringUtils.repeat;
 import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
@@ -41,7 +42,6 @@ import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
-import dte.employme.messages.translation.ConfigTranslationService;
 import dte.employme.utils.ModernJavaPlugin;
 import dte.employme.utils.java.ServiceLocator;
 import net.milkbowl.vault.economy.Economy;
@@ -81,9 +81,14 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//create the default(english) language file
 		ConfigFile.byPath("languages/english.yml", true);
-		String configLanguage = config.getConfig().getString("Language");
-		this.messageService = new TranslatedMessageService(new ConfigTranslationService(configLanguage));
 		
+		ConfigFile languageConfig = getLanguageConfig(config.getConfig().getString("Language"));
+		
+		//if the language defined in the config doesn't have a file, the plugin was disabled by getLanguageConfig() + null was returned
+		if(languageConfig == null)
+			return;
+		
+		this.messageService = new TranslatedMessageService(languageConfig);
 		this.itemFactory = new ItemFactory();
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.messageService);
@@ -94,11 +99,8 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		
 		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
-		
 		this.inventoryFactory = new InventoryFactory(this.itemFactory, this.globalJobBoard);
-		
 		this.jobService = new SimpleJobService(this.globalJobBoard);
-		
 		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
 		
 		this.jobService.loadJobs();
@@ -114,6 +116,9 @@ public class EmployMe extends ModernJavaPlugin
 	@Override
 	public void onDisable() 
 	{
+		if(!isEnabled())
+			return;
+		
 		this.jobService.saveJobs();
 		this.playerContainerService.saveContainers();
 		this.jobSubscriptionService.saveSubscriptions();
@@ -141,6 +146,23 @@ public class EmployMe extends ModernJavaPlugin
 
 		this.economy = economyProvider.getProvider();
 		return true;
+	}
+	
+	private ConfigFile getLanguageConfig(String language) 
+	{
+		ConfigFile languageConfig = ConfigFile.byPath(String.format("languages/%s.yml", language));
+		
+		if(!languageConfig.exists()) 
+		{
+			logToConsole(repeat("-", 55));
+			logToConsole(RED + String.format("The messages file for language '%s' is missing!", language));
+			logToConsole(RED + "Please close the server to create it. Shutting down until this is fixed!");
+			logToConsole(repeat("-", 55));
+			
+			Bukkit.getPluginManager().disablePlugin(this);
+			return null;
+		}
+		return languageConfig;
 	}
 
 	@SuppressWarnings("deprecation")
