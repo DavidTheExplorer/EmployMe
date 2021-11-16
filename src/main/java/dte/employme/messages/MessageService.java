@@ -2,10 +2,17 @@ package dte.employme.messages;
 
 import org.bukkit.command.CommandSender;
 
+import dte.employme.EmployMe;
+
+@FunctionalInterface
 public interface MessageService
 {
 	String getMessage(MessageKey key, Placeholders placeholders);
-	String getGeneralMessage(MessageKey key, Placeholders placeholders);
+	
+	default String getGeneralMessage(MessageKey key, Placeholders placeholders) 
+	{
+		return String.format("%s %s", EmployMe.CHAT_PREFIX, getMessage(key, placeholders));
+	}
 	
 	
 	/*
