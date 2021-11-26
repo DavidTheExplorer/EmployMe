@@ -10,6 +10,7 @@ import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -111,6 +112,8 @@ public class EmployMe extends ModernJavaPlugin
 		registerListeners(
 				new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService), 
 				new PlayerContainerAbuseListener());
+		
+		new Metrics(this, 13423);
 	}
 
 	@Override
