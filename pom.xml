@@ -52,6 +52,11 @@
 							<shadedPattern>${shade.base}.locales</shadedPattern>
 						</relocation>
 
+						<relocation>
+							<pattern>org.bstats</pattern>
+							<shadedPattern>${shade.base}.bstats</shadedPattern>
+						</relocation>
+
 					</relocations>
 				</configuration>
 				<executions>
@@ -111,6 +116,15 @@
 			<artifactId>acf-bukkit</artifactId>
 			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
+
+		<!-- Metrics -->
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>2.2.1</version>
+			<scope>compile</scope>
+		</dependency>
+
 
 	</dependencies>
 </project>
