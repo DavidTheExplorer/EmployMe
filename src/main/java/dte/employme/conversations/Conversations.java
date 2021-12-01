@@ -44,7 +44,7 @@ public class Conversations
 				.addConversationAbandonedListener(RETURN_REWARD_TO_PLAYER);
 
 		this.itemsJobConversationFactory = createConversationFactory()
-				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard), messageService))
+				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard, economy), messageService))
 				.addConversationAbandonedListener(RETURN_REWARD_TO_PLAYER);
 	}
 
