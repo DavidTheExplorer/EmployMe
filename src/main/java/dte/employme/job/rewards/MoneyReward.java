@@ -2,8 +2,8 @@ package dte.employme.job.rewards;
 
 import java.util.Map;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
 
 import dte.employme.EmployMe;
 import dte.employme.utils.java.MapBuilder;
@@ -27,9 +27,9 @@ public class MoneyReward implements Reward
 	}
 
 	@Override
-	public void giveTo(Player player) 
+	public void giveTo(OfflinePlayer offlinePlayer)
 	{
-		EmployMe.getInstance().getEconomy().depositPlayer(player, this.payment);
+		EmployMe.getInstance().getEconomy().depositPlayer(offlinePlayer, this.payment);
 	}
 
 	public double getPayment() 

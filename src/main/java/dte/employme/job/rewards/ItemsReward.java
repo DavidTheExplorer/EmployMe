@@ -3,8 +3,8 @@ package dte.employme.job.rewards;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,10 +37,9 @@ public class ItemsReward implements Reward
 	}
 	
 	@Override
-	public void giveTo(Player player)
+	public void giveTo(OfflinePlayer offlinePlayer)
 	{
-		Inventory rewardsContainer = this.playerContainerService.getRewardsContainer(player.getUniqueId());
-		
+		Inventory rewardsContainer = this.playerContainerService.getRewardsContainer(offlinePlayer.getUniqueId());
 		this.items.forEach(rewardsContainer::addItem);
 	}
 	

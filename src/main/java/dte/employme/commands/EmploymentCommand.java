@@ -11,6 +11,8 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -26,6 +28,7 @@ import co.aikar.commands.annotation.Subcommand;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
+import dte.employme.job.Job;
 import dte.employme.job.service.JobService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.Placeholders;
@@ -115,10 +118,13 @@ public class EmploymentCommand extends BaseCommand
 	}
 	
 	@Subcommand("delete")
-	@Description("Delete one of your offered Jobs.")
-	public void deleteJob(@Conditions("Employing") Player employer) 
+	@Description("Delete a job.")
+	public void deleteJob(Player player) 
 	{
-		employer.openInventory(this.inventoryFactory.getDeletionMenu(employer));
+		List<Job> jobsToDisplay = player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
+		
+		//send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
+		player.openInventory(this.inventoryFactory.getDeletionMenu(player, this.globalJobBoard, jobsToDisplay));
 	}
 	
 	@Subcommand("myitems")
