@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -69,8 +68,6 @@ public class ItemFactory
 	public ItemStack createDeletionIcon(JobBoard jobBoard, Job job) 
 	{
 		return new ItemBuilder(createBasicIcon(job))
-				.named(" ")
-				.ofType(Material.BARRIER)
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
 						bold(DARK_RED) + "Click to Delete!",

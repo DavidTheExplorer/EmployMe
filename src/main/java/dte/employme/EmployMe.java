@@ -3,7 +3,6 @@ package dte.employme;
 import static dte.employme.job.Job.ORDER_BY_GOAL_NAME;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
-import static dte.employme.messages.MessageKey.MUST_HAVE_JOBS;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static org.apache.commons.lang.StringUtils.repeat;
 import static org.bukkit.ChatColor.DARK_GREEN;
@@ -100,7 +99,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		
 		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
-		this.inventoryFactory = new InventoryFactory(this.itemFactory, this.globalJobBoard);
+		this.inventoryFactory = new InventoryFactory(this.itemFactory);
 		this.jobService = new SimpleJobService(this.globalJobBoard);
 		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
 		
@@ -119,6 +118,7 @@ public class EmployMe extends ModernJavaPlugin
 	@Override
 	public void onDisable() 
 	{
+		//TODO: do something with this...
 		if(!isEnabled())
 			return;
 		
@@ -197,12 +197,6 @@ public class EmployMe extends ModernJavaPlugin
 			
 			if(!this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
 				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
-		});
-
-		commandManager.getCommandConditions().addCondition(Player.class, "Employing", (handler, context, player) -> 
-		{
-			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).isEmpty())
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_HAVE_JOBS), false);
 		});
 		
 		//register contexts

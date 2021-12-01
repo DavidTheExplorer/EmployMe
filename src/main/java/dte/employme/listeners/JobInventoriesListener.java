@@ -62,7 +62,7 @@ public class JobInventoriesListener implements Listener
 	}
 	
 	@EventHandler
-	public void onDeletionMark(InventoryClickEvent event) 
+	public void onDelete(InventoryClickEvent event) 
 	{
 		if(!event.getView().getTitle().equals("Select Jobs to Delete"))
 			return;
@@ -74,17 +74,17 @@ public class JobInventoriesListener implements Listener
 		if(item == null)
 			return;
 		
-		Player employer = (Player) event.getWhoClicked();
+		Player player = (Player) event.getWhoClicked();
 		
 		this.itemFactory.getJobID(item)
 		.flatMap(this.globalJobBoard::getJobByID)
-		.ifPresent(job -> 
+		.ifPresent(job ->
 		{
-			employer.closeInventory();
+			player.closeInventory();
 			this.globalJobBoard.removeJob(job);
-			job.getReward().giveTo(employer);
+			job.getReward().giveTo(job.getEmployer());
 			
-			this.messageService.sendTo(employer, JOB_SUCCESSFULLY_DELETED);
+			this.messageService.sendTo(player, JOB_SUCCESSFULLY_DELETED);
 		});
 	}
 	
