@@ -13,14 +13,17 @@ import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.Reward;
 import dte.employme.visitors.reward.RewardTaker;
+import net.milkbowl.vault.economy.Economy;
 
 public class JobPostedMessagePrompt extends MessagePrompt
 {
 	private final JobBoard jobBoard;
+	private final Economy economy;
 
-	public JobPostedMessagePrompt(JobBoard jobBoard) 
+	public JobPostedMessagePrompt(JobBoard jobBoard, Economy economy) 
 	{
 		this.jobBoard = jobBoard;
+		this.economy = economy;
 	}
 
 	@Override
@@ -36,7 +39,7 @@ public class JobPostedMessagePrompt extends MessagePrompt
 				.thatOffers(reward)
 				.build();
 
-		reward.accept(new RewardTaker(employer));
+		reward.accept(new RewardTaker(employer, this.economy));
 
 		//to allow messages to be sent to the player
 		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> this.jobBoard.addJob(job));

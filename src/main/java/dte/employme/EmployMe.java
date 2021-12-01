@@ -73,6 +73,8 @@ public class EmployMe extends ModernJavaPlugin
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+		
+		ServiceLocator.register(Economy.class, this.economy);
 
 		registerSerializedClasses();
 		
@@ -132,11 +134,6 @@ public class EmployMe extends ModernJavaPlugin
 		return INSTANCE;
 	}
 
-	public Economy getEconomy() 
-	{
-		return this.economy;
-	}
-
 	private boolean setupEconomy() 
 	{
 		if(getServer().getPluginManager().getPlugin("Vault") == null)
@@ -165,6 +162,7 @@ public class EmployMe extends ModernJavaPlugin
 			Bukkit.getPluginManager().disablePlugin(this);
 			return null;
 		}
+		
 		return languageConfig;
 	}
 

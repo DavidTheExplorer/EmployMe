@@ -41,9 +41,9 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) 
 	{
-		context.setSessionData("reward", new MoneyReward(input.doubleValue()));
+		context.setSessionData("reward", new MoneyReward(this.economy, input.doubleValue()));
 		
-		return new JobPostedMessagePrompt(this.jobBoard);
+		return new JobPostedMessagePrompt(this.jobBoard, this.economy);
 	}
 	
 	@Override

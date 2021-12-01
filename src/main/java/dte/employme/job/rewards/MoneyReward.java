@@ -5,31 +5,36 @@ import java.util.Map;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
 
-import dte.employme.EmployMe;
 import dte.employme.utils.java.MapBuilder;
+import dte.employme.utils.java.ServiceLocator;
 import dte.employme.visitors.reward.RewardVisitor;
+import net.milkbowl.vault.economy.Economy;
 
 @SerializableAs("Money Reward")
 public class MoneyReward implements Reward
 {
+	private final Economy economy;
 	private final double payment;
 
-	public MoneyReward(double payment) 
+	public MoneyReward(Economy economy, double payment) 
 	{
+		this.economy = economy;
 		this.payment = payment;
 	}
 	
 	public static MoneyReward deserialize(Map<String, Object> serialized) 
 	{
+		Economy economy = ServiceLocator.getInstance(Economy.class);
 		double payment = (double) serialized.get("Payment");
 		
-		return new MoneyReward(payment);
+		
+		return new MoneyReward(economy, payment);
 	}
 
 	@Override
 	public void giveTo(OfflinePlayer offlinePlayer)
 	{
-		EmployMe.getInstance().getEconomy().depositPlayer(offlinePlayer, this.payment);
+		this.economy.depositPlayer(offlinePlayer, this.payment);
 	}
 
 	public double getPayment() 
