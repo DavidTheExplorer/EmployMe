@@ -27,7 +27,6 @@ public class MoneyReward implements Reward
 		Economy economy = ServiceLocator.getInstance(Economy.class);
 		double payment = (double) serialized.get("Payment");
 		
-		
 		return new MoneyReward(economy, payment);
 	}
 

@@ -2,13 +2,12 @@ package dte.employme.containers.service;
 
 import static java.util.stream.Collectors.toMap;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
@@ -24,10 +23,15 @@ import dte.employme.containers.PlayerContainerBuilder;
 public class SimplePlayerContainerService implements PlayerContainerService
 {
 	private final Map<UUID, Inventory> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
-
-	private ConfigFile itemsContainersConfig, rewardsContainersConfig;
+	private final ConfigFile itemsContainersConfig, rewardsContainersConfig;
 	
 	private static final Set<Integer> INVALID_SLOTS = Sets.newHashSet(43, 44, 52, 53);
+	
+	public SimplePlayerContainerService(ConfigFile itemsContainersConfig, ConfigFile rewardsContainersConfig) 
+	{
+		this.itemsContainersConfig = itemsContainersConfig;
+		this.rewardsContainersConfig = rewardsContainersConfig;
+	}
 	
 	@Override
 	public Inventory getItemsContainer(UUID playerUUID)
@@ -44,14 +48,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	@Override
 	public void loadContainers() 
 	{
-		//items containers
-		this.itemsContainersConfig = ConfigFile.byPath("containers" + File.separator + "items containers");
-		this.itemsContainersConfig.createIfAbsent(IOException::printStackTrace);
 		loadContainers(this.itemsContainersConfig, this.itemsContainers, SimplePlayerContainerService::createItemsContainer);
-
-		//rewards containers
-		this.rewardsContainersConfig = ConfigFile.byPath("containers" + File.separator + "rewards containers");
-		this.rewardsContainersConfig.createIfAbsent(IOException::printStackTrace);
 		loadContainers(this.rewardsContainersConfig, this.rewardsContainers, SimplePlayerContainerService::createRewardsContainer);
 	}
 

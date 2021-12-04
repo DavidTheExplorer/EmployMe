@@ -3,12 +3,13 @@ package dte.employme.commands;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
+import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.Placeholders.GOAL;
 import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
+import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static java.util.stream.Collectors.joining;
 import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.List;
@@ -29,6 +30,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.Job;
+import dte.employme.job.addnotifiers.JobAddedNotifier;
+import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 import dte.employme.job.service.JobService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.Placeholders;
@@ -55,9 +58,11 @@ public class EmploymentCommand extends BaseCommand
 	private JobSubscriptionService jobSubscriptionService;
 	
 	@Dependency
+	private JobAddedNotifierService jobAddedNotifierService;
+	
+	@Dependency
 	private MessageService messageService;
 	
-	private static final int MAX_JOBS = ((6*9)-26);
 	
 	@HelpCommand
 	@CatchUnknown
@@ -107,13 +112,9 @@ public class EmploymentCommand extends BaseCommand
 	
 	@Subcommand("offer")
 	@Description("Offer a new Job to the public.")
-	public void createJob(@Conditions("Not Conversing") Player employer) 
+	@Conditions("Global Jobs Board Not Full")
+	public void offerJob(@Conditions("Not Conversing") Player employer) 
 	{
-		if(this.globalJobBoard.getOfferedJobs().size() == MAX_JOBS) 
-		{
-			employer.sendMessage(RED + "Not enough room for additional Jobs.");
-			return;
-		}
 		employer.openInventory(this.inventoryFactory.getCreationMenu(employer));
 	}
 	
@@ -123,7 +124,7 @@ public class EmploymentCommand extends BaseCommand
 	{
 		List<Job> jobsToDisplay = player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
 		
-		//send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
+		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
 		player.openInventory(this.inventoryFactory.getDeletionMenu(player, this.globalJobBoard, jobsToDisplay));
 	}
 	
@@ -139,5 +140,12 @@ public class EmploymentCommand extends BaseCommand
 	public void openRewardsContainer(Player player) 
 	{
 		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
+	}
+	
+	@Subcommand("notifications")
+	public void setNotifications(Player player, JobAddedNotifier notifier) 
+	{
+		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
+		this.messageService.sendGeneralMessage(player, YOUR_NEW_JOB_ADDED_NOTIFIER_IS, new Placeholders().put(JOB_ADDED_NOTIFIER, notifier));
 	}
 }
