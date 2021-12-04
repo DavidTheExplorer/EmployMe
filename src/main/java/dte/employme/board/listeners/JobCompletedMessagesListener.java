@@ -4,6 +4,7 @@ import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.Placeholders.COMPLETER;
+import static dte.employme.utils.ChatColorUtils.colorize;
 
 import org.bukkit.entity.Player;
 
@@ -12,7 +13,6 @@ import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import dte.employme.visitors.reward.TextRewardDescriptor;
@@ -43,8 +43,9 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 	
 	private static String describe(Job job) 
 	{
-		return ChatColorUtils.colorize(String.format("&6Goal: &f%s &8&l| &6Reward: &f%s", 
-				"Get " + ItemStackUtils.describe(job.getGoal()), 
-				job.getReward().accept(TextRewardDescriptor.INSTANCE)));
+		String goal = "Get " + ItemStackUtils.describe(job.getGoal());
+		String reward = job.getReward().accept(TextRewardDescriptor.INSTANCE);
+		
+		return colorize(String.format("&6Goal: &f%s &8&l| &6Reward: &f%s", goal, reward));
 	}
 }

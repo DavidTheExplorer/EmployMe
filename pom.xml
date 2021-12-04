@@ -56,6 +56,11 @@
 							<pattern>org.bstats</pattern>
 							<shadedPattern>${shade.base}.bstats</shadedPattern>
 						</relocation>
+						
+						<relocation>
+							<pattern>dte.modernjavaplugin</pattern>
+							<shadedPattern>${shade.base}.modernjavaplugin</shadedPattern>
+						</relocation>
 
 					</relocations>
 				</configuration>
@@ -125,6 +130,12 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<!-- ModernJavaPlugin -->
+		<dependency>
+			<groupId>com.github.DavidTheExplorer</groupId>
+			<artifactId>ModernJavaPlugin</artifactId>
+			<version>master-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
 </project>

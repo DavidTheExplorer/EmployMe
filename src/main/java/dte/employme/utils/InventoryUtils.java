@@ -189,6 +189,24 @@ public class InventoryUtils
 		for(int i = startInclusive; i < endExclusive; i += jumpDistance)
 			inventory.setItem(i, with);
 	}
+	public static void fillSquare(Inventory inventory, ItemStack with, int start, int length) 
+	{
+		Validate.notNull(with);
+		
+		int currentLine = toLineAndIndex(start)[0];
+		int currentIndex = toLineAndIndex(start)[1];
+		
+		for(int i = 1; i <= length; i++) 
+		{
+			for(int j = 1; j <= length; j++) 
+			{
+				inventory.setItem(toSlot(currentLine, currentIndex), with);
+				currentIndex++;
+			}
+			currentLine++;
+			currentIndex = toLineAndIndex(start)[1];
+		}
+	}
 
 
 	/*

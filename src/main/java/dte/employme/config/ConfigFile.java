@@ -17,7 +17,12 @@ public class ConfigFile
 	private final File file;
 	private final YamlConfiguration config;
 	
-	private static File pluginFolder;
+	private static final File PLUGIN_FOLDER = EmployMe.getInstance().getDataFolder();
+	
+	static 
+	{
+		PLUGIN_FOLDER.mkdirs();
+	}
 
 	private ConfigFile(File file, YamlConfiguration config) 
 	{
@@ -25,23 +30,25 @@ public class ConfigFile
 		this.config = config;
 	}
 	
+	/*
+	 * factory methods
+	 */
 	public static ConfigFile byPath(String path) 
 	{
 		return byPath(path, false);
 	}
+	
+	public static ConfigFile loadResource(String path) 
+	{
+		return byPath(path, true);
+	}
 
 	public static ConfigFile byPath(String path, boolean isResource)
 	{
-		if(pluginFolder == null)
-		{
-			pluginFolder = EmployMe.getInstance().getDataFolder();
-			pluginFolder.mkdirs();
-		}
-		
 		if(!path.endsWith(".yml"))
 			path += ".yml";
 
-		File file = new File(pluginFolder, path);
+		File file = new File(PLUGIN_FOLDER, path);
 		
 		if(isResource && !file.exists())
 			EmployMe.getInstance().saveResource(path, false);
@@ -49,6 +56,31 @@ public class ConfigFile
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 		return new ConfigFile(file, config);
+	}
+	
+	/*
+	 * creation methods
+	 */
+	public static void createIfAbsent(ConfigFile config) throws IOException
+	{
+		if(config.exists()) 
+			return;
+		
+		File file = config.getFile();
+		file.getParentFile().mkdirs();
+		file.createNewFile();
+	}
+	
+	public static void createIfAbsent(ConfigFile config, Consumer<IOException> exceptionHandler)
+	{
+		try
+		{
+			createIfAbsent(config);
+		} 
+		catch (IOException exception) 
+		{
+			exceptionHandler.accept(exception);
+		}
 	}
 	
 	public YamlConfiguration getConfig() 
@@ -71,27 +103,6 @@ public class ConfigFile
 	public boolean exists() 
 	{
 		return this.file.exists();
-	}
-	
-	public void createIfAbsent() throws IOException
-	{
-		if(this.file.exists()) 
-			return;
-		
-		this.file.getParentFile().mkdirs();
-		this.file.createNewFile();
-	}
-	
-	public void createIfAbsent(Consumer<IOException> exceptionHandler)
-	{
-		try
-		{
-			createIfAbsent();
-		} 
-		catch (IOException exception) 
-		{
-			exceptionHandler.accept(exception);
-		}
 	}
 
 	public void save() throws IOException

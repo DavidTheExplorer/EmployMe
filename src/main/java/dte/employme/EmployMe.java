@@ -1,13 +1,19 @@
 package dte.employme;
 
 import static dte.employme.job.Job.ORDER_BY_GOAL_NAME;
+import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
-import static org.apache.commons.lang.StringUtils.repeat;
+import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
+import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
+
+import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -17,10 +23,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
 import dte.employme.board.listeners.EmployerNotificationListener;
+import dte.employme.board.listeners.JobAddNotificationListener;
 import dte.employme.board.listeners.JobCompletedMessagesListener;
 import dte.employme.board.listeners.JobGoalTransferListener;
 import dte.employme.board.listeners.JobRewardGiveListener;
@@ -32,6 +40,12 @@ import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.SimpleJob;
+import dte.employme.job.addnotifiers.AllJobsNotifier;
+import dte.employme.job.addnotifiers.DoNotNotify;
+import dte.employme.job.addnotifiers.JobAddedNotifier;
+import dte.employme.job.addnotifiers.MaterialSubscriptionNotifier;
+import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
+import dte.employme.job.addnotifiers.service.SimpleJobAddedNotifierService;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.service.JobService;
@@ -40,10 +54,11 @@ import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.listeners.PlayerContainerAbuseListener;
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
-import dte.employme.utils.ModernJavaPlugin;
 import dte.employme.utils.java.ServiceLocator;
+import dte.modernjavaplugin.ModernJavaPlugin;
 import net.milkbowl.vault.economy.Economy;
 
 public class EmployMe extends ModernJavaPlugin
@@ -55,11 +70,13 @@ public class EmployMe extends ModernJavaPlugin
 	private InventoryFactory inventoryFactory;
 	private PlayerContainerService playerContainerService;
 	private JobSubscriptionService jobSubscriptionService;
+	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private Conversations conversations;
-	
+	private ConfigFile config, englishConfig, jobsConfig, subscriptionsConfig, jobNotificationPoliciesConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
+
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
-	
+
 	private static EmployMe INSTANCE;
 
 	@Override
@@ -67,66 +84,78 @@ public class EmployMe extends ModernJavaPlugin
 	{
 		INSTANCE = this;
 
-		if(!setupEconomy())
+		//init economy
+		this.economy = getEconomy();
+
+		if(this.economy == null) 
 		{
-			logToConsole(RED + "Economy wasn't found! Shutting Down...");
-			Bukkit.getPluginManager().disablePlugin(this);
+			disableWithError(RED + "Economy wasn't found! Shutting Down...");
 			return;
 		}
-		
 		ServiceLocator.register(Economy.class, this.economy);
 
-		registerSerializedClasses();
-		
-		//create the config file
-		ConfigFile config = ConfigFile.byPath("config.yml", true);
-		
-		//create the default(english) language file
-		ConfigFile.byPath("languages/english.yml", true);
-		
-		ConfigFile languageConfig = getLanguageConfig(config.getConfig().getString("Language"));
-		
-		//if the language defined in the config doesn't have a file, the plugin was disabled by getLanguageConfig() + null was returned
-		if(languageConfig == null)
+
+
+		//init the configs
+		Stream.of(SimpleJob.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
+
+		this.config = ConfigFile.loadResource("config.yml");
+		this.englishConfig = ConfigFile.loadResource("languages" + File.separator + "english.yml");
+		this.jobsConfig = ConfigFile.byPath("jobs.yml");
+		this.subscriptionsConfig = ConfigFile.byPath("subscriptions");
+		this.jobNotificationPoliciesConfig = ConfigFile.byPath("job add notifiers");
+		this.itemsContainersConfig = ConfigFile.byPath("containers" + File.separator + "items containers");
+		this.rewardsContainersConfig = ConfigFile.byPath("containers" + File.separator + "rewards containers");
+		this.languageConfig = getLanguageConfig();
+
+		if(!createOrDisable(this.jobsConfig, this.subscriptionsConfig, this.jobNotificationPoliciesConfig, this.itemsContainersConfig, this.rewardsContainersConfig))
 			return;
-		
-		this.messageService = new TranslatedMessageService(languageConfig);
+
+
+
+		//init the global job board, services, factories, etc.
 		this.itemFactory = new ItemFactory();
-		
-		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.messageService);
-		this.jobSubscriptionService.loadSubscriptions();
-		
-		this.playerContainerService = new SimplePlayerContainerService();
-		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
-		this.playerContainerService.loadContainers();
-		
-		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
 		this.inventoryFactory = new InventoryFactory(this.itemFactory);
-		this.jobService = new SimpleJobService(this.globalJobBoard);
-		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
-		
+		this.messageService = new TranslatedMessageService(this.languageConfig);
+		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
+
+		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
+		this.jobSubscriptionService.loadSubscriptions();
+		ServiceLocator.register(JobSubscriptionService.class, this.jobSubscriptionService);
+
+		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig);
+		this.playerContainerService.loadContainers();
+		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
+
+		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
+
+		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobNotificationPoliciesConfig);
+		this.jobAddedNotifierService.register(new DoNotNotify());
+		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
+		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
+		this.jobAddedNotifierService.loadPlayersNotifiers();
+
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService));
-		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), this.jobSubscriptionService);
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
 
+		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
+
+
+
+		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(
-				new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService), 
-				new PlayerContainerAbuseListener());
-		
-		new Metrics(this, 13423);
-	}
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService), new PlayerContainerAbuseListener());
 
-	@Override
-	public void onDisable() 
-	{
-		//TODO: do something with this...
-		if(!isEnabled())
-			return;
-		
-		this.jobService.saveJobs();
-		this.playerContainerService.saveContainers();
-		this.jobSubscriptionService.saveSubscriptions();
+		setDisableListener(() -> 
+		{
+			this.jobService.saveJobs();
+			this.playerContainerService.saveContainers();
+			this.jobSubscriptionService.saveSubscriptions();
+			this.jobAddedNotifierService.savePlayersNotifiers();
+		});
+
+		new Metrics(this, 13423);
 	}
 
 	public static EmployMe getInstance()
@@ -134,36 +163,50 @@ public class EmployMe extends ModernJavaPlugin
 		return INSTANCE;
 	}
 
-	private boolean setupEconomy() 
+	private Economy getEconomy() 
 	{
-		if(getServer().getPluginManager().getPlugin("Vault") == null)
-			return false;
+		if(Bukkit.getPluginManager().getPlugin("Vault") == null)
+			return null;
 
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+		RegisteredServiceProvider<Economy> provider = Bukkit.getServicesManager().getRegistration(Economy.class);
 
-		if(economyProvider == null)
-			return false;
+		if(provider == null)
+			return null;
 
-		this.economy = economyProvider.getProvider();
-		return true;
+		return provider.getProvider();
 	}
-	
-	private ConfigFile getLanguageConfig(String language) 
+
+	private ConfigFile getLanguageConfig()
 	{
+		String language = this.config.getConfig().getString("Language");
 		ConfigFile languageConfig = ConfigFile.byPath(String.format("languages/%s.yml", language));
-		
+
 		if(!languageConfig.exists()) 
 		{
-			logToConsole(repeat("-", 55));
-			logToConsole(RED + String.format("The messages file for language '%s' is missing!", language));
-			logToConsole(RED + "Please close the server to create it. Shutting down until this is fixed!");
-			logToConsole(repeat("-", 55));
-			
-			Bukkit.getPluginManager().disablePlugin(this);
-			return null;
+			logToConsole(RED + String.format("The messages file for language '%s' is missing, defaulting to English!", language));
+			return this.englishConfig;
 		}
-		
+
 		return languageConfig;
+	}
+
+	private boolean createOrDisable(ConfigFile... configs)
+	{
+		AtomicBoolean errorOccurred = new AtomicBoolean(false);
+
+		for(ConfigFile config : configs) 
+		{
+			ConfigFile.createIfAbsent(config, exception -> 
+			{
+				disableWithError(String.format(RED + "Could not create '%s': %s", config.getFile().getName(), exception.getMessage()));
+				errorOccurred.set(true);
+			});
+
+			if(errorOccurred.get())
+				break;
+		}
+
+		return !errorOccurred.get();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -179,43 +222,50 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.registerDependency(PlayerContainerService.class, this.playerContainerService);
 		commandManager.registerDependency(JobSubscriptionService.class, this.jobSubscriptionService);
 		commandManager.registerDependency(MessageService.class, this.messageService);
+		commandManager.registerDependency(JobAddedNotifierService.class, this.jobAddedNotifierService);
 
 		//register conditions
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
-			Player player = context.getPlayer();
-
-			if(player.isConversing())
+			if(context.getPlayer().isConversing())
 				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING), false);
 		});
-		
+
 		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
 		{
-			Player player = context.getPlayer();
-			
-			if(!this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
+			if(!this.jobSubscriptionService.isSubscribedTo(context.getPlayer().getUniqueId(), material))
 				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
 		});
 		
+		commandManager.getCommandConditions().addCondition("Global Jobs Board Not Full", context -> 
+		{
+			if(this.globalJobBoard.getOfferedJobs().size() == ((6*9)-26)) 
+				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL));
+		});
+
 		//register contexts
 		commandManager.getCommandContexts().registerContext(Material.class, context -> 
 		{
 			Material material = Material.matchMaterial(context.popFirstArg());
-			
+
 			if(material == null) 
 				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND), false);
-			
+
 			return material;
+		});
+
+		commandManager.getCommandContexts().registerContext(JobAddedNotifier.class, context -> 
+		{
+			String notifierName = context.joinArgs();
+			JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
+
+			if(notifier == null)
+				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND, new Placeholders().put(JOB_ADDED_NOTIFIER, notifierName)), false);
+
+			return notifier;
 		});
 
 		//register commands
 		commandManager.registerCommand(new EmploymentCommand());
-	}
-
-	private void registerSerializedClasses() 
-	{
-		ConfigurationSerialization.registerClass(SimpleJob.class);
-		ConfigurationSerialization.registerClass(ItemsReward.class);
-		ConfigurationSerialization.registerClass(MoneyReward.class);
 	}
 }

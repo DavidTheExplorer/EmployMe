@@ -2,6 +2,7 @@ package dte.employme.messages;
 
 import java.util.Map.Entry;
 
+import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.utils.java.MapBuilder;
 
 public class Placeholders extends MapBuilder<String, String>
@@ -11,7 +12,9 @@ public class Placeholders extends MapBuilder<String, String>
 	GOAL_SUBSCRIPTIONS = "goal subscriptions",
 	COMPLETER = "completer",
 	PLAYER_MONEY = "player money",
-	GOAL = "goal";
+	GOAL = "goal",
+	REWARDS = "rewards",
+	JOB_ADDED_NOTIFIER = "job added notifier";
 	
 	public static final Placeholders NONE = new Placeholders();
 	
@@ -20,6 +23,11 @@ public class Placeholders extends MapBuilder<String, String>
 	{
 		super.put("%" + key + "%", value);
 		return this;
+	}
+	
+	public Placeholders put(String key, JobAddedNotifier notifier) 
+	{
+		return put(key, notifier.getName());
 	}
 	
 	public Placeholders put(String key, Object value) 
