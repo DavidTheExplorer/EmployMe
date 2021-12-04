@@ -131,6 +131,24 @@ public class InventoryUtils
 		}
 		return amountLeft;
 	}
+	
+	public static boolean containsAtLeast(Inventory inventory, Predicate<ItemStack> tester, int amount) 
+	{
+		Validate.notNull(inventory);
+		Validate.notNull(tester);
+		
+        for(ItemStack item : inventory.getStorageContents()) 
+        {
+        	if(item == null || !tester.test(item))
+        		continue;
+        	
+        	amount -= item.getAmount();
+        	
+        	if(amount <= 0)
+        		return true;
+        }
+        return false;
+	}
 
 
 	/*
