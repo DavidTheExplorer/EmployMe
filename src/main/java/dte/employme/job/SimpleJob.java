@@ -9,8 +9,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import dte.employme.job.rewards.Reward;
+import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.MapBuilder;
 
 @SerializableAs("Job")
@@ -55,7 +57,7 @@ public class SimpleJob implements Job
 	@Override
 	public boolean hasFinished(Player player) 
 	{
-		return player.getInventory().containsAtLeast(this.goal, this.goal.getAmount());
+		return InventoryUtils.containsAtLeast(player.getInventory(), item -> this.goal.isSimilar(item) && !((Damageable) item.getItemMeta()).hasDamage(), this.goal.getAmount());
 	}
 	
 	@Override
