@@ -12,13 +12,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import dte.employme.EmployMe;
 
-public class ConfigFile 
+public class ConfigFile
 {
 	private final File file;
 	private final YamlConfiguration config;
-	
+
 	private static final File PLUGIN_FOLDER = EmployMe.getInstance().getDataFolder();
-	
+
 	static 
 	{
 		PLUGIN_FOLDER.mkdirs();
@@ -29,7 +29,7 @@ public class ConfigFile
 		this.file = file;
 		this.config = config;
 	}
-	
+
 	/*
 	 * factory methods
 	 */
@@ -37,27 +37,30 @@ public class ConfigFile
 	{
 		return byPath(path, false);
 	}
-	
+
 	public static ConfigFile loadResource(String path) 
 	{
 		return byPath(path, true);
 	}
 
-	public static ConfigFile byPath(String path, boolean isResource)
+	private static ConfigFile byPath(String path, boolean isResource)
 	{
+		//normalize the path
+		path = path.replace("/", File.separator);
+		
 		if(!path.endsWith(".yml"))
 			path += ".yml";
 
 		File file = new File(PLUGIN_FOLDER, path);
-		
+
 		if(isResource && !file.exists())
 			EmployMe.getInstance().saveResource(path, false);
-		
+
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
 		return new ConfigFile(file, config);
 	}
-	
+
 	/*
 	 * creation methods
 	 */
@@ -65,34 +68,36 @@ public class ConfigFile
 	{
 		if(config.exists()) 
 			return;
-		
+
 		File file = config.getFile();
 		file.getParentFile().mkdirs();
 		file.createNewFile();
 	}
-	
-	public static void createIfAbsent(ConfigFile config, Consumer<IOException> exceptionHandler)
+
+	public static boolean createIfAbsent(ConfigFile config, Consumer<IOException> exceptionHandler)
 	{
 		try
 		{
 			createIfAbsent(config);
+			return true;
 		} 
 		catch (IOException exception) 
 		{
 			exceptionHandler.accept(exception);
+			return false;
 		}
 	}
-	
+
 	public YamlConfiguration getConfig() 
 	{
 		return this.config;
 	}
-	
+
 	public File getFile() 
 	{
 		return this.file;
 	}
-	
+
 	public <T> List<T> getList(String path, Class<T> type)
 	{
 		return this.config.getList(path, new ArrayList<>()).stream()
@@ -109,16 +114,18 @@ public class ConfigFile
 	{
 		this.config.save(this.file);
 	}
-	
-	public void save(Consumer<IOException> exceptionHandler) 
+
+	public boolean save(Consumer<IOException> exceptionHandler) 
 	{
 		try 
 		{
 			save();
+			return true;
 		}
 		catch (IOException exception) 
 		{
 			exceptionHandler.accept(exception);
+			return false;
 		}
 	}
 }
