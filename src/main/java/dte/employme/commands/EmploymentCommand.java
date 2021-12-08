@@ -141,7 +141,8 @@ public class EmploymentCommand extends BaseCommand
 		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
 	}
 	
-	@Subcommand("notifications")
+	@Subcommand("notifier")
+	@Syntax("<notifier name>")
 	@Description("Choose which notifications you get once a job is created.")
 	public void setNotifications(Player player, JobAddedNotifier notifier) 
 	{
