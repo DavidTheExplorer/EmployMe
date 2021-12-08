@@ -1,6 +1,7 @@
 package dte.employme.job.addnotifiers.service;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import dte.employme.job.addnotifiers.JobAddedNotifier;
@@ -11,10 +12,11 @@ public interface JobAddedNotifierService
 	JobAddedNotifier getByName(String name);
 	void register(JobAddedNotifier notifier);
 	
-	//players' data
+	//players
 	JobAddedNotifier getPlayerNotifier(UUID playerUUID);
 	void setPlayerNotifier(UUID playerUUID, JobAddedNotifier notifier);
 	Map<UUID, JobAddedNotifier> getPlayersNotifiers();
+	Set<JobAddedNotifier> getNotifiers();
 	
 	//load & save
 	void loadPlayersNotifiers();
