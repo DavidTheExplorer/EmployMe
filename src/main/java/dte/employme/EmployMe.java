@@ -2,17 +2,15 @@ package dte.employme;
 
 import static dte.employme.job.Job.ORDER_BY_GOAL_NAME;
 import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
+import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
-import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
-import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.bstats.bukkit.Metrics;
@@ -34,6 +32,7 @@ import dte.employme.board.listeners.JobGoalTransferListener;
 import dte.employme.board.listeners.JobRewardGiveListener;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.config.ConfigFile;
+import dte.employme.config.ConfigFileFactory;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.conversations.Conversations;
@@ -73,7 +72,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private Conversations conversations;
-	private ConfigFile config, englishConfig, jobsConfig, subscriptionsConfig, jobNotificationPoliciesConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
+	private ConfigFile config, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
 
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 
@@ -93,44 +92,48 @@ public class EmployMe extends ModernJavaPlugin
 			return;
 		}
 		ServiceLocator.register(Economy.class, this.economy);
-
-
-
+		
+		
+		
 		//init the configs
 		Stream.of(SimpleJob.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
-
-		this.config = ConfigFile.loadResource("config.yml");
-		this.englishConfig = ConfigFile.loadResource("languages" + File.separator + "english.yml");
-		this.jobsConfig = ConfigFile.byPath("jobs.yml");
-		this.subscriptionsConfig = ConfigFile.byPath("subscriptions");
-		this.jobNotificationPoliciesConfig = ConfigFile.byPath("job add notifiers");
-		this.itemsContainersConfig = ConfigFile.byPath("containers" + File.separator + "items containers");
-		this.rewardsContainersConfig = ConfigFile.byPath("containers" + File.separator + "rewards containers");
-		this.languageConfig = getLanguageConfig();
-
-		if(!createOrDisable(this.jobsConfig, this.subscriptionsConfig, this.jobNotificationPoliciesConfig, this.itemsContainersConfig, this.rewardsContainersConfig))
+		
+		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
+				.handleCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
+				.handleSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
+				.build();
+		
+		this.config = configFileFactory.getConfig();
+		this.languageConfig = configFileFactory.getLanguageConfigFrom(this.config);
+		this.jobsConfig = configFileFactory.getJobsConfig();
+		this.subscriptionsConfig = configFileFactory.getSubscriptionsConfig();
+		this.jobAddNotifiersConfig = configFileFactory.getJobAddNotifiersConfig();
+		this.itemsContainersConfig = configFileFactory.getItemsContainersConfig();
+		this.rewardsContainersConfig = configFileFactory.getRewardsContainersConfig();
+		
+		if(this.config == null || this.languageConfig == null || this.jobsConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null)
 			return;
-
-
-
+		
+		
+		
 		//init the global job board, services, factories, etc.
 		this.itemFactory = new ItemFactory();
 		this.inventoryFactory = new InventoryFactory(this.itemFactory);
 		this.messageService = new TranslatedMessageService(this.languageConfig);
 		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
-
+		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
 		ServiceLocator.register(JobSubscriptionService.class, this.jobSubscriptionService);
-
+		
 		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig);
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
-
+		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
 
-		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobNotificationPoliciesConfig);
+		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
 		this.jobAddedNotifierService.register(new DoNotNotify());
 		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
 		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
@@ -154,7 +157,7 @@ public class EmployMe extends ModernJavaPlugin
 			this.jobSubscriptionService.saveSubscriptions();
 			this.jobAddedNotifierService.savePlayersNotifiers();
 		});
-
+		
 		new Metrics(this, 13423);
 	}
 
@@ -174,39 +177,6 @@ public class EmployMe extends ModernJavaPlugin
 			return null;
 
 		return provider.getProvider();
-	}
-
-	private ConfigFile getLanguageConfig()
-	{
-		String language = this.config.getConfig().getString("Language");
-		ConfigFile languageConfig = ConfigFile.byPath(String.format("languages/%s.yml", language));
-
-		if(!languageConfig.exists()) 
-		{
-			logToConsole(RED + String.format("The messages file for language '%s' is missing, defaulting to English!", language));
-			return this.englishConfig;
-		}
-
-		return languageConfig;
-	}
-
-	private boolean createOrDisable(ConfigFile... configs)
-	{
-		AtomicBoolean errorOccurred = new AtomicBoolean(false);
-
-		for(ConfigFile config : configs) 
-		{
-			ConfigFile.createIfAbsent(config, exception -> 
-			{
-				disableWithError(String.format(RED + "Could not create '%s': %s", config.getFile().getName(), exception.getMessage()));
-				errorOccurred.set(true);
-			});
-
-			if(errorOccurred.get())
-				break;
-		}
-
-		return !errorOccurred.get();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -248,7 +218,7 @@ public class EmployMe extends ModernJavaPlugin
 		{
 			Material material = Material.matchMaterial(context.popFirstArg());
 
-			if(material == null) 
+			if(material == null)
 				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND), false);
 
 			return material;
