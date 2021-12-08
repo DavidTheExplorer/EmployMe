@@ -63,7 +63,6 @@ public class EmploymentCommand extends BaseCommand
 	@Dependency
 	private MessageService messageService;
 	
-	
 	@HelpCommand
 	@CatchUnknown
 	public void sendHelp(CommandHelp help) 
@@ -143,6 +142,7 @@ public class EmploymentCommand extends BaseCommand
 	}
 	
 	@Subcommand("notifications")
+	@Description("Choose which notifications you get once a job is created.")
 	public void setNotifications(Player player, JobAddedNotifier notifier) 
 	{
 		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
