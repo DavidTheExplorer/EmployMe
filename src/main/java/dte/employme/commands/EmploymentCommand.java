@@ -1,5 +1,6 @@
 package dte.employme.commands;
 
+import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
@@ -8,8 +9,10 @@ import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.Placeholders.GOAL;
 import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
+import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIERS;
 import static java.util.stream.Collectors.joining;
 import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import co.aikar.commands.annotation.Dependency;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
@@ -77,7 +81,7 @@ public class EmploymentCommand extends BaseCommand
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
 		this.messageService.sendGeneralMessage(player, SUCCESSFULLY_SUBSCRIBED_TO_GOAL, new Placeholders().put(GOAL, EnumUtils.fixEnumName(material)));
 	}
-	
+
 	@Subcommand("unsubscribe")
 	@Description("Stop receiving notifications for an item.")
 	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
@@ -85,7 +89,7 @@ public class EmploymentCommand extends BaseCommand
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
 		this.messageService.sendGeneralMessage(player, SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, new Placeholders().put(GOAL, EnumUtils.fixEnumName(material)));
 	}
-	
+
 	@Subcommand("mysubscriptions")
 	@Description("See your reward subscriptions.")
 	public void showSubscriptions(Player player) 
@@ -93,22 +97,22 @@ public class EmploymentCommand extends BaseCommand
 		String subscriptionsNames = this.jobSubscriptionService.getSubscriptions(player.getUniqueId()).stream()
 				.map(EnumUtils::fixEnumName)
 				.collect(joining(WHITE + ", " + GOLD));
-		
+
 		if(subscriptionsNames.isEmpty())
 			subscriptionsNames = this.messageService.getMessage(NONE);
-		
+
 		subscriptionsNames += WHITE + ".";
-		
+
 		this.messageService.sendGeneralMessage(player, YOUR_SUBSCRIPTIONS_ARE, new Placeholders().put(GOAL_SUBSCRIPTIONS, subscriptionsNames));
 	}
-	
+
 	@Subcommand("view")
 	@Description("Search through all the Available Jobs.")
 	public void view(Player player)
 	{
 		this.globalJobBoard.showTo(player);
 	}
-	
+
 	@Subcommand("offer")
 	@Description("Offer a new Job to the public.")
 	@Conditions("Global Jobs Board Not Full")
@@ -116,36 +120,50 @@ public class EmploymentCommand extends BaseCommand
 	{
 		employer.openInventory(this.inventoryFactory.getCreationMenu(employer));
 	}
-	
+
 	@Subcommand("delete")
 	@Description("Delete a job.")
 	public void deleteJob(Player player) 
 	{
 		List<Job> jobsToDisplay = player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
-		
+
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
 		player.openInventory(this.inventoryFactory.getDeletionMenu(player, this.globalJobBoard, jobsToDisplay));
 	}
-	
+
 	@Subcommand("myitems")
 	@Description("Claim the items that people gathered for you.")
 	public void openContainer(Player employer) 
 	{
 		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()));
 	}
-	
+
 	@Subcommand("myrewards")
 	@Description("Claim the rewards you got from Jobs your completed.")
 	public void openRewardsContainer(Player player) 
 	{
 		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
 	}
-	
-	@Subcommand("notifications")
+
+	@Subcommand("notifier")
+	@Syntax("<notifier name>")
 	@Description("Choose which notifications you get once a job is created.")
 	public void setNotifications(Player player, JobAddedNotifier notifier) 
 	{
 		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
 		this.messageService.sendGeneralMessage(player, YOUR_NEW_JOB_ADDED_NOTIFIER_IS, new Placeholders().put(JOB_ADDED_NOTIFIER, notifier));
+	}
+
+	@Subcommand("notifiers list")
+	@Description("See the list of notifiers you can select.")
+	public void sendNotificationsList(Player player) 
+	{
+		String notifiersNames = this.jobAddedNotifierService.getNotifiers().stream()
+				.map(JobAddedNotifier::getName)
+				.collect(joining(WHITE + ", " + GREEN));
+
+		notifiersNames += WHITE + ".";
+
+		this.messageService.sendTo(player, THE_JOB_ADDED_NOTIFIERS_ARE, new Placeholders().put(JOB_ADDED_NOTIFIERS, notifiersNames));
 	}
 }

@@ -2,7 +2,9 @@ package dte.employme.job.addnotifiers.service;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import dte.employme.config.ConfigFile;
@@ -32,6 +34,12 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	public void register(JobAddedNotifier notifier) 
 	{
 		this.notifierByName.put(notifier.getName().toLowerCase(), notifier);
+	}
+	
+	@Override
+	public Set<JobAddedNotifier> getNotifiers() 
+	{
+		return new HashSet<>(this.notifierByName.values());
 	}
 
 	@Override
