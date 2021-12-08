@@ -99,8 +99,8 @@ public class EmployMe extends ModernJavaPlugin
 		Stream.of(SimpleJob.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
 		
 		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
-				.handleCreationException((exception, config) -> disableWithError(RED + String.format("Could not create '%s': %s", config.getFile().getName(), exception.getMessage())))
-				.handleSaveException((exception, config) -> disableWithError(RED + String.format("Could not save '%s': %s", config.getFile().getName(), exception.getMessage())))
+				.handleCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
+				.handleSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
 				.build();
 		
 		this.config = configFileFactory.getConfig();
