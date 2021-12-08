@@ -57,6 +57,13 @@ public class ConfigFileFactory
 
 		return save(config) ? config : null;
 	}
+	
+	public ConfigFile getJobsConfig() 
+	{
+		ConfigFile config = ConfigFile.byPath("jobs.yml");
+
+		return create(config) ? config : null;
+	}
 
 	public ConfigFile getSubscriptionsConfig() 
 	{
@@ -67,21 +74,21 @@ public class ConfigFileFactory
 
 	public ConfigFile getJobAddNotifiersConfig() 
 	{
-		ConfigFile config =  ConfigFile.byPath("job add notifiers");
+		ConfigFile config = ConfigFile.byPath("job add notifiers");
 		
 		return create(config) ? config : null;
 	}
 
 	public ConfigFile getItemsContainersConfig()
 	{
-		ConfigFile config =  ConfigFile.byPath("containers/items containers");
+		ConfigFile config = ConfigFile.byPath("containers/items containers");
 		
 		return create(config) ? config : null;
 	}
 
 	public ConfigFile getRewardsContainersConfig() 
 	{
-		ConfigFile config =  ConfigFile.byPath("containers/rewards containers");
+		ConfigFile config = ConfigFile.byPath("containers/rewards containers");
 		
 		return create(config) ? config : null;
 	}
@@ -149,13 +156,6 @@ public class ConfigFileFactory
 				.build();
 
 		return getLanguageConfig("english", messages);
-	}
-
-	public ConfigFile getJobsConfig() 
-	{
-		ConfigFile config = ConfigFile.byPath("jobs.yml");
-
-		return create(config) ? config : null;
 	}
 
 	private ConfigFile getLanguageConfig(String language, Map<MessageKey, String> messages) 
