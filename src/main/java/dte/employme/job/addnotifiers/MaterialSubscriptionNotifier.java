@@ -61,7 +61,7 @@ public class MaterialSubscriptionNotifier extends JobAddedChatNotifier
 		
 		return itemsReward.getItems().stream()
 				.map(ItemStack::getType)
-				.distinct()
+				.distinct() //TODO: move to be after the filter
 				.filter(material -> this.jobSubscriptionService.isSubscribedTo(playerUUID, material))
 				.map(EnumUtils::fixEnumName)
 				.collect(joining(", "));
