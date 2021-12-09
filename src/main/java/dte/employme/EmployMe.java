@@ -23,8 +23,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
-import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
+import dte.employme.board.SimpleJobBoard;
+import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.board.listeners.EmployerNotificationListener;
 import dte.employme.board.listeners.JobAddNotificationListener;
 import dte.employme.board.listeners.JobCompletedMessagesListener;
@@ -120,7 +121,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.itemFactory = new ItemFactory();
 		this.inventoryFactory = new InventoryFactory(this.itemFactory);
 		this.messageService = new TranslatedMessageService(this.languageConfig);
-		this.globalJobBoard = new InventoryJobBoard(this.itemFactory, ORDER_BY_GOAL_NAME);
+		this.globalJobBoard = new SimpleJobBoard();
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -185,15 +186,6 @@ public class EmployMe extends ModernJavaPlugin
 		BukkitCommandManager commandManager = new BukkitCommandManager(this);
 		commandManager.enableUnstableAPI("help");
 
-		//register dependencies
-		commandManager.registerDependency(JobBoard.class, this.globalJobBoard);
-		commandManager.registerDependency(JobService.class, this.jobService);
-		commandManager.registerDependency(InventoryFactory.class, this.inventoryFactory);
-		commandManager.registerDependency(PlayerContainerService.class, this.playerContainerService);
-		commandManager.registerDependency(JobSubscriptionService.class, this.jobSubscriptionService);
-		commandManager.registerDependency(MessageService.class, this.messageService);
-		commandManager.registerDependency(JobAddedNotifierService.class, this.jobAddedNotifierService);
-
 		//register conditions
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
@@ -236,6 +228,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new EmploymentCommand());
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.inventoryFactory, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(ORDER_BY_GOAL_NAME, this.itemFactory)));
 	}
 }

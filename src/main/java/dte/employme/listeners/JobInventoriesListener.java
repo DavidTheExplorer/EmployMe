@@ -14,8 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.board.InventoryJobBoard;
 import dte.employme.board.JobBoard;
+import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.items.ItemFactory;
@@ -40,7 +40,7 @@ public class JobInventoriesListener implements Listener
 	@EventHandler
 	public void onJobComplete(InventoryClickEvent event) 
 	{
-		InventoryJobBoard.getRepresentedBoard(event.getInventory()).ifPresent(inventoryBoard -> 
+		InventoryBoardDisplayer.getRepresentedBoard(event.getInventory()).ifPresent(inventoryBoard -> 
 		{
 			event.setCancelled(true);
 			ItemStack item = event.getCurrentItem();
