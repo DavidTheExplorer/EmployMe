@@ -3,6 +3,7 @@ package dte.employme.board;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -78,17 +79,13 @@ public class SimpleJobBoard implements JobBoard
 	@Override
 	public void registerAddListener(JobAddListener... listeners) 
 	{
-		//TODO: replace with Arrays.stream
-		for(JobAddListener listener : listeners)
-			this.addListeners.add(listener);
+		Arrays.stream(listeners).forEach(this.addListeners::add);
 	}
 	
 	@Override
 	public void registerCompleteListener(JobCompleteListener... listeners) 
 	{
-		//TODO: replace with Arrays.stream
-		for(JobCompleteListener listener : listeners)
-			this.completeListeners.add(listener);
+		Arrays.stream(listeners).forEach(this.completeListeners::add);
 	}
 	
 	@Override
