@@ -3,6 +3,7 @@ package dte.employme.board;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ import dte.employme.board.listeners.JobAddListener;
 import dte.employme.board.listeners.JobCompleteListener;
 import dte.employme.job.Job;
 
-public abstract class AbstractJobBoard implements JobBoard
+public class SimpleJobBoard implements JobBoard
 {
 	private final BiMap<String, Job> jobByID = HashBiMap.create();
 	
@@ -78,15 +79,13 @@ public abstract class AbstractJobBoard implements JobBoard
 	@Override
 	public void registerAddListener(JobAddListener... listeners) 
 	{
-		for(JobAddListener listener : listeners)
-			this.addListeners.add(listener);
+		Arrays.stream(listeners).forEach(this.addListeners::add);
 	}
 	
 	@Override
 	public void registerCompleteListener(JobCompleteListener... listeners) 
 	{
-		for(JobCompleteListener listener : listeners)
-			this.completeListeners.add(listener);
+		Arrays.stream(listeners).forEach(this.completeListeners::add);
 	}
 	
 	@Override
@@ -95,7 +94,7 @@ public abstract class AbstractJobBoard implements JobBoard
 		return this.jobByID.values().iterator();
 	}
 
-	protected String generateID()
+	private String generateID()
 	{
 		String id;
 

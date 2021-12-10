@@ -25,7 +25,4 @@ public interface JobBoard extends Iterable<Job>
 	//listeners
 	void registerAddListener(JobAddListener... listeners);
 	void registerCompleteListener(JobCompleteListener... listeners);
-	
-	//display
-	void showTo(Player player);
 }

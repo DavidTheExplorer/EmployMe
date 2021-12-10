@@ -1,9 +1,9 @@
 package dte.employme.commands;
 
-import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
+import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.Placeholders.GOAL;
@@ -25,18 +25,17 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.CatchUnknown;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Conditions;
-import co.aikar.commands.annotation.Dependency;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import dte.employme.board.JobBoard;
+import dte.employme.board.displayers.JobBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
-import dte.employme.job.service.JobService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
@@ -46,34 +45,32 @@ import dte.employme.utils.java.EnumUtils;
 @Description("The general employment command - View or Manage them!")
 public class EmploymentCommand extends BaseCommand
 {
-	@Dependency
-	private JobBoard globalJobBoard;
+	private final JobBoard globalJobBoard;
+	private final InventoryFactory inventoryFactory;
+	private final PlayerContainerService playerContainerService;
+	private final JobSubscriptionService jobSubscriptionService;
+	private final JobAddedNotifierService jobAddedNotifierService;
+	private final MessageService messageService;
+	private final JobBoardDisplayer jobBoardDisplayer;
 	
-	@Dependency
-	private JobService jobService;
-	
-	@Dependency
-	private InventoryFactory inventoryFactory;
-	
-	@Dependency
-	private PlayerContainerService playerContainerService;
-	
-	@Dependency
-	private JobSubscriptionService jobSubscriptionService;
-	
-	@Dependency
-	private JobAddedNotifierService jobAddedNotifierService;
-	
-	@Dependency
-	private MessageService messageService;
-	
+	public EmploymentCommand(JobBoard globalJobBoard, InventoryFactory inventoryFactory, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer) 
+	{
+		this.globalJobBoard = globalJobBoard;
+		this.inventoryFactory = inventoryFactory;
+		this.playerContainerService = playerContainerService;
+		this.jobSubscriptionService = jobSubscriptionService;
+		this.jobAddedNotifierService = jobAddedNotifierService;
+		this.messageService = messageService;
+		this.jobBoardDisplayer = jobBoardDisplayer;
+	}
+
 	@HelpCommand
 	@CatchUnknown
 	public void sendHelp(CommandHelp help) 
 	{
 		help.showHelp();
 	}
-	
+
 	@Subcommand("subscribe")
 	@Description("Get a notification once a job that rewards a desired item is posted.")
 	public void subscribe(Player player, Material material) 
@@ -110,7 +107,7 @@ public class EmploymentCommand extends BaseCommand
 	@Description("Search through all the Available Jobs.")
 	public void view(Player player)
 	{
-		this.globalJobBoard.showTo(player);
+		this.jobBoardDisplayer.display(player, this.globalJobBoard);
 	}
 
 	@Subcommand("offer")
