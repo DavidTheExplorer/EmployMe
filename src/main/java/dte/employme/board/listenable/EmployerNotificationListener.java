@@ -1,8 +1,9 @@
-package dte.employme.board.listeners;
+package dte.employme.board.listenable;
 
 import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.listenable.ListenableJobBoard.JobAddListener;
 import dte.employme.job.Job;
 import dte.employme.messages.service.MessageService;
 

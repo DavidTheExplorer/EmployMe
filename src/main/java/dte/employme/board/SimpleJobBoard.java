@@ -3,12 +3,9 @@ package dte.employme.board;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -17,23 +14,16 @@ import org.bukkit.entity.Player;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import dte.employme.board.listeners.JobAddListener;
-import dte.employme.board.listeners.JobCompleteListener;
 import dte.employme.job.Job;
 
 public class SimpleJobBoard implements JobBoard
 {
 	private final BiMap<String, Job> jobByID = HashBiMap.create();
 	
-	//listeners
-	private final Set<JobAddListener> addListeners = new LinkedHashSet<>();
-	private final Set<JobCompleteListener> completeListeners = new LinkedHashSet<>();
-
 	@Override
 	public void addJob(Job job) 
 	{
 		this.jobByID.put(generateID(), job);
-		this.addListeners.forEach(listener -> listener.onJobAdded(this, job));
 	}
 	
 	@Override
@@ -46,8 +36,6 @@ public class SimpleJobBoard implements JobBoard
 	public void completeJob(Job job, Player whoCompleted) 
 	{
 		removeJob(job);
-		
-		this.completeListeners.forEach(listener -> listener.onJobCompleted(this, job, whoCompleted));
 	}
 	
 	@Override
@@ -74,18 +62,6 @@ public class SimpleJobBoard implements JobBoard
 	public Optional<String> getJobID(Job job) 
 	{
 		return Optional.ofNullable(this.jobByID.inverse().get(job));
-	}
-	
-	@Override
-	public void registerAddListener(JobAddListener... listeners) 
-	{
-		Arrays.stream(listeners).forEach(this.addListeners::add);
-	}
-	
-	@Override
-	public void registerCompleteListener(JobCompleteListener... listeners) 
-	{
-		Arrays.stream(listeners).forEach(this.completeListeners::add);
 	}
 	
 	@Override

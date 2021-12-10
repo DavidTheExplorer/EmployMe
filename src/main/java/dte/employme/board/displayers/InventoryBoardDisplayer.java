@@ -19,14 +19,14 @@ import dte.employme.utils.InventoryUtils;
 
 public class InventoryBoardDisplayer implements JobBoardDisplayer
 {
-	private final Comparator<Job> jobsOrderComparator;
+	private final Comparator<Job> orderComparator;
 	private final ItemFactory itemFactory;
 	
 	private static final Map<Inventory, JobBoard> INVENTORIES = new HashMap<>();
 	
-	public InventoryBoardDisplayer(Comparator<Job> jobsOrderComparator, ItemFactory itemFactory) 
+	public InventoryBoardDisplayer(Comparator<Job> orderComparator, ItemFactory itemFactory) 
 	{
-		this.jobsOrderComparator = jobsOrderComparator;
+		this.orderComparator = orderComparator;
 		this.itemFactory = itemFactory;
 	}
 	
@@ -37,7 +37,7 @@ public class InventoryBoardDisplayer implements JobBoardDisplayer
 		InventoryUtils.buildWalls(inventory, createWall(Material.GRAY_STAINED_GLASS_PANE));
 		
 		jobBoard.getOfferedJobs().stream()
-		.sorted(this.jobsOrderComparator)
+		.sorted(this.orderComparator)
 		.map(job -> this.itemFactory.createOfferIcon(jobBoard, job, player))
 		.forEach(inventory::addItem);
 
