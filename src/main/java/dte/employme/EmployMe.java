@@ -22,14 +22,15 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
-import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
-import dte.employme.board.listeners.EmployerNotificationListener;
-import dte.employme.board.listeners.JobAddNotificationListener;
-import dte.employme.board.listeners.JobCompletedMessagesListener;
-import dte.employme.board.listeners.JobGoalTransferListener;
-import dte.employme.board.listeners.JobRewardGiveListener;
+import dte.employme.board.listenable.EmployerNotificationListener;
+import dte.employme.board.listenable.JobAddNotificationListener;
+import dte.employme.board.listenable.JobCompletedMessagesListener;
+import dte.employme.board.listenable.JobGoalTransferListener;
+import dte.employme.board.listenable.JobRewardGiveListener;
+import dte.employme.board.listenable.ListenableJobBoard;
+import dte.employme.board.listenable.SimpleListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
@@ -64,7 +65,7 @@ import net.milkbowl.vault.economy.Economy;
 public class EmployMe extends ModernJavaPlugin
 {
 	private Economy economy;
-	private JobBoard globalJobBoard;
+	private ListenableJobBoard globalJobBoard;
 	private JobService jobService;
 	private ItemFactory itemFactory;
 	private InventoryFactory inventoryFactory;
@@ -121,7 +122,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.itemFactory = new ItemFactory();
 		this.inventoryFactory = new InventoryFactory(this.itemFactory);
 		this.messageService = new TranslatedMessageService(this.languageConfig);
-		this.globalJobBoard = new SimpleJobBoard();
+		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();

@@ -1,4 +1,4 @@
-package dte.employme.board.listeners;
+package dte.employme.board.listenable;
 
 import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.JOB_COMPLETED;
@@ -9,6 +9,7 @@ import static dte.employme.utils.ChatColorUtils.colorize;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.listenable.ListenableJobBoard.JobCompleteListener;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.Placeholders;

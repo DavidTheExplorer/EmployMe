@@ -1,9 +1,10 @@
-package dte.employme.board.listeners;
+package dte.employme.board.listenable;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.listenable.ListenableJobBoard.JobCompleteListener;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.Job;
 import dte.employme.utils.InventoryUtils;

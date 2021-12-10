@@ -1,9 +1,10 @@
-package dte.employme.board.listeners;
+package dte.employme.board.listenable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.listenable.ListenableJobBoard.JobAddListener;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 
