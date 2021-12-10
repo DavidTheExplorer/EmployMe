@@ -1,6 +1,5 @@
 package dte.employme;
 
-import static dte.employme.job.Job.ORDER_BY_GOAL_NAME;
 import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
 import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
@@ -39,6 +38,7 @@ import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
 import dte.employme.items.ItemFactory;
+import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
 import dte.employme.job.addnotifiers.DoNotNotify;
@@ -228,6 +228,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.inventoryFactory, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(ORDER_BY_GOAL_NAME, this.itemFactory)));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.inventoryFactory, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.itemFactory)));
 	}
 }

@@ -22,7 +22,7 @@ public class InventoryBoardDisplayer implements JobBoardDisplayer
 	private final Comparator<Job> jobsOrderComparator;
 	private final ItemFactory itemFactory;
 	
-	private static final Map<Inventory, JobBoard> INVENTORIES_BOARDS = new HashMap<>();
+	private static final Map<Inventory, JobBoard> INVENTORIES = new HashMap<>();
 	
 	public InventoryBoardDisplayer(Comparator<Job> jobsOrderComparator, ItemFactory itemFactory) 
 	{
@@ -35,19 +35,18 @@ public class InventoryBoardDisplayer implements JobBoardDisplayer
 	{
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, "Available Jobs");
 		InventoryUtils.buildWalls(inventory, createWall(Material.GRAY_STAINED_GLASS_PANE));
-
-		//add the jobs of this board
+		
 		jobBoard.getOfferedJobs().stream()
 		.sorted(this.jobsOrderComparator)
 		.map(job -> this.itemFactory.createOfferIcon(jobBoard, job, player))
 		.forEach(inventory::addItem);
 
-		INVENTORIES_BOARDS.put(inventory, jobBoard);
+		INVENTORIES.put(inventory, jobBoard);
 		player.openInventory(inventory);
 	}
 	
 	public static Optional<JobBoard> getRepresentedBoard(Inventory inventory)
 	{
-		return Optional.ofNullable(INVENTORIES_BOARDS.get(inventory));
+		return Optional.ofNullable(INVENTORIES.get(inventory));
 	}
 }
