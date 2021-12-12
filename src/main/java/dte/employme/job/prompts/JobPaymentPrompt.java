@@ -11,22 +11,20 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-import dte.employme.board.JobBoard;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
+import dte.employme.visitors.reward.RewardTaker;
 import net.milkbowl.vault.economy.Economy;
 
 public class JobPaymentPrompt extends NumericPrompt
 {
 	private final Economy economy;
-	private final JobBoard jobBoard;
 	private final MessageService messageService;
 	
-	public JobPaymentPrompt(JobBoard jobBoard, Economy economy, MessageService messageService) 
+	public JobPaymentPrompt(Economy economy, MessageService messageService) 
 	{
 		this.economy = economy;
-		this.jobBoard = jobBoard;
 		this.messageService = messageService;
 	}
 	
@@ -41,17 +39,21 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) 
 	{
-		context.setSessionData("reward", new MoneyReward(this.economy, input.doubleValue()));
+		MoneyReward moneyReward = new MoneyReward(this.economy, input.doubleValue());
+		moneyReward.accept(new RewardTaker((Player) context.getForWhom(), this.economy));
 		
-		return new JobPostedMessagePrompt(this.jobBoard, this.economy);
+		context.setSessionData("reward", moneyReward);
+		
+		return Prompt.END_OF_CONVERSATION;
 	}
 	
 	@Override
 	protected boolean isNumberValid(ConversationContext context, Number input) 
 	{
+		Player player = (Player) context.getForWhom();
 		double payment = input.doubleValue();
 		
-		return payment > 0 && this.economy.has((Player) context.getForWhom(), payment);
+		return payment > 0 && this.economy.has(player, payment);
 	}
 	
 	@Override
@@ -65,7 +67,7 @@ public class JobPaymentPrompt extends NumericPrompt
 		else if(!this.economy.has((Player) context.getForWhom(), payment))
 			return this.messageService.getMessage(MONEY_REWARD_NOT_ENOUGH);
 		
-		throw new IllegalStateException("Can't create a Money Reward from the provided input.");
+		throw new IllegalStateException("Couldn't parse the provided input to an payment amount!");
 	}
 	
 	@Override

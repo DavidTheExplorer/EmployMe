@@ -15,7 +15,10 @@ public class Placeholders extends MapBuilder<String, String>
 	GOAL = "goal",
 	REWARDS = "rewards",
 	JOB_ADDED_NOTIFIER = "job added notifier",
-	JOB_ADDED_NOTIFIERS = "job added notifiers";
+	JOB_ADDED_NOTIFIERS = "job added notifiers",
+	ENCHANTMENT = "enchantment",
+	ENCHANTMENT_MIN_LEVEL = "enchantment min level",
+	ENCHANTMENT_MAX_LEVEL = "enchantment max level";
 
 	public static final Placeholders NONE = new Placeholders();
 

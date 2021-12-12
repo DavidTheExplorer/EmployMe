@@ -128,6 +128,12 @@ public class ItemBuilder
 		this.itemMeta.addItemFlags(flags);
 		return this;
 	}
+	
+	public ItemBuilder withoutEnchantments(Enchantment... enchantments) 
+	{
+		Arrays.stream(enchantments).forEach(this.item::removeEnchantment);
+		return this;
+	}
 
 	public ItemBuilder glowing()
 	{

@@ -9,26 +9,26 @@ import net.milkbowl.vault.economy.Economy;
 
 public class RewardTaker implements RewardVisitor<Void>
 {
-	private final Player employer;
+	private final Player player;
 	private final Economy economy;
 
-	public RewardTaker(Player employer, Economy economy) 
+	public RewardTaker(Player player, Economy economy) 
 	{
-		this.employer = employer;
+		this.player = player;
 		this.economy = economy;
 	}
 
 	@Override
 	public Void visit(MoneyReward moneyReward) 
 	{
-		this.economy.withdrawPlayer(this.employer, moneyReward.getPayment());
+		this.economy.withdrawPlayer(this.player, moneyReward.getPayment());
 		return null;
 	}
 
 	@Override
 	public Void visit(ItemsReward itemsReward) 
 	{
-		itemsReward.getItems().forEach(reward -> InventoryUtils.remove(this.employer.getInventory(), reward));
+		itemsReward.getItems().forEach(reward -> InventoryUtils.remove(this.player.getInventory(), reward));
 		return null;
 	}
 }

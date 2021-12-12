@@ -56,10 +56,15 @@
 							<pattern>org.bstats</pattern>
 							<shadedPattern>${shade.base}.bstats</shadedPattern>
 						</relocation>
-						
+
 						<relocation>
 							<pattern>dte.modernjavaplugin</pattern>
 							<shadedPattern>${shade.base}.modernjavaplugin</shadedPattern>
+						</relocation>
+
+						<relocation>
+							<pattern>com.github.stefvanschie.inventoryframework</pattern>
+							<shadedPattern>${shade.base}.inventoryframework</shadedPattern>
 						</relocation>
 
 					</relocations>
@@ -135,6 +140,13 @@
 			<groupId>com.github.DavidTheExplorer</groupId>
 			<artifactId>ModernJavaPlugin</artifactId>
 			<version>master-SNAPSHOT</version>
+		</dependency>
+
+		<!-- InventoryFramework -->
+		<dependency>
+			<groupId>com.github.stefvanschie.inventoryframework</groupId>
+			<artifactId>IF</artifactId>
+			<version>0.10.3</version>
 		</dependency>
 
 	</dependencies>

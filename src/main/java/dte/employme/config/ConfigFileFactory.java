@@ -117,9 +117,8 @@ public class ConfigFileFactory
 
 				//Jobs
 				.put(JOB_ADDED_TO_BOARD, "&aYour offer was added to the &eJobs Board&a!")
-				.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment myrewards\"")
 				.put(JOB_COMPLETED, "&aYou successfully completed this Job!")
-
+				.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment myrewards\"")
 				.put(JOB_SUCCESSFULLY_DELETED, "&eYou successfully deleted this Job!")
 				.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs!")
 				.put(ITEMS_JOB_NO_ITEMS_WARNING, "&cJob creation cancelled because you didn't offer any item.")
@@ -142,13 +141,18 @@ public class ConfigFileFactory
 				.put(MONEY_PAYMENT_AMOUNT_QUESTION, "&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%player money%&6$&f)")
 
 				//Goals
-				.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the following format: &bitemName:amount")
+				.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
 				.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
 
 				//Rewards
 				.put(MONEY_REWARD_ERROR_NEGATIVE, "&cCan't create a Money Reward that pays nothing or less!")
 				.put(MONEY_REWARD_NOT_ENOUGH, "&cYou can't offer an amount of money that you don't have!")
 				.put(MONEY_REWARD_NOT_A_NUMBER, "&cPayment has to be a Positive Integer!")
+				
+				//Enchantments
+				.put(MessageKey.ENTER_ENCHANTMENT_LEVEL, "&fWhat level for &a%enchantment%&f?")
+				.put(MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER, "&cThe Level must be an Integer!")
+				.put(MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, "&cThe provided level is out of bounds! (&4%enchantment min level%&c-&4%enchantment max level%&c)")
 
 				//General
 				.put(MUST_NOT_BE_CONVERSING, "&cYou have to finish your current conversation.")

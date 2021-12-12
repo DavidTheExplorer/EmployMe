@@ -2,6 +2,7 @@ package dte.employme.conversations;
 
 import java.util.Collection;
 
+import org.bukkit.Material;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
@@ -11,10 +12,11 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
+import dte.employme.inventories.GoalCustomizationGUI;
 import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.prompts.JobPaymentPrompt;
-import dte.employme.job.prompts.JobPostedMessagePrompt;
 import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.service.MessageService;
 import net.milkbowl.vault.economy.Economy;
@@ -40,11 +42,21 @@ public class Conversations
 		this.playerContainerService = playerContainerService;
 
 		this.moneyJobConversationFactory = createConversationFactory()
-				.withFirstPrompt(new JobGoalPrompt(new JobPaymentPrompt(globalJobBoard, economy, messageService), messageService))
-				.addConversationAbandonedListener(RETURN_REWARD_TO_PLAYER);
+				.withFirstPrompt(new JobPaymentPrompt(economy, messageService))
+				.addConversationAbandonedListener(RETURN_REWARD_TO_PLAYER)
+				.addConversationAbandonedListener(event -> 
+				{
+					if(!event.gracefulExit())
+						return;
+					
+					Player player = (Player) event.getContext().getForWhom();
+					MoneyReward moneyReward = (MoneyReward) event.getContext().getSessionData("reward");
+					
+					new GoalCustomizationGUI(createTypeConversationFactory(messageService), messageService, globalJobBoard, moneyReward).show(player);
+				});
 
 		this.itemsJobConversationFactory = createConversationFactory()
-				.withFirstPrompt(new JobGoalPrompt(new JobPostedMessagePrompt(globalJobBoard, economy), messageService))
+				.withFirstPrompt(new JobGoalPrompt(messageService))
 				.addConversationAbandonedListener(RETURN_REWARD_TO_PLAYER);
 	}
 
@@ -60,8 +72,28 @@ public class Conversations
 
 		return conversation;
 	}
+	
+	public ConversationFactory createTypeConversationFactory(MessageService messageService) 
+	{
+		return createConversationFactory()
+				.withLocalEcho(false)
+				.withFirstPrompt(new JobGoalPrompt(messageService))
+				.addConversationAbandonedListener(event -> 
+				{
+					if(!event.gracefulExit())
+						return;
 
-	private static ConversationFactory createConversationFactory()
+					Player player = (Player) event.getContext().getForWhom();
+					Material material = (Material) event.getContext().getSessionData("material");
+					GoalCustomizationGUI goalCustomizationGUI = (GoalCustomizationGUI) event.getContext().getSessionData("goal inventory");
+					
+					goalCustomizationGUI.setRefundRewardOnClose(true);
+					goalCustomizationGUI.setType(material);
+					goalCustomizationGUI.show(player);
+				});
+	}
+
+	public static ConversationFactory createConversationFactory()
 	{
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)

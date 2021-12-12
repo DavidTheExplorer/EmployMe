@@ -102,17 +102,17 @@ public class JobInventoriesListener implements Listener
 		if(item == null)
 			return;
 		
-		Player employer = (Player) event.getWhoClicked();
+		Player player = (Player) event.getWhoClicked();
 		
 		switch(event.getCurrentItem().getType())
 		{
 		case GOLD_INGOT:
-			this.conversations.ofMoneyJobCreation(employer).begin();
-			employer.closeInventory();
+			player.closeInventory();
+			this.conversations.ofMoneyJobCreation(player).begin();
 			break;
 			
 		case CHEST:
-			employer.openInventory(Bukkit.createInventory(null, 9 * 6, "What would you like to offer?"));
+			player.openInventory(Bukkit.createInventory(null, 9 * 6, "What would you like to offer?"));
 			break;
 		}
 	}
