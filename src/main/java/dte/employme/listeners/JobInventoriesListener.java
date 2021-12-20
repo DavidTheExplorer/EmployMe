@@ -14,11 +14,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
+import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
+import dte.employme.inventories.GoalCustomizationGUI;
 import dte.employme.items.ItemFactory;
+import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
 
@@ -28,13 +31,15 @@ public class JobInventoriesListener implements Listener
 	private final ItemFactory itemFactory;
 	private final JobBoard globalJobBoard;
 	private final MessageService messageService;
+	private final PlayerContainerService playerContainerService;
 	
-	public JobInventoriesListener(JobBoard globalJobBoard, ItemFactory itemFactory, Conversations conversations, MessageService messageService) 
+	public JobInventoriesListener(JobBoard globalJobBoard, ItemFactory itemFactory, Conversations conversations, MessageService messageService, PlayerContainerService playerContainerService) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.itemFactory = itemFactory;
 		this.conversations = conversations;
 		this.messageService = messageService;
+		this.playerContainerService = playerContainerService;
 	}
 	
 	@EventHandler
@@ -131,8 +136,9 @@ public class JobInventoriesListener implements Listener
 			this.messageService.sendGeneralMessage(player, ITEMS_JOB_NO_ITEMS_WARNING);
 			return;
 		}
+		ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
 		
-		this.conversations.ofItemsJobCreation(player, offeredItems).begin();
+		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> new GoalCustomizationGUI(this.conversations.createTypeConversationFactory(this.messageService), this.messageService, this.globalJobBoard, itemsReward).show(player));
 	}
 	
 	@EventHandler

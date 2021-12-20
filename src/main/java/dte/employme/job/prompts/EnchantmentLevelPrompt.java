@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import dte.employme.inventories.GoalCustomizationGUI;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.java.EnumUtils;
+import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.java.NumberUtils;
 
 public class EnchantmentLevelPrompt extends NumericPrompt
@@ -36,7 +36,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	public String getPromptText(ConversationContext context) 
 	{
 		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL, 
-				new Placeholders().put(ENCHANTMENT, EnumUtils.fixEnumName(this.enchantment.getKey().getKey())));
+				new Placeholders().put(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment)));
 	}
 	
 	@Override

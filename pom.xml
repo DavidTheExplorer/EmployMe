@@ -28,6 +28,7 @@
 				<configuration>
 					<target>1.8</target>
 					<source>1.8</source>
+					<encoding>UTF-8</encoding>
 					<compilerArgs>
 						<arg>-parameters</arg>
 					</compilerArgs>

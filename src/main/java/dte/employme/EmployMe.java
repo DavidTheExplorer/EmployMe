@@ -150,7 +150,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService), new PlayerContainerAbuseListener());
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService, this.playerContainerService), new PlayerContainerAbuseListener());
 
 		setDisableListener(() -> 
 		{

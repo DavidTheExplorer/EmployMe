@@ -75,7 +75,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	private GuiItem createEnchantmentItem(Enchantment enchantment) 
 	{
 		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
-				.named(GREEN + EnumUtils.fixEnumName(enchantment.getKey().getKey()))
+				.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
 				.withLore(WHITE + "Click to add this Enchantment to the Goal.")
 				.createCopy();
 

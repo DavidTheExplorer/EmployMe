@@ -3,21 +3,23 @@ package dte.employme.items;
 import static dte.employme.utils.ChatColorUtils.bold;
 import static dte.employme.utils.ChatColorUtils.colorize;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
-import static dte.employme.utils.ChatColorUtils.underlined;
 import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.LIGHT_PURPLE;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,9 +27,13 @@ import com.google.common.collect.Lists;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
+import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.rewards.MoneyReward;
+import dte.employme.job.rewards.Reward;
+import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.visitors.reward.InventoryRewardDescriptor;
+import dte.employme.utils.java.RomanNumeralsConverter;
 
 public class ItemFactory
 {
@@ -36,12 +42,12 @@ public class ItemFactory
 	 */
 	public ItemStack createBasicIcon(Job job) 
 	{
-		//lore
 		List<String> lore = new ArrayList<>();
-		lore.add(underlined(AQUA) + "Description" + AQUA + ":");
-		lore.add(WHITE + "I need " + AQUA + ItemStackUtils.describe(job.getGoal()) + WHITE + ".");
+		lore.add(bold(AQUA) + "Goal: " + WHITE + "I need " + AQUA + AQUA + ItemStackUtils.describe(job.getGoal()) + WHITE + ".");
+		lore.addAll(getGoalEnchantmentsLore(job.getGoal()));
 		lore.add(" ");
-		lore.addAll(job.getReward().accept(InventoryRewardDescriptor.INSTANCE));
+		lore.add(describe(job.getReward()));
+		lore.add(" ");
 
 		return new ItemBuilder(job.getGoal().getType())
 				.named(GREEN + job.getEmployer().getName() + "'s Offer")
@@ -56,7 +62,6 @@ public class ItemFactory
 
 		//add the status and ID to the lore
 		List<String> lore = basicIcon.getItemMeta().getLore();
-		lore.add(" ");
 		lore.addAll(createJobStatusLore(job, player));
 		lore.add(createIDLine(job, jobBoard));
 
@@ -91,17 +96,56 @@ public class ItemFactory
 	private List<String> createJobStatusLore(Job job, Player player) 
 	{
 		boolean finished = job.hasFinished(player);
-		ChatColor lineColor = finished ? WHITE : DARK_RED;
-		
+		String separator = createSeparationLine(finished ? WHITE : DARK_RED, finished ? 25 : 29);
+		String finishMessage = finished ? (bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job.");
+
 		return Lists.newArrayList(
-				createSeparationLine(lineColor, 23),
-				finished ? (StringUtils.repeat(" ", 6) + bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job."),
-						createSeparationLine(lineColor, 23)
+				separator,
+				StringUtils.repeat(" ", finished ? 8 : 4) + finishMessage, 
+				separator
 				);
 	}
 
 	private static String createIDLine(Job job, JobBoard jobBoard)
 	{
 		return colorize(String.format("&7ID: %s", jobBoard.getJobID(job).get()));
+	}
+
+	private List<String> getGoalEnchantmentsLore(ItemStack goal)
+	{
+		List<String> lore = new ArrayList<>();
+		Map<Enchantment, Integer> enchantments = goal.getEnchantments();
+
+		if(enchantments.isEmpty())
+			return lore;
+
+		lore.add(" ");
+		lore.add(String.format(LIGHT_PURPLE + "Enchant " + WHITE + "%s with:", goal.getAmount() == 1 ? "it" : "them"));
+
+		goal.getEnchantments().forEach((enchantment, level) -> 
+		{
+			String enchantmentName = EnchantmentUtils.getDisplayName(enchantment);
+			String romanLevel = RomanNumeralsConverter.convert(level);
+
+			lore.add(colorize(String.format("&f✶ &a%s %s", enchantmentName, romanLevel)));
+		});
+
+		return lore;
+	}
+
+	private static String describe(Reward reward)
+	{
+		String description = colorize("&6&n&lPayment&6: ");
+
+		if(reward instanceof MoneyReward)
+			description += colorize(String.format("&f%.2f$", ((MoneyReward) reward).getPayment()));
+
+		else if(reward instanceof ItemsReward)
+			description += WHITE + "Click to view Items.";
+
+		else
+			throw new IllegalStateException(String.format("The provided reward cannot be described! (%s)", reward));
+		
+		return description;
 	}
 }

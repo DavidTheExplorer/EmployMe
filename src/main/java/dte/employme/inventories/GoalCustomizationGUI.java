@@ -34,6 +34,7 @@ import dte.employme.messages.service.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 
+//TODO: allow asking for enchanted books
 public class GoalCustomizationGUI extends ChestGui
 {
 	private final ConversationFactory typeConversationFactory;
@@ -112,12 +113,16 @@ public class GoalCustomizationGUI extends ChestGui
 			item.addEnchantment(enchantment, level);
 			return item;
 		});
-		
-		update();
 	}
 
 	public void setAmount(int amount) 
 	{
+		updateCurrentItem(item -> 
+		{
+			item.setAmount(amount);
+			return item;
+		});
+		
 		this.amount = amount;
 		this.optionsPane.removeItem(6, 3);
 		this.optionsPane.addItem(createAmountItem(), 6, 3);
@@ -136,6 +141,8 @@ public class GoalCustomizationGUI extends ChestGui
 
 		this.itemPane.removeItem(1, 1);
 		this.itemPane.addItem(this.currentItem = updatedItem, 1, 1);
+		
+		update();
 	}
 
 	private void setEnchantmentsItemVisibility(boolean visible) 
@@ -169,7 +176,7 @@ public class GoalCustomizationGUI extends ChestGui
 
 			Job job = new SimpleJob.Builder()
 					.by(player)
-					.of(new ItemStack(type, this.amount))
+					.of(createGoal())
 					.thatOffers(this.reward)
 					.build();
 
@@ -260,5 +267,13 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		human.closeInventory();
 		setRefundRewardOnClose(refundReward);
+	}
+	
+	private ItemStack createGoal() 
+	{
+		return new ItemBuilder(getType())
+				.amounted(this.amount)
+				.withEnchantments(getCurrentItem().getEnchantments())
+				.createCopy();
 	}
 }
