@@ -135,17 +135,17 @@ public class ItemFactory
 
 	private static String describe(Reward reward)
 	{
-		String description = colorize("&6&n&lPayment&6: ");
+		String description = "&6&n&lPayment&6: ";
 
 		if(reward instanceof MoneyReward)
-			description += colorize(String.format("&f%.2f$", ((MoneyReward) reward).getPayment()));
+			description += String.format("&f%.2f$", ((MoneyReward) reward).getPayment());
 
 		else if(reward instanceof ItemsReward)
-			description += WHITE + "Click to view Items.";
+			description += String.format("&fClick to Preview items(%d).", ((ItemsReward) reward).getItems().size());
 
 		else
-			throw new IllegalStateException(String.format("The provided reward cannot be described! (%s)", reward));
+			throw new IllegalStateException(String.format("The provided items reward cannot be described! (%s)", reward));
 		
-		return description;
+		return colorize(description);
 	}
 }
