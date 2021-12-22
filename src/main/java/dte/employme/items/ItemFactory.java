@@ -114,7 +114,7 @@ public class ItemFactory
 	private List<String> getGoalEnchantmentsLore(ItemStack goal)
 	{
 		List<String> lore = new ArrayList<>();
-		Map<Enchantment, Integer> enchantments = goal.getEnchantments();
+		Map<Enchantment, Integer> enchantments = EnchantmentUtils.getEnchantments(goal);
 
 		if(enchantments.isEmpty())
 			return lore;
@@ -122,7 +122,7 @@ public class ItemFactory
 		lore.add(" ");
 		lore.add(String.format(LIGHT_PURPLE + "Enchant " + WHITE + "%s with:", goal.getAmount() == 1 ? "it" : "them"));
 
-		goal.getEnchantments().forEach((enchantment, level) -> 
+		enchantments.forEach((enchantment, level) -> 
 		{
 			String enchantmentName = EnchantmentUtils.getDisplayName(enchantment);
 			String romanLevel = RomanNumeralsConverter.convert(level);

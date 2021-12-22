@@ -1,13 +1,8 @@
 package dte.employme.inventories;
 
-import static dte.employme.utils.java.Predicates.negate;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toSet;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
-
-import java.util.Arrays;
-import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,8 +17,8 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.conversations.Conversations;
 import dte.employme.job.prompts.EnchantmentLevelPrompt;
 import dte.employme.messages.service.MessageService;
+import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.utils.java.EnumUtils;
 
 public class GoalEnchantmentSelectionGUI extends ChestGui
 {
@@ -53,23 +48,15 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	private OutlinePane getEnchantmentsPane(Priority priority) 
 	{
 		OutlinePane pane = new OutlinePane(0, 0, 9, 6, priority);
+		
+		ItemStack currentItem = this.goalCustomizationGUI.getCurrentItem();
 
-		getRemainingEnchantments().stream()
+		EnchantmentUtils.getRemainingEnchantments(currentItem).stream()
+		.sorted(comparing(enchantment -> enchantment.getKey().getKey())) //sort the enchantments by their names
 		.map(this::createEnchantmentItem)
 		.forEach(pane::addItem);
 
 		return pane;
-	}
-	
-	private Set<Enchantment> getRemainingEnchantments()
-	{
-		ItemStack currentItem = this.goalCustomizationGUI.getCurrentItem();
-
-		return Arrays.stream(Enchantment.values())
-				.filter(negate(currentItem::containsEnchantment))
-				.filter(enchantment -> enchantment.canEnchantItem(currentItem))
-				.sorted(comparing(enchantment -> enchantment.getKey().getKey())) //sort the enchantments by their names
-				.collect(toSet());
 	}
 
 	private GuiItem createEnchantmentItem(Enchantment enchantment) 

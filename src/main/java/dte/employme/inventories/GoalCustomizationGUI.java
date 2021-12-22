@@ -1,6 +1,12 @@
 package dte.employme.inventories;
 
 import static dte.employme.utils.ChatColorUtils.bold;
+import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
+import static dte.employme.utils.EnchantmentUtils.enchant;
+import static dte.employme.utils.EnchantmentUtils.getEnchantments;
+import static dte.employme.utils.EnchantmentUtils.ifEnchantedBook;
+import static dte.employme.utils.EnchantmentUtils.isEnchantable;
+import static dte.employme.utils.EnchantmentUtils.removeEnchantment;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryFrameworkUtils.createSquare;
 import static dte.employme.utils.InventoryUtils.createWall;
@@ -11,6 +17,8 @@ import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.Material;
@@ -31,10 +39,8 @@ import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 
-//TODO: allow asking for enchanted books
 public class GoalCustomizationGUI extends ChestGui
 {
 	private final ConversationFactory typeConversationFactory;
@@ -88,44 +94,56 @@ public class GoalCustomizationGUI extends ChestGui
 
 	public void setType(Material material)
 	{
-		if(getType() == NO_ITEM_TYPE) 
+		if(getType() == NO_ITEM_TYPE)
 			this.optionsPane.addItem(createAmountItem(), 6, 3);
 		
-		ItemStack updatedItem = new ItemBuilder(this.currentItem.getItem())
-				.ofType(material)
-				.named(GREEN + "Current Item")
-				.withItemFlags(HIDE_ATTRIBUTES)
-				.createCopy();
+		updateCurrentItem(item -> 
+		{
+			//get all enchantments(normal / enchanted book's stored ones)
+			Map<Enchantment, Integer> enchantments = new HashMap<>();
+			enchantments.putAll(item.getEnchantments());
+			ifEnchantedBook(item, meta -> enchantments.putAll(meta.getStoredEnchants()));
+			
+			ItemStack updatedItem = new ItemBuilder(this.currentItem.getItem())
+					.ofType(material) //set the new material
+					.named(GREEN + "Current Item")
+					.withItemFlags(HIDE_ATTRIBUTES)
+					.createCopy();
+			
+			//remove all enchantments
+			enchantments.keySet().forEach(enchantment -> removeEnchantment(item, enchantment));
+			
+			//return only the valid ones, into their proper place(stored/regular)
+			enchantments.keySet().stream()
+			.filter(enchantment -> canEnchantItem(enchantment, item))
+			.forEach(enchantment -> enchant(item, enchantment, enchantments.get(enchantment)));
+			
+			return updatedItem;
+		});
 		
-		//remove the enchantments that can't be applied to the new material
-		updatedItem.getEnchantments().keySet().stream()
-		.filter(enchantment -> !enchantment.canEnchantItem(updatedItem))
-		.forEach(updatedItem::removeEnchantment);
-		
-		setEnchantmentsItemVisibility(EnchantmentUtils.isEnchantable(updatedItem));
-		updateCurrentItem(item -> updatedItem);
+		setEnchantmentsItemVisibility(isEnchantable(getCurrentItem()));
 	}
 
 	public void addEnchantment(Enchantment enchantment, int level) 
 	{
 		updateCurrentItem(item -> 
 		{
-			item.addEnchantment(enchantment, level);
+			enchant(item, enchantment, level);
 			return item;
 		});
 	}
 
 	public void setAmount(int amount) 
 	{
+		this.amount = amount;
+		this.optionsPane.removeItem(6, 3);
+		this.optionsPane.addItem(createAmountItem(), 6, 3);
+		
 		updateCurrentItem(item -> 
 		{
 			item.setAmount(amount);
 			return item;
 		});
-		
-		this.amount = amount;
-		this.optionsPane.removeItem(6, 3);
-		this.optionsPane.addItem(createAmountItem(), 6, 3);
 
 		update();
 	}
@@ -268,12 +286,12 @@ public class GoalCustomizationGUI extends ChestGui
 		human.closeInventory();
 		setRefundRewardOnClose(refundReward);
 	}
-	
-	private ItemStack createGoal() 
+
+	private ItemStack createGoal()
 	{
 		return new ItemBuilder(getType())
 				.amounted(this.amount)
-				.withEnchantments(getCurrentItem().getEnchantments())
+				.withEnchantments(getEnchantments(getCurrentItem()))
 				.createCopy();
 	}
 }
