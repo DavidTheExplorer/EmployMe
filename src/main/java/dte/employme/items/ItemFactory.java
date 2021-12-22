@@ -141,7 +141,7 @@ public class ItemFactory
 			description += String.format("&f%.2f$", ((MoneyReward) reward).getPayment());
 
 		else if(reward instanceof ItemsReward)
-			description += String.format("&fClick to Preview items(%d).", ((ItemsReward) reward).getItems().size());
+			description += String.format("&fRight Click to preview items(%d).", ((ItemsReward) reward).getItems().size());
 
 		else
 			throw new IllegalStateException(String.format("The provided items reward cannot be described! (%s)", reward));

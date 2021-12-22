@@ -20,6 +20,7 @@ import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.GoalCustomizationGUI;
+import dte.employme.inventories.ItemsRewardPreviewGUI;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.service.MessageService;
@@ -45,6 +46,7 @@ public class JobInventoriesListener implements Listener
 	@EventHandler
 	public void onJobComplete(InventoryClickEvent event) 
 	{
+		//TODO: replace with guard clauses
 		InventoryBoardDisplayer.getRepresentedBoard(event.getInventory()).ifPresent(inventoryBoard -> 
 		{
 			event.setCancelled(true);
@@ -57,11 +59,22 @@ public class JobInventoriesListener implements Listener
 			
 			this.itemFactory.getJobID(item)
 			.flatMap(inventoryBoard::getJobByID)
-			.filter(job -> job.hasFinished(player))
 			.ifPresent(job ->
 			{
-				player.closeInventory();
-				this.globalJobBoard.completeJob(job, player);
+				//Right click = preview mode for jobs that offer items
+				if(event.isRightClick() && job.getReward() instanceof ItemsReward)
+				{
+					ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward());
+					gui.setOnClose(closeEvent -> player.openInventory(event.getInventory()));
+					gui.show(player);
+				}
+				
+				//the user wants to finish the job
+				else if(job.hasFinished(player))
+				{
+					player.closeInventory();
+					this.globalJobBoard.completeJob(job, player);
+				}
 			});
 		});
 	}
