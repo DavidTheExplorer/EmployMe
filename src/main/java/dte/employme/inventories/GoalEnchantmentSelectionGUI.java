@@ -1,8 +1,12 @@
 package dte.employme.inventories;
 
+import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
+import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.Comparator.comparing;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
+
+import java.util.Comparator;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -24,9 +28,11 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 {
 	private final MessageService messageService;
 	private final GoalCustomizationGUI goalCustomizationGUI;
-	
+
+	private static final Comparator<Enchantment> ORDER_BY_NAME = comparing(enchantment -> enchantment.getKey().getKey());
+
 	//temp data
-	private boolean showCustomizationGuiOnClose = true;
+	private boolean showCustomizationGUIOnClose = true;
 
 	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI)
 	{
@@ -37,29 +43,28 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 		setOnClose(event -> 
 		{
-			if(this.showCustomizationGuiOnClose)
+			if(this.showCustomizationGUIOnClose)
 				goalCustomizationGUI.show(event.getPlayer());
 		});
-		
-		addPane(getEnchantmentsPane(Priority.LOWEST));
+
+		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
+		addPane(getEnchantmentsPane(Priority.LOW));
 		update();
 	}
 
 	private OutlinePane getEnchantmentsPane(Priority priority) 
 	{
 		OutlinePane pane = new OutlinePane(0, 0, 9, 6, priority);
-		
-		ItemStack currentItem = this.goalCustomizationGUI.getCurrentItem();
 
-		EnchantmentUtils.getRemainingEnchantments(currentItem).stream()
-		.sorted(comparing(enchantment -> enchantment.getKey().getKey())) //sort the enchantments by their names
-		.map(this::createEnchantmentItem)
+		EnchantmentUtils.getRemainingEnchantments(this.goalCustomizationGUI.getCurrentItem()).stream()
+		.sorted(ORDER_BY_NAME)
+		.map(this::createEnchantedBook)
 		.forEach(pane::addItem);
 
 		return pane;
 	}
 
-	private GuiItem createEnchantmentItem(Enchantment enchantment) 
+	private GuiItem createEnchantedBook(Enchantment enchantment) 
 	{
 		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
 				.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
@@ -68,9 +73,9 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 		return new GuiItem(item, event -> 
 		{
+			this.showCustomizationGUIOnClose = false;
+			
 			Player player = (Player) event.getWhoClicked();
-
-			this.showCustomizationGuiOnClose = false;
 			player.closeInventory();
 
 			Conversations.createConversationFactory()
