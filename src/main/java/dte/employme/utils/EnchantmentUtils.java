@@ -19,14 +19,14 @@ public class EnchantmentUtils
 {
 	//Container of static methods
 	private EnchantmentUtils(){}
-	
+
 	public static String getDisplayName(Enchantment enchantment) 
 	{
 		return EnumUtils.fixEnumName(enchantment.getKey().getKey());
 	}
-	
-	
-	
+
+
+
 	/*
 	 * Replacement methods to enchantment related ones, in order to treat Enchantment Books' Stored Enchantments as regular enchantments.
 	 * This results in a clean and not repetitive code.
@@ -46,14 +46,10 @@ public class EnchantmentUtils
 
 	public static void enchant(ItemStack item, Enchantment enchantment, int level) 
 	{
-		if(!isEnchantedBook(item))
-		{
+		if(isEnchantedBook(item))
+			ifEnchantedBook(item, meta -> meta.addStoredEnchant(enchantment, level, true));
+		else
 			item.addUnsafeEnchantment(enchantment, level);
-			return;
-		}
-		EnchantmentStorageMeta itemMeta = (EnchantmentStorageMeta) item.getItemMeta();
-		itemMeta.addStoredEnchant(enchantment, level, true);
-		item.setItemMeta(itemMeta);
 	}
 
 	public static void removeEnchantment(ItemStack item, Enchantment enchantment) 
@@ -66,7 +62,7 @@ public class EnchantmentUtils
 	{
 		return isEnchantedBook(item) ? true : enchantment.canEnchantItem(item);
 	}
-	
+
 	public static Map<Enchantment, Integer> getEnchantments(ItemStack item)
 	{
 		return !isEnchantedBook(item) ? item.getEnchantments() : ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants();
@@ -82,19 +78,18 @@ public class EnchantmentUtils
 				.collect(toSet());
 	}
 
-	private static boolean isEnchantedBook(ItemStack item) 
-	{
-		return item.getItemMeta() instanceof EnchantmentStorageMeta;
-	}
-	
-	public static boolean ifEnchantedBook(ItemStack item, Consumer<EnchantmentStorageMeta> metaConsumer) 
+	public static void ifEnchantedBook(ItemStack item, Consumer<EnchantmentStorageMeta> metaConsumer) 
 	{
 		if(!isEnchantedBook(item))
-			return false;
-		
+			return;
+
 		EnchantmentStorageMeta itemMeta = (EnchantmentStorageMeta) item.getItemMeta();
 		metaConsumer.accept(itemMeta);
 		item.setItemMeta(itemMeta);
-		return true;
+	}
+
+	private static boolean isEnchantedBook(ItemStack item) 
+	{
+		return item.getItemMeta() instanceof EnchantmentStorageMeta;
 	}
 }
