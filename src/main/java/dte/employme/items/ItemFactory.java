@@ -30,6 +30,7 @@ import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.rewards.Reward;
+import dte.employme.job.service.JobService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.items.ItemBuilder;
@@ -37,6 +38,13 @@ import dte.employme.utils.java.RomanNumeralsConverter;
 
 public class ItemFactory
 {
+	private final JobService jobService;
+	
+	public ItemFactory(JobService jobService) 
+	{
+		this.jobService = jobService;
+	}
+	
 	/*
 	 * Jobs
 	 */
@@ -95,7 +103,7 @@ public class ItemFactory
 
 	private List<String> createJobStatusLore(Job job, Player player) 
 	{
-		boolean finished = job.hasFinished(player);
+		boolean finished = this.jobService.hasFinished(player, job);
 		String separator = createSeparationLine(finished ? WHITE : DARK_RED, finished ? 25 : 29);
 		String finishMessage = finished ? (bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job.");
 

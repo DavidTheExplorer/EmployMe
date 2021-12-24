@@ -7,6 +7,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.listenable.ListenableJobBoard.JobCompleteListener;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.Job;
+import dte.employme.job.service.JobService;
 import dte.employme.utils.InventoryUtils;
 
 public class JobGoalTransferListener implements JobCompleteListener
@@ -23,7 +24,7 @@ public class JobGoalTransferListener implements JobCompleteListener
 	{
 		ItemStack goal = job.getGoal();
 		
-		InventoryUtils.removeIf(whoCompleted.getInventory(), item -> Job.isGoal(item, goal), goal.getAmount());
+		InventoryUtils.removeIf(whoCompleted.getInventory(), item -> JobService.isGoal(item, goal), goal.getAmount());
 		this.playerContainerService.getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
 	}
 }

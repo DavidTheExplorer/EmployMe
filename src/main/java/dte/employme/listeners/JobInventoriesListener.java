@@ -23,20 +23,23 @@ import dte.employme.inventories.GoalCustomizationGUI;
 import dte.employme.inventories.ItemsRewardPreviewGUI;
 import dte.employme.items.ItemFactory;
 import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.service.JobService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
 
 public class JobInventoriesListener implements Listener
 {
-	private final Conversations conversations;
-	private final ItemFactory itemFactory;
 	private final JobBoard globalJobBoard;
+	private final JobService jobService;
+	private final ItemFactory itemFactory;
+	private final Conversations conversations;
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
 	
-	public JobInventoriesListener(JobBoard globalJobBoard, ItemFactory itemFactory, Conversations conversations, MessageService messageService, PlayerContainerService playerContainerService) 
+	public JobInventoriesListener(JobBoard globalJobBoard, JobService jobService, ItemFactory itemFactory, Conversations conversations, MessageService messageService, PlayerContainerService playerContainerService) 
 	{
 		this.globalJobBoard = globalJobBoard;
+		this.jobService = jobService;
 		this.itemFactory = itemFactory;
 		this.conversations = conversations;
 		this.messageService = messageService;
@@ -70,7 +73,7 @@ public class JobInventoriesListener implements Listener
 				}
 				
 				//the user wants to finish the job
-				else if(job.hasFinished(player))
+				else if(this.jobService.hasFinished(player, job))
 				{
 					player.closeInventory();
 					this.globalJobBoard.completeJob(job, player);

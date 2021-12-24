@@ -7,11 +7,9 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.rewards.Reward;
-import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.MapBuilder;
 
 @SerializableAs("Job")
@@ -54,12 +52,6 @@ public class SimpleJob implements Job
 	}
 	
 	@Override
-	public boolean hasFinished(Player player) 
-	{
-		return InventoryUtils.containsAtLeast(player.getInventory(), item -> Job.isGoal(item, this.goal), this.goal.getAmount());
-	}
-	
-	@Override
 	public Map<String, Object> serialize()
 	{
 		return new MapBuilder<String, Object>()
@@ -74,10 +66,9 @@ public class SimpleJob implements Job
 	{
 		return String.format("SimpleJob [employer=%s, goal=%s, reward=%s]", this.employer.getUniqueId().toString(), this.goal, this.reward);
 	}
-
-
-
-
+	
+	
+	
 	public static class Builder
 	{
 		OfflinePlayer employer;

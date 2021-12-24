@@ -69,7 +69,7 @@
 						</relocation>
 
 						<relocation>
-							<pattern>de.tr7zw.changeme.nbtapi</pattern>
+							<pattern>de.tr7zw</pattern>
 							<shadedPattern>${shade.base}.nbtapi</shadedPattern>
 						</relocation>
 
