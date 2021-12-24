@@ -188,6 +188,9 @@ public class GoalCustomizationGUI extends ChestGui
 
 			if(type == NO_ITEM_TYPE)
 				return;
+			//the goal is a non-enchanted enchanted book lmfao
+			if(type == Material.ENCHANTED_BOOK && getEnchantments(getCurrentItem()).isEmpty())
+				return;
 
 			Player player = (Player) event.getWhoClicked();
 			closeInventory(player, false);
