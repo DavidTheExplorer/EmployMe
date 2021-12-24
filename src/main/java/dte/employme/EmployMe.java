@@ -107,13 +107,12 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.config = configFileFactory.getConfig();
 		this.languageConfig = configFileFactory.getLanguageConfigFrom(this.config);
-		this.jobsConfig = configFileFactory.getJobsConfig();
 		this.subscriptionsConfig = configFileFactory.getSubscriptionsConfig();
 		this.jobAddNotifiersConfig = configFileFactory.getJobAddNotifiersConfig();
 		this.itemsContainersConfig = configFileFactory.getItemsContainersConfig();
 		this.rewardsContainersConfig = configFileFactory.getRewardsContainersConfig();
 		
-		if(this.config == null || this.languageConfig == null || this.jobsConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null)
+		if(this.config == null || this.languageConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null)
 			return;
 		
 		
@@ -129,6 +128,11 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig);
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
+		
+		this.jobsConfig = configFileFactory.getJobsConfig();
+		
+		if(this.jobsConfig == null)
+			return;
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
