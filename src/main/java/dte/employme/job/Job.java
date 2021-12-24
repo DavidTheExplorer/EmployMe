@@ -6,7 +6,6 @@ import java.util.Comparator;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.rewards.Reward;
@@ -17,7 +16,7 @@ public interface Job extends ConfigurationSerializable
 	ItemStack getGoal();
 	Reward getReward();
 	
-	boolean hasFinished(Player player);
+	
 	
 	Comparator<Job>
 	ORDER_BY_EMPLOYER_NAME = comparing(job -> job.getEmployer().getName().toLowerCase()),

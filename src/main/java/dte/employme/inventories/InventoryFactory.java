@@ -49,7 +49,7 @@ public class InventoryFactory
 		.map(job -> this.itemFactory.createDeletionIcon(jobBoard, job))
 		.forEach(inventory::addItem);
 		
-		InventoryUtils.fillEmptySlots(inventory, InventoryUtils.createWall(Material.BLACK_STAINED_GLASS_PANE));
+		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
 
 		return inventory;
 	}

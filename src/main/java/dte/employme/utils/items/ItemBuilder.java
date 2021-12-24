@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -100,10 +101,18 @@ public class ItemBuilder
 		metaActions.accept(metaClass.cast(this.itemMeta));
 		return this;
 	}
-	
+
 	public ItemBuilder withEnchantment(Enchantment enchantment, int level)
 	{
-		this.itemMeta.addEnchant(enchantment, level, true);
+		if(this.itemMeta instanceof EnchantmentStorageMeta) 
+		{
+			EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) this.itemMeta;
+			enchantmentMeta.addStoredEnchant(enchantment, level, true);
+		}
+		else
+		{
+			this.itemMeta.addEnchant(enchantment, level, true);
+		}
 		return this;
 	}
 
@@ -126,6 +135,12 @@ public class ItemBuilder
 	public ItemBuilder withItemFlags(ItemFlag... flags)
 	{
 		this.itemMeta.addItemFlags(flags);
+		return this;
+	}
+	
+	public ItemBuilder withoutEnchantments(Enchantment... enchantments) 
+	{
+		Arrays.stream(enchantments).forEach(this.item::removeEnchantment);
 		return this;
 	}
 

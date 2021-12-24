@@ -6,52 +6,42 @@ import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.RegexPrompt;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.conversations.ValidatingPrompt;
 
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.java.NumberUtils;
 
-public class JobGoalPrompt extends RegexPrompt
+public class JobGoalPrompt extends ValidatingPrompt
 {
-	private final Prompt nextPrompt;
 	private final MessageService messageService;
 	
-	public JobGoalPrompt(Prompt nextPrompt, MessageService messageService) 
+	public JobGoalPrompt(MessageService messageService) 
 	{
-		super("[A-Za-z_]+:\\d+");
-		
-		this.nextPrompt = nextPrompt;
 		this.messageService = messageService;
 	}
 
 	@Override
-	public String getPromptText(ConversationContext context) 
+	public String getPromptText(ConversationContext context)
 	{
 		return this.messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION);
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String input) 
+	protected boolean isInputValid(ConversationContext context, String input)
 	{
-		String[] materialAndAmount = input.split(":");
-		context.setSessionData("goal", new ItemStack(Material.matchMaterial(materialAndAmount[0]), Integer.valueOf(materialAndAmount[1])));
+		Material material = Material.matchMaterial(input);
 		
-		return this.nextPrompt;
+		if(material == null)
+			return false;
+		
+		return !material.isAir() && material != Material.BARRIER;
 	}
 	
 	@Override
-	protected boolean isInputValid(ConversationContext context, String input)
+	protected Prompt acceptValidatedInput(ConversationContext context, String input) 
 	{
-		if(!super.isInputValid(context, input))
-			return false;
+		context.setSessionData("material", Material.matchMaterial(input));
 		
-		Material material = Material.matchMaterial(input.split(":")[0]);
-		
-		if(material == null || material.isAir())
-			return false;
-		
-		return NumberUtils.parseInt(input.split(":")[1]).isPresent();
+		return Prompt.END_OF_CONVERSATION;
 	}
 	
 	@Override

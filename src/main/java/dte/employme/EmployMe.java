@@ -119,10 +119,8 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the global job board, services, factories, etc.
-		this.itemFactory = new ItemFactory();
-		this.inventoryFactory = new InventoryFactory(this.itemFactory);
-		this.messageService = new TranslatedMessageService(this.languageConfig);
 		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
+		this.messageService = new TranslatedMessageService(this.languageConfig);
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -134,6 +132,9 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
+		
+		this.itemFactory = new ItemFactory(this.jobService);
+		this.inventoryFactory = new InventoryFactory(this.itemFactory);
 
 		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
 		this.jobAddedNotifierService.register(new DoNotNotify());
@@ -150,7 +151,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.itemFactory, this.conversations, this.messageService), new PlayerContainerAbuseListener());
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.jobService, this.itemFactory, this.conversations, this.messageService, this.playerContainerService), new PlayerContainerAbuseListener());
 
 		setDisableListener(() -> 
 		{

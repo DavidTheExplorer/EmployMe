@@ -12,11 +12,11 @@
 
 	<build>
 		<finalName>EmployMe ${project.version}</finalName>
-		
+
 		<resources>
 			<resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 
@@ -28,6 +28,7 @@
 				<configuration>
 					<target>1.8</target>
 					<source>1.8</source>
+					<encoding>UTF-8</encoding>
 					<compilerArgs>
 						<arg>-parameters</arg>
 					</compilerArgs>
@@ -56,10 +57,20 @@
 							<pattern>org.bstats</pattern>
 							<shadedPattern>${shade.base}.bstats</shadedPattern>
 						</relocation>
-						
+
 						<relocation>
 							<pattern>dte.modernjavaplugin</pattern>
 							<shadedPattern>${shade.base}.modernjavaplugin</shadedPattern>
+						</relocation>
+
+						<relocation>
+							<pattern>com.github.stefvanschie.inventoryframework</pattern>
+							<shadedPattern>${shade.base}.inventoryframework</shadedPattern>
+						</relocation>
+
+						<relocation>
+							<pattern>de.tr7zw</pattern>
+							<shadedPattern>${shade.base}.nbtapi</shadedPattern>
 						</relocation>
 
 					</relocations>
@@ -92,6 +103,12 @@
 		<repository>
 			<id>aikar</id>
 			<url>https://repo.aikar.co/content/groups/aikar/</url>
+		</repository>
+
+		<repository>
+			<id>codemc-repo</id>
+			<url>https://repo.codemc.org/repository/maven-public/</url>
+			<layout>default</layout>
 		</repository>
 
 	</repositories>
@@ -127,7 +144,6 @@
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
 			<version>2.2.1</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<!-- ModernJavaPlugin -->
@@ -135,6 +151,20 @@
 			<groupId>com.github.DavidTheExplorer</groupId>
 			<artifactId>ModernJavaPlugin</artifactId>
 			<version>master-SNAPSHOT</version>
+		</dependency>
+
+		<!-- InventoryFramework -->
+		<dependency>
+			<groupId>com.github.stefvanschie.inventoryframework</groupId>
+			<artifactId>IF</artifactId>
+			<version>0.10.3</version>
+		</dependency>
+
+		<!-- Item-NBT-API -->
+		<dependency>
+			<groupId>de.tr7zw</groupId>
+			<artifactId>item-nbt-api-plugin</artifactId>
+			<version>2.8.0</version>
 		</dependency>
 
 	</dependencies>

@@ -1,5 +1,6 @@
 package dte.employme.job.rewards;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import dte.employme.utils.java.ServiceLocator;
 import dte.employme.visitors.reward.RewardVisitor;
 
 @SerializableAs("Items Reward")
-public class ItemsReward implements Reward
+public class ItemsReward implements Reward, Iterable<ItemStack>
 {
 	private final Iterable<ItemStack> items;
 	private final PlayerContainerService playerContainerService;
@@ -60,6 +61,12 @@ public class ItemsReward implements Reward
 		return new MapBuilder<String, Object>()
 				.put("Items", this.items)
 				.build();
+	}
+	
+	@Override
+	public Iterator<ItemStack> iterator() 
+	{
+		return this.items.iterator();
 	}
 
 	@Override
