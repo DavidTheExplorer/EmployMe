@@ -4,7 +4,6 @@ import static dte.employme.utils.ChatColorUtils.bold;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
 import static dte.employme.utils.EnchantmentUtils.getEnchantments;
-import static dte.employme.utils.EnchantmentUtils.ifEnchantedBook;
 import static dte.employme.utils.EnchantmentUtils.isEnchantable;
 import static dte.employme.utils.EnchantmentUtils.removeEnchantment;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
@@ -17,7 +16,6 @@ import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -39,6 +37,7 @@ import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.service.MessageService;
+import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
@@ -99,24 +98,19 @@ public class GoalCustomizationGUI extends ChestGui
 		
 		updateCurrentItem(item -> 
 		{
-			//get all enchantments(normal / enchanted book's stored ones)
-			Map<Enchantment, Integer> enchantments = new HashMap<>();
-			enchantments.putAll(item.getEnchantments());
-			ifEnchantedBook(item, meta -> enchantments.putAll(meta.getStoredEnchants()));
+			Map<Enchantment, Integer> enchantments = EnchantmentUtils.getAllEnchantments(item);
 			
-			ItemStack updatedItem = new ItemBuilder(this.currentItem.getItem())
+			ItemStack updatedItem = new ItemBuilder(item)
 					.ofType(material) //set the new material
 					.named(GREEN + "Current Item")
 					.withItemFlags(HIDE_ATTRIBUTES)
 					.createCopy();
 			
-			//remove all enchantments
-			enchantments.keySet().forEach(enchantment -> removeEnchantment(item, enchantment));
-			
-			//return only the valid ones, into their proper place(stored/regular)
+			//remove the invalid enchantments, and put the valid ones in their proper places(stored/regular)
 			enchantments.keySet().stream()
-			.filter(enchantment -> canEnchantItem(enchantment, item))
-			.forEach(enchantment -> enchant(item, enchantment, enchantments.get(enchantment)));
+			.peek(enchantment -> removeEnchantment(updatedItem, enchantment))
+			.filter(enchantment -> canEnchantItem(enchantment, updatedItem))
+			.forEach(enchantment -> enchant(updatedItem, enchantment, enchantments.get(enchantment)));
 			
 			return updatedItem;
 		});
@@ -165,9 +159,9 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private void setEnchantmentsItemVisibility(boolean visible) 
 	{
-		this.optionsPane.removeItem(6, 2);
-
 		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE));
+		
+		this.optionsPane.removeItem(6, 2);
 		this.optionsPane.addItem(updatedItem, 6, 2);
 	}
 
@@ -185,15 +179,17 @@ public class GoalCustomizationGUI extends ChestGui
 				event ->
 		{
 			Material type = this.currentItem.getItem().getType();
-
+			
+			//the user didn't select an item
 			if(type == NO_ITEM_TYPE)
 				return;
+			
 			//the goal is a non-enchanted enchanted book lmfao
 			if(type == Material.ENCHANTED_BOOK && getEnchantments(getCurrentItem()).isEmpty())
 				return;
 
 			Player player = (Player) event.getWhoClicked();
-			closeInventory(player, false);
+			closeWithoutRefund(player);
 
 			Job job = new SimpleJob.Builder()
 					.by(player)
@@ -222,7 +218,7 @@ public class GoalCustomizationGUI extends ChestGui
 		{
 			Player player = (Player) event.getWhoClicked();
 
-			closeInventory(player, false);
+			closeWithoutRefund(player);
 			createTypeConversation(player).begin();
 
 		}), 6, 1);
@@ -271,7 +267,7 @@ public class GoalCustomizationGUI extends ChestGui
 			if(getType() == NO_ITEM_TYPE)
 				return;
 			
-			closeInventory(event.getWhoClicked(), false);
+			closeWithoutRefund(event.getWhoClicked());
 			new GoalEnchantmentSelectionGUI(this.messageService, this).show(event.getWhoClicked());
 		});
 	}
@@ -284,10 +280,10 @@ public class GoalCustomizationGUI extends ChestGui
 		return conversation;
 	}
 
-	private void closeInventory(HumanEntity human, boolean refundReward) 
+	private void closeWithoutRefund(HumanEntity human) 
 	{
+		setRefundRewardOnClose(false);
 		human.closeInventory();
-		setRefundRewardOnClose(refundReward);
 	}
 
 	private ItemStack createGoal()

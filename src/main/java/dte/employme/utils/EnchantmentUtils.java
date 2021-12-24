@@ -4,6 +4,7 @@ import static dte.employme.utils.java.Predicates.negate;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -66,6 +67,15 @@ public class EnchantmentUtils
 	public static Map<Enchantment, Integer> getEnchantments(ItemStack item)
 	{
 		return !isEnchantedBook(item) ? item.getEnchantments() : ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants();
+	}
+	
+	public static Map<Enchantment, Integer> getAllEnchantments(ItemStack item)
+	{
+		Map<Enchantment, Integer> enchantments = new HashMap<>();
+		enchantments.putAll(item.getEnchantments());
+		ifEnchantedBook(item, meta -> enchantments.putAll(meta.getStoredEnchants()));
+		
+		return enchantments;
 	}
 
 	public static Set<Enchantment> getRemainingEnchantments(ItemStack item)
