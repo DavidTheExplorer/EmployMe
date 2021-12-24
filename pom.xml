@@ -12,11 +12,11 @@
 
 	<build>
 		<finalName>EmployMe ${project.version}</finalName>
-		
+
 		<resources>
 			<resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 
@@ -68,6 +68,11 @@
 							<shadedPattern>${shade.base}.inventoryframework</shadedPattern>
 						</relocation>
 
+						<relocation>
+							<pattern>de.tr7zw.changeme.nbtapi</pattern>
+							<shadedPattern>${shade.base}.nbtapi</shadedPattern>
+						</relocation>
+
 					</relocations>
 				</configuration>
 				<executions>
@@ -98,6 +103,12 @@
 		<repository>
 			<id>aikar</id>
 			<url>https://repo.aikar.co/content/groups/aikar/</url>
+		</repository>
+
+		<repository>
+			<id>codemc-repo</id>
+			<url>https://repo.codemc.org/repository/maven-public/</url>
+			<layout>default</layout>
 		</repository>
 
 	</repositories>
@@ -147,6 +158,13 @@
 			<groupId>com.github.stefvanschie.inventoryframework</groupId>
 			<artifactId>IF</artifactId>
 			<version>0.10.3</version>
+		</dependency>
+
+		<!-- Item-NBT-API -->
+		<dependency>
+			<groupId>de.tr7zw</groupId>
+			<artifactId>item-nbt-api-plugin</artifactId>
+			<version>2.8.0</version>
 		</dependency>
 
 	</dependencies>

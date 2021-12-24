@@ -102,11 +102,14 @@ public class InventoryUtils
 	
 	public static int remove(Inventory inventory, ItemStack item) 
 	{
+		return removeIf(inventory, testedItem -> testedItem.isSimilar(item), item.getAmount());
+	}
+	
+	public static int removeIf(Inventory inventory, Predicate<ItemStack> tester, int amountLeft) 
+	{
 		Map<Integer, ItemStack> similarItems = dataStream(inventory)
-				.filter(itemData -> itemData.getValue().isSimilar(item))
+				.filter(itemData -> tester.test(itemData.getValue()))
 				.collect(toMap(Entry::getKey, Entry::getValue));
-		
-		int amountLeft = item.getAmount();
 		
 		for(Map.Entry<Integer, ItemStack> entry : similarItems.entrySet())
 		{

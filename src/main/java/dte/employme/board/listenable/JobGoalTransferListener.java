@@ -23,7 +23,7 @@ public class JobGoalTransferListener implements JobCompleteListener
 	{
 		ItemStack goal = job.getGoal();
 		
-		InventoryUtils.remove(whoCompleted.getInventory(), goal);
+		InventoryUtils.removeIf(whoCompleted.getInventory(), item -> Job.isGoal(item, goal), goal.getAmount());
 		this.playerContainerService.getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
 	}
 }
