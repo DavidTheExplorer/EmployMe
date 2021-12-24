@@ -150,8 +150,9 @@ public class JobInventoriesListener implements Listener
 			return;
 		}
 		ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
+		GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.conversations.createTypeConversationFactory(this.messageService), this.messageService, this.globalJobBoard, itemsReward);
 		
-		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> new GoalCustomizationGUI(this.conversations.createTypeConversationFactory(this.messageService), this.messageService, this.globalJobBoard, itemsReward).show(player));
+		Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
 	}
 	
 	@EventHandler
