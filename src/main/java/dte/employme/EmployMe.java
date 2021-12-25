@@ -39,7 +39,6 @@ import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.inventories.InventoryFactory;
-import dte.employme.items.ItemFactory;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
@@ -68,7 +67,6 @@ public class EmployMe extends ModernJavaPlugin
 	private Economy economy;
 	private ListenableJobBoard globalJobBoard;
 	private JobService jobService;
-	private ItemFactory itemFactory;
 	private InventoryFactory inventoryFactory;
 	private PlayerContainerService playerContainerService;
 	private JobSubscriptionService jobSubscriptionService;
@@ -121,6 +119,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
 		this.messageService = new TranslatedMessageService(this.languageConfig);
+		this.inventoryFactory = new InventoryFactory();
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -137,9 +136,6 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
-		
-		this.itemFactory = new ItemFactory(this.jobService);
-		this.inventoryFactory = new InventoryFactory(this.itemFactory);
 
 		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
 		this.jobAddedNotifierService.register(new DoNotNotify());
@@ -156,7 +152,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.jobService, this.itemFactory, this.conversations, this.messageService, this.playerContainerService), new PlayerContainerAbuseListener());
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.jobService, this.conversations, this.messageService, this.playerContainerService), new PlayerContainerAbuseListener());
 
 		setDisableListener(() -> 
 		{
@@ -245,6 +241,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.inventoryFactory, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.itemFactory)));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.inventoryFactory, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService)));
 	}
 }
