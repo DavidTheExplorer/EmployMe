@@ -127,6 +127,7 @@ public class EmploymentCommand extends BaseCommand
 	@Subcommand("delete")
 	@Description("Delete a job.")
 	@CommandPermission("employme.jobs.delete")
+	public void deleteJob(Player player)
 	{
 		List<Job> jobsToDisplay = player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
 
