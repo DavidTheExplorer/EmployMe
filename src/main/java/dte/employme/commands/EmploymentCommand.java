@@ -132,7 +132,7 @@ public class EmploymentCommand extends BaseCommand
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService);
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
 	@Subcommand("myitems")
