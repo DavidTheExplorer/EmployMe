@@ -27,6 +27,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
@@ -127,10 +128,8 @@ public class EmploymentCommand extends BaseCommand
 	@Subcommand("delete")
 	@Description("Delete a job.")
 	@CommandPermission("employme.jobs.delete")
-	public void deleteJob(Player player)
+	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
-		List<Job> jobsToDisplay = player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
-
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
 		player.openInventory(this.inventoryFactory.getDeletionMenu(player, this.globalJobBoard, jobsToDisplay));
 	}
