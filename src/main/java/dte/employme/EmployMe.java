@@ -10,6 +10,7 @@ import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.bstats.bukkit.Metrics;
@@ -231,6 +232,16 @@ public class EmployMe extends ModernJavaPlugin
 				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND, new Placeholders().put(JOB_ADDED_NOTIFIER, notifierName)), false);
 
 			return notifier;
+		});
+		
+		commandManager.getCommandContexts().registerIssuerOnlyContext(List.class, context -> 
+		{
+			if(!context.hasFlag("Jobs Able To Delete"))
+				return null;
+			
+			Player player = context.getPlayer();
+			
+			return player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
 		});
 
 		//register commands
