@@ -38,7 +38,6 @@ import dte.employme.config.ConfigFileFactory;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.conversations.Conversations;
-import dte.employme.inventories.InventoryFactory;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
@@ -67,7 +66,6 @@ public class EmployMe extends ModernJavaPlugin
 	private Economy economy;
 	private ListenableJobBoard globalJobBoard;
 	private JobService jobService;
-	private InventoryFactory inventoryFactory;
 	private PlayerContainerService playerContainerService;
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
@@ -119,7 +117,6 @@ public class EmployMe extends ModernJavaPlugin
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
 		this.messageService = new ColoredMessageService(new TranslatedMessageService(this.languageConfig));
-		this.inventoryFactory = new InventoryFactory();
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -152,7 +149,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.jobService, this.conversations, this.messageService, this.playerContainerService), new PlayerContainerAbuseListener());
+		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.jobService), new PlayerContainerAbuseListener());
 
 		setDisableListener(() -> 
 		{
@@ -243,6 +240,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.inventoryFactory, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService)));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService), this.conversations));
 	}
 }
