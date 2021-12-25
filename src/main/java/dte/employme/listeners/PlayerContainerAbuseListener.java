@@ -10,6 +10,22 @@ import dte.employme.containers.service.PlayerContainerService;
 
 public class PlayerContainerAbuseListener implements Listener
 {
+	@EventHandler
+	public void onClick(InventoryClickEvent event) 
+	{
+		if(!PlayerContainerService.isContainer(event.getView()))
+			return;
+		
+		switch(event.getRawSlot()) 
+		{
+		case 43:
+		case 44:
+		case 52:
+		case 53:
+			event.setCancelled(true);
+		}
+	}
+	
 	@SuppressWarnings("incomplete-switch")
 	@EventHandler
 	public void onAbuse(InventoryClickEvent event) 

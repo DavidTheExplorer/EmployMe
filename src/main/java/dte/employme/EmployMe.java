@@ -52,7 +52,6 @@ import dte.employme.job.service.JobService;
 import dte.employme.job.service.SimpleJobService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
-import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
@@ -149,7 +148,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new JobInventoriesListener(this.globalJobBoard, this.jobService), new PlayerContainerAbuseListener());
+		registerListeners(new PlayerContainerAbuseListener());
 
 		setDisableListener(() -> 
 		{
