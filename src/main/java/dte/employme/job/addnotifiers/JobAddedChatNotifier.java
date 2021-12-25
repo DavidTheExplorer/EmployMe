@@ -27,9 +27,9 @@ public abstract class JobAddedChatNotifier extends AbstractJobAddedNotifier
 	public void notify(Player player, Job job)
 	{
 		player.sendMessage(createSeparationLine(GRAY, 45));
-		createMessages(player, job).forEach((messageKey, placeholders) -> this.messageService.sendGeneralMessage(player, messageKey, placeholders));
+		createMessages(player, job).forEach((messageKey, placeholders) -> player.sendMessage(Placeholders.apply(this.messageService.getGeneralMessage(messageKey), placeholders)));
 		player.sendMessage(createSeparationLine(GRAY, 45));
 	}
 	
-	protected abstract Map<MessageKey, Placeholders> createMessages(Player player, Job job);
+	protected abstract Map<MessageKey, Map<String, String>> createMessages(Player player, Job job);
 }

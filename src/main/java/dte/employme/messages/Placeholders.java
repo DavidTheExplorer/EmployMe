@@ -1,49 +1,35 @@
 package dte.employme.messages;
 
-import java.util.Map.Entry;
+import java.util.Map;
 
-import dte.employme.job.addnotifiers.JobAddedNotifier;
-import dte.employme.utils.java.MapBuilder;
-
-public class Placeholders extends MapBuilder<String, String>
+public class Placeholders
 {
+	//Container of static fields
+	private Placeholders(){}
+	
 	public static final String 
-	PLAYER_NAME = "player",
-	GOAL_SUBSCRIPTIONS = "goal subscriptions",
-	COMPLETER = "completer",
-	PLAYER_MONEY = "player money",
-	GOAL = "goal",
-	REWARDS = "rewards",
-	JOB_ADDED_NOTIFIER = "job added notifier",
-	JOB_ADDED_NOTIFIERS = "job added notifiers",
-	ENCHANTMENT = "enchantment",
-	ENCHANTMENT_MIN_LEVEL = "enchantment min level",
-	ENCHANTMENT_MAX_LEVEL = "enchantment max level";
+	PLAYER_NAME = create("player"),
+	GOAL_SUBSCRIPTIONS = create("goal subscriptions"),
+	COMPLETER = create("completer"),
+	PLAYER_MONEY = create("player money"),
+	GOAL = create("goal"),
+	REWARDS = create("rewards"),
+	JOB_ADDED_NOTIFIER = create("job added notifier"),
+	JOB_ADDED_NOTIFIERS = create("job added notifiers"),
+	ENCHANTMENT = create("enchantment"),
+	ENCHANTMENT_MIN_LEVEL = create("enchantment min level"),
+	ENCHANTMENT_MAX_LEVEL = create("enchantment max level");
 
-	public static final Placeholders NONE = new Placeholders();
-
-	@Override
-	public Placeholders put(String key, String value) 
+	public static String apply(String text, Map<String, String> placeholders) 
 	{
-		super.put("%" + key + "%", value);
-		return this;
-	}
-
-	public Placeholders put(String key, JobAddedNotifier notifier) 
-	{
-		return put(key, notifier.getName());
-	}
-
-	public Placeholders put(String key, Object value) 
-	{
-		return put(key, value.toString());
-	}
-
-	public String apply(String text) 
-	{
-		for(Entry<String, String> entry : build().entrySet())
+		for(Map.Entry<String, String> entry : placeholders.entrySet())
 			text = text.replace(entry.getKey(), entry.getValue());
-
+		
 		return text;
+	}
+
+	private static String create(String value) 
+	{
+		return '%' + value + '%';
 	}
 }

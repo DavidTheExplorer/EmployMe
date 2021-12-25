@@ -1,10 +1,7 @@
 package dte.employme.messages.service;
 
-import static dte.employme.utils.ChatColorUtils.colorize;
-
 import dte.employme.config.ConfigFile;
 import dte.employme.messages.MessageKey;
-import dte.employme.messages.Placeholders;
 import dte.employme.utils.java.EnumUtils;
 
 public class TranslatedMessageService implements MessageService
@@ -17,19 +14,10 @@ public class TranslatedMessageService implements MessageService
 	}
 	
 	@Override
-	public String getMessage(MessageKey key, Placeholders placeholders) 
+	public String getMessage(MessageKey key) 
 	{
-		String finalMessage;
+		String configPath = String.format("Messages.%s", EnumUtils.fixEnumName(key));
 		
-		finalMessage = this.languageConfig.getConfig().getString(getConfigPath(key));
-		finalMessage = colorize(finalMessage);
-		finalMessage = placeholders.apply(finalMessage);
-		
-		return finalMessage;
-	}
-	
-	private static String getConfigPath(MessageKey key) 
-	{
-		return String.format("Messages.%s", EnumUtils.fixEnumName(key));
+		return this.languageConfig.getConfig().getString(configPath);
 	}
 }

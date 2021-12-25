@@ -12,7 +12,6 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.visitors.reward.RewardTaker;
 import net.milkbowl.vault.economy.Economy;
@@ -31,9 +30,10 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		double employerMoney = this.economy.getBalance((Player) context.getForWhom());
+		Double employerMoney = this.economy.getBalance((Player) context.getForWhom());
 		
-		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION, new Placeholders().put(PLAYER_MONEY, employerMoney));
+		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
+				.replace(PLAYER_MONEY, employerMoney.toString());
 	}
 
 	@Override
