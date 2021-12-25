@@ -13,22 +13,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import dte.employme.board.JobBoard;
-import dte.employme.items.ItemFactory;
+import dte.employme.items.JobDeletionIcon;
 import dte.employme.job.Job;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.items.ItemBuilder;
 
 public class InventoryFactory 
 {
-	private final ItemFactory itemFactory;
-
 	//cached menus
 	private Inventory jobCreationInventory;
-
-	public InventoryFactory(ItemFactory itemFactory) 
-	{
-		this.itemFactory = itemFactory;
-	}
 
 	/*
 	 * Menus
@@ -46,7 +39,7 @@ public class InventoryFactory
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, "Select Jobs to Delete");
 
 		jobsToDisplay.stream()
-		.map(job -> this.itemFactory.createDeletionIcon(jobBoard, job))
+		.map(job -> JobDeletionIcon.create(jobBoard, job))
 		.forEach(inventory::addItem);
 		
 		InventoryUtils.fillEmptySlots(inventory, createWall(Material.BLACK_STAINED_GLASS_PANE));
