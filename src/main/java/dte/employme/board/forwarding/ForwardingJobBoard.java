@@ -2,7 +2,6 @@ package dte.employme.board.forwarding;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -47,18 +46,6 @@ public abstract class ForwardingJobBoard implements JobBoard
 	public List<Job> getJobsOfferedBy(UUID employerUUID) 
 	{
 		return this.delegate.getJobsOfferedBy(employerUUID);
-	}
-
-	@Override
-	public Optional<Job> getJobByID(String id) 
-	{
-		return this.delegate.getJobByID(id);
-	}
-
-	@Override
-	public Optional<String> getJobID(Job job) 
-	{
-		return this.delegate.getJobID(job);
 	}
 	
 	@Override

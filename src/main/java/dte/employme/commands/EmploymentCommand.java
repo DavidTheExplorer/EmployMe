@@ -34,7 +34,9 @@ import co.aikar.commands.annotation.Syntax;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.JobBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
-import dte.employme.inventories.InventoryFactory;
+import dte.employme.conversations.Conversations;
+import dte.employme.inventories.JobCreationGUI;
+import dte.employme.inventories.JobDeletionGUI;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
@@ -47,22 +49,22 @@ import dte.employme.utils.java.EnumUtils;
 public class EmploymentCommand extends BaseCommand
 {
 	private final JobBoard globalJobBoard;
-	private final InventoryFactory inventoryFactory;
 	private final PlayerContainerService playerContainerService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final MessageService messageService;
 	private final JobBoardDisplayer jobBoardDisplayer;
+	private final Conversations conversations;
 	
-	public EmploymentCommand(JobBoard globalJobBoard, InventoryFactory inventoryFactory, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer) 
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Conversations conversations) 
 	{
 		this.globalJobBoard = globalJobBoard;
-		this.inventoryFactory = inventoryFactory;
 		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
+		this.conversations = conversations;
 	}
 
 	@HelpCommand
@@ -121,7 +123,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing") Player employer) 
 	{
-		employer.openInventory(this.inventoryFactory.getCreationMenu(employer));
+		new JobCreationGUI(this.conversations, this.globalJobBoard, this.messageService, this.playerContainerService).show(employer);
 	}
 
 	@Subcommand("delete")
@@ -130,7 +132,7 @@ public class EmploymentCommand extends BaseCommand
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		player.openInventory(this.inventoryFactory.getDeletionMenu(player, this.globalJobBoard, jobsToDisplay));
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
 	@Subcommand("myitems")

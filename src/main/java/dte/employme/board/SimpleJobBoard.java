@@ -5,31 +5,26 @@ import static java.util.stream.Collectors.toList;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.entity.Player;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 import dte.employme.job.Job;
 
 public class SimpleJobBoard implements JobBoard
 {
-	private final BiMap<String, Job> jobByID = HashBiMap.create();
+	private final List<Job> jobs = new ArrayList<>();
 	
 	@Override
 	public void addJob(Job job) 
 	{
-		this.jobByID.put(generateID(), job);
+		this.jobs.add(job);
 	}
 	
 	@Override
 	public void removeJob(Job job) 
 	{
-		this.jobByID.inverse().remove(job);
+		this.jobs.remove(job);
 	}
 	
 	@Override
@@ -41,45 +36,20 @@ public class SimpleJobBoard implements JobBoard
 	@Override
 	public List<Job> getOfferedJobs()
 	{
-		return new ArrayList<>(this.jobByID.values());
+		return new ArrayList<>(this.jobs);
 	}
 	
 	@Override
 	public List<Job> getJobsOfferedBy(UUID employerUUID) 
 	{
-		return this.jobByID.values().stream()
+		return this.jobs.stream()
 				.filter(job -> job.getEmployer().getUniqueId().equals(employerUUID))
 				.collect(toList());
 	}
 	
 	@Override
-	public Optional<Job> getJobByID(String id) 
-	{
-		return Optional.ofNullable(this.jobByID.get(id));
-	}
-	
-	@Override
-	public Optional<String> getJobID(Job job) 
-	{
-		return Optional.ofNullable(this.jobByID.inverse().get(job));
-	}
-	
-	@Override
 	public Iterator<Job> iterator() 
 	{
-		return this.jobByID.values().iterator();
-	}
-
-	private String generateID()
-	{
-		String id;
-
-		do 
-		{
-			id = RandomStringUtils.randomAlphanumeric(4);
-		}
-		while(this.jobByID.containsKey(id));
-
-		return id;
+		return this.jobs.iterator();
 	}
 }

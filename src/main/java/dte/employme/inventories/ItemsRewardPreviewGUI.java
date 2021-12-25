@@ -11,21 +11,24 @@ import dte.employme.job.rewards.ItemsReward;
 
 public class ItemsRewardPreviewGUI extends ChestGui
 {
+	private final ItemsReward itemsReward;
+	
 	public ItemsRewardPreviewGUI(ItemsReward itemsReward) 
 	{
 		super(6, "Reward Preview (Esc to Return)");
 		
-		setOnTopClick(event -> event.setCancelled(true));
+		this.itemsReward = itemsReward;
 		
-		addPane(createItemsPane(Priority.LOWEST, itemsReward));
+		setOnTopClick(event -> event.setCancelled(true));
+		addPane(createItemsPane(Priority.LOWEST));
 		update();
 	}
 	
-	private OutlinePane createItemsPane(Priority priority, ItemsReward itemsReward) 
+	private OutlinePane createItemsPane(Priority priority) 
 	{
 		OutlinePane pane = new OutlinePane(0, 0, 9, 6, priority);
 		
-		itemsReward.getItems().stream()
+		this.itemsReward.getItems().stream()
 		.map(item -> new GuiItem(new ItemStack(item)))
 		.forEach(pane::addItem);
 		
