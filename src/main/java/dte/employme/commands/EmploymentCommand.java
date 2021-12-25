@@ -39,7 +39,6 @@ import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 import dte.employme.job.subscription.JobSubscriptionService;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 
@@ -79,7 +78,7 @@ public class EmploymentCommand extends BaseCommand
 	public void subscribe(Player player, Material material) 
 	{
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
-		this.messageService.sendGeneralMessage(player, SUCCESSFULLY_SUBSCRIBED_TO_GOAL, new Placeholders().put(GOAL, EnumUtils.fixEnumName(material)));
+		player.sendMessage(this.messageService.getGeneralMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL).replace(GOAL, EnumUtils.fixEnumName(material)));
 	}
 
 	@Subcommand("unsubscribe")
@@ -88,7 +87,7 @@ public class EmploymentCommand extends BaseCommand
 	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
 	{
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
-		this.messageService.sendGeneralMessage(player, SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, new Placeholders().put(GOAL, EnumUtils.fixEnumName(material)));
+		player.sendMessage(this.messageService.getGeneralMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL).replace(GOAL, EnumUtils.fixEnumName(material)));
 	}
 
 	@Subcommand("mysubscriptions")
@@ -104,8 +103,8 @@ public class EmploymentCommand extends BaseCommand
 			subscriptionsNames = this.messageService.getMessage(NONE);
 
 		subscriptionsNames += WHITE + ".";
-
-		this.messageService.sendGeneralMessage(player, YOUR_SUBSCRIPTIONS_ARE, new Placeholders().put(GOAL_SUBSCRIPTIONS, subscriptionsNames));
+		
+		player.sendMessage(this.messageService.getGeneralMessage(YOUR_SUBSCRIPTIONS_ARE).replace(GOAL_SUBSCRIPTIONS, subscriptionsNames));
 	}
 
 	@Subcommand("view")
@@ -157,7 +156,7 @@ public class EmploymentCommand extends BaseCommand
 	public void setNotifications(Player player, JobAddedNotifier notifier) 
 	{
 		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
-		this.messageService.sendGeneralMessage(player, YOUR_NEW_JOB_ADDED_NOTIFIER_IS, new Placeholders().put(JOB_ADDED_NOTIFIER, notifier));
+		player.sendMessage(this.messageService.getGeneralMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS).replace(JOB_ADDED_NOTIFIER, notifier.getName()));
 	}
 
 	@Subcommand("notifiers list")
@@ -170,7 +169,7 @@ public class EmploymentCommand extends BaseCommand
 				.collect(joining(WHITE + ", " + GREEN));
 
 		notifiersNames += WHITE + ".";
-
-		this.messageService.sendTo(player, THE_JOB_ADDED_NOTIFIERS_ARE, new Placeholders().put(JOB_ADDED_NOTIFIERS, notifiersNames));
+		
+		player.sendMessage(this.messageService.getMessage(THE_JOB_ADDED_NOTIFIERS_ARE).replace(JOB_ADDED_NOTIFIERS, notifiersNames));
 	}
 }

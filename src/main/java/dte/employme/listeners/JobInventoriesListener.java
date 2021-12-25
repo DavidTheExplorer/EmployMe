@@ -103,7 +103,7 @@ public class JobInventoriesListener implements Listener
 			this.globalJobBoard.removeJob(job);
 			job.getReward().giveTo(job.getEmployer());
 			
-			this.messageService.sendTo(player, JOB_SUCCESSFULLY_DELETED);
+			player.sendMessage(this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED));
 		});
 	}
 	
@@ -147,7 +147,7 @@ public class JobInventoriesListener implements Listener
 		
 		if(offeredItems.isEmpty()) 
 		{
-			this.messageService.sendGeneralMessage(player, ITEMS_JOB_NO_ITEMS_WARNING);
+			player.sendMessage(this.messageService.getGeneralMessage(ITEMS_JOB_NO_ITEMS_WARNING));
 			return;
 		}
 		ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);

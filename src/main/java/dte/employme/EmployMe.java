@@ -55,7 +55,7 @@ import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.JobInventoriesListener;
 import dte.employme.listeners.PlayerContainerAbuseListener;
-import dte.employme.messages.Placeholders;
+import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
 import dte.employme.utils.java.ServiceLocator;
@@ -118,7 +118,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
-		this.messageService = new TranslatedMessageService(this.languageConfig);
+		this.messageService = new ColoredMessageService(new TranslatedMessageService(this.languageConfig));
 		this.inventoryFactory = new InventoryFactory();
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
@@ -224,8 +224,10 @@ public class EmployMe extends ModernJavaPlugin
 			String notifierName = context.joinArgs();
 			JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
 
-			if(notifier == null)
-				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND, new Placeholders().put(JOB_ADDED_NOTIFIER, notifierName)), false);
+			if(notifier == null) 
+			{
+				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND).replace(JOB_ADDED_NOTIFIER, notifierName), false);
+			}
 
 			return notifier;
 		});

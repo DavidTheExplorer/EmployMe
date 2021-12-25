@@ -14,7 +14,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
 import dte.employme.inventories.GoalCustomizationGUI;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.java.NumberUtils;
@@ -35,8 +34,8 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL, 
-				new Placeholders().put(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment)));
+		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL)
+				.replace(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment));
 	}
 	
 	@Override
@@ -65,9 +64,9 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, new Placeholders()
-				.put(ENCHANTMENT_MIN_LEVEL, this.enchantment.getStartLevel())
-				.put(ENCHANTMENT_MAX_LEVEL, this.enchantment.getMaxLevel())); 
+		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
+				.replace(ENCHANTMENT_MIN_LEVEL, String.valueOf(this.enchantment.getStartLevel()))
+				.replace(ENCHANTMENT_MAX_LEVEL, String.valueOf(this.enchantment.getMaxLevel())); 
 	}
 	
 	@Override

@@ -14,7 +14,6 @@ import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.MessageKey;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 import dte.employme.utils.java.MapBuilder;
@@ -46,12 +45,12 @@ public class MaterialSubscriptionNotifier extends JobAddedChatNotifier
 	}
 
 	@Override
-	protected Map<MessageKey, Placeholders> createMessages(Player player, Job job) 
+	protected Map<MessageKey, Map<String, String>> createMessages(Player player, Job job) 
 	{
 		ItemsReward itemsReward = (ItemsReward) job.getReward();
 		
-		return new MapBuilder<MessageKey, Placeholders>()
-				.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, new Placeholders().put(REWARDS, getSubscribedToItemsNames(player, itemsReward)))
+		return new MapBuilder<MessageKey, Map<String, String>>()
+				.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, new MapBuilder<String, String>().put(REWARDS, getSubscribedToItemsNames(player, itemsReward)).build())
 				.build();
 	}
 	
