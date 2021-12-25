@@ -24,6 +24,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.CatchUnknown;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.HelpCommand;
@@ -73,6 +74,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("subscribe")
 	@Description("Get a notification once a job that rewards a desired item is posted.")
+	@CommandPermission("employme.goals.subscription")
 	public void subscribe(Player player, Material material) 
 	{
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
@@ -81,6 +83,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("unsubscribe")
 	@Description("Stop receiving notifications for an item.")
+	@CommandPermission("employme.goals.subscription")
 	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
 	{
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
@@ -89,6 +92,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("mysubscriptions")
 	@Description("See your reward subscriptions.")
+	@CommandPermission("employme.goals.subscription")
 	public void showSubscriptions(Player player) 
 	{
 		String subscriptionsNames = this.jobSubscriptionService.getSubscriptions(player.getUniqueId()).stream()
@@ -105,6 +109,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("view")
 	@Description("Search through all the Available Jobs.")
+	@CommandPermission("employme.jobs.view")
 	public void view(Player player)
 	{
 		this.jobBoardDisplayer.display(player, this.globalJobBoard);
@@ -113,6 +118,7 @@ public class EmploymentCommand extends BaseCommand
 	@Subcommand("offer")
 	@Description("Offer a new Job to the public.")
 	@Conditions("Global Jobs Board Not Full")
+	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing") Player employer) 
 	{
 		employer.openInventory(this.inventoryFactory.getCreationMenu(employer));
@@ -120,7 +126,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("delete")
 	@Description("Delete a job.")
-	public void deleteJob(Player player) 
+	@CommandPermission("employme.jobs.delete")
 	{
 		List<Job> jobsToDisplay = player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
 
@@ -130,6 +136,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("myitems")
 	@Description("Claim the items that people gathered for you.")
+	@CommandPermission("employme.jobs.myitems")
 	public void openContainer(Player employer) 
 	{
 		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()));
@@ -137,6 +144,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("myrewards")
 	@Description("Claim the rewards you got from Jobs your completed.")
+	@CommandPermission("employme.jobs.myrewards")
 	public void openRewardsContainer(Player player) 
 	{
 		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
@@ -145,6 +153,7 @@ public class EmploymentCommand extends BaseCommand
 	@Subcommand("notifier")
 	@Syntax("<notifier name>")
 	@Description("Choose which notifications you get once a job is created.")
+	@CommandPermission("employme.jobs.notifications")
 	public void setNotifications(Player player, JobAddedNotifier notifier) 
 	{
 		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
@@ -153,6 +162,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("notifiers list")
 	@Description("See the list of notifiers you can select.")
+	@CommandPermission("employme.jobs.notifications")
 	public void sendNotificationsList(Player player) 
 	{
 		String notifiersNames = this.jobAddedNotifierService.getNotifiers().stream()
