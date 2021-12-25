@@ -26,7 +26,6 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 
 import dte.employme.board.JobBoard;
 import dte.employme.items.JobBasicIcon;
-import dte.employme.items.JobItemUtils;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.service.JobService;
@@ -79,7 +78,7 @@ public class JobBoardGUI extends ChestGui
 
 	private GuiItem createOfferIcon(Job job) 
 	{
-		ItemStack basicIcon = JobBasicIcon.create(job);
+		ItemStack basicIcon = JobBasicIcon.of(job);
 		boolean finished = this.jobService.hasFinished(this.player, job);
 
 		//add the status and ID to the lore
@@ -90,7 +89,6 @@ public class JobBoardGUI extends ChestGui
 		lore.add(separator);
 		lore.add(StringUtils.repeat(" ", finished ? 8 : 4) + finishMessage);
 		lore.add(separator);
-		lore.add(JobItemUtils.createIDLoreLine(job, this.jobBoard));
 
 		ItemStack item = new ItemBuilder(basicIcon)
 				.withLore(lore.toArray(new String[0]))

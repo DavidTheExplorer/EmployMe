@@ -26,7 +26,7 @@ import dte.employme.utils.java.RomanNumeralsConverter;
 
 public class JobBasicIcon
 {
-	public static ItemStack create(Job job) 
+	public static ItemStack of(Job job) 
 	{
 		List<String> lore = new ArrayList<>();
 		lore.add(bold(AQUA) + "Goal: " + WHITE + "I need " + AQUA + AQUA + ItemStackUtils.describe(job.getGoal()) + WHITE + ".");

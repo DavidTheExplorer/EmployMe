@@ -21,7 +21,6 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
 import dte.employme.items.JobBasicIcon;
-import dte.employme.items.JobItemUtils;
 import dte.employme.job.Job;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryFrameworkUtils;
@@ -61,12 +60,11 @@ public class JobDeletionGUI extends ChestGui
 
 	private GuiItem createDeletionIcon(Job job) 
 	{
-		ItemStack item = new ItemBuilder(JobBasicIcon.create(job))
+		ItemStack item = new ItemBuilder(JobBasicIcon.of(job))
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
 						bold(DARK_RED) + "Click to Delete!",
-						createSeparationLine(GRAY, 23),
-						JobItemUtils.createIDLoreLine(job, this.jobBoard))
+						createSeparationLine(GRAY, 23))
 				.createCopy();
 
 		return new GuiItem(item, event -> 
