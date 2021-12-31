@@ -18,6 +18,7 @@ import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_HAVE_JOBS;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.NEW_JOB_POSTED;
+import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
@@ -159,6 +160,7 @@ public class ConfigFileFactory
 				.put(MUST_HAVE_JOBS, "&cYou must have offered at least one Job!")
 				.put(MATERIAL_NOT_FOUND, "&cThe specified Material doesn't exist!")
 				.put(NONE, "None")
+				.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 				.build();
 
 		return getLanguageConfig("english", messages);

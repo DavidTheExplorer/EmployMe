@@ -52,10 +52,12 @@ import dte.employme.job.service.JobService;
 import dte.employme.job.service.SimpleJobService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
+import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
+import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.java.ServiceLocator;
 import dte.modernjavaplugin.ModernJavaPlugin;
 import net.milkbowl.vault.economy.Economy;
@@ -159,6 +161,11 @@ public class EmployMe extends ModernJavaPlugin
 		});
 		
 		new Metrics(this, 13423);
+		
+		AutoUpdater.forPlugin(this, 96513)
+		.ifRequestFailed(exception -> logToConsole(RED + "There was an internet error while checking for an update!"))
+		.ifNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
+		.check();
 	}
 
 	public static EmployMe getInstance()
