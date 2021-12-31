@@ -44,7 +44,7 @@ import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 
-@CommandAlias("employment")
+@CommandAlias("employment|emp")
 @Description("The general employment command - View or Manage them!")
 public class EmploymentCommand extends BaseCommand
 {
