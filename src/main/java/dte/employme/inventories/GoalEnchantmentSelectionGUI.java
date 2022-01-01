@@ -18,9 +18,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import dte.employme.conversations.Conversations;
 import dte.employme.job.prompts.EnchantmentLevelPrompt;
 import dte.employme.messages.service.MessageService;
+import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -77,9 +77,21 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			
 			Player player = (Player) event.getWhoClicked();
 			player.closeInventory();
-
+			
 			Conversations.createFactory()
-			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService, this.goalCustomizationGUI))
+			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
+			.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
+			.addConversationAbandonedListener(abandonedEvent -> 
+			{
+				if(!abandonedEvent.gracefulExit())
+					return;
+				
+				int level = (int) abandonedEvent.getContext().getSessionData("level");
+				
+				this.goalCustomizationGUI.addEnchantment(enchantment, level);
+				this.goalCustomizationGUI.setRefundRewardOnClose(true);
+				this.goalCustomizationGUI.show(player);
+			})
 			.buildConversation(player)
 			.begin();
 		});

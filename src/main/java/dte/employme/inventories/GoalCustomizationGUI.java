@@ -35,10 +35,13 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
+import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.service.MessageService;
+import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.MapBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
 {
@@ -55,17 +58,36 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(ConversationFactory typeConversationFactory, MessageService messageService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, JobBoard jobBoard, Reward reward)
 	{
 		super(6, "What should the Goal Item be?");
-
-		this.typeConversationFactory = typeConversationFactory;
+		
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
+		this.typeConversationFactory = Conversations.createFactory()
+				.withLocalEcho(false)
+				.withFirstPrompt(new JobGoalPrompt(messageService))
+				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
+				.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
+				.addConversationAbandonedListener(event -> 
+				{
+					if(!event.gracefulExit())
+						return;
+					
+					//re-open the goal customization gui
+					Player player = (Player) event.getContext().getForWhom();
+					Material material = (Material) event.getContext().getSessionData("material");
+					GoalCustomizationGUI goalCustomizationGUI = (GoalCustomizationGUI) event.getContext().getSessionData("goal inventory");
 
+					goalCustomizationGUI.setRefundRewardOnClose(true);
+					goalCustomizationGUI.setType(material);
+					goalCustomizationGUI.show(player);
+				});
+	
+		
 		setOnTopClick(event -> event.setCancelled(true));
-
+		
 		setOnClose(event -> 
 		{
 			if(this.refundRewardOnClose)
@@ -272,6 +294,7 @@ public class GoalCustomizationGUI extends ChestGui
 		});
 	}
 
+	//TODO: remove
 	private Conversation createTypeConversation(Player employer) 
 	{
 		Conversation conversation = this.typeConversationFactory.buildConversation(employer);

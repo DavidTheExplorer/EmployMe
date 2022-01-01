@@ -44,6 +44,7 @@ import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 import net.milkbowl.vault.economy.Economy;
 
+//TODO: organize methods order
 @CommandAlias("employment|emp")
 @Description("The general employment command - View or Manage them!")
 public class EmploymentCommand extends BaseCommand

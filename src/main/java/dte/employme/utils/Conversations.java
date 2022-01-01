@@ -1,8 +1,8 @@
-package dte.employme.conversations;
+package dte.employme.utils;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.entity.Player;
 
 import dte.employme.EmployMe;
 import dte.employme.job.rewards.Reward;
@@ -12,18 +12,14 @@ public class Conversations
 	//Container of static methods
 	private Conversations(){}
 	
-	public static final ConversationAbandonedListener RETURN_REWARD_TO_PLAYER = event -> 
+	public static final ConversationAbandonedListener REFUND_REWARD_IF_ABANDONED = event -> 
 	{
 		if(event.gracefulExit())
 			return;
 		
-		Reward reward = (Reward) event.getContext().getSessionData("reward");
+		Reward reward = (Reward) event.getContext().getSessionData("Reward");
 		
-		if(reward == null)
-			return;
-		
-		Player player = (Player) event.getContext().getForWhom();
-		reward.giveTo(player);
+		reward.giveTo((OfflinePlayer) event.getContext().getForWhom());
 	};
 
 	public static ConversationFactory createFactory()

@@ -112,7 +112,8 @@ public class JobBoardGUI extends ChestGui
 			}
 		});
 	}
-
+	
+	//TODO: put in InventoryFrameworkUtils
 	private static PatternPane createBackground(Priority priority) 
 	{
 		PatternPane background = new PatternPane(0, 0, 9, 6, BACKGROUND_PATTERN);

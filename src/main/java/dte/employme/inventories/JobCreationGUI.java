@@ -18,11 +18,10 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
-import dte.employme.conversations.Conversations;
-import dte.employme.conversations.GoalTypeConversationFactory;
 import dte.employme.job.prompts.JobPaymentPrompt;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.messages.service.MessageService;
+import dte.employme.utils.Conversations;
 import dte.employme.utils.items.ItemBuilder;
 import net.milkbowl.vault.economy.Economy;
 
@@ -44,16 +43,16 @@ public class JobCreationGUI extends ChestGui
 		//init the goal's type conversation factory
 		this.moneyJobConversationFactory = Conversations.createFactory()
 				.withFirstPrompt(new JobPaymentPrompt(economy, messageService))
-				.addConversationAbandonedListener(Conversations.RETURN_REWARD_TO_PLAYER)
 				.addConversationAbandonedListener(event -> 
 				{
+					//if the player disconnected(etc) then the goal customization gui can't be open
 					if(!event.gracefulExit())
 						return;
 					
 					Player player = (Player) event.getContext().getForWhom();
 					MoneyReward moneyReward = (MoneyReward) event.getContext().getSessionData("reward");
 					
-					new GoalCustomizationGUI(GoalTypeConversationFactory.create(messageService), messageService, jobBoard, moneyReward).show(player);
+					new GoalCustomizationGUI(messageService, jobBoard, moneyReward).show(player);
 				});
 		
 		setOnTopClick(event -> event.setCancelled(true));
