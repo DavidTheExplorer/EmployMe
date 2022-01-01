@@ -11,9 +11,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 
-import dte.employme.inventories.GoalCustomizationGUI;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.java.NumberUtils;
@@ -22,45 +20,42 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 {
 	private final Enchantment enchantment;
 	private final MessageService messageService;
-	private final GoalCustomizationGUI goalCustomizationGUI;
-	
-	public EnchantmentLevelPrompt(Enchantment enchantment, MessageService messageService, GoalCustomizationGUI goalCustomizationGUI) 
+
+	public EnchantmentLevelPrompt(Enchantment enchantment, MessageService messageService) 
 	{
 		this.enchantment = enchantment;
 		this.messageService = messageService;
-		this.goalCustomizationGUI = goalCustomizationGUI;
 	}
-	
+
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
 		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL)
 				.replace(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment));
 	}
-	
+
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) 
 	{
-		this.goalCustomizationGUI.addEnchantment(this.enchantment, input.intValue());
-		this.goalCustomizationGUI.show((Player) context.getForWhom());
-
+		context.setSessionData("level", input.intValue());
+		
 		return Prompt.END_OF_CONVERSATION;
 	}
-	
+
 	@Override
 	protected boolean isNumberValid(ConversationContext context, Number input) 
 	{
 		int level = input.intValue();
-		
+
 		return level >= this.enchantment.getStartLevel() && level <= this.enchantment.getMaxLevel();
 	}
-	
+
 	@Override
 	protected boolean isInputValid(ConversationContext context, String input) 
 	{
 		return super.isInputValid(context, input) && NumberUtils.parseInt(input).isPresent();
 	}
-	
+
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
@@ -68,7 +63,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 				.replace(ENCHANTMENT_MIN_LEVEL, String.valueOf(this.enchantment.getStartLevel()))
 				.replace(ENCHANTMENT_MAX_LEVEL, String.valueOf(this.enchantment.getMaxLevel())); 
 	}
-	
+
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{

@@ -34,7 +34,6 @@ import co.aikar.commands.annotation.Syntax;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.JobBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
-import dte.employme.conversations.Conversations;
 import dte.employme.inventories.JobCreationGUI;
 import dte.employme.inventories.JobDeletionGUI;
 import dte.employme.job.Job;
@@ -43,7 +42,9 @@ import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
+import net.milkbowl.vault.economy.Economy;
 
+//TODO: organize methods order
 @CommandAlias("employment|emp")
 @Description("The general employment command - View or Manage them!")
 public class EmploymentCommand extends BaseCommand
@@ -54,9 +55,9 @@ public class EmploymentCommand extends BaseCommand
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final MessageService messageService;
 	private final JobBoardDisplayer jobBoardDisplayer;
-	private final Conversations conversations;
+	private final Economy economy;
 	
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Conversations conversations) 
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.playerContainerService = playerContainerService;
@@ -64,7 +65,7 @@ public class EmploymentCommand extends BaseCommand
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
-		this.conversations = conversations;
+		this.economy = economy;
 	}
 
 	@HelpCommand
@@ -121,9 +122,9 @@ public class EmploymentCommand extends BaseCommand
 	@Description("Offer a new Job to the public.")
 	@Conditions("Global Jobs Board Not Full")
 	@CommandPermission("employme.jobs.offer")
-	public void offerJob(@Conditions("Not Conversing") Player employer) 
+	public void offerJob(@Conditions("Not Conversing") Player employer)
 	{
-		new JobCreationGUI(this.conversations, this.globalJobBoard, this.messageService, this.playerContainerService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService).show(employer);
 	}
 
 	@Subcommand("delete")
