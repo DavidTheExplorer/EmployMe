@@ -78,7 +78,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			Player player = (Player) event.getWhoClicked();
 			player.closeInventory();
 
-			Conversations.createConversationFactory()
+			Conversations.createFactory()
 			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService, this.goalCustomizationGUI))
 			.buildConversation(player)
 			.begin();

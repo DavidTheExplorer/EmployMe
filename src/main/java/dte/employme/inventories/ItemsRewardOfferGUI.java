@@ -13,14 +13,14 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
-import dte.employme.conversations.Conversations;
+import dte.employme.conversations.GoalTypeConversationFactory;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
 
 public class ItemsRewardOfferGUI extends ChestGui
 {
-	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, Conversations conversations) 
+	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService) 
 	{
 		super(6, "What would you like to offer?");
 		
@@ -35,7 +35,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 				return;
 			}
 			ItemsReward itemsReward = new ItemsReward(offeredItems, playerContainerService);
-			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(conversations.createTypeConversationFactory(messageService), messageService, jobBoard, itemsReward);
+			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(GoalTypeConversationFactory.create(messageService), messageService, jobBoard, itemsReward);
 			
 			Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
 		});

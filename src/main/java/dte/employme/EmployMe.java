@@ -37,7 +37,6 @@ import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
-import dte.employme.conversations.Conversations;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
@@ -71,7 +70,6 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
-	private Conversations conversations;
 	private ConfigFile config, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
 
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
@@ -143,8 +141,6 @@ public class EmployMe extends ModernJavaPlugin
 
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
-
-		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
 
 
 
@@ -246,6 +242,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService), this.conversations));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService), this.economy));
 	}
 }

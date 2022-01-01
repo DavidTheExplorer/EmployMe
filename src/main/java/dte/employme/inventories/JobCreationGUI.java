@@ -8,6 +8,7 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.WHITE;
 
 import org.bukkit.Material;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -18,24 +19,42 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
+import dte.employme.conversations.GoalTypeConversationFactory;
+import dte.employme.job.prompts.JobPaymentPrompt;
+import dte.employme.job.rewards.MoneyReward;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.items.ItemBuilder;
+import net.milkbowl.vault.economy.Economy;
 
 public class JobCreationGUI extends ChestGui
 {
-	private final Conversations conversations;
 	private final JobBoard jobBoard;
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
+	private final ConversationFactory moneyJobConversationFactory;
 	
-	public JobCreationGUI(Conversations conversations, JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService)
+	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, Economy economy, PlayerContainerService playerContainerService)
 	{
 		super(3, "Create a new Job");
 		
-		this.conversations = conversations;
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
+		
+		//init the goal's type conversation factory
+		this.moneyJobConversationFactory = Conversations.createFactory()
+				.withFirstPrompt(new JobPaymentPrompt(economy, messageService))
+				.addConversationAbandonedListener(Conversations.RETURN_REWARD_TO_PLAYER)
+				.addConversationAbandonedListener(event -> 
+				{
+					if(!event.gracefulExit())
+						return;
+					
+					Player player = (Player) event.getContext().getForWhom();
+					MoneyReward moneyReward = (MoneyReward) event.getContext().getSessionData("reward");
+					
+					new GoalCustomizationGUI(GoalTypeConversationFactory.create(messageService), messageService, jobBoard, moneyReward).show(player);
+				});
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 3, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
@@ -49,6 +68,7 @@ public class JobCreationGUI extends ChestGui
 		pane.setOrientation(HORIZONTAL);
 		pane.setGap(3);
 		
+		//add the money job icon
 		pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
 				.named(GOLD + "Money Job")
 				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
@@ -58,14 +78,15 @@ public class JobCreationGUI extends ChestGui
 			Player player = (Player) event.getWhoClicked();
 			
 			player.closeInventory();
-			this.conversations.ofMoneyJobCreation(player).begin();
+			this.moneyJobConversationFactory.buildConversation(player).begin();
 		}));
 		
+		//add the items job icon
 		pane.addItem(new GuiItem(new ItemBuilder(Material.CHEST)
 				.named(AQUA + "Items Job")
 				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
 				.createCopy(),
-				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.conversations).show(event.getWhoClicked())));
+				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService).show(event.getWhoClicked())));
 		
 		return pane;
 	}
