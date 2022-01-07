@@ -1,6 +1,14 @@
 package dte.employme.inventories;
 
-import static dte.employme.utils.ChatColorUtils.bold;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
 import static dte.employme.utils.EnchantmentUtils.getEnchantments;
@@ -9,11 +17,6 @@ import static dte.employme.utils.EnchantmentUtils.removeEnchantment;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryFrameworkUtils.createSquare;
 import static dte.employme.utils.InventoryUtils.createWall;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.LIGHT_PURPLE;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.Map;
@@ -35,10 +38,15 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
+import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
+import dte.employme.messages.MessageKey;
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
+import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.MapBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
 {
@@ -55,17 +63,36 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(ConversationFactory typeConversationFactory, MessageService messageService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, JobBoard jobBoard, Reward reward)
 	{
-		super(6, "What should the Goal Item be?");
-
-		this.typeConversationFactory = typeConversationFactory;
+		super(6, messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TITLE).first());
+		
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
+		this.typeConversationFactory = Conversations.createFactory()
+				.withLocalEcho(false)
+				.withFirstPrompt(new JobGoalPrompt(messageService))
+				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
+				.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
+				.addConversationAbandonedListener(event -> 
+				{
+					if(!event.gracefulExit())
+						return;
+					
+					//re-open the goal customization gui
+					Player player = (Player) event.getContext().getForWhom();
+					Material material = (Material) event.getContext().getSessionData("material");
+					GoalCustomizationGUI goalCustomizationGUI = (GoalCustomizationGUI) event.getContext().getSessionData("goal inventory");
 
+					goalCustomizationGUI.setRefundRewardOnClose(true);
+					goalCustomizationGUI.setType(material);
+					goalCustomizationGUI.show(player);
+				});
+	
+		
 		setOnTopClick(event -> event.setCancelled(true));
-
+		
 		setOnClose(event -> 
 		{
 			if(this.refundRewardOnClose)
@@ -102,7 +129,7 @@ public class GoalCustomizationGUI extends ChestGui
 			
 			ItemStack updatedItem = new ItemBuilder(item)
 					.ofType(material) //set the new material
-					.named(GREEN + "Current Item")
+					.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
 					.withItemFlags(HIDE_ATTRIBUTES)
 					.createCopy();
 			
@@ -170,11 +197,11 @@ public class GoalCustomizationGUI extends ChestGui
 		StaticPane pane = new StaticPane(0, 0, 6, 9, priority);
 
 		pane.addItem(this.currentItem = new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
-				.named(bold(RED) + "Current Goal: None")
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
 				.createCopy()), 1, 1);
 
 		pane.addItem(new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(bold(GREEN) + "Finish")
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
 				.createCopy(), 
 				event ->
 		{
@@ -210,8 +237,8 @@ public class GoalCustomizationGUI extends ChestGui
 		StaticPane pane = new StaticPane(0, 0, 9, 6, priority);
 
 		pane.addItem(new GuiItem(new ItemBuilder(Material.ANVIL)
-				.named(GREEN + "Type")
-				.withLore(WHITE + "Click to set the type of the goal.")
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy(), 
 				event -> 
@@ -231,11 +258,8 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createAmountItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.ARROW)
-				.named(GOLD + "Amount: " + bold(WHITE) + this.amount)
-				.withLore(
-						WHITE + "Left Click to " + GREEN + "Increase" + WHITE + ".",
-						WHITE + "Right Click to " + RED + "Decrease" + WHITE + "."
-						)
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(Placeholders.GOAL_AMOUNT, String.valueOf(this.amount)).first())
+				.withLore(this.messageService.getMessage(MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy();
 
@@ -257,8 +281,8 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createEnchantmentsItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
-				.named(LIGHT_PURPLE + "Enchantments")
-				.withLore(WHITE + "Click to add an enchantment that", WHITE + "the goal must have on it.")
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy();
 
@@ -272,6 +296,7 @@ public class GoalCustomizationGUI extends ChestGui
 		});
 	}
 
+	//TODO: remove
 	private Conversation createTypeConversation(Player employer) 
 	{
 		Conversation conversation = this.typeConversationFactory.buildConversation(employer);

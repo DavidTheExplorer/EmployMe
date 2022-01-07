@@ -1,7 +1,9 @@
 package dte.employme.containers;
 
+import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
+import static dte.employme.messages.MessageKey.CONTAINER_HELP_ITEM_NAME;
+import static dte.employme.messages.Placeholders.CONTAINER_SUBJECT;
 import static dte.employme.utils.InventoryUtils.createWall;
-import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.ArrayList;
@@ -14,18 +16,24 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.containers.service.PlayerContainerService;
+import dte.employme.messages.service.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 
 public class PlayerContainerBuilder
 {
 	String title;
 	String[] helpDescription;
+	MessageService messageService;
 	Collection<ItemStack> initialItems = new ArrayList<>();
 	
 	public PlayerContainerBuilder of(String subject) 
 	{
-		this.title = String.format(PlayerContainerService.TITLE_PATTERN, subject);
+		Objects.requireNonNull(this.messageService);
+		
+		this.title = this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
+				.inject(CONTAINER_SUBJECT, subject)
+				.first();
+		
 		return this;
 	}
 
@@ -34,11 +42,18 @@ public class PlayerContainerBuilder
 		this.helpDescription = helpDescription;
 		return this;
 	}
+	
+	public PlayerContainerBuilder withMessageService(MessageService messageService) 
+	{
+		this.messageService = messageService;
+		return this;
+	}
 
 	public Inventory build() 
 	{
 		Objects.requireNonNull(this.title);
 		Objects.requireNonNull(this.helpDescription);
+		Objects.requireNonNull(this.messageService);
 
 		Inventory inventory = Bukkit.createInventory(null, 9 * 6, this.title);
 
@@ -47,7 +62,7 @@ public class PlayerContainerBuilder
 		inventory.setItem(52, createWall(Material.GRAY_STAINED_GLASS_PANE));
 
 		inventory.setItem(53, new ItemBuilder(Material.BOOK)
-				.named(GREEN + "Help")
+				.named(this.messageService.getMessage(CONTAINER_HELP_ITEM_NAME).first())
 				.withLore(Arrays.stream(this.helpDescription).map(line -> WHITE + line).toArray(String[]::new))
 				.createCopy());
 
