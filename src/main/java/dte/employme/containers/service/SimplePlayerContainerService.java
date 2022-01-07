@@ -1,10 +1,5 @@
 package dte.employme.containers.service;
 
-import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
-import static dte.employme.messages.MessageKey.ITEMS;
-import static dte.employme.messages.MessageKey.ITEMS_CONTAINER_DESCRIPTION;
-import static dte.employme.messages.MessageKey.REWARDS;
-import static dte.employme.messages.MessageKey.REWARDS_CONTAINER_DESCRIPTION;
 import static java.util.stream.Collectors.toMap;
 
 import java.io.IOException;
@@ -18,28 +13,24 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Sets;
 
 import dte.employme.config.ConfigFile;
 import dte.employme.containers.PlayerContainerBuilder;
-import dte.employme.messages.service.MessageService;
 
 public class SimplePlayerContainerService implements PlayerContainerService
 {
 	private final Map<UUID, Inventory> itemsContainers = new HashMap<>(), rewardsContainers = new HashMap<>();
 	private final ConfigFile itemsContainersConfig, rewardsContainersConfig;
-	private final MessageService messageService;
 	
 	private static final Set<Integer> INVALID_SLOTS = Sets.newHashSet(43, 44, 52, 53);
 	
-	public SimplePlayerContainerService(ConfigFile itemsContainersConfig, ConfigFile rewardsContainersConfig, MessageService messageService) 
+	public SimplePlayerContainerService(ConfigFile itemsContainersConfig, ConfigFile rewardsContainersConfig) 
 	{
 		this.itemsContainersConfig = itemsContainersConfig;
 		this.rewardsContainersConfig = rewardsContainersConfig;
-		this.messageService = messageService;
 	}
 	
 	@Override
@@ -53,20 +44,12 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	{
 		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> createRewardsContainer());
 	}
-	
-	@Override
-	public boolean isContainer(InventoryView view) 
-	{
-		return view.getTitle().matches(this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
-				.inject("%container subject%", "[a-zA-Z\\d]+")
-				.first());
-	}
 
 	@Override
 	public void loadContainers() 
 	{
-		loadContainers(this.itemsContainersConfig, this.itemsContainers, this::createItemsContainer);
-		loadContainers(this.rewardsContainersConfig, this.rewardsContainers, this::createRewardsContainer);
+		loadContainers(this.itemsContainersConfig, this.itemsContainers, SimplePlayerContainerService::createItemsContainer);
+		loadContainers(this.rewardsContainersConfig, this.rewardsContainers, SimplePlayerContainerService::createRewardsContainer);
 	}
 
 	@Override
@@ -76,21 +59,19 @@ public class SimplePlayerContainerService implements PlayerContainerService
 		saveContainers(this.rewardsContainers, this.rewardsContainersConfig);
 	}
 	
-	private Inventory createItemsContainer() 
+	private static Inventory createItemsContainer() 
 	{
 		return new PlayerContainerBuilder()
-				.withMessageService(this.messageService)
-				.of(this.messageService.getMessage(ITEMS).first())
-				.withHelp(this.messageService.getMessage(ITEMS_CONTAINER_DESCRIPTION).toArray())
+				.of("Items")
+				.withHelp("When someone completes one of your jobs,", "The items they got for you are stored here.")
 				.build();
 	}
 	
-	private Inventory createRewardsContainer() 
+	public static Inventory createRewardsContainer() 
 	{
 		return new PlayerContainerBuilder()
-				.withMessageService(this.messageService)
-				.of(this.messageService.getMessage(REWARDS).first())
-				.withHelp(this.messageService.getMessage(REWARDS_CONTAINER_DESCRIPTION).toArray())
+				.of("Rewards")
+				.withHelp("This is where Reward Items are stored", "after you complete a job that pays them.")
 				.build();
 	}
 
@@ -119,7 +100,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 				.collect(toMap(Entry::getKey, entry -> 
 				{
 					Inventory container = entry.getValue();
-					
+
 					return IntStream.range(0, container.getSize())
 							.filter(i -> !INVALID_SLOTS.contains(i))
 							.filter(i -> container.getItem(i) != null)

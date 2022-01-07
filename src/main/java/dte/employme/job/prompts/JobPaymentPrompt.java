@@ -33,8 +33,7 @@ public class JobPaymentPrompt extends NumericPrompt
 		Double employerMoney = this.economy.getBalance((Player) context.getForWhom());
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
-				.inject(PLAYER_MONEY, employerMoney.toString())
-				.first();
+				.replace(PLAYER_MONEY, employerMoney.toString());
 	}
 
 	@Override
@@ -63,10 +62,10 @@ public class JobPaymentPrompt extends NumericPrompt
 		double payment = invalidInput.doubleValue();
 		
 		if(payment <= 0)
-			return this.messageService.getMessage(MONEY_REWARD_ERROR_NEGATIVE).first();
+			return this.messageService.getMessage(MONEY_REWARD_ERROR_NEGATIVE);
 		
 		else if(!this.economy.has((Player) context.getForWhom(), payment))
-			return this.messageService.getMessage(MONEY_REWARD_NOT_ENOUGH).first();
+			return this.messageService.getMessage(MONEY_REWARD_NOT_ENOUGH);
 		
 		throw new IllegalStateException("Couldn't parse the provided input to an payment amount!");
 	}
@@ -74,6 +73,6 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.getMessage(MONEY_REWARD_NOT_A_NUMBER).first();
+		return this.messageService.getMessage(MONEY_REWARD_NOT_A_NUMBER);
 	}
 }

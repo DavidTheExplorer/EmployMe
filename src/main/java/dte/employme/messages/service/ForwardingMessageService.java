@@ -1,6 +1,5 @@
 package dte.employme.messages.service;
 
-import dte.employme.messages.MessageBuilder;
 import dte.employme.messages.MessageKey;
 
 public class ForwardingMessageService implements MessageService
@@ -13,7 +12,7 @@ public class ForwardingMessageService implements MessageService
 	}
 	
 	@Override
-	public MessageBuilder getMessage(MessageKey key) 
+	public String getMessage(MessageKey key) 
 	{
 		return this.delegate.getMessage(key);
 	}

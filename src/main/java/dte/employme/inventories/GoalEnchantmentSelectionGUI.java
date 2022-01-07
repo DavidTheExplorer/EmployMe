@@ -1,11 +1,10 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.Comparator.comparing;
 import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.WHITE;
 
 import java.util.Comparator;
 
@@ -19,9 +18,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
+import dte.employme.conversations.Conversations;
 import dte.employme.job.prompts.EnchantmentLevelPrompt;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -37,8 +36,8 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI)
 	{
-		super(6, messageService.getMessage(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
-		
+		super(6, "Choose an Enchantment:");
+
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
 
@@ -69,7 +68,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	{
 		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
 				.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE).toArray())
+				.withLore(WHITE + "Click to add this Enchantment to the Goal.")
 				.createCopy();
 
 		return new GuiItem(item, event -> 
@@ -78,21 +77,9 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			
 			Player player = (Player) event.getWhoClicked();
 			player.closeInventory();
-			
-			Conversations.createFactory()
-			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
-			.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
-			.addConversationAbandonedListener(abandonedEvent -> 
-			{
-				if(!abandonedEvent.gracefulExit())
-					return;
-				
-				int level = (int) abandonedEvent.getContext().getSessionData("level");
-				
-				this.goalCustomizationGUI.addEnchantment(enchantment, level);
-				this.goalCustomizationGUI.setRefundRewardOnClose(true);
-				this.goalCustomizationGUI.show(player);
-			})
+
+			Conversations.createConversationFactory()
+			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService, this.goalCustomizationGUI))
 			.buildConversation(player)
 			.begin();
 		});

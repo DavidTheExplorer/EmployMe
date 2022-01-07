@@ -5,7 +5,6 @@ import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
-import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
@@ -38,7 +37,7 @@ import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
-import dte.employme.items.JobIconFactory;
+import dte.employme.conversations.Conversations;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
@@ -59,7 +58,6 @@ import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
 import dte.employme.utils.AutoUpdater;
-import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
 import dte.modernjavaplugin.ModernJavaPlugin;
 import net.milkbowl.vault.economy.Economy;
@@ -73,8 +71,8 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
+	private Conversations conversations;
 	private ConfigFile config, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
-	private JobIconFactory jobIconFactory;
 
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 
@@ -125,7 +123,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobSubscriptionService.loadSubscriptions();
 		ServiceLocator.register(JobSubscriptionService.class, this.jobSubscriptionService);
 		
-		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig, this.messageService);
+		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig);
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
@@ -133,8 +131,6 @@ public class EmployMe extends ModernJavaPlugin
 		
 		if(this.jobsConfig == null)
 			return;
-		
-		this.jobIconFactory = new JobIconFactory(this.messageService);
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
@@ -148,11 +144,13 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
 
+		this.conversations = new Conversations(this.globalJobBoard, this.playerContainerService, this.messageService, this.economy);
+
 
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new PlayerContainerAbuseListener(this.playerContainerService));
+		registerListeners(new PlayerContainerAbuseListener());
 
 		setDisableListener(() -> 
 		{
@@ -198,39 +196,28 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
 			if(context.getPlayer().isConversing())
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING).first(), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING), false);
 		});
 
 		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
 		{
 			if(!this.jobSubscriptionService.isSubscribedTo(context.getPlayer().getUniqueId(), material))
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL).first(), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
 		});
 		
 		commandManager.getCommandConditions().addCondition("Global Jobs Board Not Full", context -> 
 		{
 			if(this.globalJobBoard.getOfferedJobs().size() == ((6*9)-26)) 
-				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL).first());
+				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL));
 		});
-		
-		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
-		{
-			String jobPermission = PermissionUtils.findPermission(player, permission -> permission.startsWith("employme.jobs.allowed."))
-					.orElse("employme.jobs.allowed.3");
-			
-			int allowedJobs = Integer.parseInt(jobPermission.split("\\.")[jobPermission.split("\\.").length-1]);
-			
-			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).size() >= allowedJobs)
-				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS).first());
-		});
-		
+
 		//register contexts
 		commandManager.getCommandContexts().registerContext(Material.class, context -> 
 		{
 			Material material = Material.matchMaterial(context.popFirstArg());
 
 			if(material == null)
-				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND).first(), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND), false);
 
 			return material;
 		});
@@ -241,9 +228,9 @@ public class EmployMe extends ModernJavaPlugin
 			JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
 
 			if(notifier == null) 
-				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND)
-						.inject(JOB_ADDED_NOTIFIER, notifierName)
-						.first(), false);
+			{
+				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND).replace(JOB_ADDED_NOTIFIER, notifierName), false);
+			}
 
 			return notifier;
 		});
@@ -259,8 +246,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
-		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, inventoryBoardDisplayer, this.economy, this.jobIconFactory));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService), this.conversations));
 	}
 }

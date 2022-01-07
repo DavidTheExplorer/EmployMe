@@ -10,17 +10,10 @@ import dte.employme.containers.service.PlayerContainerService;
 
 public class PlayerContainerAbuseListener implements Listener
 {
-	private final PlayerContainerService playerContainerService;
-	
-	public PlayerContainerAbuseListener(PlayerContainerService playerContainerService) 
-	{
-		this.playerContainerService = playerContainerService;
-	}
-	
 	@EventHandler
 	public void onClick(InventoryClickEvent event) 
 	{
-		if(!this.playerContainerService.isContainer(event.getView()))
+		if(!PlayerContainerService.isContainer(event.getView()))
 			return;
 		
 		switch(event.getRawSlot()) 
@@ -39,7 +32,7 @@ public class PlayerContainerAbuseListener implements Listener
 	{
 		InventoryView view = event.getView();
 		
-		if(!this.playerContainerService.isContainer(view))
+		if(!PlayerContainerService.isContainer(view))
 			return;
 		
 		if(event.isShiftClick() && event.getClickedInventory() == view.getBottomInventory()) 
@@ -62,7 +55,7 @@ public class PlayerContainerAbuseListener implements Listener
 	@EventHandler
 	public void onDrag(InventoryDragEvent event) 
 	{
-		if(!this.playerContainerService.isContainer(event.getView()))
+		if(!PlayerContainerService.isContainer(event.getView()))
 			return;
 
 		if(event.getOldCursor() == null)

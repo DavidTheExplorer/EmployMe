@@ -1,11 +1,11 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INSTRUCTION;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_DELETED;
+import static dte.employme.utils.ChatColorUtils.bold;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.GRAY;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
-import dte.employme.items.JobIconFactory;
+import dte.employme.items.JobBasicIcon;
 import dte.employme.job.Job;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryFrameworkUtils;
@@ -31,16 +31,14 @@ public class JobDeletionGUI extends ChestGui
 	private final JobBoard jobBoard;
 	private final List<Job> jobsToDisplay;
 	private final MessageService messageService;
-	private final JobIconFactory jobIconFactory;
 
-	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobIconFactory jobIconFactory) 
+	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService) 
 	{
-		super(6, messageService.getMessage(INVENTORY_JOB_DELETION_TITLE).first());
+		super(6, "Select Jobs to Delete");
 
 		this.jobBoard = jobBoard;
 		this.jobsToDisplay = jobsToDisplay;
 		this.messageService = messageService;
-		this.jobIconFactory = jobIconFactory;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createJobsPane(Priority.LOW));
@@ -62,10 +60,10 @@ public class JobDeletionGUI extends ChestGui
 
 	private GuiItem createDeletionIcon(Job job) 
 	{
-		ItemStack item = new ItemBuilder(this.jobIconFactory.createFor(job))
+		ItemStack item = new ItemBuilder(JobBasicIcon.of(job))
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
-						this.messageService.getMessage(INVENTORY_JOB_DELETION_DELETE_INSTRUCTION).first(),
+						bold(DARK_RED) + "Click to Delete!",
 						createSeparationLine(GRAY, 23))
 				.createCopy();
 
@@ -76,7 +74,7 @@ public class JobDeletionGUI extends ChestGui
 			this.jobBoard.removeJob(job);
 			job.getReward().giveTo(job.getEmployer());
 
-			this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED).sendTo(player);
+			player.sendMessage(this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED));
 		});
 	}
 }

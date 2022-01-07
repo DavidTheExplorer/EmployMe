@@ -22,7 +22,7 @@ public class JobGoalPrompt extends ValidatingPrompt
 	@Override
 	public String getPromptText(ConversationContext context)
 	{
-		return this.messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first();
+		return this.messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION);
 	}
 
 	@Override
@@ -47,6 +47,6 @@ public class JobGoalPrompt extends ValidatingPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.getMessage(ITEM_GOAL_INVALID).first();
+		return this.messageService.getMessage(ITEM_GOAL_INVALID);
 	}
 }

@@ -1,12 +1,12 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
+import static dte.employme.utils.ChatColorUtils.bold;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.Comparator;
@@ -25,11 +25,10 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 
 import dte.employme.board.JobBoard;
-import dte.employme.items.JobIconFactory;
+import dte.employme.items.JobBasicIcon;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.service.JobService;
-import dte.employme.messages.service.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobBoardGUI extends ChestGui
@@ -38,8 +37,6 @@ public class JobBoardGUI extends ChestGui
 	private final JobBoard jobBoard;
 	private final Comparator<Job> orderComparator;
 	private final JobService jobService;
-	private final MessageService messageService;
-	private final JobIconFactory jobIconFactory;
 
 	private static final Pattern BACKGROUND_PATTERN = new Pattern
 			(
@@ -51,16 +48,14 @@ public class JobBoardGUI extends ChestGui
 					"BBBBBBBBB"
 					);
 
-	public JobBoardGUI(Player player, JobBoard jobBoard, Comparator<Job> orderComparator, JobService jobService, MessageService messageService, JobIconFactory jobIconFactory)
+	public JobBoardGUI(Player player, JobBoard jobBoard, Comparator<Job> orderComparator, JobService jobService)
 	{
-		super(6, messageService.getMessage(INVENTORY_JOB_BOARD_TITLE).first());
+		super(6, "Available Jobs");
 
 		this.player = player;
 		this.jobBoard = jobBoard;
 		this.orderComparator = orderComparator;
 		this.jobService = jobService;
-		this.messageService = messageService;
-		this.jobIconFactory = jobIconFactory;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createBackground(Priority.LOWEST));
@@ -83,12 +78,12 @@ public class JobBoardGUI extends ChestGui
 
 	private GuiItem createOfferIcon(Job job) 
 	{
-		ItemStack basicIcon = this.jobIconFactory.createFor(job);
+		ItemStack basicIcon = JobBasicIcon.of(job);
 		boolean finished = this.jobService.hasFinished(this.player, job);
 
 		//add the status and ID to the lore
 		String separator = createSeparationLine(finished ? WHITE : DARK_RED, finished ? 25 : 29);
-		String finishMessage = this.messageService.getMessage(finished ? INVENTORY_JOB_BOARD_OFFER_COMPLETED : INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED).first();
+		String finishMessage = finished ? (bold(GREEN) +  "Click to Finish!") : (RED + "You didn't complete this Job.");
 
 		List<String> lore = basicIcon.getItemMeta().getLore();
 		lore.add(separator);
@@ -104,7 +99,7 @@ public class JobBoardGUI extends ChestGui
 			//Right click = preview mode for jobs that offer items
 			if(event.isRightClick() && job.getReward() instanceof ItemsReward)
 			{
-				ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
+				ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward());
 				gui.setOnClose(closeEvent -> this.player.openInventory(event.getInventory()));
 				gui.show(this.player);
 			}
@@ -117,8 +112,7 @@ public class JobBoardGUI extends ChestGui
 			}
 		});
 	}
-	
-	//TODO: put in InventoryFrameworkUtils
+
 	private static PatternPane createBackground(Priority priority) 
 	{
 		PatternPane background = new PatternPane(0, 0, 9, 6, BACKGROUND_PATTERN);

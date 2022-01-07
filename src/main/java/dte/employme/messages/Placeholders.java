@@ -1,5 +1,7 @@
 package dte.employme.messages;
 
+import java.util.Map;
+
 public class Placeholders
 {
 	//Container of static fields
@@ -17,12 +19,15 @@ public class Placeholders
 	ENCHANTMENT = create("enchantment"),
 	ENCHANTMENT_MIN_LEVEL = create("enchantment min level"),
 	ENCHANTMENT_MAX_LEVEL = create("enchantment max level"),
-	NEW_VERSION = create("new version"),
-	GOAL_AMOUNT = create("goal amount"),
-	EMPLOYER = create("employer"),
-	MONEY_PAYMENT = create("money payment"),
-	ITEMS_AMOUNT = create("items amount"),
-	CONTAINER_SUBJECT = create("container subject");
+	NEW_VERSION = create("new version");
+
+	public static String apply(String text, Map<String, String> placeholders) 
+	{
+		for(Map.Entry<String, String> entry : placeholders.entrySet())
+			text = text.replace(entry.getKey(), entry.getValue());
+		
+		return text;
+	}
 
 	private static String create(String value) 
 	{
