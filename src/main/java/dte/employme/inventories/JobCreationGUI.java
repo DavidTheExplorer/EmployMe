@@ -1,11 +1,13 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
-import static org.bukkit.ChatColor.AQUA;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.WHITE;
 
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationFactory;
@@ -34,7 +36,7 @@ public class JobCreationGUI extends ChestGui
 	
 	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, Economy economy, PlayerContainerService playerContainerService)
 	{
-		super(3, "Create a new Job");
+		super(3, messageService.getMessage(INVENTORY_JOB_CREATION_TITLE).first());
 		
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
@@ -69,8 +71,8 @@ public class JobCreationGUI extends ChestGui
 		
 		//add the money job icon
 		pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
-				.named(GOLD + "Money Job")
-				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay a certain amount of money.")
+				.named(this.messageService.getMessage(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
+				.withLore(this.messageService.getMessage(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
 				.createCopy(), 
 				event -> 
 		{
@@ -82,8 +84,8 @@ public class JobCreationGUI extends ChestGui
 		
 		//add the items job icon
 		pane.addItem(new GuiItem(new ItemBuilder(Material.CHEST)
-				.named(AQUA + "Items Job")
-				.withLore(WHITE + "Click to offer a Job for which", WHITE + "You will pay with resources.")
+				.named(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
+				.withLore(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
 				.createCopy(),
 				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService).show(event.getWhoClicked())));
 		

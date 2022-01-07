@@ -9,14 +9,8 @@ public interface PlayerContainerService
 {
 	Inventory getItemsContainer(UUID playerUUID);
 	Inventory getRewardsContainer(UUID playerUUID);
+	boolean isContainer(InventoryView view);
 	
 	void loadContainers();
 	void saveContainers();
-	
-	String TITLE_PATTERN = "Claim your %s:";
-	
-	public static boolean isContainer(InventoryView view) 
-	{
-		return view.getTitle().matches(TITLE_PATTERN.replace("%s", "[a-zA-Z\\d]+"));
-	}
 }
