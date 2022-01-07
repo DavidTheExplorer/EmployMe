@@ -137,7 +137,7 @@ public class EmploymentCommand extends BaseCommand
 	@Description("Offer a new Job to the public.")
 	@Conditions("Global Jobs Board Not Full")
 	@CommandPermission("employme.jobs.offer")
-	public void offerJob(@Conditions("Not Conversing") Player employer)
+	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
 		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService).show(employer);
 	}

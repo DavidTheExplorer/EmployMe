@@ -66,6 +66,7 @@ import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GO
 import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
+import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static org.bukkit.ChatColor.RED;
 
 import java.io.File;
@@ -162,6 +163,7 @@ public class ConfigFileFactory
 				.put(ITEMS_JOB_COMPLETED, new String[]{"&aJob Completed. You can access your items via &b\"/employment myrewards\""})
 				.put(PLAYER_COMPLETED_YOUR_JOB, new String[]{"&b%completer% &djust completed one of your Jobs!"})
 				.put(GLOBAL_JOB_BOARD_IS_FULL, new String[]{"&cNot enough room for additional Jobs."})
+				.put(YOU_OFFERED_TOO_MANY_JOBS, new String[]{"&cYou have offered too many Jobs! Please delete one to proceed."})
 
 				//Job Added Notifiers
 				.put(JOB_ADDED_NOTIFIER_NOT_FOUND, new String[]{"&cNo notifier named '%job added notifier%' was found."})

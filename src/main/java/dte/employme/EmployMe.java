@@ -5,6 +5,7 @@ import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
+import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
@@ -58,6 +59,7 @@ import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
 import dte.employme.utils.AutoUpdater;
+import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
 import dte.modernjavaplugin.ModernJavaPlugin;
 import net.milkbowl.vault.economy.Economy;
@@ -210,7 +212,18 @@ public class EmployMe extends ModernJavaPlugin
 			if(this.globalJobBoard.getOfferedJobs().size() == ((6*9)-26)) 
 				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL).first());
 		});
-
+		
+		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
+		{
+			String jobPermission = PermissionUtils.findPermission(player, permission -> permission.startsWith("employme.jobs.allowed."))
+					.orElse("employme.jobs.allowed.3");
+			
+			int allowedJobs = Integer.parseInt(jobPermission.split("\\.")[jobPermission.split("\\.").length-1]);
+			
+			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).size() >= allowedJobs)
+				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS).first());
+		});
+		
 		//register contexts
 		commandManager.getCommandContexts().registerContext(Material.class, context -> 
 		{
