@@ -1,11 +1,11 @@
 package dte.employme.items;
 
-import static dte.employme.messages.MessageKey.JOB_ICON_ENCHANT_DESCRIPTION;
-import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
-import static dte.employme.messages.MessageKey.JOB_ICON_ITEMS_PAYMENT_DESCRIPTION;
-import static dte.employme.messages.MessageKey.JOB_ICON_MONEY_PAYMENT_DESCRIPTION;
-import static dte.employme.messages.MessageKey.JOB_ICON_NAME;
+import static dte.employme.utils.ChatColorUtils.bold;
 import static dte.employme.utils.ChatColorUtils.colorize;
+import static org.bukkit.ChatColor.AQUA;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.LIGHT_PURPLE;
+import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.ArrayList;
@@ -19,41 +19,30 @@ import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.rewards.Reward;
-import dte.employme.messages.Placeholders;
-import dte.employme.messages.service.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.RomanNumeralsConverter;
 
-public class JobIconFactory
+public class JobBasicIcon
 {
-	private final MessageService messageService;
-	
-	public JobIconFactory(MessageService messageService) 
-	{
-		this.messageService = messageService;
-	}
-	
-	public ItemStack createFor(Job job) 
+	public static ItemStack of(Job job) 
 	{
 		List<String> lore = new ArrayList<>();
-		lore.addAll(this.messageService.getMessage(JOB_ICON_GOAL_INSTRUCTIONS)
-				.inject(Placeholders.GOAL, ItemStackUtils.describe(job.getGoal()))
-				.toList());
+		lore.add(bold(AQUA) + "Goal: " + WHITE + "I need " + AQUA + AQUA + ItemStackUtils.describe(job.getGoal()) + WHITE + ".");
 		lore.addAll(getGoalEnchantmentsLore(job.getGoal()));
 		lore.add(" ");
 		lore.add(describe(job.getReward()));
 		lore.add(" ");
 
 		return new ItemBuilder(job.getGoal().getType())
-				.named(this.messageService.getMessage(JOB_ICON_NAME).inject(Placeholders.EMPLOYER, job.getEmployer().getName()).first())
+				.named(GREEN + job.getEmployer().getName() + "'s Offer")
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.withLore(lore.toArray(new String[0]))
 				.createCopy();
 	}
-
-	private List<String> getGoalEnchantmentsLore(ItemStack goal)
+	
+	private static List<String> getGoalEnchantmentsLore(ItemStack goal)
 	{
 		List<String> lore = new ArrayList<>();
 		Map<Enchantment, Integer> enchantments = EnchantmentUtils.getEnchantments(goal);
@@ -62,7 +51,7 @@ public class JobIconFactory
 			return lore;
 
 		lore.add(" ");
-		lore.add(this.messageService.getMessage(JOB_ICON_ENCHANT_DESCRIPTION).first());
+		lore.add(String.format(LIGHT_PURPLE + "Enchant " + WHITE + "%s with:", goal.getAmount() == 1 ? "it" : "them"));
 
 		enchantments.forEach((enchantment, level) -> 
 		{
@@ -75,19 +64,19 @@ public class JobIconFactory
 		return lore;
 	}
 
-	private String describe(Reward reward)
+	private static String describe(Reward reward)
 	{
+		String description = "&6&n&lPayment&6: ";
+
 		if(reward instanceof MoneyReward)
-			return this.messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
-					.inject(Placeholders.MONEY_PAYMENT, String.format("%.2f", ((MoneyReward) reward).getPayment()))
-					.first();
+			description += String.format("&f%.2f$", ((MoneyReward) reward).getPayment());
 
 		else if(reward instanceof ItemsReward)
-			return this.messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
-					.inject(Placeholders.ITEMS_AMOUNT, String.valueOf(((ItemsReward) reward).getItems().size()))
-					.first();
+			description += String.format("&fRight Click to preview items(%d).", ((ItemsReward) reward).getItems().size());
 
 		else
 			throw new IllegalStateException(String.format("The provided items reward cannot be described! (%s)", reward));
+		
+		return colorize(description);
 	}
 }

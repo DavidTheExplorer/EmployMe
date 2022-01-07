@@ -34,19 +34,16 @@ import co.aikar.commands.annotation.Syntax;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.JobBoardDisplayer;
 import dte.employme.containers.service.PlayerContainerService;
+import dte.employme.conversations.Conversations;
 import dte.employme.inventories.JobCreationGUI;
 import dte.employme.inventories.JobDeletionGUI;
-import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 import dte.employme.job.subscription.JobSubscriptionService;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
-import net.milkbowl.vault.economy.Economy;
 
-//TODO: organize methods order
 @CommandAlias("employment|emp")
 @Description("The general employment command - View or Manage them!")
 public class EmploymentCommand extends BaseCommand
@@ -57,10 +54,9 @@ public class EmploymentCommand extends BaseCommand
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final MessageService messageService;
 	private final JobBoardDisplayer jobBoardDisplayer;
-	private final Economy economy;
-	private final JobIconFactory jobIconFactory;
-
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory) 
+	private final Conversations conversations;
+	
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Conversations conversations) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.playerContainerService = playerContainerService;
@@ -68,8 +64,7 @@ public class EmploymentCommand extends BaseCommand
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
-		this.economy = economy;
-		this.jobIconFactory = jobIconFactory;
+		this.conversations = conversations;
 	}
 
 	@HelpCommand
@@ -85,11 +80,7 @@ public class EmploymentCommand extends BaseCommand
 	public void subscribe(Player player, Material material) 
 	{
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
-
-		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
-		.withGeneralPrefix()
-		.inject(Placeholders.GOAL, EnumUtils.fixEnumName(material))
-		.sendTo(player);
+		player.sendMessage(this.messageService.getGeneralMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL).replace(GOAL, EnumUtils.fixEnumName(material)));
 	}
 
 	@Subcommand("unsubscribe")
@@ -98,11 +89,7 @@ public class EmploymentCommand extends BaseCommand
 	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
 	{
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
-
-		this.messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
-		.withGeneralPrefix()
-		.inject(GOAL, EnumUtils.fixEnumName(material))
-		.sendTo(player);
+		player.sendMessage(this.messageService.getGeneralMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL).replace(GOAL, EnumUtils.fixEnumName(material)));
 	}
 
 	@Subcommand("mysubscriptions")
@@ -115,14 +102,11 @@ public class EmploymentCommand extends BaseCommand
 				.collect(joining(WHITE + ", " + GOLD));
 
 		if(subscriptionsNames.isEmpty())
-			subscriptionsNames = this.messageService.getMessage(NONE).first();
+			subscriptionsNames = this.messageService.getMessage(NONE);
 
 		subscriptionsNames += WHITE + ".";
-
-		this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
-		.withGeneralPrefix()
-		.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
-		.sendTo(player);
+		
+		player.sendMessage(this.messageService.getGeneralMessage(YOUR_SUBSCRIPTIONS_ARE).replace(GOAL_SUBSCRIPTIONS, subscriptionsNames));
 	}
 
 	@Subcommand("view")
@@ -137,9 +121,9 @@ public class EmploymentCommand extends BaseCommand
 	@Description("Offer a new Job to the public.")
 	@Conditions("Global Jobs Board Not Full")
 	@CommandPermission("employme.jobs.offer")
-	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
+	public void offerJob(@Conditions("Not Conversing") Player employer) 
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService).show(employer);
+		new JobCreationGUI(this.conversations, this.globalJobBoard, this.messageService, this.playerContainerService).show(employer);
 	}
 
 	@Subcommand("delete")
@@ -148,7 +132,7 @@ public class EmploymentCommand extends BaseCommand
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory).show(player);
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
 	@Subcommand("myitems")
@@ -174,11 +158,7 @@ public class EmploymentCommand extends BaseCommand
 	public void setNotifications(Player player, JobAddedNotifier notifier) 
 	{
 		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
-
-		this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
-		.withGeneralPrefix()
-		.inject(JOB_ADDED_NOTIFIER, notifier.getName())
-		.sendTo(player);
+		player.sendMessage(this.messageService.getGeneralMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS).replace(JOB_ADDED_NOTIFIER, notifier.getName()));
 	}
 
 	@Subcommand("notifiers list")
@@ -188,10 +168,10 @@ public class EmploymentCommand extends BaseCommand
 	{
 		String notifiersNames = this.jobAddedNotifierService.getNotifiers().stream()
 				.map(JobAddedNotifier::getName)
-				.collect(joining(WHITE + ", " + GREEN, "", WHITE + "."));
+				.collect(joining(WHITE + ", " + GREEN));
 
-		this.messageService.getMessage(THE_JOB_ADDED_NOTIFIERS_ARE)
-		.inject(JOB_ADDED_NOTIFIERS, notifiersNames)
-		.sendTo(player);
+		notifiersNames += WHITE + ".";
+		
+		player.sendMessage(this.messageService.getMessage(THE_JOB_ADDED_NOTIFIERS_ARE).replace(JOB_ADDED_NOTIFIERS, notifiersNames));
 	}
 }

@@ -1,6 +1,6 @@
 package dte.employme.messages.service;
 
-import dte.employme.messages.MessageBuilder;
+import dte.employme.EmployMe;
 import dte.employme.messages.MessageKey;
 
 @FunctionalInterface
@@ -12,5 +12,16 @@ public interface MessageService
 	 * @param key The key that identifies the message.
 	 * @return The message.
 	 */
-	MessageBuilder getMessage(MessageKey key);
+	String getMessage(MessageKey key);
+	
+	/**
+	 * Retrieves the message that corresponds to the provided {@code key}, prefixed with the EmployMe's chat prefix.
+	 * @param key The key that identifies the message.
+	 * 
+	 * @return The message.
+	 */
+	default String getGeneralMessage(MessageKey key) 
+	{
+		return String.format("%s %s", EmployMe.CHAT_PREFIX, getMessage(key));
+	}
 }
