@@ -1,8 +1,8 @@
 package dte.employme.messages.service;
 
-import static dte.employme.utils.ChatColorUtils.colorize;
-
+import dte.employme.messages.MessageBuilder;
 import dte.employme.messages.MessageKey;
+import dte.employme.utils.ChatColorUtils;
 
 public class ColoredMessageService extends ForwardingMessageService
 {
@@ -12,8 +12,8 @@ public class ColoredMessageService extends ForwardingMessageService
 	}
 	
 	@Override
-	public String getMessage(MessageKey key) 
+	public MessageBuilder getMessage(MessageKey key) 
 	{
-		return colorize(super.getMessage(key));
+		return super.getMessage(key).transform(ChatColorUtils::colorize);
 	}
 }

@@ -1,5 +1,7 @@
 package dte.employme.inventories;
 
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
+
 import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -8,14 +10,15 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.job.rewards.ItemsReward;
+import dte.employme.messages.service.MessageService;
 
 public class ItemsRewardPreviewGUI extends ChestGui
 {
 	private final ItemsReward itemsReward;
 	
-	public ItemsRewardPreviewGUI(ItemsReward itemsReward) 
+	public ItemsRewardPreviewGUI(ItemsReward itemsReward, MessageService messageService) 
 	{
-		super(6, "Reward Preview (Esc to Return)");
+		super(6, messageService.getMessage(INVENTORY_ITEMS_REWARD_PREVIEW_TITLE).first());
 		
 		this.itemsReward = itemsReward;
 		
