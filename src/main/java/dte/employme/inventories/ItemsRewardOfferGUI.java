@@ -1,6 +1,7 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.ITEMS_JOB_NO_ITEMS_WARNING;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -22,21 +23,23 @@ public class ItemsRewardOfferGUI extends ChestGui
 {
 	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService) 
 	{
-		super(6, "What would you like to offer?");
-		
+		super(6, messageService.getMessage(INVENTORY_ITEMS_REWARD_OFFER_TITLE).first());
+
 		setOnClose(event -> 
 		{
 			Player player = (Player) event.getPlayer();
 			List<ItemStack> offeredItems = InventoryUtils.itemsStream(event.getInventory(), true).collect(toList());
-			
+
 			if(offeredItems.isEmpty()) 
 			{
-				player.sendMessage(messageService.getGeneralMessage(ITEMS_JOB_NO_ITEMS_WARNING));
+				messageService.getMessage(INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING)
+				.withGeneralPrefix()
+				.sendTo(player);
 				return;
 			}
 			ItemsReward itemsReward = new ItemsReward(offeredItems, playerContainerService);
 			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(messageService, jobBoard, itemsReward);
-			
+
 			Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
 		});
 	}

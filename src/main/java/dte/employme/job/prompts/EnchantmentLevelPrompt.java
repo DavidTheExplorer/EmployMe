@@ -31,7 +31,8 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	public String getPromptText(ConversationContext context) 
 	{
 		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL)
-				.replace(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment));
+				.inject(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment))
+				.first();
 	}
 
 	@Override
@@ -60,13 +61,14 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
 		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
-				.replace(ENCHANTMENT_MIN_LEVEL, String.valueOf(this.enchantment.getStartLevel()))
-				.replace(ENCHANTMENT_MAX_LEVEL, String.valueOf(this.enchantment.getMaxLevel())); 
+				.inject(ENCHANTMENT_MIN_LEVEL, String.valueOf(this.enchantment.getStartLevel()))
+				.inject(ENCHANTMENT_MAX_LEVEL, String.valueOf(this.enchantment.getMaxLevel()))
+				.first();
 	}
 
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.getMessage(ENCHANTMENT_LEVEL_NOT_A_NUMBER); 
+		return this.messageService.getMessage(ENCHANTMENT_LEVEL_NOT_A_NUMBER).first();
 	}
 }

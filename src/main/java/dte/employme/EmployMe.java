@@ -37,6 +37,7 @@ import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
+import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
@@ -71,6 +72,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private ConfigFile config, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
+	private JobIconFactory jobIconFactory;
 
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 
@@ -121,7 +123,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobSubscriptionService.loadSubscriptions();
 		ServiceLocator.register(JobSubscriptionService.class, this.jobSubscriptionService);
 		
-		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig);
+		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig, this.messageService);
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
@@ -129,6 +131,8 @@ public class EmployMe extends ModernJavaPlugin
 		
 		if(this.jobsConfig == null)
 			return;
+		
+		this.jobIconFactory = new JobIconFactory(this.messageService);
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
@@ -146,7 +150,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new PlayerContainerAbuseListener());
+		registerListeners(new PlayerContainerAbuseListener(this.playerContainerService));
 
 		setDisableListener(() -> 
 		{
@@ -192,19 +196,19 @@ public class EmployMe extends ModernJavaPlugin
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
 			if(context.getPlayer().isConversing())
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING).first(), false);
 		});
 
 		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
 		{
 			if(!this.jobSubscriptionService.isSubscribedTo(context.getPlayer().getUniqueId(), material))
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL).first(), false);
 		});
 		
 		commandManager.getCommandConditions().addCondition("Global Jobs Board Not Full", context -> 
 		{
 			if(this.globalJobBoard.getOfferedJobs().size() == ((6*9)-26)) 
-				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL));
+				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL).first());
 		});
 
 		//register contexts
@@ -213,7 +217,7 @@ public class EmployMe extends ModernJavaPlugin
 			Material material = Material.matchMaterial(context.popFirstArg());
 
 			if(material == null)
-				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND), false);
+				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND).first(), false);
 
 			return material;
 		});
@@ -224,9 +228,9 @@ public class EmployMe extends ModernJavaPlugin
 			JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
 
 			if(notifier == null) 
-			{
-				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND).replace(JOB_ADDED_NOTIFIER, notifierName), false);
-			}
+				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND)
+						.inject(JOB_ADDED_NOTIFIER, notifierName)
+						.first(), false);
 
 			return notifier;
 		});
@@ -242,6 +246,8 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService), this.economy));
+		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
+		
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, inventoryBoardDisplayer, this.economy, this.jobIconFactory));
 	}
 }

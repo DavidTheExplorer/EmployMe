@@ -1,10 +1,11 @@
 package dte.employme.inventories;
 
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.Comparator.comparing;
 import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.WHITE;
 
 import java.util.Comparator;
 
@@ -36,8 +37,8 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI)
 	{
-		super(6, "Choose an Enchantment:");
-
+		super(6, messageService.getMessage(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
+		
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
 
@@ -68,7 +69,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	{
 		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
 				.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
-				.withLore(WHITE + "Click to add this Enchantment to the Goal.")
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE).toArray())
 				.createCopy();
 
 		return new GuiItem(item, event -> 
