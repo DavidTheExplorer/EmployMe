@@ -35,6 +35,9 @@ public class AutoUpdateListeners implements Listener
 		if(!player.isOp())
 			return;
 		
-		player.sendMessage(this.messageService.getGeneralMessage(NEW_UPDATE_AVAILABLE).replace(Placeholders.NEW_VERSION, this.newVersion));
+		this.messageService.getMessage(NEW_UPDATE_AVAILABLE)
+		.withGeneralPrefix()
+		.inject(Placeholders.NEW_VERSION, this.newVersion)
+		.sendTo(player);
 	}
 }
