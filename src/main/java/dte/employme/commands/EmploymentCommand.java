@@ -6,10 +6,6 @@ import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GO
 import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
-import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
-import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIERS;
 import static java.util.stream.Collectors.joining;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.GREEN;
@@ -101,7 +97,7 @@ public class EmploymentCommand extends BaseCommand
 
 		this.messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
 		.withGeneralPrefix()
-		.inject(GOAL, EnumUtils.fixEnumName(material))
+		.inject(Placeholders.GOAL, EnumUtils.fixEnumName(material))
 		.sendTo(player);
 	}
 
@@ -121,7 +117,7 @@ public class EmploymentCommand extends BaseCommand
 
 		this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
 		.withGeneralPrefix()
-		.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
+		.inject(Placeholders.GOAL_SUBSCRIPTIONS, subscriptionsNames)
 		.sendTo(player);
 	}
 
@@ -177,7 +173,7 @@ public class EmploymentCommand extends BaseCommand
 
 		this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
 		.withGeneralPrefix()
-		.inject(JOB_ADDED_NOTIFIER, notifier.getName())
+		.inject(Placeholders.JOB_ADDED_NOTIFIER, notifier.getName())
 		.sendTo(player);
 	}
 
@@ -191,7 +187,7 @@ public class EmploymentCommand extends BaseCommand
 				.collect(joining(WHITE + ", " + GREEN, "", WHITE + "."));
 
 		this.messageService.getMessage(THE_JOB_ADDED_NOTIFIERS_ARE)
-		.inject(JOB_ADDED_NOTIFIERS, notifiersNames)
+		.inject(Placeholders.JOB_ADDED_NOTIFIERS, notifiersNames)
 		.sendTo(player);
 	}
 }

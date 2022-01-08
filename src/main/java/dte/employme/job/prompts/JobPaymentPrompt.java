@@ -1,19 +1,22 @@
 package dte.employme.job.prompts;
 
+import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_ENOUGH;
-import static dte.employme.messages.Placeholders.PLAYER_MONEY;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
+import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
+import dte.employme.job.rewards.Reward;
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
-import dte.employme.visitors.reward.RewardTaker;
+import dte.employme.utils.InventoryUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class JobPaymentPrompt extends NumericPrompt
@@ -33,16 +36,18 @@ public class JobPaymentPrompt extends NumericPrompt
 		Double employerMoney = this.economy.getBalance((Player) context.getForWhom());
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
-				.inject(PLAYER_MONEY, employerMoney.toString())
+				.inject(Placeholders.PLAYER_MONEY, employerMoney.toString())
+				.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
 				.first();
 	}
 
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) 
 	{
+		Player player = (Player) context.getForWhom();
 		MoneyReward moneyReward = new MoneyReward(this.economy, input.doubleValue());
-		moneyReward.accept(new RewardTaker((Player) context.getForWhom(), this.economy));
 		
+		takeReward(player, moneyReward);
 		context.setSessionData("reward", moneyReward);
 		
 		return Prompt.END_OF_CONVERSATION;
@@ -75,5 +80,17 @@ public class JobPaymentPrompt extends NumericPrompt
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
 		return this.messageService.getMessage(MONEY_REWARD_NOT_A_NUMBER).first();
+	}
+	
+	private void takeReward(Player player, Reward reward)
+	{
+		if(reward instanceof MoneyReward) 
+			this.economy.withdrawPlayer(player, ((MoneyReward) reward).getPayment());
+		
+		else if(reward instanceof ItemsReward) 
+			((ItemsReward) reward).getItems().forEach(item -> InventoryUtils.remove(player.getInventory(), item));
+		
+		else
+			throw new IllegalArgumentException("Cannot take the provided reward!");
 	}
 }
