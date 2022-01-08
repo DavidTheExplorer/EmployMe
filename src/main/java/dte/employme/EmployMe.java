@@ -35,6 +35,7 @@ import dte.employme.board.listenable.SimpleListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
+import dte.employme.config.Messages;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.items.JobIconFactory;
@@ -73,9 +74,9 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
-	private ConfigFile config, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, languageConfig;
 	private JobIconFactory jobIconFactory;
-
+	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 
 	private static EmployMe INSTANCE;
@@ -105,21 +106,20 @@ public class EmployMe extends ModernJavaPlugin
 				.handleSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
 				.build();
 		
-		this.config = configFileFactory.getConfig();
-		this.languageConfig = configFileFactory.getLanguageConfigFrom(this.config);
-		this.subscriptionsConfig = configFileFactory.getSubscriptionsConfig();
-		this.jobAddNotifiersConfig = configFileFactory.getJobAddNotifiersConfig();
-		this.itemsContainersConfig = configFileFactory.getItemsContainersConfig();
-		this.rewardsContainersConfig = configFileFactory.getRewardsContainersConfig();
+		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
+		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
+		this.itemsContainersConfig = configFileFactory.loadContainer("items");
+		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
+		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
 		
-		if(this.config == null || this.languageConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null)
+		if(this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
 			return;
 		
 		
 		
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
-		this.messageService = new ColoredMessageService(new TranslatedMessageService(this.languageConfig));
+		this.messageService = new ColoredMessageService(new TranslatedMessageService(this.messagesConfig));
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -129,7 +129,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
-		this.jobsConfig = configFileFactory.getJobsConfig();
+		this.jobsConfig = configFileFactory.loadConfig("jobs");
 		
 		if(this.jobsConfig == null)
 			return;
