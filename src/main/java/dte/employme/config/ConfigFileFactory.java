@@ -102,42 +102,14 @@ public class ConfigFileFactory
 
 		return save(config) ? config : null;
 	}
-
-	public ConfigFile getJobsConfig() 
+	
+	public ConfigFile getConfig(String path) 
 	{
-		ConfigFile config = ConfigFile.byPath("jobs.yml");
+		ConfigFile config = ConfigFile.byPath(path);
 
 		return create(config) ? config : null;
 	}
-
-	public ConfigFile getSubscriptionsConfig() 
-	{
-		ConfigFile config = ConfigFile.byPath("subscriptions");
-
-		return create(config) ? config : null;
-	}
-
-	public ConfigFile getJobAddNotifiersConfig() 
-	{
-		ConfigFile config = ConfigFile.byPath("job add notifiers");
-
-		return create(config) ? config : null;
-	}
-
-	public ConfigFile getItemsContainersConfig()
-	{
-		ConfigFile config = ConfigFile.byPath("containers/items containers");
-
-		return create(config) ? config : null;
-	}
-
-	public ConfigFile getRewardsContainersConfig() 
-	{
-		ConfigFile config = ConfigFile.byPath("containers/rewards containers");
-
-		return create(config) ? config : null;
-	}
-
+	
 	public ConfigFile getLanguageConfigFrom(ConfigFile config) 
 	{
 		//always create the english config

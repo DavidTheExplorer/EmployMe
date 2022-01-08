@@ -107,10 +107,10 @@ public class EmployMe extends ModernJavaPlugin
 		
 		this.config = configFileFactory.getConfig();
 		this.languageConfig = configFileFactory.getLanguageConfigFrom(this.config);
-		this.subscriptionsConfig = configFileFactory.getSubscriptionsConfig();
-		this.jobAddNotifiersConfig = configFileFactory.getJobAddNotifiersConfig();
-		this.itemsContainersConfig = configFileFactory.getItemsContainersConfig();
-		this.rewardsContainersConfig = configFileFactory.getRewardsContainersConfig();
+		this.subscriptionsConfig = configFileFactory.getConfig("subscriptions");
+		this.jobAddNotifiersConfig = configFileFactory.getConfig("job add notifiers");
+		this.itemsContainersConfig = configFileFactory.getConfig("containers/items containers");
+		this.rewardsContainersConfig = configFileFactory.getConfig("containers/rewards containers");
 		
 		if(this.config == null || this.languageConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null)
 			return;
@@ -129,7 +129,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
-		this.jobsConfig = configFileFactory.getJobsConfig();
+		this.jobsConfig = configFileFactory.getConfig("jobs");
 		
 		if(this.jobsConfig == null)
 			return;
