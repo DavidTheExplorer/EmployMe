@@ -22,6 +22,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
+import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryFrameworkUtils;
 import dte.employme.utils.items.ItemBuilder;
@@ -72,11 +73,23 @@ public class JobDeletionGUI extends ChestGui
 		return new GuiItem(item, event -> 
 		{
 			Player player = (Player) event.getWhoClicked();
-			player.closeInventory();
-			this.jobBoard.removeJob(job);
-			job.getReward().giveTo(job.getEmployer());
 
-			this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED).sendTo(player);
+			//Right click = preview mode for jobs that offer items
+			if(event.isRightClick() && job.getReward() instanceof ItemsReward)
+			{
+				ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
+				gui.setOnClose(closeEvent -> show(player));
+				gui.show(player);
+			}
+			
+			//delete the job
+			else 
+			{
+				player.closeInventory();
+				this.jobBoard.removeJob(job);
+				job.getReward().giveTo(job.getEmployer());
+				this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED).sendTo(player);
+			}
 		});
 	}
 }
