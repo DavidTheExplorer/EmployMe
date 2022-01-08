@@ -96,4 +96,6 @@ public enum MessageKey
 	INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE,
 	ITEM_GOAL_FORMAT_QUESTION,
 	ITEM_GOAL_INVALID;
+	
+	public static final MessageKey[] VALUES = values();
 }
