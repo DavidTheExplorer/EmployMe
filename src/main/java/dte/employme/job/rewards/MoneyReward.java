@@ -7,7 +7,6 @@ import org.bukkit.configuration.serialization.SerializableAs;
 
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
-import dte.employme.visitors.reward.RewardVisitor;
 import net.milkbowl.vault.economy.Economy;
 
 @SerializableAs("Money Reward")
@@ -39,12 +38,6 @@ public class MoneyReward implements Reward
 	public double getPayment() 
 	{
 		return this.payment;
-	}
-
-	@Override
-	public <R> R accept(RewardVisitor<R> visitor) 
-	{
-		return visitor.visit(this);
 	}
 
 	@Override

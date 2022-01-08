@@ -14,7 +14,6 @@ import com.google.common.collect.Lists;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
-import dte.employme.visitors.reward.RewardVisitor;
 
 @SerializableAs("Items Reward")
 public class ItemsReward implements Reward, Iterable<ItemStack>
@@ -47,12 +46,6 @@ public class ItemsReward implements Reward, Iterable<ItemStack>
 	public List<ItemStack> getItems() 
 	{
 		return Lists.newArrayList(this.items);
-	}
-
-	@Override
-	public <R> R accept(RewardVisitor<R> visitor) 
-	{
-		return visitor.visit(this);
 	}
 
 	@Override

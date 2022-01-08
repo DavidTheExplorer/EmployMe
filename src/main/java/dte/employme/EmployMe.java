@@ -6,7 +6,6 @@ import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
-import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
@@ -55,6 +54,7 @@ import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.listeners.PlayerContainerAbuseListener;
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
@@ -242,7 +242,7 @@ public class EmployMe extends ModernJavaPlugin
 
 			if(notifier == null) 
 				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND)
-						.inject(JOB_ADDED_NOTIFIER, notifierName)
+						.inject(Placeholders.JOB_ADDED_NOTIFIER, notifierName)
 						.first(), false);
 
 			return notifier;

@@ -1,6 +1,8 @@
 package dte.employme.config;
 
 import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
+import static dte.employme.messages.MessageKey.CONTAINER_HELP_ITEM_NAME;
+import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
 import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
@@ -188,18 +190,19 @@ public class ConfigFileFactory
 				.put(MUST_NOT_BE_CONVERSING, new String[]{"&cYou have to finish your current conversation."})
 				.put(MATERIAL_NOT_FOUND, new String[]{"&cThe specified Material doesn't exist!"})
 				.put(NEW_UPDATE_AVAILABLE, new String[]{"&fPlease update &fto the lastest version! (&e%new version%&f)"})
+				.put(CURRENCY_SYMBOL, new String[]{"$"})
 
 				//Players Containers
 				.put(ITEMS_CONTAINER_DESCRIPTION, new String[]{"&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here."})
 				.put(REWARDS_CONTAINER_DESCRIPTION, new String[]{"&fThis is where Reward Items are stored", "&fafter you complete a job that pays them."})
 				.put(CONTAINER_CLAIM_INSTRUCTION, new String[]{"Claim your %container subject%:"})
-				.put(MessageKey.CONTAINER_HELP_ITEM_NAME, new String[]{"&aHelp"})
+				.put(CONTAINER_HELP_ITEM_NAME, new String[]{"&aHelp"})
 
 				//Job Icon
 				.put(JOB_ICON_NAME, new String[]{"&a%employer%'s Offer"})
 				.put(JOB_ICON_GOAL_INSTRUCTIONS, new String[]{"&b&lGoal: &fI need &b%goal%&f."})
 				.put(JOB_ICON_ENCHANT_DESCRIPTION, new String[]{"&dEnchanted &fwith:"})
-				.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, new String[]{"&6&n&lPayment&6: &f%money payment%$"})
+				.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, new String[]{"&6&n&lPayment&6: &f%money payment%%currency symbol%"})
 				.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, new String[]{"&6&n&lPayment&6: &fRight Click to preview items(%items amount%)"})
 
 				//Job Board GUI
@@ -218,7 +221,7 @@ public class ConfigFileFactory
 				.put(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE, new String[]{"&fClick to offer a Job for which", "&fyou will pay a certain amount of money."})
 				.put(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME, new String[]{"&bItems Job"})
 				.put(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE, new String[]{"&fClick to offer a Job for which", "&fyou will pay with resources."})
-				.put(MONEY_PAYMENT_AMOUNT_QUESTION, new String[]{"&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%player money%&6$&f)"})
+				.put(MONEY_PAYMENT_AMOUNT_QUESTION, new String[]{"&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%player money%&6%currency symbol%&f)"})
 				.put(MONEY_REWARD_ERROR_NEGATIVE, new String[]{"&cCan't create a Money Reward that pays nothing or less!"})
 				.put(MONEY_REWARD_NOT_ENOUGH, new String[]{"&cYou can't offer an amount of money that you don't have!"})
 				.put(MONEY_REWARD_NOT_A_NUMBER, new String[]{"&cPayment has to be a Positive Integer!"})

@@ -1,7 +1,6 @@
 package dte.employme.job.addnotifiers;
 
 import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
-import static dte.employme.messages.Placeholders.REWARDS;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Map;
@@ -14,6 +13,7 @@ import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.MessageKey;
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.java.EnumUtils;
 import dte.employme.utils.java.MapBuilder;
@@ -50,7 +50,7 @@ public class MaterialSubscriptionNotifier extends JobAddedChatNotifier
 		ItemsReward itemsReward = (ItemsReward) job.getReward();
 		
 		return new MapBuilder<MessageKey, Map<String, String>>()
-				.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, new MapBuilder<String, String>().put(REWARDS, getSubscribedToItemsNames(player, itemsReward)).build())
+				.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, new MapBuilder<String, String>().put(Placeholders.REWARDS, getSubscribedToItemsNames(player, itemsReward)).build())
 				.build();
 	}
 	
