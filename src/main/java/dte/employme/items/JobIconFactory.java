@@ -1,5 +1,6 @@
 package dte.employme.items;
 
+import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.JOB_ICON_ENCHANT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
 import static dte.employme.messages.MessageKey.JOB_ICON_ITEMS_PAYMENT_DESCRIPTION;
@@ -80,6 +81,7 @@ public class JobIconFactory
 		if(reward instanceof MoneyReward)
 			return this.messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
 					.inject(Placeholders.MONEY_PAYMENT, String.format("%.2f", ((MoneyReward) reward).getPayment()))
+					.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
 					.first();
 
 		else if(reward instanceof ItemsReward)

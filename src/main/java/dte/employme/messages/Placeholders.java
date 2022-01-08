@@ -22,7 +22,8 @@ public class Placeholders
 	EMPLOYER = create("employer"),
 	MONEY_PAYMENT = create("money payment"),
 	ITEMS_AMOUNT = create("items amount"),
-	CONTAINER_SUBJECT = create("container subject");
+	CONTAINER_SUBJECT = create("container subject"),
+	CURRENCY_SYMBOL = create("currency symbol");
 
 	private static String create(String value) 
 	{

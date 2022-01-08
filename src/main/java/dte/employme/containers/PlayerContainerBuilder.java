@@ -2,7 +2,6 @@ package dte.employme.containers;
 
 import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
 import static dte.employme.messages.MessageKey.CONTAINER_HELP_ITEM_NAME;
-import static dte.employme.messages.Placeholders.CONTAINER_SUBJECT;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.WHITE;
 
@@ -16,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -31,7 +31,7 @@ public class PlayerContainerBuilder
 		Objects.requireNonNull(this.messageService);
 		
 		this.title = this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
-				.inject(CONTAINER_SUBJECT, subject)
+				.inject(Placeholders.CONTAINER_SUBJECT, subject)
 				.first();
 		
 		return this;
