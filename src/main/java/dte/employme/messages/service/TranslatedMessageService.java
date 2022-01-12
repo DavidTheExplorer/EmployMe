@@ -20,6 +20,7 @@ public class TranslatedMessageService implements MessageService
 	@Override
 	public MessageBuilder getMessage(MessageKey key) 
 	{
+		//can be either a String or a List<String> - if the message contains multiple lines
 		Object message = this.languageConfig.getConfig().get(String.format("Messages.%s", EnumUtils.fixEnumName(key)));
 		
 		if(message instanceof String) 
