@@ -15,7 +15,7 @@ import dte.employme.EmployMe;
 public class ConfigFile
 {
 	private final File file;
-	private final YamlConfiguration config;
+	private YamlConfiguration config;
 
 	private static final File PLUGIN_FOLDER = EmployMe.getInstance().getDataFolder();
 
@@ -24,10 +24,10 @@ public class ConfigFile
 		PLUGIN_FOLDER.mkdirs();
 	}
 
-	private ConfigFile(File file, YamlConfiguration config) 
+	private ConfigFile(File file) 
 	{
 		this.file = file;
-		this.config = config;
+		reload();
 	}
 
 	/*
@@ -55,10 +55,8 @@ public class ConfigFile
 
 		if(isResource && !file.exists())
 			EmployMe.getInstance().saveResource(path, false);
-
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-
-		return new ConfigFile(file, config);
+		
+		return new ConfigFile(file);
 	}
 
 	/*
@@ -127,5 +125,10 @@ public class ConfigFile
 			exceptionHandler.accept(exception);
 			return false;
 		}
+	}
+	
+	public void reload() 
+	{
+		this.config = YamlConfiguration.loadConfiguration(this.file);
 	}
 }

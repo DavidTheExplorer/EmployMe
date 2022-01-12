@@ -1,6 +1,7 @@
 package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.NONE;
+import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
 import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
@@ -39,6 +40,7 @@ import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
+import dte.employme.reloadable.Reloadable;
 import dte.employme.utils.java.EnumUtils;
 import net.milkbowl.vault.economy.Economy;
 
@@ -55,8 +57,9 @@ public class EmploymentCommand extends BaseCommand
 	private final JobBoardDisplayer jobBoardDisplayer;
 	private final Economy economy;
 	private final JobIconFactory jobIconFactory;
-
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory) 
+	private final List<Reloadable> reloadables;
+	
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, List<Reloadable> reloadables) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.playerContainerService = playerContainerService;
@@ -66,6 +69,18 @@ public class EmploymentCommand extends BaseCommand
 		this.jobBoardDisplayer = jobBoardDisplayer;
 		this.economy = economy;
 		this.jobIconFactory = jobIconFactory;
+		this.reloadables = reloadables;
+	}
+	
+	@Subcommand("reload")
+	@CommandPermission("employme.reload")
+	public void reload(Player player) 
+	{
+		this.reloadables.forEach(Reloadable::reload);
+		
+		this.messageService.getMessage(PLUGIN_RELOADED)
+		.withGeneralPrefix()
+		.sendTo(player);
 	}
 
 	@HelpCommand
