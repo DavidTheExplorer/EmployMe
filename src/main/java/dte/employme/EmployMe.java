@@ -10,6 +10,7 @@ import static org.bukkit.ChatColor.DARK_GREEN;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -59,6 +60,7 @@ import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.ColoredMessageService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.messages.service.TranslatedMessageService;
+import dte.employme.reloadable.Reloadable;
 import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
@@ -76,6 +78,7 @@ public class EmployMe extends ModernJavaPlugin
 	private MessageService messageService;
 	private JobIconFactory jobIconFactory;
 	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	private List<Reloadable> reloadables = new ArrayList<>();
 	
 	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 
@@ -88,7 +91,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//init economy
 		this.economy = getEconomy();
-
+		
 		if(this.economy == null) 
 		{
 			disableWithError(RED + "Economy wasn't found! Shutting Down...");
@@ -119,7 +122,10 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
-		this.messageService = new ColoredMessageService(new TranslatedMessageService(this.messagesConfig));
+		
+		TranslatedMessageService translatedMessageService = new TranslatedMessageService(this.messagesConfig);
+		this.reloadables.add(translatedMessageService);
+		this.messageService = new ColoredMessageService(translatedMessageService);
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -147,8 +153,6 @@ public class EmployMe extends ModernJavaPlugin
 
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
-
-
 
 		//register commands, listeners, metrics
 		registerCommands();
@@ -261,6 +265,6 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, inventoryBoardDisplayer, this.economy, this.jobIconFactory));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, inventoryBoardDisplayer, this.economy, this.jobIconFactory, this.reloadables));
 	}
 }

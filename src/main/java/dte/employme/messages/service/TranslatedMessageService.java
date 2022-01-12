@@ -5,9 +5,10 @@ import java.util.Collection;
 import dte.employme.config.ConfigFile;
 import dte.employme.messages.MessageBuilder;
 import dte.employme.messages.MessageKey;
+import dte.employme.reloadable.Reloadable;
 import dte.employme.utils.java.EnumUtils;
 
-public class TranslatedMessageService implements MessageService
+public class TranslatedMessageService implements MessageService, Reloadable
 {
 	private final ConfigFile languageConfig;
 	
@@ -29,7 +30,13 @@ public class TranslatedMessageService implements MessageService
 		if(isStringCollection(message))
 			return new MessageBuilder(((Collection<String>) message).toArray(new String[0]));
 					
-		throw new IllegalArgumentException("The specified object doesn't represent a message!");
+		throw new IllegalArgumentException(String.format("The specified object(%s) doesn't represent a message!", message));
+	}
+	
+	@Override
+	public void reload() 
+	{
+		this.languageConfig.reload();
 	}
 	
 	private static boolean isStringCollection(Object object) 
@@ -39,12 +46,6 @@ public class TranslatedMessageService implements MessageService
 		
 		Collection<?> collection = (Collection<?>) object;
 		
-		if(collection.isEmpty())
-			return false;
-		
-		if(!(collection.iterator().next() instanceof String))
-			return false;
-		
-		return true;
+		return !collection.isEmpty() && collection.iterator().next() instanceof String;
 	}
 }

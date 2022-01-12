@@ -59,6 +59,7 @@ import static dte.employme.messages.MessageKey.NEW_JOB_POSTED;
 import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
+import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
 import static dte.employme.messages.MessageKey.REWARD;
 import static dte.employme.messages.MessageKey.REWARDS;
 import static dte.employme.messages.MessageKey.REWARDS_CONTAINER_DESCRIPTION;
@@ -129,6 +130,7 @@ public class Messages
 			.put(MATERIAL_NOT_FOUND, "&cThe specified Material doesn't exist!")
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
+			.put(PLUGIN_RELOADED, "&fReload completed!")
 
 			//Players Containers
 			.put(ITEMS_CONTAINER_DESCRIPTION, "&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here.")
