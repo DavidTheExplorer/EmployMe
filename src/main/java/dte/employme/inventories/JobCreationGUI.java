@@ -43,7 +43,7 @@ public class JobCreationGUI extends ChestGui
 		this.playerContainerService = playerContainerService;
 		
 		//init the goal's type conversation factory
-		this.moneyJobConversationFactory = Conversations.createFactory()
+		this.moneyJobConversationFactory = Conversations.createFactory(messageService)
 				.withFirstPrompt(new JobPaymentPrompt(economy, messageService))
 				.addConversationAbandonedListener(event -> 
 				{

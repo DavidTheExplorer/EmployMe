@@ -1,5 +1,6 @@
 package dte.employme.inventories;
 
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE;
@@ -9,6 +10,7 @@ import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_NO_C
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
+import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
 import static dte.employme.utils.EnchantmentUtils.getEnchantments;
@@ -40,8 +42,6 @@ import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
-import dte.employme.messages.MessageKey;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
@@ -70,7 +70,7 @@ public class GoalCustomizationGUI extends ChestGui
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
-		this.typeConversationFactory = Conversations.createFactory()
+		this.typeConversationFactory = Conversations.createFactory(messageService)
 				.withLocalEcho(false)
 				.withFirstPrompt(new JobGoalPrompt(messageService))
 				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
@@ -258,8 +258,8 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createAmountItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.ARROW)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(Placeholders.GOAL_AMOUNT, String.valueOf(this.amount)).first())
-				.withLore(this.messageService.getMessage(MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy();
 

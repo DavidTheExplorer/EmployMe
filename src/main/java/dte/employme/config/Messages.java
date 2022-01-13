@@ -60,6 +60,7 @@ import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.REWARD;
 import static dte.employme.messages.MessageKey.REWARDS;
 import static dte.employme.messages.MessageKey.REWARDS_CONTAINER_DESCRIPTION;
@@ -120,6 +121,7 @@ public class Messages
 			.put(YOUR_SUBSCRIPTIONS_ARE, "&fYou are subscribed to: &6%goal subscriptions%")
 
 			//General
+			.put(PREFIX, "&2[&aEmployMe&2] ")
 			.put(NONE, "None")
 			.put(GET, "Get")
 			.put(GOAL, "Goal")

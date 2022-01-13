@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
-import dte.employme.EmployMe;
 import dte.employme.messages.service.MessageService;
 
 /**
@@ -27,21 +26,20 @@ public class MessageBuilder
 		this.lines = Arrays.asList(lines);
 	}
 	
-	public MessageBuilder transform(UnaryOperator<String> transformer)
+	public MessageBuilder map(UnaryOperator<String> transformer)
 	{
 		this.lines.replaceAll(transformer);
 		return this;
 	}
 	
-	public MessageBuilder withGeneralPrefix()
+	public MessageBuilder prefixed(String prefix) 
 	{
-		return transform(line -> EmployMe.CHAT_PREFIX + " " + line);
+		return map(line -> prefix + line);
 	}
 	
 	public MessageBuilder inject(String placeholder, String value) 
 	{
-		this.lines.replaceAll(line -> line.replace(placeholder, value));
-		return this;
+		return map(line -> line.replace(placeholder, value));
 	}
 	
 	public MessageBuilder inject(Map<String, String> placeholders) 
