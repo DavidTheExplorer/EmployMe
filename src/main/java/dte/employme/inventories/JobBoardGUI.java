@@ -3,9 +3,11 @@ package dte.employme.inventories;
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
-import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.InventoryFrameworkUtils.createWalls;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.WHITE;
 
@@ -16,13 +18,13 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
-import com.github.stefvanschie.inventoryframework.pane.PatternPane;
-import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
@@ -41,16 +43,6 @@ public class JobBoardGUI extends ChestGui
 	private final MessageService messageService;
 	private final JobIconFactory jobIconFactory;
 
-	private static final Pattern BACKGROUND_PATTERN = new Pattern
-			(
-					"BBBBBBBBB",
-					"B       B",
-					"B       B", 
-					"B       B", 
-					"B       B", 
-					"BBBBBBBBB"
-					);
-
 	public JobBoardGUI(Player player, JobBoard jobBoard, Comparator<Job> orderComparator, JobService jobService, MessageService messageService, JobIconFactory jobIconFactory)
 	{
 		super(6, messageService.getMessage(INVENTORY_JOB_BOARD_TITLE).first());
@@ -63,8 +55,9 @@ public class JobBoardGUI extends ChestGui
 		this.jobIconFactory = jobIconFactory;
 
 		setOnTopClick(event -> event.setCancelled(true));
-		addPane(createBackground(Priority.LOWEST));
+		addPane(createWalls(this, Priority.LOWEST));
 		addPane(createJobsPane(Priority.LOW));
+		addPane(createPersonalJobsPane(Priority.HIGH)); //for some reason LOW/NORMAL don't work
 		update();
 	}
 
@@ -78,6 +71,14 @@ public class JobBoardGUI extends ChestGui
 		.map(this::createOfferIcon)
 		.forEach(pane::addItem);
 
+		return pane;
+	}
+	
+	private StaticPane createPersonalJobsPane(Priority priority) 
+	{
+		StaticPane pane = new StaticPane(0, 0, 9, 6, priority);
+		pane.addItem(createPersonalJobsItem(), 4, 5);
+		
 		return pane;
 	}
 
@@ -118,12 +119,19 @@ public class JobBoardGUI extends ChestGui
 		});
 	}
 	
-	//TODO: put in InventoryFrameworkUtils
-	private static PatternPane createBackground(Priority priority) 
+	private GuiItem createPersonalJobsItem() 
 	{
-		PatternPane background = new PatternPane(0, 0, 9, 6, BACKGROUND_PATTERN);
-		background.bindItem('B', new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE)));
-
-		return background;
+		ItemStack item = new ItemBuilder(Material.PLAYER_HEAD)
+				.named(this.messageService.getMessage(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
+				.withItemMeta(SkullMeta.class, meta -> meta.setOwningPlayer(this.player))
+				.withLore(this.messageService.getMessage(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
+				.createCopy();
+		
+		return new GuiItem(item, event -> 
+		{
+			List<Job> playerJobs = this.jobBoard.getJobsOfferedBy(this.player.getUniqueId());
+			
+			new PlayerJobsGUI(this, this.messageService, playerJobs, this.orderComparator, this.jobIconFactory).show(this.player);
+		});
 	}
 }
