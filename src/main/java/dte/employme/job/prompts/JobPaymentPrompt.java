@@ -5,6 +5,7 @@ import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_ENOUGH;
+import static dte.employme.messages.Placeholders.PLAYER_MONEY;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -36,7 +37,7 @@ public class JobPaymentPrompt extends NumericPrompt
 		Double employerMoney = this.economy.getBalance((Player) context.getForWhom());
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
-				.inject(Placeholders.PLAYER_MONEY, employerMoney.toString())
+				.inject(PLAYER_MONEY, employerMoney.toString())
 				.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
 				.first();
 	}

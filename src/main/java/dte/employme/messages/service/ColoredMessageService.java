@@ -14,6 +14,6 @@ public class ColoredMessageService extends ForwardingMessageService
 	@Override
 	public MessageBuilder getMessage(MessageKey key) 
 	{
-		return super.getMessage(key).transform(ChatColorUtils::colorize);
+		return super.getMessage(key).map(ChatColorUtils::colorize);
 	}
 }

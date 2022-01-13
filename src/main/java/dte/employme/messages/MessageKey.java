@@ -24,6 +24,7 @@ public enum MessageKey
 	YOUR_SUBSCRIPTIONS_ARE,
 	
 	//General
+	PREFIX,
 	NONE,
 	GET,
 	GOAL,

@@ -6,6 +6,10 @@ import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
 import static dte.employme.messages.MessageKey.JOB_ICON_ITEMS_PAYMENT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_MONEY_PAYMENT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_NAME;
+import static dte.employme.messages.Placeholders.EMPLOYER;
+import static dte.employme.messages.Placeholders.GOAL;
+import static dte.employme.messages.Placeholders.ITEMS_AMOUNT;
+import static dte.employme.messages.Placeholders.MONEY_PAYMENT;
 import static dte.employme.utils.ChatColorUtils.colorize;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
@@ -40,7 +44,7 @@ public class JobIconFactory
 	{
 		List<String> lore = new ArrayList<>();
 		lore.addAll(this.messageService.getMessage(JOB_ICON_GOAL_INSTRUCTIONS)
-				.inject(Placeholders.GOAL, ItemStackUtils.describe(job.getGoal()))
+				.inject(GOAL, ItemStackUtils.describe(job.getGoal()))
 				.toList());
 		lore.addAll(getGoalEnchantmentsLore(job.getGoal()));
 		lore.add(" ");
@@ -48,7 +52,7 @@ public class JobIconFactory
 		lore.add(" ");
 
 		return new ItemBuilder(job.getGoal().getType())
-				.named(this.messageService.getMessage(JOB_ICON_NAME).inject(Placeholders.EMPLOYER, job.getEmployer().getName()).first())
+				.named(this.messageService.getMessage(JOB_ICON_NAME).inject(EMPLOYER, job.getEmployer().getName()).first())
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.withLore(lore.toArray(new String[0]))
 				.createCopy();
@@ -80,13 +84,13 @@ public class JobIconFactory
 	{
 		if(reward instanceof MoneyReward)
 			return this.messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
-					.inject(Placeholders.MONEY_PAYMENT, String.format("%.2f", ((MoneyReward) reward).getPayment()))
+					.inject(MONEY_PAYMENT, String.format("%.2f", ((MoneyReward) reward).getPayment()))
 					.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
 					.first();
 
 		else if(reward instanceof ItemsReward)
 			return this.messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
-					.inject(Placeholders.ITEMS_AMOUNT, String.valueOf(((ItemsReward) reward).getItems().size()))
+					.inject(ITEMS_AMOUNT, String.valueOf(((ItemsReward) reward).getItems().size()))
 					.first();
 
 		else

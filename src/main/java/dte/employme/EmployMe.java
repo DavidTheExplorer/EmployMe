@@ -6,8 +6,6 @@ import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
-import static org.bukkit.ChatColor.DARK_GREEN;
-import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
@@ -79,8 +77,6 @@ public class EmployMe extends ModernJavaPlugin
 	private JobIconFactory jobIconFactory;
 	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	private List<Reloadable> reloadables = new ArrayList<>();
-	
-	public static final String CHAT_PREFIX = DARK_GREEN + "[" + GREEN + "EmployMe" + DARK_GREEN + "]";
 
 	private static EmployMe INSTANCE;
 

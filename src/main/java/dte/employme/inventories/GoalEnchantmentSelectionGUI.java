@@ -79,7 +79,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			Player player = (Player) event.getWhoClicked();
 			player.closeInventory();
 			
-			Conversations.createFactory()
+			Conversations.createFactory(this.messageService)
 			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
 			.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
 			.addConversationAbandonedListener(abandonedEvent -> 

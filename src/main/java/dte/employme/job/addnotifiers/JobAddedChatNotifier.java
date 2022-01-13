@@ -1,5 +1,6 @@
 package dte.employme.job.addnotifiers;
 
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static org.bukkit.ChatColor.GRAY;
 
@@ -31,7 +32,7 @@ public abstract class JobAddedChatNotifier extends AbstractJobAddedNotifier
 		{
 			this.messageService.getMessage(messageKey)
 			.inject(placeholders)
-			.withGeneralPrefix()
+			.prefixed(this.messageService.getMessage(PREFIX).first())
 			.sendTo(player);
 		});
 		
