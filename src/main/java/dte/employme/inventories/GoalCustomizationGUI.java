@@ -157,7 +157,6 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setAmount(int amount) 
 	{
 		this.amount = amount;
-		this.optionsPane.removeItem(6, 3);
 		this.optionsPane.addItem(createAmountItem(), 6, 3);
 		
 		updateCurrentItem(item -> 
@@ -178,7 +177,6 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		GuiItem updatedItem = new GuiItem(update.apply(getCurrentItem()));
 
-		this.itemPane.removeItem(1, 1);
 		this.itemPane.addItem(this.currentItem = updatedItem, 1, 1);
 		
 		update();
@@ -188,7 +186,6 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE));
 		
-		this.optionsPane.removeItem(6, 2);
 		this.optionsPane.addItem(updatedItem, 6, 2);
 	}
 
