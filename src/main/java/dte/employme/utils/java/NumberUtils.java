@@ -1,5 +1,7 @@
 package dte.employme.utils.java;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 public class NumberUtils 
@@ -34,5 +36,12 @@ public class NumberUtils
 		{
 			return Optional.empty();
 		}
+	}
+	
+	public static double limit(double number, int decimalPlaces) 
+	{
+		return new BigDecimal(number)
+				.setScale(decimalPlaces, RoundingMode.DOWN)
+				.doubleValue();
 	}
 }
