@@ -18,6 +18,7 @@ import dte.employme.job.rewards.Reward;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
+import dte.employme.utils.java.NumberUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class JobPaymentPrompt extends NumericPrompt
@@ -34,7 +35,7 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		Double employerMoney = this.economy.getBalance((Player) context.getForWhom());
+		Double employerMoney = NumberUtils.limit(this.economy.getBalance((Player) context.getForWhom()), 2);
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
 				.inject(PLAYER_MONEY, employerMoney.toString())
