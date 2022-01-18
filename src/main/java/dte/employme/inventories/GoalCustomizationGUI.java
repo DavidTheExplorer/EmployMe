@@ -103,8 +103,8 @@ public class GoalCustomizationGUI extends ChestGui
 		addPane(createSquare(Priority.LOWEST, 0, 3, 3, new GuiItem(createWall(Material.LIME_STAINED_GLASS_PANE))));
 		addPane(createRectangle(Priority.LOWEST, 3, 0, 6, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(createRectangle(Priority.LOW, 5, 1, 3, 4, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
-		addPane(createItemPane(Priority.NORMAL));
-		addPane(createOptionsPane(Priority.HIGH));
+		addPane(createItemPane());
+		addPane(createOptionsPane());
 		update();
 	}
 
@@ -192,9 +192,9 @@ public class GoalCustomizationGUI extends ChestGui
 		this.optionsPane.addItem(updatedItem, 6, 2);
 	}
 
-	private StaticPane createItemPane(Priority priority) 
+	private StaticPane createItemPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 6, 9, priority);
+		StaticPane pane = new StaticPane(0, 0, 6, 9, Priority.NORMAL);
 
 		pane.addItem(this.currentItem = new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
@@ -232,9 +232,9 @@ public class GoalCustomizationGUI extends ChestGui
 		return pane;
 	}
 
-	private StaticPane createOptionsPane(Priority priority) 
+	private StaticPane createOptionsPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 9, 6, priority);
+		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH);
 
 		pane.addItem(new GuiItem(new ItemBuilder(Material.ANVIL)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())

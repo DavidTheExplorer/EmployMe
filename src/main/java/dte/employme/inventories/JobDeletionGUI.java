@@ -5,6 +5,7 @@ import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INS
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_DELETED;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
+import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.GRAY;
 
@@ -24,7 +25,6 @@ import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.InventoryFrameworkUtils;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobDeletionGUI extends ChestGui
@@ -44,14 +44,14 @@ public class JobDeletionGUI extends ChestGui
 		this.jobIconFactory = jobIconFactory;
 
 		setOnTopClick(event -> event.setCancelled(true));
-		addPane(createJobsPane(Priority.LOW));
-		addPane(InventoryFrameworkUtils.createRectangle(Priority.LOWEST, 0, 0, 9, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
+		addPane(createJobsPane());
+		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		update();
 	}
 
-	private OutlinePane createJobsPane(Priority priority) 
+	private OutlinePane createJobsPane() 
 	{
-		OutlinePane pane = new OutlinePane(0, 0, 9, 6, priority);
+		OutlinePane pane = new OutlinePane(0, 0, 9, 6, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
 
 		this.jobsToDisplay.stream()

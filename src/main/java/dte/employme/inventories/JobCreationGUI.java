@@ -59,13 +59,13 @@ public class JobCreationGUI extends ChestGui
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 3, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
-		addPane(createOptionsPane(Priority.LOW));
+		addPane(createOptionsPane());
 		update();
 	}
 	
-	private OutlinePane createOptionsPane(Priority priority) 
+	private OutlinePane createOptionsPane() 
 	{
-		OutlinePane pane = new OutlinePane(2, 1, 6, 1, priority);
+		OutlinePane pane = new OutlinePane(2, 1, 6, 1, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
 		pane.setGap(3);
 		

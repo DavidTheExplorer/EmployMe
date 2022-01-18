@@ -23,13 +23,13 @@ public class ItemsRewardPreviewGUI extends ChestGui
 		this.itemsReward = itemsReward;
 		
 		setOnTopClick(event -> event.setCancelled(true));
-		addPane(createItemsPane(Priority.LOWEST));
+		addPane(createItemsPane());
 		update();
 	}
 	
-	private OutlinePane createItemsPane(Priority priority) 
+	private OutlinePane createItemsPane() 
 	{
-		OutlinePane pane = new OutlinePane(0, 0, 9, 6, priority);
+		OutlinePane pane = new OutlinePane(0, 0, 9, 6, Priority.LOWEST);
 		
 		this.itemsReward.getItems().stream()
 		.map(item -> new GuiItem(new ItemStack(item)))
