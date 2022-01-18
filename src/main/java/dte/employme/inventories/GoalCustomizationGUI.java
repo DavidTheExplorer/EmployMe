@@ -121,7 +121,7 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setType(Material material)
 	{
 		if(getType() == NO_ITEM_TYPE)
-			this.optionsPane.addItem(createAmountItem(), 6, 3);
+			this.optionsPane.addItem(createAmountItem(), 6, 2);
 		
 		updateCurrentItem(item -> 
 		{
@@ -157,7 +157,7 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setAmount(int amount) 
 	{
 		this.amount = amount;
-		this.optionsPane.addItem(createAmountItem(), 6, 3);
+		this.optionsPane.addItem(createAmountItem(), 6, 2);
 		
 		updateCurrentItem(item -> 
 		{
@@ -184,9 +184,9 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private void setEnchantmentsItemVisibility(boolean visible) 
 	{
-		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE));
+		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
 		
-		this.optionsPane.addItem(updatedItem, 6, 2);
+		this.optionsPane.addItem(updatedItem, 6, 3);
 	}
 
 	private StaticPane createItemPane() 
@@ -292,8 +292,7 @@ public class GoalCustomizationGUI extends ChestGui
 			new GoalEnchantmentSelectionGUI(this.messageService, this).show(event.getWhoClicked());
 		});
 	}
-
-	//TODO: remove
+	
 	private Conversation createTypeConversation(Player employer) 
 	{
 		Conversation conversation = this.typeConversationFactory.buildConversation(employer);
