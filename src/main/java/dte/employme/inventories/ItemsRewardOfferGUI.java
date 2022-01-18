@@ -1,6 +1,7 @@
 package dte.employme.inventories;
 
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
 import static java.util.stream.Collectors.toList;
 
@@ -33,7 +34,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 			if(offeredItems.isEmpty()) 
 			{
 				messageService.getMessage(INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING)
-				.withGeneralPrefix()
+				.prefixed(messageService.getMessage(PREFIX).first())
 				.sendTo(player);
 				return;
 			}

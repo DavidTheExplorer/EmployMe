@@ -26,6 +26,8 @@ import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITL
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME;
@@ -34,6 +36,7 @@ import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INSTRUCTION;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_TITLE;
 import static dte.employme.messages.MessageKey.ITEMS;
 import static dte.employme.messages.MessageKey.ITEMS_CONTAINER_DESCRIPTION;
 import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
@@ -59,6 +62,8 @@ import static dte.employme.messages.MessageKey.NEW_JOB_POSTED;
 import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
+import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.REWARD;
 import static dte.employme.messages.MessageKey.REWARDS;
 import static dte.employme.messages.MessageKey.REWARDS_CONTAINER_DESCRIPTION;
@@ -119,6 +124,7 @@ public class Messages
 			.put(YOUR_SUBSCRIPTIONS_ARE, "&fYou are subscribed to: &6%goal subscriptions%")
 
 			//General
+			.put(PREFIX, "&2[&aEmployMe&2] ")
 			.put(NONE, "None")
 			.put(GET, "Get")
 			.put(GOAL, "Goal")
@@ -129,6 +135,7 @@ public class Messages
 			.put(MATERIAL_NOT_FOUND, "&cThe specified Material doesn't exist!")
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
+			.put(PLUGIN_RELOADED, "&fReload completed!")
 
 			//Players Containers
 			.put(ITEMS_CONTAINER_DESCRIPTION, "&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here.")
@@ -142,12 +149,16 @@ public class Messages
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%money payment%%currency symbol%")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")
-
+			
 			//Job Board GUI
 			.put(INVENTORY_JOB_BOARD_TITLE, "Available Jobs")
 			.put(INVENTORY_JOB_BOARD_OFFER_COMPLETED, "&a&lClick to Finish!")
 			.put(INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED, "&cYou didn't complete this Job.")
-
+			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
+			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
+			
+			.put(INVENTORY_PLAYER_JOBS_TITLE, "Your Jobs")
+			
 			//Job Deletion GUI
 			.put(INVENTORY_JOB_DELETION_TITLE, "Select Jobs to Delete")
 			.put(INVENTORY_JOB_DELETION_DELETE_INSTRUCTION, "&4&lClick to Delete!")

@@ -5,6 +5,7 @@ import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_ENOUGH;
+import static dte.employme.messages.Placeholders.PLAYER_MONEY;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -17,6 +18,7 @@ import dte.employme.job.rewards.Reward;
 import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
+import dte.employme.utils.java.NumberUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class JobPaymentPrompt extends NumericPrompt
@@ -33,10 +35,10 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
-		Double employerMoney = this.economy.getBalance((Player) context.getForWhom());
+		Double employerMoney = NumberUtils.limit(this.economy.getBalance((Player) context.getForWhom()), 2);
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
-				.inject(Placeholders.PLAYER_MONEY, employerMoney.toString())
+				.inject(PLAYER_MONEY, employerMoney.toString())
 				.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
 				.first();
 	}

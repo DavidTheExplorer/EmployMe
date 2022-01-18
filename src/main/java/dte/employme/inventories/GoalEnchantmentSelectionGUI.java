@@ -49,13 +49,13 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 		});
 
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
-		addPane(getEnchantmentsPane(Priority.LOW));
+		addPane(getEnchantmentsPane());
 		update();
 	}
 
-	private OutlinePane getEnchantmentsPane(Priority priority) 
+	private OutlinePane getEnchantmentsPane() 
 	{
-		OutlinePane pane = new OutlinePane(0, 0, 9, 6, priority);
+		OutlinePane pane = new OutlinePane(0, 0, 9, 6, Priority.LOW);
 
 		EnchantmentUtils.getRemainingEnchantments(this.goalCustomizationGUI.getCurrentItem()).stream()
 		.sorted(ORDER_BY_NAME)
@@ -79,7 +79,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			Player player = (Player) event.getWhoClicked();
 			player.closeInventory();
 			
-			Conversations.createFactory()
+			Conversations.createFactory(this.messageService)
 			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
 			.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
 			.addConversationAbandonedListener(abandonedEvent -> 

@@ -1,6 +1,8 @@
 package dte.employme.listeners;
 
 import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
+import static dte.employme.messages.MessageKey.PREFIX;
+import static dte.employme.messages.Placeholders.NEW_VERSION;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 
 public class AutoUpdateListeners implements Listener
@@ -36,8 +37,8 @@ public class AutoUpdateListeners implements Listener
 			return;
 		
 		this.messageService.getMessage(NEW_UPDATE_AVAILABLE)
-		.withGeneralPrefix()
-		.inject(Placeholders.NEW_VERSION, this.newVersion)
+		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.inject(NEW_VERSION, this.newVersion)
 		.sendTo(player);
 	}
 }

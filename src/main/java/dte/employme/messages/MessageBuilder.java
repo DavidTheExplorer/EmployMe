@@ -1,7 +1,7 @@
 package dte.employme.messages;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
-import dte.employme.EmployMe;
 import dte.employme.messages.service.MessageService;
 
 /**
@@ -20,17 +19,27 @@ import dte.employme.messages.service.MessageService;
  */
 public class MessageBuilder
 {
-	private final LinkedList<String> lines;
+	private final List<String> lines;
 	
 	public MessageBuilder(String... lines) 
 	{
-		this.lines = new LinkedList<>(Arrays.asList(lines));
+		this.lines = Arrays.asList(lines);
+	}
+	
+	public MessageBuilder map(UnaryOperator<String> transformer)
+	{
+		this.lines.replaceAll(transformer);
+		return this;
+	}
+	
+	public MessageBuilder prefixed(String prefix) 
+	{
+		return map(line -> prefix + line);
 	}
 	
 	public MessageBuilder inject(String placeholder, String value) 
 	{
-		this.lines.replaceAll(line -> line.replace(placeholder, value));
-		return this;
+		return map(line -> line.replace(placeholder, value));
 	}
 	
 	public MessageBuilder inject(Map<String, String> placeholders) 
@@ -39,16 +48,6 @@ public class MessageBuilder
 		return this;
 	}
 	
-	public MessageBuilder transform(UnaryOperator<String> transformer)
-	{
-		this.lines.replaceAll(transformer);
-		return this;
-	}
-	
-	public MessageBuilder withGeneralPrefix()
-	{
-		return transform(line -> EmployMe.CHAT_PREFIX + " " + line);
-	}
 	
 	
 	/*
@@ -56,12 +55,11 @@ public class MessageBuilder
 	 */
 	public String first() 
 	{
-		return this.lines.peek();
+		return this.lines.get(0);
 	}
-
 	public List<String> toList() 
 	{
-		return this.lines;
+		return new ArrayList<>(this.lines);
 	}
 	
 	public String[] toArray() 

@@ -1,11 +1,17 @@
 package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.NONE;
+import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
 import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
+import static dte.employme.messages.Placeholders.GOAL;
+import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
+import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
+import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIERS;
 import static java.util.stream.Collectors.joining;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.GREEN;
@@ -37,8 +43,8 @@ import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
 import dte.employme.job.subscription.JobSubscriptionService;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
+import dte.employme.reloadable.Reloadable;
 import dte.employme.utils.java.EnumUtils;
 import net.milkbowl.vault.economy.Economy;
 
@@ -55,8 +61,9 @@ public class EmploymentCommand extends BaseCommand
 	private final JobBoardDisplayer jobBoardDisplayer;
 	private final Economy economy;
 	private final JobIconFactory jobIconFactory;
-
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory) 
+	private final List<Reloadable> reloadables;
+	
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, List<Reloadable> reloadables) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.playerContainerService = playerContainerService;
@@ -66,6 +73,18 @@ public class EmploymentCommand extends BaseCommand
 		this.jobBoardDisplayer = jobBoardDisplayer;
 		this.economy = economy;
 		this.jobIconFactory = jobIconFactory;
+		this.reloadables = reloadables;
+	}
+	
+	@Subcommand("reload")
+	@CommandPermission("employme.reload")
+	public void reload(Player player) 
+	{
+		this.reloadables.forEach(Reloadable::reload);
+		
+		this.messageService.getMessage(PLUGIN_RELOADED)
+		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.sendTo(player);
 	}
 
 	@HelpCommand
@@ -83,8 +102,8 @@ public class EmploymentCommand extends BaseCommand
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
 
 		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
-		.withGeneralPrefix()
-		.inject(Placeholders.GOAL, EnumUtils.fixEnumName(material))
+		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.inject(GOAL, EnumUtils.fixEnumName(material))
 		.sendTo(player);
 	}
 
@@ -96,8 +115,8 @@ public class EmploymentCommand extends BaseCommand
 		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
 
 		this.messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
-		.withGeneralPrefix()
-		.inject(Placeholders.GOAL, EnumUtils.fixEnumName(material))
+		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.inject(GOAL, EnumUtils.fixEnumName(material))
 		.sendTo(player);
 	}
 
@@ -116,8 +135,8 @@ public class EmploymentCommand extends BaseCommand
 		subscriptionsNames += WHITE + ".";
 
 		this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
-		.withGeneralPrefix()
-		.inject(Placeholders.GOAL_SUBSCRIPTIONS, subscriptionsNames)
+		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
 		.sendTo(player);
 	}
 
@@ -172,8 +191,8 @@ public class EmploymentCommand extends BaseCommand
 		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
 
 		this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
-		.withGeneralPrefix()
-		.inject(Placeholders.JOB_ADDED_NOTIFIER, notifier.getName())
+		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.inject(JOB_ADDED_NOTIFIER, notifier.getName())
 		.sendTo(player);
 	}
 
@@ -187,7 +206,7 @@ public class EmploymentCommand extends BaseCommand
 				.collect(joining(WHITE + ", " + GREEN, "", WHITE + "."));
 
 		this.messageService.getMessage(THE_JOB_ADDED_NOTIFIERS_ARE)
-		.inject(Placeholders.JOB_ADDED_NOTIFIERS, notifiersNames)
+		.inject(JOB_ADDED_NOTIFIERS, notifiersNames)
 		.sendTo(player);
 	}
 }

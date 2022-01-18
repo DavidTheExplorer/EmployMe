@@ -1,5 +1,6 @@
 package dte.employme.inventories;
 
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE;
@@ -9,6 +10,7 @@ import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_NO_C
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
+import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
 import static dte.employme.utils.EnchantmentUtils.getEnchantments;
@@ -40,8 +42,6 @@ import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
-import dte.employme.messages.MessageKey;
-import dte.employme.messages.Placeholders;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
@@ -70,7 +70,7 @@ public class GoalCustomizationGUI extends ChestGui
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
-		this.typeConversationFactory = Conversations.createFactory()
+		this.typeConversationFactory = Conversations.createFactory(messageService)
 				.withLocalEcho(false)
 				.withFirstPrompt(new JobGoalPrompt(messageService))
 				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
@@ -103,8 +103,8 @@ public class GoalCustomizationGUI extends ChestGui
 		addPane(createSquare(Priority.LOWEST, 0, 3, 3, new GuiItem(createWall(Material.LIME_STAINED_GLASS_PANE))));
 		addPane(createRectangle(Priority.LOWEST, 3, 0, 6, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(createRectangle(Priority.LOW, 5, 1, 3, 4, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
-		addPane(createItemPane(Priority.NORMAL));
-		addPane(createOptionsPane(Priority.HIGH));
+		addPane(createItemPane());
+		addPane(createOptionsPane());
 		update();
 	}
 
@@ -121,7 +121,7 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setType(Material material)
 	{
 		if(getType() == NO_ITEM_TYPE)
-			this.optionsPane.addItem(createAmountItem(), 6, 3);
+			this.optionsPane.addItem(createAmountItem(), 6, 2);
 		
 		updateCurrentItem(item -> 
 		{
@@ -133,7 +133,7 @@ public class GoalCustomizationGUI extends ChestGui
 					.withItemFlags(HIDE_ATTRIBUTES)
 					.createCopy();
 			
-			//remove the invalid enchantments, and put the valid ones in their proper places(stored/regular)
+			//remove all enchantments, and return only the valid ones
 			enchantments.keySet().stream()
 			.peek(enchantment -> removeEnchantment(updatedItem, enchantment))
 			.filter(enchantment -> canEnchantItem(enchantment, updatedItem))
@@ -157,8 +157,7 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setAmount(int amount) 
 	{
 		this.amount = amount;
-		this.optionsPane.removeItem(6, 3);
-		this.optionsPane.addItem(createAmountItem(), 6, 3);
+		this.optionsPane.addItem(createAmountItem(), 6, 2);
 		
 		updateCurrentItem(item -> 
 		{
@@ -178,7 +177,6 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		GuiItem updatedItem = new GuiItem(update.apply(getCurrentItem()));
 
-		this.itemPane.removeItem(1, 1);
 		this.itemPane.addItem(this.currentItem = updatedItem, 1, 1);
 		
 		update();
@@ -186,15 +184,14 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private void setEnchantmentsItemVisibility(boolean visible) 
 	{
-		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE));
+		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
 		
-		this.optionsPane.removeItem(6, 2);
-		this.optionsPane.addItem(updatedItem, 6, 2);
+		this.optionsPane.addItem(updatedItem, 6, 3);
 	}
 
-	private StaticPane createItemPane(Priority priority) 
+	private StaticPane createItemPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 6, 9, priority);
+		StaticPane pane = new StaticPane(0, 0, 6, 9, Priority.NORMAL);
 
 		pane.addItem(this.currentItem = new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
@@ -232,9 +229,9 @@ public class GoalCustomizationGUI extends ChestGui
 		return pane;
 	}
 
-	private StaticPane createOptionsPane(Priority priority) 
+	private StaticPane createOptionsPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 9, 6, priority);
+		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH);
 
 		pane.addItem(new GuiItem(new ItemBuilder(Material.ANVIL)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
@@ -258,8 +255,8 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createAmountItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.ARROW)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(Placeholders.GOAL_AMOUNT, String.valueOf(this.amount)).first())
-				.withLore(this.messageService.getMessage(MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy();
 
@@ -295,8 +292,7 @@ public class GoalCustomizationGUI extends ChestGui
 			new GoalEnchantmentSelectionGUI(this.messageService, this).show(event.getWhoClicked());
 		});
 	}
-
-	//TODO: remove
+	
 	private Conversation createTypeConversation(Player employer) 
 	{
 		Conversation conversation = this.typeConversationFactory.buildConversation(employer);
