@@ -29,8 +29,7 @@ public class EnchantmentUtils
 
 
 	/*
-	 * Replacement methods to enchantment related ones, in order to treat Enchantment Books' Stored Enchantments as regular enchantments.
-	 * This results in a clean and not repetitive code.
+	 * Replacement methods to enchantment related ones that treat Enchantment Books' Stored Enchantments as regular enchantments.
 	 */
 	public static boolean isEnchantable(Material material) 
 	{
@@ -100,6 +99,7 @@ public class EnchantmentUtils
 
 	private static boolean isEnchantedBook(ItemStack item) 
 	{
+		//TODO: replace with return item.getType() == Material.ENCHANTED_BOOK;
 		return item.getItemMeta() instanceof EnchantmentStorageMeta;
 	}
 }

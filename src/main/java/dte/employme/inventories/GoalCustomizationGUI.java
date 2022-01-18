@@ -133,7 +133,7 @@ public class GoalCustomizationGUI extends ChestGui
 					.withItemFlags(HIDE_ATTRIBUTES)
 					.createCopy();
 			
-			//remove the invalid enchantments, and put the valid ones in their proper places(stored/regular)
+			//remove all enchantments, and return only the valid ones
 			enchantments.keySet().stream()
 			.peek(enchantment -> removeEnchantment(updatedItem, enchantment))
 			.filter(enchantment -> canEnchantItem(enchantment, updatedItem))
