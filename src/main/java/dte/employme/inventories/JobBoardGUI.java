@@ -56,14 +56,14 @@ public class JobBoardGUI extends ChestGui
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createWalls(this, Priority.LOWEST));
-		addPane(createJobsPane(Priority.LOW));
-		addPane(createPersonalJobsPane(Priority.HIGH)); //for some reason LOW/NORMAL don't work
+		addPane(createJobsPane());
+		addPane(createPersonalJobsPane());
 		update();
 	}
 
-	private OutlinePane createJobsPane(Priority priority) 
+	private OutlinePane createJobsPane() 
 	{
-		OutlinePane pane = new OutlinePane(1, 1, 7, 5, priority);
+		OutlinePane pane = new OutlinePane(1, 1, 7, 5, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
 
 		this.jobBoard.getOfferedJobs().stream()
@@ -74,9 +74,9 @@ public class JobBoardGUI extends ChestGui
 		return pane;
 	}
 	
-	private StaticPane createPersonalJobsPane(Priority priority) 
+	private StaticPane createPersonalJobsPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 9, 6, priority);
+		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH); //for some reason LOW/NORMAL don't work
 		pane.addItem(createPersonalJobsItem(), 4, 5);
 		
 		return pane;

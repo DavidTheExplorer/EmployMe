@@ -33,14 +33,14 @@ public class PlayerJobsGUI extends ChestGui
 		setOnTopClick(event -> event.setCancelled(true));
 		setOnClose(event -> jobBoardGUI.show(event.getPlayer()));
 		addPane(createWalls(this, Priority.LOWEST));
-		addPane(createJobsPane(Priority.LOW));
+		addPane(createJobsPane());
 		
 		update();
 	}
 	
-	private OutlinePane createJobsPane(Priority priority) 
+	private OutlinePane createJobsPane() 
 	{
-		OutlinePane pane = new OutlinePane(1, 1, 7, 5, priority);
+		OutlinePane pane = new OutlinePane(1, 1, 7, 5, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
 
 		this.jobsToDisplay.stream()
