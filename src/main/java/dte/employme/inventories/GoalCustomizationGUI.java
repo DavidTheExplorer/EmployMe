@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
@@ -189,7 +190,7 @@ public class GoalCustomizationGUI extends ChestGui
 		this.optionsPane.addItem(updatedItem, 6, 3);
 	}
 
-	private StaticPane createItemPane() 
+	private Pane createItemPane() 
 	{
 		StaticPane pane = new StaticPane(0, 0, 6, 9, Priority.NORMAL);
 
@@ -229,7 +230,7 @@ public class GoalCustomizationGUI extends ChestGui
 		return pane;
 	}
 
-	private StaticPane createOptionsPane() 
+	private Pane createOptionsPane() 
 	{
 		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH);
 

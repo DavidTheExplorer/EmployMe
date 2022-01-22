@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
@@ -61,7 +62,7 @@ public class JobBoardGUI extends ChestGui
 		update();
 	}
 
-	private OutlinePane createJobsPane() 
+	private Pane createJobsPane() 
 	{
 		OutlinePane pane = new OutlinePane(1, 1, 7, 5, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
@@ -74,7 +75,7 @@ public class JobBoardGUI extends ChestGui
 		return pane;
 	}
 	
-	private StaticPane createPersonalJobsPane() 
+	private Pane createPersonalJobsPane() 
 	{
 		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH); //for some reason LOW/NORMAL don't work
 		pane.addItem(createPersonalJobsItem(), 4, 5);

@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.job.prompts.EnchantmentLevelPrompt;
@@ -53,7 +54,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 		update();
 	}
 
-	private OutlinePane getEnchantmentsPane() 
+	private Pane getEnchantmentsPane() 
 	{
 		OutlinePane pane = new OutlinePane(0, 0, 9, 6, Priority.LOW);
 
