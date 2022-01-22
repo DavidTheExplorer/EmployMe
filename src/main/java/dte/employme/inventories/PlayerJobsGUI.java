@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.items.JobIconFactory;
@@ -38,7 +39,7 @@ public class PlayerJobsGUI extends ChestGui
 		update();
 	}
 	
-	private OutlinePane createJobsPane() 
+	private Pane createJobsPane() 
 	{
 		OutlinePane pane = new OutlinePane(1, 1, 7, 5, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);

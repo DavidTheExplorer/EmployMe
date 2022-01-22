@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.job.rewards.ItemsReward;
@@ -27,7 +28,7 @@ public class ItemsRewardPreviewGUI extends ChestGui
 		update();
 	}
 	
-	private OutlinePane createItemsPane() 
+	private Pane createItemsPane() 
 	{
 		OutlinePane pane = new OutlinePane(0, 0, 9, 6, Priority.LOWEST);
 		
