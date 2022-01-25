@@ -245,7 +245,7 @@ public class GoalCustomizationGUI extends ChestGui
 				return;
 			
 			closeWithoutRefund(event.getWhoClicked());
-			new GoalEnchantmentSelectionGUI(this.messageService, this).show(event.getWhoClicked());
+			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward).show(event.getWhoClicked());
 		});
 	}
 	
