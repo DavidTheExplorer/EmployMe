@@ -24,6 +24,10 @@ import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECT
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
@@ -201,5 +205,11 @@ public class Messages
 			.put(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "&dEnchantments")
 			.put(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "&fClick to add an enchantment that", "&fthe goal must have on it.")
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
-			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!");
+			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
+			
+			//Item Palette GUI
+			.put(INVENTORY_ITEM_PALETTE_TITLE, "Select the Goal Item:")
+			.put(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME, "&cBack")
+			.put(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME, "&aNext")
+			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name");
 }
