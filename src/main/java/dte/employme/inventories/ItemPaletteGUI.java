@@ -52,6 +52,8 @@ public class ItemPaletteGUI extends ChestGui
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final ConversationFactory typeConversationFactory;
 	private PaginatedPane itemsPane;
+	
+	private boolean showGoalCustomizationGUIOnClose = true;
 
 	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, Reward reward)
 	{
@@ -64,6 +66,9 @@ public class ItemPaletteGUI extends ChestGui
 		
 		setOnClose(event -> 
 		{
+			if(!this.showGoalCustomizationGUIOnClose)
+				return;
+			
 			goalCustomizationGUI.setRefundRewardOnClose(true);
 			goalCustomizationGUI.show(event.getPlayer());
 		});
@@ -188,6 +193,7 @@ public class ItemPaletteGUI extends ChestGui
 				event -> 
 		{
 			Player player = (Player) event.getWhoClicked();
+			this.showGoalCustomizationGUIOnClose = false;
 			player.closeInventory();
 			
 			Conversation conversation = this.typeConversationFactory.buildConversation(player);
