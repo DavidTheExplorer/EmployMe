@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.Material;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -40,17 +38,13 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
-import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.utils.java.MapBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
 {
-	private final ConversationFactory typeConversationFactory;
 	private final MessageService messageService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
@@ -70,26 +64,6 @@ public class GoalCustomizationGUI extends ChestGui
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
-		this.typeConversationFactory = Conversations.createFactory(messageService)
-				.withLocalEcho(false)
-				.withFirstPrompt(new JobGoalPrompt(messageService))
-				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-				.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
-				.addConversationAbandonedListener(event -> 
-				{
-					if(!event.gracefulExit())
-						return;
-					
-					//re-open the goal customization gui
-					Player player = (Player) event.getContext().getForWhom();
-					Material material = (Material) event.getContext().getSessionData("material");
-					GoalCustomizationGUI goalCustomizationGUI = (GoalCustomizationGUI) event.getContext().getSessionData("goal inventory");
-
-					goalCustomizationGUI.setRefundRewardOnClose(true);
-					goalCustomizationGUI.setType(material);
-					goalCustomizationGUI.show(player);
-				});
-	
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		
@@ -172,32 +146,56 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		this.refundRewardOnClose = status;
 	}
-
-	private void updateCurrentItem(UnaryOperator<ItemStack> update) 
+	
+	private void closeWithoutRefund(HumanEntity human) 
 	{
-		GuiItem updatedItem = new GuiItem(update.apply(getCurrentItem()));
-
-		this.itemPane.addItem(this.currentItem = updatedItem, 1, 1);
-		
-		update();
+		setRefundRewardOnClose(false);
+		human.closeInventory();
 	}
 
-	private void setEnchantmentsItemVisibility(boolean visible) 
+	private ItemStack createGoal()
 	{
-		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
-		
-		this.optionsPane.addItem(updatedItem, 6, 3);
+		return new ItemBuilder(getType())
+				.amounted(this.amount)
+				.withEnchantments(getEnchantments(getCurrentItem()))
+				.createCopy();
 	}
-
+	
+	
+	
+	/*
+	 * Panes
+	 */
 	private StaticPane createItemPane() 
 	{
 		StaticPane pane = new StaticPane(0, 0, 6, 9, Priority.NORMAL);
 
-		pane.addItem(this.currentItem = new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
-				.createCopy()), 1, 1);
+		pane.addItem(this.currentItem = createNoItemIcon(), 1, 1);
+		pane.addItem(createFinishItem(), 1, 4);
 
-		pane.addItem(new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
+		this.itemPane = pane;
+
+		return pane;
+	}
+
+	private StaticPane createOptionsPane() 
+	{
+		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH);
+		pane.addItem(createTypeChoosingItem(), 6, 1);
+
+		this.optionsPane = pane;
+
+		return pane;
+	}
+
+	
+	
+	/*
+	 * Items
+	 */
+	private GuiItem createFinishItem() 
+	{
+		return new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
 				.createCopy(), 
 				event ->
@@ -222,36 +220,34 @@ public class GoalCustomizationGUI extends ChestGui
 					.build();
 
 			this.jobBoard.addJob(job);
-		}), 1, 4);
-
-		this.itemPane = pane;
-
-		return pane;
+		});
 	}
-
-	private StaticPane createOptionsPane() 
+	
+	private GuiItem createNoItemIcon() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH);
-
-		pane.addItem(new GuiItem(new ItemBuilder(Material.ANVIL)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
-				.glowing()
-				.createCopy(), 
-				event -> 
-		{
-			Player player = (Player) event.getWhoClicked();
-
-			closeWithoutRefund(player);
-			createTypeConversation(player).begin();
-
-		}), 6, 1);
-
-		this.optionsPane = pane;
-
-		return pane;
+		return new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
+				.createCopy());
 	}
+	
+	private GuiItem createEnchantmentsItem() 
+	{
+		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
+				.glowing()
+				.createCopy();
 
+		return new GuiItem(item, event -> 
+		{
+			if(getType() == NO_ITEM_TYPE)
+				return;
+			
+			closeWithoutRefund(event.getWhoClicked());
+			new GoalEnchantmentSelectionGUI(this.messageService, this).show(event.getWhoClicked());
+		});
+	}
+	
 	private GuiItem createAmountItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.ARROW)
@@ -274,44 +270,36 @@ public class GoalCustomizationGUI extends ChestGui
 			setAmount(this.amount);
 		});
 	}
-
-	private GuiItem createEnchantmentsItem() 
+	
+	private GuiItem createTypeChoosingItem() 
 	{
-		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
+		return new GuiItem(new ItemBuilder(Material.ANVIL)
+				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
 				.glowing()
-				.createCopy();
-
-		return new GuiItem(item, event -> 
+				.createCopy(), 
+				event ->
 		{
-			if(getType() == NO_ITEM_TYPE)
-				return;
+			HumanEntity player = event.getWhoClicked();
 			
-			closeWithoutRefund(event.getWhoClicked());
-			new GoalEnchantmentSelectionGUI(this.messageService, this).show(event.getWhoClicked());
+			closeWithoutRefund(player);
+			new ItemPaletteGUI(this, this.messageService, this.reward).show(player);
 		});
 	}
 	
-	private Conversation createTypeConversation(Player employer) 
+	private void updateCurrentItem(UnaryOperator<ItemStack> update) 
 	{
-		Conversation conversation = this.typeConversationFactory.buildConversation(employer);
-		conversation.getContext().setSessionData("goal inventory", this);
+		GuiItem updatedItem = new GuiItem(update.apply(getCurrentItem()));
 
-		return conversation;
+		this.itemPane.addItem(this.currentItem = updatedItem, 1, 1);
+		
+		update();
 	}
 
-	private void closeWithoutRefund(HumanEntity human) 
+	private void setEnchantmentsItemVisibility(boolean visible) 
 	{
-		setRefundRewardOnClose(false);
-		human.closeInventory();
-	}
-
-	private ItemStack createGoal()
-	{
-		return new ItemBuilder(getType())
-				.amounted(this.amount)
-				.withEnchantments(getEnchantments(getCurrentItem()))
-				.createCopy();
+		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
+		
+		this.optionsPane.addItem(updatedItem, 6, 3);
 	}
 }
