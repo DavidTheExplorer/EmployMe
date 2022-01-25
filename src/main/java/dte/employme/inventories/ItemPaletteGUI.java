@@ -1,12 +1,14 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
 
 import java.util.Arrays;
 import java.util.Deque;
@@ -48,19 +50,21 @@ public class ItemPaletteGUI extends ChestGui
 	private static final int
 	ITEMS_PER_PAGE = 9*5,
 	PAGES_AMOUNT = (ALL_ITEMS.size() / ITEMS_PER_PAGE) +1;
-
+	
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final ConversationFactory typeConversationFactory;
+	private final MessageService messageService;
 	private PaginatedPane itemsPane;
 	
 	private boolean showGoalCustomizationGUIOnClose = true;
 
 	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, Reward reward)
 	{
-		super(6, "Select the Goal Item:");
+		super(6, messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first());
 
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.typeConversationFactory = createTypeConversationFactory(messageService, reward);
+		this.messageService = messageService;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		
@@ -112,9 +116,9 @@ public class ItemPaletteGUI extends ChestGui
 		pane.setOrientation(HORIZONTAL);
 		pane.setGap(3);
 		
-		pane.addItem(createController("MHF_ArrowLeft", RED + "Back", currentPage -> currentPage > 0, currentPage -> --currentPage));
+		pane.addItem(createController("MHF_ArrowLeft", this.messageService.getMessage(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME).first(), currentPage -> currentPage > 0, currentPage -> --currentPage));
 		pane.addItem(createEnglishSearchItem());
-		pane.addItem(createController("MHF_ArrowRight", GREEN + "Next", currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
+		pane.addItem(createController("MHF_ArrowRight", this.messageService.getMessage(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME).first(), currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
 
 		return pane;
 	}
@@ -187,7 +191,7 @@ public class ItemPaletteGUI extends ChestGui
 	private GuiItem createEnglishSearchItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.NAME_TAG)
-				.named(GREEN + "Search By English Name")
+				.named(this.messageService.getMessage(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
 				.glowing()
 				.createCopy(), 
 				event -> 
