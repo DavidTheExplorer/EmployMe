@@ -4,7 +4,7 @@ and the first player to complete it gets rewarded by the Employer!
 
 * **Without** an Economy plugin(e.g. Essentials) EmployMe would shut down.
 
-![A test image](https://i.imgur.com/HriKUG7.png)
+![A test image](https://i.imgur.com/j7s49wN.png)
 
 ## Rewards
 Employers can pay either by money, or offer an unlimited amount of valuable items.
