@@ -60,7 +60,13 @@ public class EnchantmentUtils
 
 	public static boolean canEnchantItem(Enchantment enchantment, ItemStack item) 
 	{
-		return isEnchantedBook(item) ? true : enchantment.canEnchantItem(item);
+		if(isEnchantedBook(item))
+			return true;
+		
+		if(!enchantment.canEnchantItem(item))
+			return false;
+		
+		return getEnchantments(item).keySet().stream().noneMatch(itemEnchantment -> itemEnchantment.conflictsWith(enchantment));
 	}
 
 	public static Map<Enchantment, Integer> getEnchantments(ItemStack item)

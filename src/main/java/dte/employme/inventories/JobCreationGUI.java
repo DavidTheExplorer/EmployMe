@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
@@ -63,7 +64,7 @@ public class JobCreationGUI extends ChestGui
 		update();
 	}
 	
-	private OutlinePane createOptionsPane() 
+	private Pane createOptionsPane() 
 	{
 		OutlinePane pane = new OutlinePane(2, 1, 6, 1, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
