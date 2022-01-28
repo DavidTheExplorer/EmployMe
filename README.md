@@ -1,6 +1,6 @@
 # EmployMe
-[Spigot Plugin](https://www.spigotmc.org/resources/employme.96513/) that boosts the economy by adding competitive jobs Anyone can post the job within the Global Jobs Board,\
-and the first player to complete it gets rewarded by the Employer!
+A [Spigot Plugin](https://www.spigotmc.org/resources/employme.96513/) that boosts the economy by allowing players to add their own custom jobs to the Global Jobs Board,\
+and pay the player who completed the job.
 
 * **Without** an Economy plugin(e.g. Essentials) EmployMe would shut down.
 
