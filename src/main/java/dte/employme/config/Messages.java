@@ -22,6 +22,8 @@ import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
@@ -161,6 +163,7 @@ public class Messages
 			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
 			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
 			
+			//Player Jobs GUI
 			.put(INVENTORY_PLAYER_JOBS_TITLE, "Your Jobs")
 			
 			//Job Deletion GUI
@@ -185,6 +188,8 @@ public class Messages
 			//Items Reward Offer GUI
 			.put(INVENTORY_ITEMS_REWARD_OFFER_TITLE, "What would you like to offer?")
 			.put(INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING, "&cJob creation cancelled because you didn't offer any item.")
+			.put(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME, "&aConfirm and Continue")
+			.put(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE, "&fClick to offer the items you added as the job's reward.", "&fExiting this inventory would cancel the job.")
 
 			//Goal Enchantment Selection GUI
 			.put(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE, "Choose an Enchantment:")
