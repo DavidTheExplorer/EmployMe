@@ -14,6 +14,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 
 public class InventoryFrameworkUtils
@@ -40,6 +41,19 @@ public class InventoryFrameworkUtils
 		background.bindItem('W', new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE)));
 
 		return background;
+	}
+	
+	public static StaticPane createItemPane(int x, int y, GuiItem item) 
+	{
+		return createItemPane(x, y, Priority.NORMAL, item);
+	}
+	
+	public static StaticPane createItemPane(int x, int y, Priority priority, GuiItem item) 
+	{
+		StaticPane pane = new StaticPane(x, y, 1, 1, priority);
+		pane.addItem(item, x, y);
+		
+		return pane;
 	}
 
 	private static Pattern createWallsPattern(ChestGui gui) 
