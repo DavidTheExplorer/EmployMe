@@ -266,7 +266,7 @@ public class GoalCustomizationGUI extends ChestGui
 			HumanEntity player = event.getWhoClicked();
 			
 			closeWithoutRefund(player);
-			new GoalAmountGUI(this).show(player);
+			new GoalAmountGUI(this, this.messageService).show(player);
 		});
 	}
 	

@@ -9,6 +9,9 @@ import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
 import static dte.employme.messages.MessageKey.GET;
 import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
 import static dte.employme.messages.MessageKey.GOAL;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
@@ -216,5 +219,10 @@ public class Messages
 			.put(INVENTORY_ITEM_PALETTE_TITLE, "Select the Goal Item:")
 			.put(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME, "&cBack")
 			.put(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME, "&aNext")
-			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name");
+			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name")
+			
+			//Goal Amount GUI
+			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME, "&aContinue")
+			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE, "&fClick to set the new amount.")
+			.put(INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "&cEnter Numeric Amount:");
 }
