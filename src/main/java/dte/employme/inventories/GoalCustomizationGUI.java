@@ -92,6 +92,11 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		return this.currentItem.getItem().getType();
 	}
+	
+	public int getAmount() 
+	{
+		return this.amount;
+	}
 
 	public void setType(Material material)
 	{
@@ -251,24 +256,17 @@ public class GoalCustomizationGUI extends ChestGui
 	
 	private GuiItem createAmountItem() 
 	{
-		ItemStack item = new ItemBuilder(Material.ARROW)
+		return new GuiItem(new ItemBuilder(Material.ARROW)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
 				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 				.glowing()
-				.createCopy();
-
-		return new GuiItem(item, event ->
+				.createCopy(), 
+				event -> 
 		{
-			if(getType() == NO_ITEM_TYPE)
-				return;
-
-			if(event.isLeftClick())
-				this.amount++;
-
-			else if(event.isRightClick() && this.amount > 1)
-				this.amount--;
-
-			setAmount(this.amount);
+			HumanEntity player = event.getWhoClicked();
+			
+			closeWithoutRefund(player);
+			new GoalAmountGUI(this).show(player);
 		});
 	}
 	
