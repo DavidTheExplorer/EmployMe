@@ -34,6 +34,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.job.prompts.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.Conversations;
 import dte.employme.utils.MaterialUtils;
@@ -54,17 +55,19 @@ public class ItemPaletteGUI extends ChestGui
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final ConversationFactory typeConversationFactory;
 	private final MessageService messageService;
+	private final RewardService rewardService;
 	private PaginatedPane itemsPane;
 	
 	private boolean showGoalCustomizationGUIOnClose = true;
 
-	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, Reward reward)
+	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, RewardService rewardService, Reward reward)
 	{
 		super(6, messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first());
 
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.typeConversationFactory = createTypeConversationFactory(messageService, reward);
 		this.messageService = messageService;
+		this.rewardService = rewardService;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		
@@ -89,7 +92,7 @@ public class ItemPaletteGUI extends ChestGui
 				.withLocalEcho(false)
 				.withFirstPrompt(new JobGoalPrompt(messageService))
 				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-				.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
+				.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.rewardService))
 				.addConversationAbandonedListener(event -> 
 				{
 					if(!event.gracefulExit())

@@ -42,6 +42,7 @@ import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.reloadable.Reloadable;
@@ -60,9 +61,10 @@ public class EmploymentCommand extends BaseCommand
 	private final JobBoardDisplayer jobBoardDisplayer;
 	private final Economy economy;
 	private final JobIconFactory jobIconFactory;
+	private final RewardService rewardService;
 	private final List<Reloadable> reloadables;
 	
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, List<Reloadable> reloadables) 
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, RewardService rewardService, List<Reloadable> reloadables) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.playerContainerService = playerContainerService;
@@ -72,6 +74,7 @@ public class EmploymentCommand extends BaseCommand
 		this.jobBoardDisplayer = jobBoardDisplayer;
 		this.economy = economy;
 		this.jobIconFactory = jobIconFactory;
+		this.rewardService = rewardService;
 		this.reloadables = reloadables;
 	}
 	
@@ -115,7 +118,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService, this.rewardService).show(employer);
 	}
 
 	@Subcommand("delete")
@@ -124,7 +127,7 @@ public class EmploymentCommand extends BaseCommand
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory).show(player);
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory, this.rewardService).show(player);
 	}
 	
 	/*
