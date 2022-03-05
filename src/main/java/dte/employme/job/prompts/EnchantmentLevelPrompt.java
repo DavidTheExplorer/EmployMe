@@ -48,7 +48,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	{
 		int level = input.intValue();
 
-		return level >= this.enchantment.getStartLevel() && level <= this.enchantment.getMaxLevel();
+		return level >= this.enchantment.getStartLevel();
 	}
 
 	@Override
