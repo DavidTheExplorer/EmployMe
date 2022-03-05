@@ -4,6 +4,7 @@ import static dte.employme.utils.java.Predicates.negate;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 import static org.bukkit.Material.BARRIER;
+import static org.bukkit.Material.BEDROCK;
 import static org.bukkit.Material.DEBUG_STICK;
 import static org.bukkit.Material.JIGSAW;
 import static org.bukkit.Material.KNOWLEDGE_BOOK;
@@ -24,7 +25,7 @@ public class MaterialUtils
 	//Container of static methods
 	private MaterialUtils(){}
 	
-	private static final Set<Material> UNOBTAINABLE = Sets.newHashSet(BARRIER, JIGSAW, STRUCTURE_BLOCK, STRUCTURE_VOID, SPAWNER, DEBUG_STICK, KNOWLEDGE_BOOK);
+	private static final Set<Material> UNOBTAINABLE = Sets.newHashSet(BARRIER, JIGSAW, STRUCTURE_BLOCK, STRUCTURE_VOID, SPAWNER, DEBUG_STICK, KNOWLEDGE_BOOK, BEDROCK);
 	
 	private static final Set<Material> OBTAINABLES = Arrays.stream(Material.values())
 			.filter(Material::isItem)
