@@ -42,15 +42,15 @@ import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.job.subscription.JobSubscriptionService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.reloadable.Reloadable;
 import dte.employme.utils.java.EnumUtils;
 import net.milkbowl.vault.economy.Economy;
 
-//TODO: organize methods order
 @CommandAlias("employment|emp")
-@Description("The general employment command - View or Manage them!")
+@Description("The main entry of EmployMe commands.")
 public class EmploymentCommand extends BaseCommand
 {
 	private final JobBoard globalJobBoard;
@@ -61,9 +61,10 @@ public class EmploymentCommand extends BaseCommand
 	private final JobBoardDisplayer jobBoardDisplayer;
 	private final Economy economy;
 	private final JobIconFactory jobIconFactory;
+	private final RewardService rewardService;
 	private final List<Reloadable> reloadables;
 	
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, List<Reloadable> reloadables) 
+	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, RewardService rewardService, List<Reloadable> reloadables) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.playerContainerService = playerContainerService;
@@ -73,7 +74,27 @@ public class EmploymentCommand extends BaseCommand
 		this.jobBoardDisplayer = jobBoardDisplayer;
 		this.economy = economy;
 		this.jobIconFactory = jobIconFactory;
+		this.rewardService = rewardService;
 		this.reloadables = reloadables;
+	}
+	
+	/*
+	 * General
+	 */
+	
+	@HelpCommand
+	@CatchUnknown
+	public void sendHelp(CommandHelp help) 
+	{
+		help.showHelp();
+	}
+	
+	@Subcommand("view")
+	@Description("Search through all the Available Jobs.")
+	@CommandPermission("employme.jobs.view")
+	public void view(Player player)
+	{
+		this.jobBoardDisplayer.display(player, this.globalJobBoard);
 	}
 	
 	@Subcommand("reload")
@@ -86,14 +107,53 @@ public class EmploymentCommand extends BaseCommand
 		.prefixed(this.messageService.getMessage(PREFIX).first())
 		.sendTo(player);
 	}
-
-	@HelpCommand
-	@CatchUnknown
-	public void sendHelp(CommandHelp help) 
+	
+	/*
+	 * Manage Jobs
+	 */
+	
+	@Subcommand("offer")
+	@Description("Offer a new Job to the public.")
+	@Conditions("Global Jobs Board Not Full")
+	@CommandPermission("employme.jobs.offer")
+	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		help.showHelp();
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService, this.rewardService).show(employer);
 	}
 
+	@Subcommand("delete")
+	@Description("Delete a job.")
+	@CommandPermission("employme.jobs.delete")
+	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
+	{
+		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory, this.rewardService).show(player);
+	}
+	
+	/*
+	 * Players Containers
+	 */
+	
+	@Subcommand("myitems")
+	@Description("Claim the items that people gathered for you.")
+	@CommandPermission("employme.jobs.myitems")
+	public void openContainer(Player employer) 
+	{
+		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()));
+	}
+
+	@Subcommand("myrewards")
+	@Description("Claim the rewards you got from Jobs your completed.")
+	@CommandPermission("employme.jobs.myrewards")
+	public void openRewardsContainer(Player player) 
+	{
+		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
+	}
+	
+	/*
+	 * Subscriptions
+	 */
+	
 	@Subcommand("subscribe")
 	@Description("Get a notification once a job that rewards a desired item is posted.")
 	@CommandPermission("employme.goals.subscription")
@@ -139,49 +199,11 @@ public class EmploymentCommand extends BaseCommand
 		.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
 		.sendTo(player);
 	}
-
-	@Subcommand("view")
-	@Description("Search through all the Available Jobs.")
-	@CommandPermission("employme.jobs.view")
-	public void view(Player player)
-	{
-		this.jobBoardDisplayer.display(player, this.globalJobBoard);
-	}
-
-	@Subcommand("offer")
-	@Description("Offer a new Job to the public.")
-	@Conditions("Global Jobs Board Not Full")
-	@CommandPermission("employme.jobs.offer")
-	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
-	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService).show(employer);
-	}
-
-	@Subcommand("delete")
-	@Description("Delete a job.")
-	@CommandPermission("employme.jobs.delete")
-	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
-	{
-		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory).show(player);
-	}
-
-	@Subcommand("myitems")
-	@Description("Claim the items that people gathered for you.")
-	@CommandPermission("employme.jobs.myitems")
-	public void openContainer(Player employer) 
-	{
-		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()));
-	}
-
-	@Subcommand("myrewards")
-	@Description("Claim the rewards you got from Jobs your completed.")
-	@CommandPermission("employme.jobs.myrewards")
-	public void openRewardsContainer(Player player) 
-	{
-		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
-	}
-
+	
+	/*
+	 * Add Notifiers
+	 */
+	
 	@Subcommand("notifier")
 	@Syntax("<notifier name>")
 	@Description("Choose which notifications you get once a job is created.")

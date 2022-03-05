@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -40,6 +41,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.Reward;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
@@ -49,6 +51,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private final MessageService messageService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
+	private final RewardService rewardService;
 
 	//temp data(items, panes, etc)
 	private StaticPane itemPane, optionsPane;
@@ -58,20 +61,21 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(MessageService messageService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, RewardService rewardService, JobBoard jobBoard, Reward reward)
 	{
 		super(6, messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
+		this.rewardService = rewardService;
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		
 		setOnClose(event -> 
 		{
 			if(this.refundRewardOnClose)
-				reward.giveTo((Player) event.getPlayer());
+				rewardService.refund((OfflinePlayer) event.getPlayer(), reward);
 		});
 
 		addPane(createSquare(Priority.LOWEST, 0, 0, 3, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
@@ -91,6 +95,11 @@ public class GoalCustomizationGUI extends ChestGui
 	public Material getType() 
 	{
 		return this.currentItem.getItem().getType();
+	}
+	
+	public int getAmount() 
+	{
+		return this.amount;
 	}
 
 	public void setType(Material material)
@@ -245,30 +254,23 @@ public class GoalCustomizationGUI extends ChestGui
 				return;
 			
 			closeWithoutRefund(event.getWhoClicked());
-			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward).show(event.getWhoClicked());
+			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward, this.rewardService).show(event.getWhoClicked());
 		});
 	}
 	
 	private GuiItem createAmountItem() 
 	{
-		ItemStack item = new ItemBuilder(Material.ARROW)
+		return new GuiItem(new ItemBuilder(Material.ARROW)
 				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
 				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 				.glowing()
-				.createCopy();
-
-		return new GuiItem(item, event ->
+				.createCopy(), 
+				event -> 
 		{
-			if(getType() == NO_ITEM_TYPE)
-				return;
-
-			if(event.isLeftClick())
-				this.amount++;
-
-			else if(event.isRightClick() && this.amount > 1)
-				this.amount--;
-
-			setAmount(this.amount);
+			HumanEntity player = event.getWhoClicked();
+			
+			closeWithoutRefund(player);
+			new GoalAmountGUI(this, this.messageService).show(player);
 		});
 	}
 	
@@ -284,7 +286,7 @@ public class GoalCustomizationGUI extends ChestGui
 			HumanEntity player = event.getWhoClicked();
 			
 			closeWithoutRefund(player);
-			new ItemPaletteGUI(this, this.messageService, this.reward).show(player);
+			new ItemPaletteGUI(this, this.messageService, this.rewardService, this.reward).show(player);
 		});
 	}
 	

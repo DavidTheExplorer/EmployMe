@@ -9,6 +9,9 @@ import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
 import static dte.employme.messages.MessageKey.GET;
 import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
 import static dte.employme.messages.MessageKey.GOAL;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
@@ -22,6 +25,8 @@ import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
@@ -48,6 +53,7 @@ import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
+import static dte.employme.messages.MessageKey.JOB_CANCELLED_REWARD_REFUNDED;
 import static dte.employme.messages.MessageKey.JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.JOB_ICON_ENCHANT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
@@ -113,6 +119,7 @@ public class Messages
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs!")
 			.put(GLOBAL_JOB_BOARD_IS_FULL, "&cNot enough room for additional Jobs.")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! Please delete one to proceed.")
+			.put(JOB_CANCELLED_REWARD_REFUNDED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment myrewards\"&f.")
 
 			//Job Added Notifiers
 			.put(JOB_ADDED_NOTIFIER_NOT_FOUND, "&cNo notifier named '%job added notifier%' was found.")
@@ -161,6 +168,7 @@ public class Messages
 			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
 			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
 			
+			//Player Jobs GUI
 			.put(INVENTORY_PLAYER_JOBS_TITLE, "Your Jobs")
 			
 			//Job Deletion GUI
@@ -185,6 +193,8 @@ public class Messages
 			//Items Reward Offer GUI
 			.put(INVENTORY_ITEMS_REWARD_OFFER_TITLE, "What would you like to offer?")
 			.put(INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING, "&cJob creation cancelled because you didn't offer any item.")
+			.put(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME, "&aConfirm and Continue")
+			.put(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE, "&fClick to offer the items you added as the job's reward.", "&fExiting this inventory would cancel the job.")
 
 			//Goal Enchantment Selection GUI
 			.put(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE, "Choose an Enchantment:")
@@ -200,8 +210,8 @@ public class Messages
 			.put(INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "&a&lFinish")
 			.put(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "&aType")
 			.put(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.")
-			.put(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "&6Amount: &f&l%goal amount%")
-			.put(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "&fLeft Click to &aIncrease&f.", "&fRight Click to &cDecrease&f.")
+			.put(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "&6Amount")
+			.put(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "&fClick to set the amount of the goal.")
 			.put(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "&dEnchantments")
 			.put(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "&fClick to add an enchantment that", "&fthe goal must have on it.")
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
@@ -211,5 +221,10 @@ public class Messages
 			.put(INVENTORY_ITEM_PALETTE_TITLE, "Select the Goal Item:")
 			.put(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME, "&cBack")
 			.put(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME, "&aNext")
-			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name");
+			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name")
+			
+			//Goal Amount GUI
+			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME, "&aContinue")
+			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE, "&fClick to set the new amount.")
+			.put(INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "&cEnter Numeric Amount:");
 }

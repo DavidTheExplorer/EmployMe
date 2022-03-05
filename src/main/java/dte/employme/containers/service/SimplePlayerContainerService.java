@@ -17,6 +17,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -57,6 +58,9 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	@Override
 	public boolean isContainer(InventoryView view) 
 	{
+		if(view.getTopInventory().getType() != InventoryType.CHEST)
+			return false;
+
 		return view.getTitle().matches(this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
 				.inject("%container subject%", "[a-zA-Z\\d]+")
 				.first());

@@ -8,22 +8,23 @@ import org.bukkit.conversations.ConversationFactory;
 
 import dte.employme.EmployMe;
 import dte.employme.job.rewards.Reward;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
 
 public class Conversations
 {
-	//Container of static methods
-	private Conversations(){}
-	
-	public static final ConversationAbandonedListener REFUND_REWARD_IF_ABANDONED = event -> 
+	public static ConversationAbandonedListener refundRewardIfAbandoned(RewardService rewardService) 
 	{
-		if(event.gracefulExit())
-			return;
-		
-		Reward reward = (Reward) event.getContext().getSessionData("Reward");
-		
-		reward.giveTo((OfflinePlayer) event.getContext().getForWhom());
-	};
+		return event ->
+		{
+			if(event.gracefulExit())
+				return;
+			
+			Reward reward = (Reward) event.getContext().getSessionData("Reward");
+			
+			rewardService.refund((OfflinePlayer) event.getContext().getForWhom(), reward);
+		};
+	}
 
 	public static ConversationFactory createFactory(MessageService messageService)
 	{
