@@ -23,6 +23,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.prompts.JobPaymentPrompt;
 import dte.employme.job.rewards.MoneyReward;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.Conversations;
 import dte.employme.utils.items.ItemBuilder;
@@ -34,14 +35,16 @@ public class JobCreationGUI extends ChestGui
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
 	private final ConversationFactory moneyJobConversationFactory;
+	private final RewardService rewardService;
 	
-	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, Economy economy, PlayerContainerService playerContainerService)
+	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, Economy economy, PlayerContainerService playerContainerService, RewardService rewardService)
 	{
 		super(3, messageService.getMessage(INVENTORY_JOB_CREATION_TITLE).first());
 		
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
+		this.rewardService = rewardService;
 		
 		//init the goal's type conversation factory
 		this.moneyJobConversationFactory = Conversations.createFactory(messageService)
@@ -55,7 +58,7 @@ public class JobCreationGUI extends ChestGui
 					Player player = (Player) event.getContext().getForWhom();
 					MoneyReward moneyReward = (MoneyReward) event.getContext().getSessionData("reward");
 					
-					new GoalCustomizationGUI(messageService, jobBoard, moneyReward).show(player);
+					new GoalCustomizationGUI(messageService, rewardService, jobBoard, moneyReward).show(player);
 				});
 		
 		setOnTopClick(event -> event.setCancelled(true));
@@ -88,7 +91,7 @@ public class JobCreationGUI extends ChestGui
 				.named(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
 				.withLore(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
 				.createCopy(),
-				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService).show(event.getWhoClicked())));
+				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.rewardService).show(event.getWhoClicked())));
 		
 		return pane;
 	}

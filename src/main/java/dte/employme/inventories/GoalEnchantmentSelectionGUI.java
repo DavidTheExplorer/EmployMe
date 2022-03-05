@@ -22,6 +22,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.job.prompts.EnchantmentLevelPrompt;
 import dte.employme.job.rewards.Reward;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.Conversations;
 import dte.employme.utils.EnchantmentUtils;
@@ -33,19 +34,21 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	private final MessageService messageService;
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final Reward reward;
+	private final RewardService rewardService;
 
 	private static final Comparator<Enchantment> ORDER_BY_NAME = comparing(enchantment -> enchantment.getKey().getKey());
 
 	//temp data
 	private boolean showCustomizationGUIOnClose = true;
 
-	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
+	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward, RewardService rewardService)
 	{
 		super(6, messageService.getMessage(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.reward = reward;
+		this.rewardService = rewardService;
 
 		setOnClose(event -> 
 		{
@@ -88,7 +91,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			Conversations.createFactory(this.messageService)
 			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
 			.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
-			.addConversationAbandonedListener(Conversations.REFUND_REWARD_IF_ABANDONED)
+			.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.rewardService))
 			.addConversationAbandonedListener(abandonedEvent -> 
 			{
 				if(!abandonedEvent.gracefulExit())

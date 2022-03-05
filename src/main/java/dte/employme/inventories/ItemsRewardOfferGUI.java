@@ -24,6 +24,7 @@ import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.rewards.ItemsReward;
+import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.items.ItemBuilder;
@@ -32,17 +33,19 @@ public class ItemsRewardOfferGUI extends ChestGui
 {
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
+	private final RewardService rewardService;
 	private final JobBoard jobBoard;
 
 	private ItemStack confirmationButton;
 
-	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService) 
+	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, RewardService rewardService) 
 	{
 		super(6, messageService.getMessage(INVENTORY_ITEMS_REWARD_OFFER_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
+		this.rewardService = rewardService;
 
 		setOnClose(event -> 
 		{
@@ -103,7 +106,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 			//open the Goal Customization GUI
 			ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
-			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.jobBoard, itemsReward);
+			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.rewardService, this.jobBoard, itemsReward);
 
 			Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
 		});

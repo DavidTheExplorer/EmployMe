@@ -53,6 +53,7 @@ import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
+import static dte.employme.messages.MessageKey.JOB_CANCELLED_REWARD_REFUNDED;
 import static dte.employme.messages.MessageKey.JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.JOB_ICON_ENCHANT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
@@ -118,6 +119,7 @@ public class Messages
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs!")
 			.put(GLOBAL_JOB_BOARD_IS_FULL, "&cNot enough room for additional Jobs.")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! Please delete one to proceed.")
+			.put(JOB_CANCELLED_REWARD_REFUNDED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment myrewards\"&f.")
 
 			//Job Added Notifiers
 			.put(JOB_ADDED_NOTIFIER_NOT_FOUND, "&cNo notifier named '%job added notifier%' was found.")
