@@ -8,7 +8,6 @@ import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.BLACK;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
@@ -30,6 +29,13 @@ public class GoalAmountGUI extends AnvilGui
 		this.messageService = messageService;
 
 		setOnGlobalClick(event -> event.setCancelled(true));
+		
+		setOnClose(event -> 
+		{
+			goalCustomizationGUI.setRefundRewardOnClose(true);
+			goalCustomizationGUI.show(event.getPlayer());
+		});
+		
 		getFirstItemComponent().addPane(createItemPane(0, 0, createGoalItem()));
 		getSecondItemComponent().addPane(createItemPane(0, 0, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		getResultComponent().addPane(createItemPane(0, 0, createFinishItem()));
@@ -66,12 +72,9 @@ public class GoalAmountGUI extends AnvilGui
 				return;
 			}
 			
-			Player player = (Player) event.getWhoClicked();
-			player.closeInventory();
-
+			event.getWhoClicked().closeInventory();
+			
 			this.goalCustomizationGUI.setAmount(enteredAmount);
-			this.goalCustomizationGUI.setRefundRewardOnClose(true);
-			this.goalCustomizationGUI.show(player);
 		});
 	}
 }

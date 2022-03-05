@@ -52,10 +52,13 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 		setOnClose(event -> 
 		{
-			if(this.showCustomizationGUIOnClose)
-				goalCustomizationGUI.show(event.getPlayer());
+			if(!this.showCustomizationGUIOnClose)
+				return;
+			
+			goalCustomizationGUI.setRefundRewardOnClose(true);
+			goalCustomizationGUI.show(event.getPlayer());
 		});
-		
+
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 6, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(getEnchantmentsPane());
