@@ -1,25 +1,10 @@
 package dte.employme.commands;
 
-import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
 import static dte.employme.messages.MessageKey.PREFIX;
-import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
-import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
-import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
-import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
-import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
-import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
-import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIERS;
-import static java.util.stream.Collectors.joining;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.WHITE;
 
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
@@ -27,60 +12,30 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.CatchUnknown;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.JobBoardDisplayer;
-import dte.employme.inventories.JobCreationGUI;
-import dte.employme.inventories.JobDeletionGUI;
-import dte.employme.items.JobIconFactory;
-import dte.employme.job.Job;
-import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.reloadable.Reloadable;
-import dte.employme.services.job.addnotifiers.JobAddedNotifierService;
-import dte.employme.services.job.reward.RewardService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.playercontainer.PlayerContainerService;
-import dte.employme.utils.java.EnumUtils;
-import net.milkbowl.vault.economy.Economy;
 
 @CommandAlias("employment|emp")
 @Description("The main entry of EmployMe commands.")
 public class EmploymentCommand extends BaseCommand
 {
 	private final JobBoard globalJobBoard;
-	private final PlayerContainerService playerContainerService;
-	private final JobSubscriptionService jobSubscriptionService;
-	private final JobAddedNotifierService jobAddedNotifierService;
-	private final MessageService messageService;
 	private final JobBoardDisplayer jobBoardDisplayer;
-	private final Economy economy;
-	private final JobIconFactory jobIconFactory;
-	private final RewardService rewardService;
+	private final MessageService messageService;
 	private final List<Reloadable> reloadables;
 	
-	public EmploymentCommand(JobBoard globalJobBoard, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobAddedNotifierService jobAddedNotifierService, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, Economy economy, JobIconFactory jobIconFactory, RewardService rewardService, List<Reloadable> reloadables) 
+	public EmploymentCommand(JobBoard globalJobBoard, MessageService messageService, JobBoardDisplayer jobBoardDisplayer, List<Reloadable> reloadables) 
 	{
 		this.globalJobBoard = globalJobBoard;
-		this.playerContainerService = playerContainerService;
-		this.jobSubscriptionService = jobSubscriptionService;
-		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
-		this.economy = economy;
-		this.jobIconFactory = jobIconFactory;
-		this.rewardService = rewardService;
 		this.reloadables = reloadables;
 	}
-	
-	/*
-	 * General
-	 */
 	
 	@HelpCommand
 	@CatchUnknown
@@ -105,130 +60,6 @@ public class EmploymentCommand extends BaseCommand
 		
 		this.messageService.getMessage(PLUGIN_RELOADED)
 		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.sendTo(player);
-	}
-	
-	/*
-	 * Manage Jobs
-	 */
-	
-	@Subcommand("offer")
-	@Description("Offer a new Job to the public.")
-	@Conditions("Global Jobs Board Not Full")
-	@CommandPermission("employme.jobs.offer")
-	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
-	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService, this.rewardService).show(employer);
-	}
-
-	@Subcommand("delete")
-	@Description("Delete a job.")
-	@CommandPermission("employme.jobs.delete")
-	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
-	{
-		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory, this.rewardService).show(player);
-	}
-	
-	/*
-	 * Players Containers
-	 */
-	
-	@Subcommand("myitems")
-	@Description("Claim the items that people gathered for you.")
-	@CommandPermission("employme.jobs.myitems")
-	public void openContainer(Player employer) 
-	{
-		employer.openInventory(this.playerContainerService.getItemsContainer(employer.getUniqueId()));
-	}
-
-	@Subcommand("myrewards")
-	@Description("Claim the rewards you got from Jobs your completed.")
-	@CommandPermission("employme.jobs.myrewards")
-	public void openRewardsContainer(Player player) 
-	{
-		player.openInventory(this.playerContainerService.getRewardsContainer(player.getUniqueId()));
-	}
-	
-	/*
-	 * Subscriptions
-	 */
-	
-	@Subcommand("subscribe")
-	@Description("Get a notification once a job that rewards a desired item is posted.")
-	@CommandPermission("employme.goals.subscription")
-	public void subscribe(Player player, Material material) 
-	{
-		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
-
-		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.inject(GOAL, EnumUtils.fixEnumName(material))
-		.sendTo(player);
-	}
-
-	@Subcommand("unsubscribe")
-	@Description("Stop receiving notifications for an item.")
-	@CommandPermission("employme.goals.subscription")
-	public void unsubscribe(Player player, @Conditions("Subscribed To Goal") Material material) 
-	{
-		this.jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
-
-		this.messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.inject(GOAL, EnumUtils.fixEnumName(material))
-		.sendTo(player);
-	}
-
-	@Subcommand("mysubscriptions")
-	@Description("See your reward subscriptions.")
-	@CommandPermission("employme.goals.subscription")
-	public void showSubscriptions(Player player) 
-	{
-		String subscriptionsNames = this.jobSubscriptionService.getSubscriptions(player.getUniqueId()).stream()
-				.map(EnumUtils::fixEnumName)
-				.collect(joining(WHITE + ", " + GOLD));
-
-		if(subscriptionsNames.isEmpty())
-			subscriptionsNames = this.messageService.getMessage(NONE).first();
-
-		subscriptionsNames += WHITE + ".";
-
-		this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
-		.sendTo(player);
-	}
-	
-	/*
-	 * Add Notifiers
-	 */
-	
-	@Subcommand("notifier")
-	@Syntax("<notifier name>")
-	@Description("Choose which notifications you get once a job is created.")
-	@CommandPermission("employme.jobs.notifications")
-	public void setNotifications(Player player, JobAddedNotifier notifier) 
-	{
-		this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
-
-		this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.inject(JOB_ADDED_NOTIFIER, notifier.getName())
-		.sendTo(player);
-	}
-
-	@Subcommand("notifiers list")
-	@Description("See the list of notifiers you can select.")
-	@CommandPermission("employme.jobs.notifications")
-	public void sendNotificationsList(Player player) 
-	{
-		String notifiersNames = this.jobAddedNotifierService.getNotifiers().stream()
-				.map(JobAddedNotifier::getName)
-				.collect(joining(WHITE + ", " + GREEN, "", WHITE + "."));
-
-		this.messageService.getMessage(THE_JOB_ADDED_NOTIFIERS_ARE)
-		.inject(JOB_ADDED_NOTIFIERS, notifiersNames)
 		.sendTo(player);
 	}
 }
