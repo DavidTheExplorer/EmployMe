@@ -4,7 +4,7 @@ import org.bukkit.OfflinePlayer;
 
 import dte.employme.job.rewards.Reward;
 
-public interface RewardService 
+public interface JobRewardService 
 {
 	void refund(OfflinePlayer employer, Reward reward);
 }

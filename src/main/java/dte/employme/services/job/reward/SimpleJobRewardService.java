@@ -8,11 +8,11 @@ import org.bukkit.OfflinePlayer;
 import dte.employme.job.rewards.Reward;
 import dte.employme.services.message.MessageService;
 
-public class SimpleRewardService implements RewardService
+public class SimpleJobRewardService implements JobRewardService
 {
 	private final MessageService messageService;
 	
-	public SimpleRewardService(MessageService messageService) 
+	public SimpleJobRewardService(MessageService messageService) 
 	{
 		this.messageService = messageService;
 	}

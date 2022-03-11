@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import dte.employme.config.ConfigFile;
-import dte.employme.job.addnotifiers.DoNotNotify;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 
 public class SimpleJobAddedNotifierService implements JobAddedNotifierService
@@ -16,8 +15,6 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	private final Map<String, JobAddedNotifier> notifierByName = new HashMap<>();
 	private final Map<UUID, JobAddedNotifier> playersNotifiers = new HashMap<>();
 	private final ConfigFile notifiersConfig;
-	
-	private static final DoNotNotify DO_NOT_NOTIFY = new DoNotNotify();
 	
 	public SimpleJobAddedNotifierService(ConfigFile notifiersConfig) 
 	{
@@ -45,7 +42,7 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	@Override
 	public JobAddedNotifier getPlayerNotifier(UUID playerUUID) 
 	{
-		return this.notifierByName.getOrDefault(playerUUID, DO_NOT_NOTIFY);
+		return this.notifierByName.getOrDefault(playerUUID, DoNotNotify.INSTANCE);
 	}
 
 	@Override

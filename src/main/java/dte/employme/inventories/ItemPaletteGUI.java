@@ -35,7 +35,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
-import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.job.reward.JobRewardService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.MaterialUtils;
 import dte.employme.utils.items.ItemBuilder;
@@ -55,19 +55,19 @@ public class ItemPaletteGUI extends ChestGui
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final ConversationFactory typeConversationFactory;
 	private final MessageService messageService;
-	private final RewardService rewardService;
+	private final JobRewardService jobRewardService;
 	private PaginatedPane itemsPane;
 	
 	private boolean showGoalCustomizationGUIOnClose = true;
 
-	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, RewardService rewardService, Reward reward)
+	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, JobRewardService jobRewardService, Reward reward)
 	{
 		super(6, messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first());
 
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.typeConversationFactory = createTypeConversationFactory(messageService, reward);
 		this.messageService = messageService;
-		this.rewardService = rewardService;
+		this.jobRewardService = jobRewardService;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		
@@ -92,7 +92,7 @@ public class ItemPaletteGUI extends ChestGui
 				.withLocalEcho(false)
 				.withFirstPrompt(new JobGoalPrompt(messageService))
 				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-				.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.rewardService))
+				.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.jobRewardService))
 				.addConversationAbandonedListener(event -> 
 				{
 					if(!event.gracefulExit())

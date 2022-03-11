@@ -23,7 +23,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.job.reward.JobRewardService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.InventoryUtils;
@@ -33,19 +33,19 @@ public class ItemsRewardOfferGUI extends ChestGui
 {
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
-	private final RewardService rewardService;
+	private final JobRewardService jobRewardService;
 	private final JobBoard jobBoard;
 
 	private ItemStack confirmationButton;
 
-	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, RewardService rewardService) 
+	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobRewardService jobRewardService) 
 	{
 		super(6, messageService.getMessage(INVENTORY_ITEMS_REWARD_OFFER_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
-		this.rewardService = rewardService;
+		this.jobRewardService = jobRewardService;
 
 		setOnClose(event -> 
 		{
@@ -106,7 +106,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 			//open the Goal Customization GUI
 			ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
-			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.rewardService, this.jobBoard, itemsReward);
+			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.jobRewardService, this.jobBoard, itemsReward);
 
 			Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
 		});

@@ -28,37 +28,31 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 	}
 
 	@Override
-	public void subscribe(UUID playerUUID, Material goalMaterial)
+	public void subscribe(UUID playerUUID, Material material)
 	{
-		this.subscriptions.computeIfAbsent(playerUUID, u -> new HashSet<>()).add(goalMaterial);
+		this.subscriptions.computeIfAbsent(playerUUID, u -> new HashSet<>()).add(material);
 	}
 
 	@Override
-	public void unsubscribe(UUID playerUUID, Material goalMaterial) 
+	public void unsubscribe(UUID playerUUID, Material material) 
 	{
 		Set<Material> materials = this.subscriptions.getOrDefault(playerUUID, new HashSet<>());
-		materials.remove(goalMaterial);
+		materials.remove(material);
 		
 		if(materials.isEmpty())
 			this.subscriptions.remove(playerUUID);
 	}
 
 	@Override
-	public boolean isSubscribedTo(UUID playerUUID, Material goalMaterial)
+	public boolean isSubscribedTo(UUID playerUUID, Material material)
 	{
-		return this.subscriptions.getOrDefault(playerUUID, new HashSet<>()).contains(goalMaterial);
+		return this.subscriptions.getOrDefault(playerUUID, new HashSet<>()).contains(material);
 	}
 
 	@Override
 	public Set<Material> getSubscriptions(UUID playerUUID) 
 	{
 		return new HashSet<>(this.subscriptions.getOrDefault(playerUUID, new HashSet<>()));
-	}
-	
-	@Override
-	public Map<UUID, Set<Material>> getSubscriptions() 
-	{
-		return new HashMap<>(this.subscriptions);
 	}
 
 	@Override

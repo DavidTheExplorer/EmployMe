@@ -23,7 +23,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.EnchantmentLevelPrompt;
 import dte.employme.job.rewards.Reward;
-import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.job.reward.JobRewardService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
@@ -34,21 +34,21 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	private final MessageService messageService;
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final Reward reward;
-	private final RewardService rewardService;
+	private final JobRewardService jobRewardService;
 
 	private static final Comparator<Enchantment> ORDER_BY_NAME = comparing(enchantment -> enchantment.getKey().getKey());
 
 	//temp data
 	private boolean showCustomizationGUIOnClose = true;
 
-	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward, RewardService rewardService)
+	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward, JobRewardService jobRewardService)
 	{
 		super(6, messageService.getMessage(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.reward = reward;
-		this.rewardService = rewardService;
+		this.jobRewardService = jobRewardService;
 
 		setOnClose(event -> 
 		{
@@ -94,7 +94,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			Conversations.createFactory(this.messageService)
 			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
 			.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
-			.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.rewardService))
+			.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.jobRewardService))
 			.addConversationAbandonedListener(abandonedEvent -> 
 			{
 				if(!abandonedEvent.gracefulExit())

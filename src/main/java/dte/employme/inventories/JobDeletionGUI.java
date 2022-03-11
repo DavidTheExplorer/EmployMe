@@ -25,7 +25,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.job.reward.JobRewardService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -35,9 +35,9 @@ public class JobDeletionGUI extends ChestGui
 	private final List<Job> jobsToDisplay;
 	private final MessageService messageService;
 	private final JobIconFactory jobIconFactory;
-	private final RewardService rewardService;
+	private final JobRewardService jobRewardService;
 
-	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobIconFactory jobIconFactory, RewardService rewardService) 
+	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobIconFactory jobIconFactory, JobRewardService jobRewardService) 
 	{
 		super(6, messageService.getMessage(INVENTORY_JOB_DELETION_TITLE).first());
 
@@ -45,7 +45,7 @@ public class JobDeletionGUI extends ChestGui
 		this.jobsToDisplay = jobsToDisplay;
 		this.messageService = messageService;
 		this.jobIconFactory = jobIconFactory;
-		this.rewardService = rewardService;
+		this.jobRewardService = jobRewardService;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createJobsPane());
@@ -91,7 +91,7 @@ public class JobDeletionGUI extends ChestGui
 			{
 				player.closeInventory();
 				this.jobBoard.removeJob(job);
-				this.rewardService.refund(job.getEmployer(), job.getReward());
+				this.jobRewardService.refund(job.getEmployer(), job.getReward());
 				this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED).sendTo(player);
 			}
 		});
