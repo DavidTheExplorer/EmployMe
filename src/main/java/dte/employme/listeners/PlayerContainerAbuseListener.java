@@ -6,7 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.InventoryView;
 
-import dte.employme.containers.service.PlayerContainerService;
+import dte.employme.services.playercontainer.PlayerContainerService;
 
 public class PlayerContainerAbuseListener implements Listener
 {

@@ -1,4 +1,4 @@
-package dte.employme.job.subscription;
+package dte.employme.services.job.subscription;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;

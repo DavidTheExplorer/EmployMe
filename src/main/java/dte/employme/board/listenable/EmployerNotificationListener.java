@@ -6,7 +6,7 @@ import static dte.employme.messages.MessageKey.PREFIX;
 import dte.employme.board.JobBoard;
 import dte.employme.board.listenable.ListenableJobBoard.JobAddListener;
 import dte.employme.job.Job;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public class EmployerNotificationListener implements JobAddListener
 {

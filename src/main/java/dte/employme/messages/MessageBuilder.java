@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 /**
  * This class, along with {@link MessageService}, allows implementing multi-line messages in an encapsulated and relatively clean way.

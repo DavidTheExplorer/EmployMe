@@ -16,7 +16,7 @@ import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.Placeholders;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.NumberUtils;
 import net.milkbowl.vault.economy.Economy;

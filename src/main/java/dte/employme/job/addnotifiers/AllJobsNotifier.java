@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import dte.employme.job.Job;
 import dte.employme.messages.MessageKey;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.java.MapBuilder;
 
 public class AllJobsNotifier extends JobAddedChatNotifier

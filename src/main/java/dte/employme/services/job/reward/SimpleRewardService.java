@@ -1,4 +1,4 @@
-package dte.employme.job.rewards.service;
+package dte.employme.services.job.reward;
 
 import static dte.employme.messages.MessageKey.JOB_CANCELLED_REWARD_REFUNDED;
 import static dte.employme.messages.MessageKey.PREFIX;
@@ -6,7 +6,7 @@ import static dte.employme.messages.MessageKey.PREFIX;
 import org.bukkit.OfflinePlayer;
 
 import dte.employme.job.rewards.Reward;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public class SimpleRewardService implements RewardService
 {

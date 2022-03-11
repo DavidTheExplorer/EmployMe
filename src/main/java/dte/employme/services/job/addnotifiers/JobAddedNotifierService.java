@@ -1,4 +1,4 @@
-package dte.employme.job.addnotifiers.service;
+package dte.employme.services.job.addnotifiers;
 
 import java.util.Map;
 import java.util.Set;

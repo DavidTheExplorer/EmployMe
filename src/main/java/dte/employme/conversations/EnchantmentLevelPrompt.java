@@ -12,7 +12,7 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.enchantments.Enchantment;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.java.NumberUtils;
 

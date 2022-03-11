@@ -1,4 +1,4 @@
-package dte.employme.job.subscription;
+package dte.employme.services.job.subscription;
 
 import java.util.Map;
 import java.util.Set;

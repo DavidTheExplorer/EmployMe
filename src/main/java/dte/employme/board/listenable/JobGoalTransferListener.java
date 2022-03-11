@@ -5,9 +5,9 @@ import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.JobBoard;
 import dte.employme.board.listenable.ListenableJobBoard.JobCompleteListener;
-import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.Job;
-import dte.employme.job.service.JobService;
+import dte.employme.services.job.JobService;
+import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.InventoryUtils;
 
 public class JobGoalTransferListener implements JobCompleteListener

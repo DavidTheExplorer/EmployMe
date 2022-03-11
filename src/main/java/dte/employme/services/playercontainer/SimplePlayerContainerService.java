@@ -1,4 +1,4 @@
-package dte.employme.containers.service;
+package dte.employme.services.playercontainer;
 
 import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
 import static dte.employme.messages.MessageKey.ITEMS;
@@ -26,7 +26,7 @@ import com.google.common.collect.Sets;
 
 import dte.employme.config.ConfigFile;
 import dte.employme.containers.PlayerContainerBuilder;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public class SimplePlayerContainerService implements PlayerContainerService
 {

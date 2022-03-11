@@ -22,10 +22,10 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.job.rewards.service.RewardService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.message.MessageService;
+import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.items.ItemBuilder;
 

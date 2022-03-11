@@ -20,12 +20,12 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
-import dte.employme.containers.service.PlayerContainerService;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPaymentPrompt;
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.job.rewards.service.RewardService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.message.MessageService;
+import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.items.ItemBuilder;
 import net.milkbowl.vault.economy.Economy;
 

@@ -1,4 +1,4 @@
-package dte.employme.job.rewards.service;
+package dte.employme.services.job.reward;
 
 import org.bukkit.OfflinePlayer;
 

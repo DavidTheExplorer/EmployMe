@@ -8,8 +8,8 @@ import org.bukkit.conversations.ConversationFactory;
 
 import dte.employme.EmployMe;
 import dte.employme.job.rewards.Reward;
-import dte.employme.job.rewards.service.RewardService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.reward.RewardService;
+import dte.employme.services.message.MessageService;
 
 public class Conversations
 {

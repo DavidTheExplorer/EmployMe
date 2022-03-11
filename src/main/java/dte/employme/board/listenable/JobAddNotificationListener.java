@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import dte.employme.board.JobBoard;
 import dte.employme.board.listenable.ListenableJobBoard.JobAddListener;
 import dte.employme.job.Job;
-import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
+import dte.employme.services.job.addnotifiers.JobAddedNotifierService;
 
 public class JobAddNotificationListener implements JobAddListener
 {

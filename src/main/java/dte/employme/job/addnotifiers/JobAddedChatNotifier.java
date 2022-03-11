@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import dte.employme.job.Job;
 import dte.employme.messages.MessageKey;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public abstract class JobAddedChatNotifier extends AbstractJobAddedNotifier
 {

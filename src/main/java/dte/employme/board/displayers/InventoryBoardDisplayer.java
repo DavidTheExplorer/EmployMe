@@ -8,8 +8,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.inventories.JobBoardGUI;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.job.service.JobService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.JobService;
+import dte.employme.services.message.MessageService;
 
 public class InventoryBoardDisplayer implements JobBoardDisplayer
 {
