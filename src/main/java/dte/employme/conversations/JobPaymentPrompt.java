@@ -1,4 +1,4 @@
-package dte.employme.job.prompts;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;

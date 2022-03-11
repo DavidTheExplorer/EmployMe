@@ -32,11 +32,11 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import dte.employme.job.prompts.JobGoalPrompt;
+import dte.employme.conversations.Conversations;
+import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.job.rewards.Reward;
 import dte.employme.job.rewards.service.RewardService;
 import dte.employme.messages.service.MessageService;
-import dte.employme.utils.Conversations;
 import dte.employme.utils.MaterialUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.MapBuilder;

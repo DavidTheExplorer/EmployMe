@@ -1,4 +1,4 @@
-package dte.employme.job.prompts;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;

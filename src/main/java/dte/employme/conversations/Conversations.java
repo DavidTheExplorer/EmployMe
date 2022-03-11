@@ -1,4 +1,4 @@
-package dte.employme.utils;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.PREFIX;
 

@@ -1,4 +1,4 @@
-package dte.employme.job.prompts;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
