@@ -16,7 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 
 public class PlayerContainerBuilder

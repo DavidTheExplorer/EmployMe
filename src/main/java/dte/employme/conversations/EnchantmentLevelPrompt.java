@@ -1,4 +1,4 @@
-package dte.employme.job.prompts;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
@@ -12,7 +12,7 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.enchantments.Enchantment;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.java.NumberUtils;
 

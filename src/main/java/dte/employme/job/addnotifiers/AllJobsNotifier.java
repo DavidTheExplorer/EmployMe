@@ -2,22 +2,17 @@ package dte.employme.job.addnotifiers;
 
 import static dte.employme.messages.MessageKey.NEW_JOB_POSTED;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 
 import dte.employme.job.Job;
-import dte.employme.messages.MessageKey;
-import dte.employme.messages.service.MessageService;
-import dte.employme.utils.java.MapBuilder;
+import dte.employme.messages.MessageBuilder;
+import dte.employme.services.message.MessageService;
 
 public class AllJobsNotifier extends JobAddedChatNotifier
 {
-	private static final Map<MessageKey, Map<String, String>> MESSAGES = new MapBuilder<MessageKey, Map<String, String>>()
-			.put(NEW_JOB_POSTED, new HashMap<>())
-			.build();
-
 	public AllJobsNotifier(MessageService messageService)
 	{
 		super("All Jobs", messageService);
@@ -28,11 +23,10 @@ public class AllJobsNotifier extends JobAddedChatNotifier
 	{
 		return true;
 	}
-
+	
 	@Override
-	protected Map<MessageKey, Map<String, String>> createMessages(Player player, Job job) 
+	protected List<MessageBuilder> createMessages(Player player, Job job) 
 	{
-		return MESSAGES;
+		return Arrays.asList(this.messageService.getMessage(NEW_JOB_POSTED));
 	}
 }
-

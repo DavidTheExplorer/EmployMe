@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.NumberUtils;
 

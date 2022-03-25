@@ -1,4 +1,4 @@
-package dte.employme.job.service;
+package dte.employme.services.job;
 
 import java.io.IOException;
 

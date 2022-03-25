@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public class AutoUpdateListeners implements Listener
 {

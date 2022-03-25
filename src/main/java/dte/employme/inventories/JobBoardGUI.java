@@ -31,8 +31,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.rewards.ItemsReward;
-import dte.employme.job.service.JobService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.JobService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobBoardGUI extends ChestGui

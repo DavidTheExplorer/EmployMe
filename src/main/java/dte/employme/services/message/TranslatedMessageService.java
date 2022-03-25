@@ -1,4 +1,4 @@
-package dte.employme.messages.service;
+package dte.employme.services.message;
 
 import java.util.Collection;
 

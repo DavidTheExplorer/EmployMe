@@ -15,7 +15,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public class PlayerJobsGUI extends ChestGui
 {

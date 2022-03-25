@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dte</groupId>
 	<artifactId>employeme</artifactId>
-	<version>1.1.6</version>
+	<version>1.1.7</version>
 
 	<properties>
 		<shade.base>dte.employme.shaded</shade.base>
@@ -116,11 +116,11 @@
 
 	<dependencies>
 
-		<!-- Spigot 1.16.5 -->
+		<!-- Spigot 1.18.2 -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<version>1.18.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 

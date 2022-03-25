@@ -1,4 +1,4 @@
-package dte.employme.job.service;
+package dte.employme.services.job;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

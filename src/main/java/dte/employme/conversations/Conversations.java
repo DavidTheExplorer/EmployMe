@@ -1,4 +1,4 @@
-package dte.employme.utils;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.PREFIX;
 
@@ -8,12 +8,12 @@ import org.bukkit.conversations.ConversationFactory;
 
 import dte.employme.EmployMe;
 import dte.employme.job.rewards.Reward;
-import dte.employme.job.rewards.service.RewardService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.services.message.MessageService;
 
 public class Conversations
 {
-	public static ConversationAbandonedListener refundRewardIfAbandoned(RewardService rewardService) 
+	public static ConversationAbandonedListener refundRewardIfAbandoned(JobRewardService jobRewardService) 
 	{
 		return event ->
 		{
@@ -22,7 +22,7 @@ public class Conversations
 			
 			Reward reward = (Reward) event.getContext().getSessionData("Reward");
 			
-			rewardService.refund((OfflinePlayer) event.getContext().getForWhom(), reward);
+			jobRewardService.refund((OfflinePlayer) event.getContext().getForWhom(), reward);
 		};
 	}
 

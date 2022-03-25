@@ -1,4 +1,4 @@
-package dte.employme.job.prompts;
+package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
@@ -8,7 +8,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.ValidatingPrompt;
 
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 
 public class JobGoalPrompt extends ValidatingPrompt
 {

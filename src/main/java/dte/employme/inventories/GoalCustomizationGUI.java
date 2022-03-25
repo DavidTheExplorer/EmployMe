@@ -41,8 +41,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.rewards.Reward;
-import dte.employme.job.rewards.service.RewardService;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -51,7 +51,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private final MessageService messageService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
-	private final RewardService rewardService;
+	private final JobRewardService jobRewardService;
 
 	//temp data(items, panes, etc)
 	private StaticPane itemPane, optionsPane;
@@ -61,21 +61,21 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(MessageService messageService, RewardService rewardService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, JobRewardService jobRewardService, JobBoard jobBoard, Reward reward)
 	{
 		super(6, messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
-		this.rewardService = rewardService;
+		this.jobRewardService = jobRewardService;
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		
 		setOnClose(event -> 
 		{
 			if(this.refundRewardOnClose)
-				rewardService.refund((OfflinePlayer) event.getPlayer(), reward);
+				jobRewardService.refund((OfflinePlayer) event.getPlayer(), reward);
 		});
 
 		addPane(createSquare(Priority.LOWEST, 0, 0, 3, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
@@ -254,7 +254,7 @@ public class GoalCustomizationGUI extends ChestGui
 				return;
 			
 			closeWithoutRefund(event.getWhoClicked());
-			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward, this.rewardService).show(event.getWhoClicked());
+			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward, this.jobRewardService).show(event.getWhoClicked());
 		});
 	}
 	
@@ -286,7 +286,7 @@ public class GoalCustomizationGUI extends ChestGui
 			HumanEntity player = event.getWhoClicked();
 			
 			closeWithoutRefund(player);
-			new ItemPaletteGUI(this, this.messageService, this.rewardService, this.reward).show(player);
+			new ItemPaletteGUI(this, this.messageService, this.jobRewardService, this.reward).show(player);
 		});
 	}
 	

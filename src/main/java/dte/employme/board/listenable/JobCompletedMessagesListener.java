@@ -20,7 +20,7 @@ import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
 import dte.employme.job.rewards.Reward;
 import dte.employme.messages.MessageKey;
-import dte.employme.messages.service.MessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import net.md_5.bungee.api.chat.ComponentBuilder;

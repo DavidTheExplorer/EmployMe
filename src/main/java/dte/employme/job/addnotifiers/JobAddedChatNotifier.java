@@ -4,19 +4,19 @@ import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static org.bukkit.ChatColor.GRAY;
 
-import java.util.Map;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 
 import dte.employme.job.Job;
-import dte.employme.messages.MessageKey;
-import dte.employme.messages.service.MessageService;
+import dte.employme.messages.MessageBuilder;
+import dte.employme.services.message.MessageService;
 
-public abstract class JobAddedChatNotifier extends AbstractJobAddedNotifier
+public abstract class JobAddedChatNotifier extends JobAddedNotifier
 {
-	private final MessageService messageService;
+	protected final MessageService messageService;
 
-	public JobAddedChatNotifier(String name, MessageService messageService) 
+	protected JobAddedChatNotifier(String name, MessageService messageService) 
 	{
 		super(name);
 		
@@ -28,16 +28,12 @@ public abstract class JobAddedChatNotifier extends AbstractJobAddedNotifier
 	{
 		player.sendMessage(createSeparationLine(GRAY, 45));
 		
-		createMessages(player, job).forEach((messageKey, placeholders) -> 
-		{
-			this.messageService.getMessage(messageKey)
-			.inject(placeholders)
-			.prefixed(this.messageService.getMessage(PREFIX).first())
-			.sendTo(player);
-		});
+		createMessages(player, job).stream()
+		.map(builder -> builder.prefixed(this.messageService.getMessage(PREFIX).first()))
+		.forEach(builder -> builder.sendTo(player));
 		
 		player.sendMessage(createSeparationLine(GRAY, 45));
 	}
-	
-	protected abstract Map<MessageKey, Map<String, String>> createMessages(Player player, Job job);
+
+	protected abstract List<MessageBuilder> createMessages(Player player, Job job);
 }

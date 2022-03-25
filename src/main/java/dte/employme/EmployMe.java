@@ -32,35 +32,39 @@ import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
 import dte.employme.board.listenable.SimpleListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
+import dte.employme.commands.sub.employment.EmploymentAddNotifierCommands;
+import dte.employme.commands.sub.employment.EmploymentContainerCommands;
+import dte.employme.commands.sub.employment.EmploymentManageCommands;
+import dte.employme.commands.sub.employment.EmploymentSubscriptionCommands;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
-import dte.employme.containers.service.PlayerContainerService;
-import dte.employme.containers.service.SimplePlayerContainerService;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
-import dte.employme.job.addnotifiers.DoNotNotify;
 import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.MaterialSubscriptionNotifier;
-import dte.employme.job.addnotifiers.service.JobAddedNotifierService;
-import dte.employme.job.addnotifiers.service.SimpleJobAddedNotifierService;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.job.rewards.service.RewardService;
-import dte.employme.job.rewards.service.SimpleRewardService;
-import dte.employme.job.service.JobService;
-import dte.employme.job.service.SimpleJobService;
-import dte.employme.job.subscription.JobSubscriptionService;
-import dte.employme.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.Placeholders;
-import dte.employme.messages.service.ColoredMessageService;
-import dte.employme.messages.service.MessageService;
-import dte.employme.messages.service.TranslatedMessageService;
 import dte.employme.reloadable.Reloadable;
+import dte.employme.services.job.JobService;
+import dte.employme.services.job.SimpleJobService;
+import dte.employme.services.job.addnotifiers.DoNotNotify;
+import dte.employme.services.job.addnotifiers.JobAddedNotifierService;
+import dte.employme.services.job.addnotifiers.SimpleJobAddedNotifierService;
+import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.services.job.reward.SimpleJobRewardService;
+import dte.employme.services.job.subscription.JobSubscriptionService;
+import dte.employme.services.job.subscription.SimpleJobSubscriptionService;
+import dte.employme.services.message.ColoredMessageService;
+import dte.employme.services.message.MessageService;
+import dte.employme.services.message.TranslatedMessageService;
+import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
@@ -76,7 +80,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
-	private RewardService rewardService;
+	private JobRewardService jobRewardService;
 	private JobIconFactory jobIconFactory;
 	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	private List<Reloadable> reloadables = new ArrayList<>();
@@ -134,7 +138,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
-		this.rewardService = new SimpleRewardService(this.messageService);
+		this.jobRewardService = new SimpleJobRewardService(this.messageService);
 		
 		this.jobsConfig = configFileFactory.loadConfig("jobs");
 		
@@ -266,6 +270,10 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.playerContainerService, this.jobSubscriptionService, this.jobAddedNotifierService, this.messageService, inventoryBoardDisplayer, this.economy, this.jobIconFactory, this.rewardService, this.reloadables));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, inventoryBoardDisplayer, this.reloadables));
+		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService, this.jobIconFactory));
+		commandManager.registerCommand(new EmploymentAddNotifierCommands(this.jobAddedNotifierService, this.messageService));
+		commandManager.registerCommand(new EmploymentContainerCommands(this.playerContainerService));
+		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
 	}
 }

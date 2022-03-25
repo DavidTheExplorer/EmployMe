@@ -1,4 +1,4 @@
-package dte.employme.messages.service;
+package dte.employme.services.message;
 
 import dte.employme.messages.MessageBuilder;
 import dte.employme.messages.MessageKey;
