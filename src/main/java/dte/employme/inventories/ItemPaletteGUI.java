@@ -64,11 +64,11 @@ public class ItemPaletteGUI extends ChestGui
 	{
 		super(6, messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first());
 
+		this.jobRewardService = jobRewardService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.typeConversationFactory = createTypeConversationFactory(messageService, reward);
 		this.messageService = messageService;
-		this.jobRewardService = jobRewardService;
-
+		
 		setOnTopClick(event -> event.setCancelled(true));
 		
 		setOnClose(event -> 
