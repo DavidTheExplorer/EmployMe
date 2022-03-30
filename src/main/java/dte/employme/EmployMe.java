@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -47,7 +46,6 @@ import dte.employme.job.addnotifiers.JobAddedNotifier;
 import dte.employme.job.addnotifiers.MaterialSubscriptionNotifier;
 import dte.employme.job.rewards.ItemsReward;
 import dte.employme.job.rewards.MoneyReward;
-import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.Placeholders;
 import dte.employme.reloadable.Reloadable;
@@ -65,7 +63,6 @@ import dte.employme.services.message.MessageService;
 import dte.employme.services.message.TranslatedMessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
-import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
 import dte.modernjavaplugin.ModernJavaPlugin;
@@ -170,13 +167,6 @@ public class EmployMe extends ModernJavaPlugin
 			this.jobSubscriptionService.saveSubscriptions();
 			this.jobAddedNotifierService.savePlayersNotifiers();
 		});
-		
-		new Metrics(this, 13423);
-		
-		AutoUpdater.forPlugin(this, 96513)
-		.ifRequestFailed(exception -> logToConsole(RED + "There was an internet error while checking for an update!"))
-		.ifNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
-		.check();
 	}
 
 	public static EmployMe getInstance()
