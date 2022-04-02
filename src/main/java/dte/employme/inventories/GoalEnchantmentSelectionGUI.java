@@ -35,11 +35,10 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final Reward reward;
 	private final JobRewardService jobRewardService;
+	
+	private boolean showCustomizationGUIOnClose = true;
 
 	private static final Comparator<Enchantment> ORDER_BY_NAME = comparing(enchantment -> enchantment.getKey().getKey());
-
-	//temp data
-	private boolean showCustomizationGUIOnClose = true;
 
 	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward, JobRewardService jobRewardService)
 	{

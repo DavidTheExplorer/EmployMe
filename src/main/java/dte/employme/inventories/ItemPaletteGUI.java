@@ -43,6 +43,14 @@ import dte.employme.utils.java.MapBuilder;
 
 public class ItemPaletteGUI extends ChestGui
 {
+	private final GoalCustomizationGUI goalCustomizationGUI;
+	private final ConversationFactory typeConversationFactory;
+	private final MessageService messageService;
+	private final JobRewardService jobRewardService;
+	private PaginatedPane itemsPane;
+	
+	private boolean showGoalCustomizationGUIOnClose = true;
+	
 	private static final List<ItemStack> ALL_ITEMS = Arrays.stream(Material.values())
 			.filter(MaterialUtils::isObtainable)
 			.map(ItemStack::new)
@@ -51,14 +59,6 @@ public class ItemPaletteGUI extends ChestGui
 	private static final int
 	ITEMS_PER_PAGE = 9*5,
 	PAGES_AMOUNT = (ALL_ITEMS.size() / ITEMS_PER_PAGE) +1;
-	
-	private final GoalCustomizationGUI goalCustomizationGUI;
-	private final ConversationFactory typeConversationFactory;
-	private final MessageService messageService;
-	private final JobRewardService jobRewardService;
-	private PaginatedPane itemsPane;
-	
-	private boolean showGoalCustomizationGUIOnClose = true;
 
 	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, JobRewardService jobRewardService, Reward reward)
 	{
