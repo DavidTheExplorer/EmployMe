@@ -1,5 +1,7 @@
 package dte.employme.board.listenable;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,8 +25,9 @@ public class JobGoalTransferListener implements JobCompleteListener
 	public void onJobCompleted(JobBoard jobBoard, Job job, Player whoCompleted) 
 	{
 		ItemStack goal = job.getGoal();
+		UUID employerUUID = job.getEmployer().getUniqueId();
 		
 		InventoryUtils.removeIf(whoCompleted.getInventory(), item -> JobService.isGoal(item, goal), goal.getAmount());
-		this.playerContainerService.getItemsContainer(job.getEmployer().getUniqueId()).addItem(goal);
+		this.playerContainerService.getItemsContainer(employerUUID).addItem(goal);
 	}
 }
