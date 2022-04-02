@@ -1,5 +1,6 @@
 package dte.employme.job.rewards;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,10 @@ import dte.employme.utils.java.ServiceLocator;
 @SerializableAs("Items Reward")
 public class ItemsReward implements Reward, Iterable<ItemStack>
 {
-	private final Iterable<ItemStack> items;
+	private final Collection<ItemStack> items;
 	private final PlayerContainerService playerContainerService;
 	
-	public ItemsReward(Iterable<ItemStack> items, PlayerContainerService playerContainerService) 
+	public ItemsReward(Collection<ItemStack> items, PlayerContainerService playerContainerService) 
 	{
 		this.items = items;
 		this.playerContainerService = playerContainerService;
