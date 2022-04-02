@@ -13,19 +13,6 @@ import dte.employme.services.message.MessageService;
 
 public class Conversations
 {
-	public static ConversationAbandonedListener refundRewardIfAbandoned(JobRewardService jobRewardService) 
-	{
-		return event ->
-		{
-			if(event.gracefulExit())
-				return;
-			
-			Reward reward = (Reward) event.getContext().getSessionData("Reward");
-			
-			jobRewardService.refund((OfflinePlayer) event.getContext().getForWhom(), reward);
-		};
-	}
-
 	public static ConversationFactory createFactory(MessageService messageService)
 	{
 		return new ConversationFactory(EmployMe.getInstance())
@@ -33,5 +20,21 @@ public class Conversations
 				.withModality(false)
 				.withEscapeSequence("cancel")
 				.withPrefix(context -> messageService.getMessage(PREFIX).first());
+	}
+
+	public static ConversationAbandonedListener refundRewardIfAbandoned(JobRewardService jobRewardService) 
+	{
+		return event ->
+		{
+			if(event.gracefulExit())
+				return;
+
+			Reward reward = (Reward) event.getContext().getSessionData("Reward");
+
+			if(reward == null)
+				return;
+
+			jobRewardService.refund((OfflinePlayer) event.getContext().getForWhom(), reward);
+		};
 	}
 }
