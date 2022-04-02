@@ -37,7 +37,7 @@ public class InventoryFrameworkUtils
 	
 	public static Pane createWalls(ChestGui gui, Priority priority) 
 	{
-		PatternPane background = new PatternPane(0, 0, 9, 6, createWallsPattern(gui));
+		PatternPane background = new PatternPane(0, 0, 9, gui.getRows(), createWallsPattern(gui));
 		background.bindItem('W', new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE)));
 
 		return background;
@@ -59,7 +59,6 @@ public class InventoryFrameworkUtils
 	private static Pattern createWallsPattern(ChestGui gui) 
 	{
 		List<String> pattern = new ArrayList<>();
-
 		pattern.add(StringUtils.repeat("W", 9));
 
 		for(int i = 1, rows = gui.getRows()-2; i <= rows; i++)
