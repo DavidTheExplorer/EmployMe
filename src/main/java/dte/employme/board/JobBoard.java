@@ -13,7 +13,6 @@ public interface JobBoard extends Iterable<Job>
 	void removeJob(Job job);
 	void completeJob(Job job, Player whoCompleted);
 	
-	//query
 	List<Job> getOfferedJobs();
 	List<Job> getJobsOfferedBy(UUID employerUUID);
 }

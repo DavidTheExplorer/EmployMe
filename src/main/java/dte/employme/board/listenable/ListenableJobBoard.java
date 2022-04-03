@@ -1,26 +1,48 @@
 package dte.employme.board.listenable;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.bukkit.entity.Player;
 
+import dte.employme.board.ForwardingJobBoard;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 
-public interface ListenableJobBoard extends JobBoard
+public class ListenableJobBoard extends ForwardingJobBoard
 {
-	void registerAddListener(JobAddListener... listeners);
-	void registerCompleteListener(JobCompleteListener... listeners);
+	private final Set<JobAddListener> addListeners = new LinkedHashSet<>();
+	private final Set<JobCompleteListener> completeListeners = new LinkedHashSet<>();
 	
-	
-	
-	@FunctionalInterface
-	public interface JobAddListener
+	public ListenableJobBoard(JobBoard jobBoard) 
 	{
-		void onJobAdded(JobBoard jobBoard, Job job);
+		super(jobBoard);
 	}
 	
-	@FunctionalInterface
-	public interface JobCompleteListener
+	@Override
+	public void addJob(Job job)
 	{
-		void onJobCompleted(JobBoard jobBoard, Job job, Player whoCompleted);
+		super.addJob(job);
+		
+		this.addListeners.forEach(listener -> listener.onJobAdded(this, job));
+	}
+	
+	@Override
+	public void completeJob(Job job, Player whoCompleted) 
+	{
+		super.completeJob(job, whoCompleted);
+		
+		this.completeListeners.forEach(listener -> listener.onJobCompleted(this, job, whoCompleted));
+	}
+	
+	public void registerAddListener(JobAddListener... listeners) 
+	{
+		Arrays.stream(listeners).forEach(this.addListeners::add);
+	}
+	
+	public void registerCompleteListener(JobCompleteListener... listeners) 
+	{
+		Arrays.stream(listeners).forEach(this.completeListeners::add);
 	}
 }

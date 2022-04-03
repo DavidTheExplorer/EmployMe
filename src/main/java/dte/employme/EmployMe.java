@@ -32,7 +32,6 @@ import dte.employme.board.listenable.JobCompletedMessagesListener;
 import dte.employme.board.listenable.JobGoalTransferListener;
 import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
-import dte.employme.board.listenable.SimpleListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.commands.sub.employment.EmploymentAddNotifierCommands;
 import dte.employme.commands.sub.employment.EmploymentContainerCommands;
@@ -120,7 +119,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the global job board, services, factories, etc.
-		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
+		this.globalJobBoard = new ListenableJobBoard(new SimpleJobBoard());
 		
 		TranslatedMessageService translatedMessageService = new TranslatedMessageService(this.messagesConfig);
 		this.reloadables.add(translatedMessageService);
