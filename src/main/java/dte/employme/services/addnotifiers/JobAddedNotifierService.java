@@ -1,10 +1,10 @@
-package dte.employme.services.job.addnotifiers;
+package dte.employme.services.addnotifiers;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import dte.employme.job.addnotifiers.JobAddedNotifier;
+import dte.employme.addnotifiers.JobAddedNotifier;
 
 public interface JobAddedNotifierService
 {

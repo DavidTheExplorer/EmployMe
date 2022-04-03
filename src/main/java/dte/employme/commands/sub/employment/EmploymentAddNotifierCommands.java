@@ -17,8 +17,8 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import dte.employme.job.addnotifiers.JobAddedNotifier;
-import dte.employme.services.job.addnotifiers.JobAddedNotifierService;
+import dte.employme.addnotifiers.JobAddedNotifier;
+import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.message.MessageService;
 
 @CommandAlias("employment|emp")

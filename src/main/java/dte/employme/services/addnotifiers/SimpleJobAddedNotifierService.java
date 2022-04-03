@@ -1,4 +1,4 @@
-package dte.employme.services.job.addnotifiers;
+package dte.employme.services.addnotifiers;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import dte.employme.addnotifiers.JobAddedNotifier;
 import dte.employme.config.ConfigFile;
-import dte.employme.job.addnotifiers.JobAddedNotifier;
 
 public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 {
