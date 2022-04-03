@@ -43,7 +43,6 @@ import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.job.SimpleJob;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.Placeholders;
 import dte.employme.reloadable.Reloadable;
@@ -102,7 +101,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the configs
-		Stream.of(SimpleJob.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
+		Stream.of(Job.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
 		
 		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
 				.handleCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))

@@ -39,7 +39,6 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
-import dte.employme.job.SimpleJob;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.rewards.JobRewardService;
@@ -223,10 +222,10 @@ public class GoalCustomizationGUI extends ChestGui
 			Player player = (Player) event.getWhoClicked();
 			closeWithoutRefund(player);
 
-			Job job = new SimpleJob.Builder()
-					.by(player)
-					.of(createGoal())
-					.thatOffers(this.reward)
+			Job job = new Job.Builder()
+					.byEmployer(player)
+					.withGoal(createGoal())
+					.thatRewards(this.reward)
 					.build();
 
 			this.jobBoard.addJob(job);
