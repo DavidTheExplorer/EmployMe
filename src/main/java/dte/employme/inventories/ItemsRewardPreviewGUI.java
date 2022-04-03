@@ -10,7 +10,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import dte.employme.job.rewards.ItemsReward;
+import dte.employme.rewards.ItemsReward;
 import dte.employme.services.message.MessageService;
 
 public class ItemsRewardPreviewGUI extends ChestGui

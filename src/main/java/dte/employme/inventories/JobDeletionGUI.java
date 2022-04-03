@@ -24,9 +24,9 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.job.rewards.ItemsReward;
-import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.rewards.ItemsReward;
 import dte.employme.services.message.MessageService;
+import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobDeletionGUI extends ChestGui

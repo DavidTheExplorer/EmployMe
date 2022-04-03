@@ -1,4 +1,4 @@
-package dte.employme.job.addnotifiers;
+package dte.employme.addnotifiers;
 
 import org.bukkit.entity.Player;
 

@@ -16,9 +16,9 @@ import dte.employme.inventories.JobCreationGUI;
 import dte.employme.inventories.JobDeletionGUI;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.services.job.reward.JobRewardService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.services.rewards.JobRewardService;
 import net.milkbowl.vault.economy.Economy;
 
 @CommandAlias("employment|emp")

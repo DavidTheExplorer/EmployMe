@@ -9,7 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.job.rewards.Reward;
+import dte.employme.rewards.Reward;
 import dte.employme.utils.java.MapBuilder;
 
 @SerializableAs("Job")

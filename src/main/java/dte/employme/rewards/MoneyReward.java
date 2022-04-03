@@ -1,4 +1,4 @@
-package dte.employme.job.rewards;
+package dte.employme.rewards;
 
 import java.util.Map;
 

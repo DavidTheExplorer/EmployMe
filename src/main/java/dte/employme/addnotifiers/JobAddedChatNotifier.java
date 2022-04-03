@@ -1,4 +1,4 @@
-package dte.employme.job.addnotifiers;
+package dte.employme.addnotifiers;
 
 import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
