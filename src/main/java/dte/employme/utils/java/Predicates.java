@@ -4,9 +4,6 @@ import java.util.function.Predicate;
 
 public class Predicates
 {
-	//Container of static methods
-	private Predicates(){}
-
 	public static <T> Predicate<T> of(Predicate<T> predicate)
 	{
 		return predicate;

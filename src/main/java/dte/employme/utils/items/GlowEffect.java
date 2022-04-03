@@ -8,9 +8,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class GlowEffect
 {
-	//Container of static methods
-	private GlowEffect(){}
-
 	/**
 	 * Glows the provided {@code item} "without enchanting it" by injecting a useless enchantment to it(material dependent);
 	 * along with {@link ItemFlag.HIDE_ENCHANTS} to hide the trick (which also allows additional enchants to be added).

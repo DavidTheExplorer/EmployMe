@@ -6,9 +6,6 @@ import java.util.Optional;
 
 public class NumberUtils 
 {
-	//Container of static methods
-	private NumberUtils(){}
-
 	public static boolean isBetween(double number, double startInclusive, double endExclusive) 
 	{
 		return number >= startInclusive && number < endExclusive;

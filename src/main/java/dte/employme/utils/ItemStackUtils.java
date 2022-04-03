@@ -9,9 +9,6 @@ import dte.employme.utils.java.Pluraliser;
 
 public class ItemStackUtils
 {
-	//Container of static methods
-	private ItemStackUtils(){}
-
 	public static String describe(ItemStack item) 
 	{
 		return describe(item.getType(), item.getAmount());

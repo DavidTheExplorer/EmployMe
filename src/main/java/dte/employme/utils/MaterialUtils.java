@@ -22,9 +22,6 @@ import com.google.common.collect.Sets;
 
 public class MaterialUtils 
 {
-	//Container of static methods
-	private MaterialUtils(){}
-	
 	private static final Set<Material> UNOBTAINABLE = Sets.newHashSet(BARRIER, JIGSAW, STRUCTURE_BLOCK, STRUCTURE_VOID, SPAWNER, DEBUG_STICK, KNOWLEDGE_BOOK, BEDROCK);
 	
 	private static final Set<Material> OBTAINABLES = Arrays.stream(Material.values())
