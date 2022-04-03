@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.joining;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
-import dte.employme.board.listenable.ListenableJobBoard.JobCompleteListener;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageKey;
 import dte.employme.rewards.ItemsReward;

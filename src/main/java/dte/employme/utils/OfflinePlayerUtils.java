@@ -7,9 +7,6 @@ import org.bukkit.entity.Player;
 
 public class OfflinePlayerUtils 
 {
-	//Container of static methods
-	private OfflinePlayerUtils(){}
-	
 	public static void ifOnline(OfflinePlayer offlinePlayer, Consumer<Player> playerAction) 
 	{
 		if(offlinePlayer.isOnline())

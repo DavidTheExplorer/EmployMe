@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.board.JobBoard;
-import dte.employme.board.listenable.ListenableJobBoard.JobCompleteListener;
 import dte.employme.job.Job;
 import dte.employme.services.job.JobService;
 import dte.employme.services.playercontainer.PlayerContainerService;

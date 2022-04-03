@@ -19,9 +19,6 @@ import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 
 public class InventoryFrameworkUtils
 {
-	//Container of static methods
-	private InventoryFrameworkUtils(){}
-
 	public static Pane createRectangle(Priority priority, int x, int y, int length, int height, GuiItem item) 
 	{
 		OutlinePane pane = new OutlinePane(x, y, length, height, priority);

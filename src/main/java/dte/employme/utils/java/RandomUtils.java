@@ -13,9 +13,6 @@ import java.util.function.Predicate;
 
 public class RandomUtils
 {
-	//Container of static methods
-	private RandomUtils(){}
-	
 	/*
 	 * Numbers Methods
 	 */

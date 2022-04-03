@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
 import static dte.employme.messages.MessageKey.PREFIX;
 
 import dte.employme.board.JobBoard;
-import dte.employme.board.listenable.ListenableJobBoard.JobAddListener;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;
 

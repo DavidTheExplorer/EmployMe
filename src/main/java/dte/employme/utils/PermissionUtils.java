@@ -11,9 +11,6 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class PermissionUtils 
 {
-	//Container of static methods
-	private PermissionUtils(){}
-
 	public static Set<String> findPermissions(Permissible permissible, Predicate<String> tester) 
 	{
 		return permissible.getEffectivePermissions().stream()

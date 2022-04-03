@@ -1,4 +1,4 @@
-package dte.employme.board.forwarding;
+package dte.employme.board;
 
 import java.util.Iterator;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 
 public abstract class ForwardingJobBoard implements JobBoard

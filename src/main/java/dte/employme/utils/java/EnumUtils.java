@@ -7,9 +7,6 @@ import java.util.regex.Pattern;
 
 public class EnumUtils
 {
-	//Container of static methods
-	private EnumUtils(){}
-	
 	private static final String WORD_PATTERN = Pattern.quote("_");
 
 	/**

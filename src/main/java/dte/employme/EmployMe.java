@@ -22,6 +22,7 @@ import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.addnotifiers.AllJobsNotifier;
+import dte.employme.addnotifiers.DoNotNotify;
 import dte.employme.addnotifiers.JobAddedNotifier;
 import dte.employme.addnotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.SimpleJobBoard;
@@ -32,7 +33,6 @@ import dte.employme.board.listenable.JobCompletedMessagesListener;
 import dte.employme.board.listenable.JobGoalTransferListener;
 import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
-import dte.employme.board.listenable.SimpleListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.commands.sub.employment.EmploymentAddNotifierCommands;
 import dte.employme.commands.sub.employment.EmploymentContainerCommands;
@@ -43,13 +43,11 @@ import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.job.SimpleJob;
 import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.Placeholders;
 import dte.employme.reloadable.Reloadable;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
-import dte.employme.services.addnotifiers.DoNotNotify;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.addnotifiers.SimpleJobAddedNotifierService;
 import dte.employme.services.job.JobService;
@@ -102,7 +100,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the configs
-		Stream.of(SimpleJob.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
+		Stream.of(Job.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
 		
 		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
 				.handleCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
@@ -121,7 +119,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the global job board, services, factories, etc.
-		this.globalJobBoard = new SimpleListenableJobBoard(new SimpleJobBoard());
+		this.globalJobBoard = new ListenableJobBoard(new SimpleJobBoard());
 		
 		TranslatedMessageService translatedMessageService = new TranslatedMessageService(this.messagesConfig);
 		this.reloadables.add(translatedMessageService);
