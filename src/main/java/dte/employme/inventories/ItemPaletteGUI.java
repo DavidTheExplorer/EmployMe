@@ -34,9 +34,9 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
-import dte.employme.job.rewards.Reward;
-import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
+import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.MaterialUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.MapBuilder;

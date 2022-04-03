@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.job.Job;
-import dte.employme.job.rewards.ItemsReward;
 import dte.employme.messages.MessageBuilder;
+import dte.employme.rewards.ItemsReward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.java.EnumUtils;

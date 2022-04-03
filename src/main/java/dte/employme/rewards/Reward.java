@@ -1,4 +1,4 @@
-package dte.employme.job.rewards;
+package dte.employme.rewards;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;

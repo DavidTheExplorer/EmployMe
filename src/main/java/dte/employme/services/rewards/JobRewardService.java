@@ -1,8 +1,8 @@
-package dte.employme.services.job.reward;
+package dte.employme.services.rewards;
 
 import org.bukkit.OfflinePlayer;
 
-import dte.employme.job.rewards.Reward;
+import dte.employme.rewards.Reward;
 
 public interface JobRewardService 
 {

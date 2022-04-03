@@ -40,9 +40,9 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.job.SimpleJob;
-import dte.employme.job.rewards.Reward;
-import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
+import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 

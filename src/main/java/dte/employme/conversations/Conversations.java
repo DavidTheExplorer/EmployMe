@@ -7,9 +7,9 @@ import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
 
 import dte.employme.EmployMe;
-import dte.employme.job.rewards.Reward;
-import dte.employme.services.job.reward.JobRewardService;
+import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
+import dte.employme.services.rewards.JobRewardService;
 
 public class Conversations
 {

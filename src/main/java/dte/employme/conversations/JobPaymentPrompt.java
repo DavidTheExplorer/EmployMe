@@ -12,10 +12,10 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-import dte.employme.job.rewards.ItemsReward;
-import dte.employme.job.rewards.MoneyReward;
-import dte.employme.job.rewards.Reward;
 import dte.employme.messages.Placeholders;
+import dte.employme.rewards.ItemsReward;
+import dte.employme.rewards.MoneyReward;
+import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.NumberUtils;
