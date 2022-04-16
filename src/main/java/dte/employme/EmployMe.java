@@ -35,7 +35,6 @@ import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.commands.sub.employment.EmploymentAddNotifierCommands;
-import dte.employme.commands.sub.employment.EmploymentContainerCommands;
 import dte.employme.commands.sub.employment.EmploymentManageCommands;
 import dte.employme.commands.sub.employment.EmploymentSubscriptionCommands;
 import dte.employme.config.ConfigFile;
@@ -43,7 +42,6 @@ import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.Placeholders;
 import dte.employme.reloadable.Reloadable;
 import dte.employme.rewards.ItemsReward;
@@ -156,7 +154,6 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new PlayerContainerAbuseListener(this.playerContainerService));
 
 		setDisableListener(() -> 
 		{
@@ -258,10 +255,9 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, inventoryBoardDisplayer, this.reloadables));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.playerContainerService, inventoryBoardDisplayer, this.reloadables));
 		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService, this.jobIconFactory));
 		commandManager.registerCommand(new EmploymentAddNotifierCommands(this.jobAddedNotifierService, this.messageService));
-		commandManager.registerCommand(new EmploymentContainerCommands(this.playerContainerService));
 		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
 	}
 }
