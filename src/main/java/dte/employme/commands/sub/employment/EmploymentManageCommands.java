@@ -14,7 +14,6 @@ import co.aikar.commands.annotation.Subcommand;
 import dte.employme.board.JobBoard;
 import dte.employme.inventories.JobCreationGUI;
 import dte.employme.inventories.JobDeletionGUI;
-import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
@@ -29,16 +28,14 @@ public class EmploymentManageCommands extends BaseCommand
 	private final JobRewardService jobRewardService;
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
-	private final JobIconFactory jobIconFactory;
 	
-	public EmploymentManageCommands(JobBoard globalJobBoard, Economy economy, JobRewardService jobRewardService, MessageService messageService, PlayerContainerService playerContainerService, JobIconFactory jobIconFactory) 
+	public EmploymentManageCommands(JobBoard globalJobBoard, Economy economy, JobRewardService jobRewardService, MessageService messageService, PlayerContainerService playerContainerService) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.economy = economy;
 		this.jobRewardService = jobRewardService;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
-		this.jobIconFactory = jobIconFactory;
 	}
 
 	@Subcommand("offer")
@@ -56,6 +53,6 @@ public class EmploymentManageCommands extends BaseCommand
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobIconFactory, this.jobRewardService).show(player);
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobRewardService).show(player);
 	}
 }

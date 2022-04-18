@@ -40,7 +40,6 @@ import dte.employme.commands.sub.employment.EmploymentSubscriptionCommands;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
-import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.messages.Placeholders;
 import dte.employme.reloadable.Reloadable;
@@ -74,7 +73,6 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private JobRewardService jobRewardService;
-	private JobIconFactory jobIconFactory;
 	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	private List<Reloadable> reloadables = new ArrayList<>();
 
@@ -137,8 +135,6 @@ public class EmployMe extends ModernJavaPlugin
 		
 		if(this.jobsConfig == null)
 			return;
-		
-		this.jobIconFactory = new JobIconFactory(this.messageService);
 		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
@@ -253,10 +249,10 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
+		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService);
 		
 		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.playerContainerService, inventoryBoardDisplayer, this.reloadables));
-		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService, this.jobIconFactory));
+		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService));
 		commandManager.registerCommand(new EmploymentAddNotifierCommands(this.jobAddedNotifierService, this.messageService));
 		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
 	}

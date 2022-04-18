@@ -33,41 +33,36 @@ import dte.employme.utils.java.RomanNumeralsConverter;
 
 public class JobIconFactory
 {
-	private final MessageService messageService;
-	
-	public JobIconFactory(MessageService messageService) 
-	{
-		this.messageService = messageService;
-	}
-	
-	public ItemStack createFor(Job job) 
+	public static ItemStack create(Job job, MessageService messageService) 
 	{
 		List<String> lore = new ArrayList<>();
-		lore.addAll(this.messageService.getMessage(JOB_ICON_GOAL_INSTRUCTIONS)
+		
+		lore.addAll(messageService.getMessage(JOB_ICON_GOAL_INSTRUCTIONS)
 				.inject(GOAL, ItemStackUtils.describe(job.getGoal()))
 				.toList());
-		lore.addAll(getGoalEnchantmentsLore(job.getGoal()));
+		
+		lore.addAll(getGoalEnchantmentsLore(job.getGoal(), messageService));
 		lore.add(" ");
-		lore.add(describe(job.getReward()));
+		lore.add(describe(job.getReward(), messageService));
 		lore.add(" ");
 
 		return new ItemBuilder(job.getGoal().getType())
-				.named(this.messageService.getMessage(JOB_ICON_NAME).inject(EMPLOYER, job.getEmployer().getName()).first())
+				.named(messageService.getMessage(JOB_ICON_NAME).inject(EMPLOYER, job.getEmployer().getName()).first())
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.withLore(lore.toArray(new String[0]))
 				.createCopy();
 	}
 
-	private List<String> getGoalEnchantmentsLore(ItemStack goal)
+	private static List<String> getGoalEnchantmentsLore(ItemStack goal, MessageService messageService)
 	{
-		List<String> lore = new ArrayList<>();
 		Map<Enchantment, Integer> enchantments = EnchantmentUtils.getEnchantments(goal);
 
 		if(enchantments.isEmpty())
-			return lore;
-
+			return new ArrayList<>();
+		
+		List<String> lore = new ArrayList<>();
 		lore.add(" ");
-		lore.add(this.messageService.getMessage(JOB_ICON_ENCHANT_DESCRIPTION).first());
+		lore.add(messageService.getMessage(JOB_ICON_ENCHANT_DESCRIPTION).first());
 
 		enchantments.forEach((enchantment, level) -> 
 		{
@@ -80,16 +75,16 @@ public class JobIconFactory
 		return lore;
 	}
 
-	private String describe(Reward reward)
+	private static String describe(Reward reward, MessageService messageService)
 	{
 		if(reward instanceof MoneyReward)
-			return this.messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
+			return messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
 					.inject(MONEY_PAYMENT, String.format("%.2f", ((MoneyReward) reward).getPayment()))
-					.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
+					.inject(Placeholders.CURRENCY_SYMBOL, messageService.getMessage(CURRENCY_SYMBOL).first())
 					.first();
 
 		else if(reward instanceof ItemsReward)
-			return this.messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
+			return messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
 					.inject(ITEMS_AMOUNT, String.valueOf(((ItemsReward) reward).getItems().size()))
 					.first();
 

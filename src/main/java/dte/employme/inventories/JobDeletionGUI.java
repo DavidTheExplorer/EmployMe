@@ -34,17 +34,15 @@ public class JobDeletionGUI extends ChestGui
 	private final JobBoard jobBoard;
 	private final List<Job> jobsToDisplay;
 	private final MessageService messageService;
-	private final JobIconFactory jobIconFactory;
 	private final JobRewardService jobRewardService;
 
-	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobIconFactory jobIconFactory, JobRewardService jobRewardService) 
+	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobRewardService jobRewardService) 
 	{
 		super(6, messageService.getMessage(INVENTORY_JOB_DELETION_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.jobsToDisplay = jobsToDisplay;
 		this.messageService = messageService;
-		this.jobIconFactory = jobIconFactory;
 		this.jobRewardService = jobRewardService;
 
 		setOnTopClick(event -> event.setCancelled(true));
@@ -67,7 +65,7 @@ public class JobDeletionGUI extends ChestGui
 
 	private GuiItem createDeletionIcon(Job job) 
 	{
-		ItemStack item = new ItemBuilder(this.jobIconFactory.createFor(job))
+		ItemStack item = new ItemBuilder(JobIconFactory.create(job, this.messageService))
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
 						this.messageService.getMessage(INVENTORY_JOB_DELETION_DELETE_INSTRUCTION).first(),

@@ -20,16 +20,16 @@ import dte.employme.services.message.MessageService;
 public class PlayerJobsGUI extends ChestGui
 {
 	private final List<Job> jobsToDisplay;
+	private final MessageService messageService;
 	private final Comparator<Job> orderComparator;
-	private final JobIconFactory jobIconFactory;
 	
-	public PlayerJobsGUI(JobBoardGUI jobBoardGUI, MessageService messageService, List<Job> jobsToDisplay, Comparator<Job> orderComparator, JobIconFactory jobIconFactory)
+	public PlayerJobsGUI(JobBoardGUI jobBoardGUI, MessageService messageService, List<Job> jobsToDisplay, Comparator<Job> orderComparator)
 	{
 		super(6, messageService.getMessage(INVENTORY_PLAYER_JOBS_TITLE).first());
 		
 		this.jobsToDisplay = jobsToDisplay;
 		this.orderComparator = orderComparator;
-		this.jobIconFactory = jobIconFactory;
+		this.messageService = messageService;
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		setOnClose(event -> jobBoardGUI.show(event.getPlayer()));
@@ -46,7 +46,7 @@ public class PlayerJobsGUI extends ChestGui
 
 		this.jobsToDisplay.stream()
 		.sorted(this.orderComparator)
-		.map(this.jobIconFactory::createFor)
+		.map(job -> JobIconFactory.create(job, this.messageService))
 		.map(GuiItem::new)
 		.forEach(pane::addItem);
 

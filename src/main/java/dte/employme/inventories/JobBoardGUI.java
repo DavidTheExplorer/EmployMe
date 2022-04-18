@@ -42,9 +42,8 @@ public class JobBoardGUI extends ChestGui
 	private final Comparator<Job> orderComparator;
 	private final JobService jobService;
 	private final MessageService messageService;
-	private final JobIconFactory jobIconFactory;
 
-	public JobBoardGUI(Player player, JobBoard jobBoard, Comparator<Job> orderComparator, JobService jobService, MessageService messageService, JobIconFactory jobIconFactory)
+	public JobBoardGUI(Player player, JobBoard jobBoard, Comparator<Job> orderComparator, JobService jobService, MessageService messageService)
 	{
 		super(6, messageService.getMessage(INVENTORY_JOB_BOARD_TITLE).first());
 
@@ -53,7 +52,6 @@ public class JobBoardGUI extends ChestGui
 		this.orderComparator = orderComparator;
 		this.jobService = jobService;
 		this.messageService = messageService;
-		this.jobIconFactory = jobIconFactory;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createWalls(this, Priority.LOWEST));
@@ -85,7 +83,7 @@ public class JobBoardGUI extends ChestGui
 
 	private GuiItem createOfferIcon(Job job) 
 	{
-		ItemStack basicIcon = this.jobIconFactory.createFor(job);
+		ItemStack basicIcon = JobIconFactory.create(job, this.messageService);
 		boolean finished = this.jobService.hasFinished(this.player, job);
 
 		//add the status and ID to the lore
@@ -132,7 +130,7 @@ public class JobBoardGUI extends ChestGui
 		{
 			List<Job> playerJobs = this.jobBoard.getJobsOfferedBy(this.player.getUniqueId());
 			
-			new PlayerJobsGUI(this, this.messageService, playerJobs, this.orderComparator, this.jobIconFactory).show(this.player);
+			new PlayerJobsGUI(this, this.messageService, playerJobs, this.orderComparator).show(this.player);
 		});
 	}
 }
