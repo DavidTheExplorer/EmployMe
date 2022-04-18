@@ -33,41 +33,40 @@ public class SimplePlayerContainerService implements PlayerContainerService
 		this.rewardsContainersConfig = rewardsContainersConfig;
 		this.messageService = messageService;
 	}
-
+	
 	@Override
 	public PlayerContainerGUI getItemsContainer(UUID playerUUID)
 	{
-		String title = this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
-				.inject(CONTAINER_SUBJECT, "Items")
-				.first();
-		
-		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(title, this.messageService));
+		return this.itemsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(createContainerTitle("Items"), this.messageService));
 	}
-
+	
 	@Override
 	public PlayerContainerGUI getRewardsContainer(UUID playerUUID)
 	{
-		String title = this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
-				.inject(CONTAINER_SUBJECT, "Rewards")
-				.first();
-
-		return this.itemsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(title, this.messageService));
+		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(createContainerTitle("Rewards"), this.messageService));
 	}
-
+	
 	@Override
 	public void loadContainers() 
 	{
 		this.itemsContainers.putAll(loadContainers(this.itemsContainersConfig, "Items"));
 		this.rewardsContainers.putAll(loadContainers(this.rewardsContainersConfig, "Rewards"));
 	}
-
+	
 	@Override
 	public void saveContainers() 
 	{
 		saveContainers(this.itemsContainers, this.itemsContainersConfig);
 		saveContainers(this.rewardsContainers, this.rewardsContainersConfig);
 	}
-
+	
+	private String createContainerTitle(String subject) 
+	{
+		return this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
+				.inject(CONTAINER_SUBJECT, subject)
+				.first();
+	}
+	
 	private Map<UUID, PlayerContainerGUI> loadContainers(ConfigFile containersConfig, String subject) 
 	{
 		return containersConfig.getConfig().getKeys(false).stream()
@@ -84,7 +83,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 					return container;
 				}));
 	}
-
+	
 	private static void saveContainers(Map<UUID, PlayerContainerGUI> containers, ConfigFile containersConfig) 
 	{
 		containers.forEach((playerUUID, container) -> 
@@ -94,7 +93,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 			for(int i = 0; i < items.size(); i++) 
 				containersConfig.getConfig().set(playerUUID.toString() + "." + i, items.get(i)); 
 		});
-		
+
 		containersConfig.save(IOException::printStackTrace);
 	}
 }

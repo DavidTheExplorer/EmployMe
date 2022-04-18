@@ -1,15 +1,12 @@
 package dte.employme.inventories;
 
-import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_BACK;
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.stream.Collectors.toList;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,21 +28,21 @@ import dte.employme.utils.items.ItemBuilder;
 public class PlayerContainerGUI extends ChestGui
 {
 	private final MessageService messageService;
-	
+
 	private final PaginatedPane itemsPane;
-	private final Map<OutlinePane, Map<ItemStack, GuiItem>> panesItems = new HashMap<>();
 
 	private static final int ITEMS_PER_PAGE = 9 * 4;
 
 	public PlayerContainerGUI(String title, MessageService messageService) 
 	{
 		super(6, title);
-		
+
 		this.messageService = messageService;
 
 		this.itemsPane = new PaginatedPane(0, 0, 9, ITEMS_PER_PAGE / 9);
 		this.itemsPane.addPane(0, createPage());
-
+		
+		setOnTopClick(event -> event.setCancelled(true));
 		setAbuseListeners();
 		addPane(createPanelBackground());		
 		addPane(createControlPanel(this.itemsPane));
@@ -55,17 +52,16 @@ public class PlayerContainerGUI extends ChestGui
 
 	public void addItem(ItemStack item) 
 	{
-		GuiItem guiItem = new GuiItem(item);
 		OutlinePane lastPage = (OutlinePane) this.itemsPane.getPanes(this.itemsPane.getPages()-1).iterator().next();
-
-		if(lastPage.getItems().size() == ITEMS_PER_PAGE) 
+		
+		//if the last page is full
+		if(lastPage.getItems().size() == this.itemsPane.getHeight()) 
 		{
 			lastPage = createPage();
 			this.itemsPane.addPane(this.itemsPane.getPages(), lastPage);
 		}
 
-		lastPage.addItem(guiItem);
-		this.panesItems.get(lastPage).put(item, guiItem);
+		lastPage.addItem(createStoredItem(item, lastPage));
 	}
 
 	public List<ItemStack> getStoredItems()
@@ -80,7 +76,7 @@ public class PlayerContainerGUI extends ChestGui
 		MasonryPane background = new MasonryPane(0, 4, 9, 2, Priority.LOWEST);
 		background.addPane(createRectangle(Priority.LOWEST, 0, 4, 9, 1, new GuiItem(createWall(Material.GRAY_STAINED_GLASS_PANE))));
 		background.addPane(createRectangle(Priority.LOWEST, 0, 5, 9, 1, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
-		background.setOnClick(event -> event.setCancelled(true));
+
 
 		return background;
 	}
@@ -88,90 +84,17 @@ public class PlayerContainerGUI extends ChestGui
 	private Pane createControlPanel(PaginatedPane itemsPane) 
 	{
 		OutlinePane panel = new OutlinePane(2, 5, 9, 1, Priority.LOW);
-		panel.setOnClick(event -> event.setCancelled(true));
-		panel.setOrientation(HORIZONTAL);
 		panel.setGap(3);
-		
+
 		panel.addItem(createBackButton("MHF_ArrowLeft", itemsPane));
 		panel.addItem(createNextButton("MHF_ArrowRight", itemsPane));
-		
+
 		return panel;
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	private void setAbuseListeners() 
-	{
-		setOnBottomClick(event ->
-		{
-			if(event.isShiftClick())
-				event.setCancelled(true);
-		});
-
-		setOnTopClick(event ->
-		{
-			event.setCancelled(true);
-			
-			InventoryView view = event.getView();
-
-			if(event.isShiftClick() && event.getClickedInventory() == view.getBottomInventory()) 
-				event.setCancelled(true);
-
-			if(event.getClickedInventory() == view.getTopInventory() && event.getCursor() != null)
-			{
-				switch(event.getAction())
-				{
-				case PLACE_ALL:
-				case PLACE_ONE:
-				case PLACE_SOME:
-				case HOTBAR_SWAP:
-					event.setCancelled(true);
-				}
-			}
-		});
-
-		setOnTopDrag(event -> 
-		{
-			if(event.getOldCursor() == null)
-				return;
-
-			event.setCancelled(true);
-		});
 	}
 
 	private OutlinePane createPage() 
 	{
-		OutlinePane page = new OutlinePane(0, 0, 9, ITEMS_PER_PAGE / 9);
-		page.setOrientation(HORIZONTAL);
-
-		page.setOnClick(event -> 
-		{
-			ItemStack item = event.getCurrentItem();
-
-			if(item == null)
-				return;
-			
-			if(!event.getWhoClicked().getInventory().addItem(item).isEmpty())
-				return;
-			
-			//remove the clicked item
-			Map<ItemStack, GuiItem> pageItems = this.panesItems.get(page);
-			page.removeItem(pageItems.get(item));
-			pageItems.remove(item);
-			
-			if(pageItems.isEmpty() && this.itemsPane.getPages() > 1)
-			{
-				int previousPage = this.itemsPane.getPage() == 0 ? 0 : this.itemsPane.getPage()-1;
-
-				this.itemsPane.deletePage(this.itemsPane.getPage());
-				this.itemsPane.setPage(previousPage);
-			}
-
-			update();
-		});
-
-		this.panesItems.put(page, new HashMap<>());
-
-		return page;
+		return new OutlinePane(0, 0, 9, this.itemsPane.getHeight());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -207,6 +130,76 @@ public class PlayerContainerGUI extends ChestGui
 
 			itemsPane.setPage(itemsPane.getPage()-1);
 			update();
+		});
+	}
+
+	private GuiItem createStoredItem(ItemStack item, OutlinePane page) 
+	{
+		GuiItem guiItem = new GuiItem(item);
+
+		guiItem.setAction(event -> 
+		{
+			boolean givenToPlayer = !event.getWhoClicked().getInventory().addItem(item).isEmpty();
+
+			//do nothing if the player can't get the item
+			if(givenToPlayer)
+				return;
+
+			//remove the clicked item
+			page.removeItem(guiItem);
+
+			//delete the page if it's now empty, unless it's the only page left
+			if(page.getItems().isEmpty() && this.itemsPane.getPages() > 1)
+			{
+				int previousPage = this.itemsPane.getPage() == 0 ? 0 : this.itemsPane.getPage()-1;
+
+				this.itemsPane.deletePage(this.itemsPane.getPage());
+				this.itemsPane.setPage(previousPage);
+			}
+
+			update();
+		});
+
+		return guiItem;
+	}
+	
+	@SuppressWarnings("incomplete-switch")
+	private void setAbuseListeners() 
+	{
+		setOnBottomClick(event ->
+		{
+			if(event.isShiftClick())
+				event.setCancelled(true);
+		});
+
+		setOnTopClick(event ->
+		{
+			event.setCancelled(true);
+
+			InventoryView view = event.getView();
+
+			if(event.isShiftClick() && event.getClickedInventory() == view.getBottomInventory()) 
+				event.setCancelled(true);
+
+			if(event.getClickedInventory() == view.getTopInventory() && event.getCursor() != null)
+			{
+				switch(event.getAction())
+				{
+				case PLACE_ALL:
+				case PLACE_ONE:
+				case PLACE_SOME:
+				case HOTBAR_SWAP:
+					event.setCancelled(true);
+				}
+			}
+		});
+
+		setOnTopDrag(event -> 
+		{
+			if(event.getOldCursor() == null)
+				return;
+
+			event.setCancelled(true);
 		});
 	}
 }
