@@ -48,8 +48,8 @@ public class InventoryFrameworkUtils
 	public static StaticPane createItemPane(int x, int y, Priority priority, GuiItem item) 
 	{
 		StaticPane pane = new StaticPane(x, y, 1, 1, priority);
-		pane.addItem(item, x, y);
-		
+		pane.addItem(item, 0, 0);
+
 		return pane;
 	}
 
