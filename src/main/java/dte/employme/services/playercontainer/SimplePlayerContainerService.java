@@ -56,8 +56,8 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	@Override
 	public void saveContainers() 
 	{
-		saveContainers(this.itemsContainers, this.itemsContainersConfig);
-		saveContainers(this.rewardsContainers, this.rewardsContainersConfig);
+		saveContainers(this.itemsContainersConfig, this.itemsContainers);
+		saveContainers(this.rewardsContainersConfig, this.rewardsContainers);
 	}
 	
 	private String createContainerTitle(String subject) 
@@ -84,16 +84,18 @@ public class SimplePlayerContainerService implements PlayerContainerService
 				}));
 	}
 	
-	private static void saveContainers(Map<UUID, PlayerContainerGUI> containers, ConfigFile containersConfig) 
+	private static void saveContainers(ConfigFile containersConfig, Map<UUID, PlayerContainerGUI> containers) 
 	{
+		containersConfig.clear(IOException::printStackTrace);
+		
 		containers.forEach((playerUUID, container) -> 
 		{
 			List<ItemStack> items = container.getStoredItems();
-
+			
 			for(int i = 0; i < items.size(); i++) 
 				containersConfig.getConfig().set(playerUUID.toString() + "." + i, items.get(i)); 
 		});
-
+		
 		containersConfig.save(IOException::printStackTrace);
 	}
 }
