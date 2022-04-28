@@ -7,7 +7,6 @@ import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static org.bukkit.ChatColor.RED;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,7 +40,6 @@ import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
 import dte.employme.job.Job;
 import dte.employme.messages.Placeholders;
-import dte.employme.reloadable.Reloadable;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
@@ -73,7 +71,6 @@ public class EmployMe extends ModernJavaPlugin
 	private MessageService messageService;
 	private JobRewardService jobRewardService;
 	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
-	private List<Reloadable> reloadables = new ArrayList<>();
 
 	private static EmployMe INSTANCE;
 
@@ -116,9 +113,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new ListenableJobBoard(new SimpleJobBoard());
 		
-		TranslatedMessageService translatedMessageService = new TranslatedMessageService(this.messagesConfig);
-		this.reloadables.add(translatedMessageService);
-		this.messageService = new ColoredMessageService(translatedMessageService);
+		this.messageService = new ColoredMessageService(new TranslatedMessageService(this.messagesConfig));
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -244,7 +239,7 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.playerContainerService, inventoryBoardDisplayer, this.reloadables));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.playerContainerService, inventoryBoardDisplayer));
 		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService));
 		commandManager.registerCommand(new EmploymentAddNotifierCommands(this.jobAddedNotifierService, this.messageService));
 		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
