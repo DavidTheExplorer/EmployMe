@@ -7,11 +7,11 @@ import java.util.Map;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
+import dte.employme.inventories.PlayerContainerGUI;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
@@ -40,7 +40,7 @@ public class ItemsReward implements Reward, Iterable<ItemStack>
 	@Override
 	public void giveTo(OfflinePlayer offlinePlayer)
 	{
-		Inventory rewardsContainer = this.playerContainerService.getRewardsContainer(offlinePlayer.getUniqueId());
+		PlayerContainerGUI rewardsContainer = this.playerContainerService.getRewardsContainer(offlinePlayer.getUniqueId());
 		this.items.forEach(rewardsContainer::addItem);
 	}
 	

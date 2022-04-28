@@ -1,6 +1,5 @@
 package dte.employme;
 
-import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
 import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
@@ -35,15 +34,12 @@ import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.commands.sub.employment.EmploymentAddNotifierCommands;
-import dte.employme.commands.sub.employment.EmploymentContainerCommands;
 import dte.employme.commands.sub.employment.EmploymentManageCommands;
 import dte.employme.commands.sub.employment.EmploymentSubscriptionCommands;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
-import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
-import dte.employme.listeners.PlayerContainerAbuseListener;
 import dte.employme.messages.Placeholders;
 import dte.employme.reloadable.Reloadable;
 import dte.employme.rewards.ItemsReward;
@@ -76,7 +72,6 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private JobRewardService jobRewardService;
-	private JobIconFactory jobIconFactory;
 	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	private List<Reloadable> reloadables = new ArrayList<>();
 
@@ -140,8 +135,6 @@ public class EmployMe extends ModernJavaPlugin
 		if(this.jobsConfig == null)
 			return;
 		
-		this.jobIconFactory = new JobIconFactory(this.messageService);
-		
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
 		this.jobService.loadJobs();
 
@@ -156,7 +149,6 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
-		registerListeners(new PlayerContainerAbuseListener(this.playerContainerService));
 
 		setDisableListener(() -> 
 		{
@@ -202,12 +194,6 @@ public class EmployMe extends ModernJavaPlugin
 		{
 			if(!this.jobSubscriptionService.isSubscribedTo(context.getPlayer().getUniqueId(), material))
 				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL).first(), false);
-		});
-		
-		commandManager.getCommandConditions().addCondition("Global Jobs Board Not Full", context -> 
-		{
-			if(this.globalJobBoard.getOfferedJobs().size() == ((6*9)-26)) 
-				throw new ConditionFailedException(this.messageService.getMessage(GLOBAL_JOB_BOARD_IS_FULL).first());
 		});
 		
 		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
@@ -256,12 +242,11 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(Job.ORDER_BY_GOAL_NAME, this.jobService, this.messageService, this.jobIconFactory);
+		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, inventoryBoardDisplayer, this.reloadables));
-		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService, this.jobIconFactory));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.playerContainerService, inventoryBoardDisplayer, this.reloadables));
+		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService));
 		commandManager.registerCommand(new EmploymentAddNotifierCommands(this.jobAddedNotifierService, this.messageService));
-		commandManager.registerCommand(new EmploymentContainerCommands(this.playerContainerService));
 		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
 	}
 }

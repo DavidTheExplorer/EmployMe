@@ -2,14 +2,12 @@ package dte.employme.services.playercontainer;
 
 import java.util.UUID;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
+import dte.employme.inventories.PlayerContainerGUI;
 
 public interface PlayerContainerService
 {
-	Inventory getItemsContainer(UUID playerUUID);
-	Inventory getRewardsContainer(UUID playerUUID);
-	boolean isContainer(InventoryView view);
+	PlayerContainerGUI getItemsContainer(UUID playerUUID);
+	PlayerContainerGUI getRewardsContainer(UUID playerUUID);
 	
 	void loadContainers();
 	void saveContainers();

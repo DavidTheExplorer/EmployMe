@@ -47,7 +47,7 @@ public class ConfigFile
 	{
 		//normalize the path
 		path = path.replace("/", File.separator);
-		
+
 		if(!path.endsWith(".yml"))
 			path += ".yml";
 
@@ -55,7 +55,7 @@ public class ConfigFile
 
 		if(isResource && !file.exists())
 			EmployMe.getInstance().saveResource(path, false);
-		
+
 		return new ConfigFile(file);
 	}
 
@@ -113,6 +113,26 @@ public class ConfigFile
 		this.config.save(this.file);
 	}
 
+	public boolean clear(Consumer<IOException> exceptionHandler) 
+	{
+		try 
+		{
+			clear();
+			return true;
+		}
+		catch(IOException exception) 
+		{
+			exceptionHandler.accept(exception);
+			return false;
+		}
+	}
+
+	public void clear() throws IOException
+	{
+		this.config.getKeys(false).forEach(key -> this.config.set(key, null));
+		save();
+	}
+
 	public boolean save(Consumer<IOException> exceptionHandler) 
 	{
 		try 
@@ -120,13 +140,13 @@ public class ConfigFile
 			save();
 			return true;
 		}
-		catch (IOException exception) 
+		catch(IOException exception) 
 		{
 			exceptionHandler.accept(exception);
 			return false;
 		}
 	}
-	
+
 	public void reload() 
 	{
 		this.config = YamlConfiguration.loadConfiguration(this.file);

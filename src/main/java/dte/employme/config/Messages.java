@@ -7,7 +7,6 @@ import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
 import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
 import static dte.employme.messages.MessageKey.GET;
-import static dte.employme.messages.MessageKey.GLOBAL_JOB_BOARD_IS_FULL;
 import static dte.employme.messages.MessageKey.GOAL;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
@@ -38,6 +37,7 @@ import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COM
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_GUI_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE;
@@ -45,6 +45,8 @@ import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INSTRUCTION;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_BACK;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE;
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_TITLE;
 import static dte.employme.messages.MessageKey.ITEMS;
 import static dte.employme.messages.MessageKey.ITEMS_CONTAINER_DESCRIPTION;
@@ -84,6 +86,8 @@ import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -117,9 +121,8 @@ public class Messages
 			.put(JOB_COMPLETED, "&aYou successfully completed this Job!")
 			.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment myrewards\"")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs!")
-			.put(GLOBAL_JOB_BOARD_IS_FULL, "&cNot enough room for additional Jobs.")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! Please delete one to proceed.")
-			.put(JOB_CANCELLED_REWARD_REFUNDED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment myrewards\"&f.")
+			.put(JOB_CANCELLED_REWARD_REFUNDED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
 
 			//Job Added Notifiers
 			.put(JOB_ADDED_NOTIFIER_NOT_FOUND, "&cNo notifier named '%job added notifier%' was found.")
@@ -148,11 +151,16 @@ public class Messages
 			.put(CURRENCY_SYMBOL, "$")
 			.put(PLUGIN_RELOADED, "&fReload completed!")
 
-			//Players Containers
+			//Job Containers GUI
+			.put(INVENTORY_JOB_CONTAINERS_GUI_TITLE, "Personal Job Containers")
 			.put(ITEMS_CONTAINER_DESCRIPTION, "&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here.")
 			.put(REWARDS_CONTAINER_DESCRIPTION, "&fThis is where Reward Items are stored", "&fafter you complete a job that pays them.")
 			.put(CONTAINER_CLAIM_INSTRUCTION, "Claim your %container subject%:")
 			.put(CONTAINER_HELP_ITEM_NAME, "&aHelp")
+			
+			//Player Container GUI
+			.put(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE, GREEN + "Next Page")
+			.put(INVENTORY_PLAYER_CONTAINER_BACK, RED + "Back")
 
 			//Job Icon
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
