@@ -28,10 +28,7 @@ public class ConfigFile
 		this.file = file;
 		reload();
 	}
-
-	/*
-	 * factory methods
-	 */
+	
 	public static ConfigFile byPath(String path) 
 	{
 		return byPath(path, false);
@@ -44,7 +41,6 @@ public class ConfigFile
 
 	private static ConfigFile byPath(String path, boolean isResource)
 	{
-		//normalize the path
 		path = path.replace("/", File.separator);
 
 		if(!path.endsWith(".yml"))
