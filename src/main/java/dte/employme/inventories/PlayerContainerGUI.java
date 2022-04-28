@@ -2,10 +2,11 @@ package dte.employme.inventories;
 
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_BACK;
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE;
-import static dte.employme.utils.InventoryFrameworkUtils.BACK_BUTTON;
-import static dte.employme.utils.InventoryFrameworkUtils.NEXT_BUTTON;
-import static dte.employme.utils.InventoryFrameworkUtils.createBackButtonListener;
-import static dte.employme.utils.InventoryFrameworkUtils.createNextButtonListener;
+import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
+import static dte.employme.utils.InventoryFrameworkUtils.nextButtonBuilder;
+import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
+import static dte.employme.utils.InventoryFrameworkUtils.nextButtonListener;
+import static dte.employme.utils.InventoryFrameworkUtils.createPage;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.stream.Collectors.toList;
@@ -24,6 +25,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.InventoryFrameworkUtils;
 
 public class PlayerContainerGUI extends ChestGui
 {
@@ -38,8 +40,8 @@ public class PlayerContainerGUI extends ChestGui
 
 		this.messageService = messageService;
 
-		this.itemsPane = createItemsPane();
-		addPage();
+		this.itemsPane = new PaginatedPane(0, 0, 9, ITEMS_PER_PAGE / 9, Priority.LOWEST);
+		this.itemsPane.addPane(0, createPage(this.itemsPane));
 
 		setOnTopClick(event -> event.setCancelled(true));
 		setAbuseListeners();	
@@ -51,12 +53,7 @@ public class PlayerContainerGUI extends ChestGui
 
 	public void addItem(ItemStack item) 
 	{
-		OutlinePane lastPage = (OutlinePane) this.itemsPane.getPanes(this.itemsPane.getPages()-1).iterator().next();
-
-		if(lastPage.getItems().size() == ITEMS_PER_PAGE) 
-			lastPage = addPage();
-
-		lastPage.addItem(createStoredItem(item, lastPage));
+		InventoryFrameworkUtils.addItem(lastPage -> createStoredItem(item, lastPage), this.itemsPane, this);
 	}
 
 	public List<ItemStack> getStoredItems()
@@ -72,29 +69,16 @@ public class PlayerContainerGUI extends ChestGui
 		panel.setGap(3);
 
 		panel.addItem(new GuiItemBuilder()
-				.forItem(BACK_BUTTON.named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_BACK).first()).createCopy())
-				.whenClicked(createBackButtonListener(this, this.itemsPane))
+				.forItem(backButtonBuilder().named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_BACK).first()).createCopy())
+				.whenClicked(backButtonListener(this, this.itemsPane))
 				.build());
 
 		panel.addItem(new GuiItemBuilder()
-				.forItem(NEXT_BUTTON.named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE).first()).createCopy())
-				.whenClicked(createNextButtonListener(this, this.itemsPane))
+				.forItem(nextButtonBuilder().named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE).first()).createCopy())
+				.whenClicked(nextButtonListener(this, this.itemsPane))
 				.build());
 
 		return panel;
-	}
-
-	private PaginatedPane createItemsPane() 
-	{
-		return new PaginatedPane(0, 0, 9, ITEMS_PER_PAGE / 9);
-	}
-
-	private OutlinePane addPage() 
-	{
-		OutlinePane page = new OutlinePane(0, 0, 9, this.itemsPane.getHeight());
-		this.itemsPane.addPane(this.itemsPane.getPages(), page);
-
-		return page;
 	}
 
 	private GuiItem createStoredItem(ItemStack item, OutlinePane page) 

@@ -40,7 +40,6 @@ public class EmploymentManageCommands extends BaseCommand
 
 	@Subcommand("offer")
 	@Description("Offer a new Job to the public.")
-	@Conditions("Global Jobs Board Not Full")
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{

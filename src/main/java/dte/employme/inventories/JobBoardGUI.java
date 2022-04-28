@@ -1,17 +1,22 @@
 package dte.employme.inventories;
 
-import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_BACK;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
+import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
+import static dte.employme.utils.InventoryFrameworkUtils.nextButtonBuilder;
+import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
+import static dte.employme.utils.InventoryFrameworkUtils.nextButtonListener;
+import static dte.employme.utils.InventoryFrameworkUtils.createPage;
 import static dte.employme.utils.InventoryFrameworkUtils.createWalls;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.WHITE;
 
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,9 +28,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
@@ -33,54 +38,64 @@ import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.InventoryFrameworkUtils;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobBoardGUI extends ChestGui
 {
 	private final Player player;
 	private final JobBoard jobBoard;
-	private final Comparator<Job> orderComparator;
 	private final JobService jobService;
 	private final MessageService messageService;
+	
+	private final PaginatedPane jobsPane;
 
-	public JobBoardGUI(Player player, JobBoard jobBoard, Comparator<Job> orderComparator, JobService jobService, MessageService messageService)
+	public JobBoardGUI(Player player, JobBoard jobBoard, JobService jobService, MessageService messageService)
 	{
 		super(6, messageService.getMessage(INVENTORY_JOB_BOARD_TITLE).first());
 
 		this.player = player;
 		this.jobBoard = jobBoard;
-		this.orderComparator = orderComparator;
 		this.jobService = jobService;
 		this.messageService = messageService;
+		
+		this.jobsPane = new PaginatedPane(1, 1, 7, 4, Priority.LOWEST);
+		this.jobsPane.addPane(0, createPage(this.jobsPane));
+		this.jobBoard.getOfferedJobs().forEach(this::addJob);
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createWalls(this, Priority.LOWEST));
-		addPane(createJobsPane());
-		addPane(createPersonalJobsPane());
+		addPane(createPanel());
+		addPane(this.jobsPane);
 		update();
 	}
-
-	private Pane createJobsPane() 
+	
+	public void addJob(Job job) 
 	{
-		OutlinePane pane = new OutlinePane(1, 1, 7, 5, Priority.LOW);
-		pane.setOrientation(HORIZONTAL);
-
-		this.jobBoard.getOfferedJobs().stream()
-		.sorted(this.orderComparator)
-		.map(this::createOfferIcon)
-		.forEach(pane::addItem);
-
-		return pane;
+		InventoryFrameworkUtils.addItem(createOfferIcon(job), this.jobsPane, this);
 	}
 	
-	private Pane createPersonalJobsPane() 
+	private Pane createPanel() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH); //for some reason LOW/NORMAL don't work
-		pane.addItem(createPersonalJobsItem(), 4, 5);
+		OutlinePane panel = new OutlinePane(1, 5, 9, 1, Priority.LOW);
+		panel.setGap(2);
 		
-		return pane;
+		panel.addItem(new GuiItemBuilder()
+				.forItem(backButtonBuilder().named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_BACK).first()).createCopy())
+				.whenClicked(backButtonListener(this, this.jobsPane))
+				.build());
+		
+		panel.addItem(createPersonalJobsItem());
+		
+		panel.addItem(new GuiItemBuilder()
+				.forItem(nextButtonBuilder().named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE).first()).createCopy())
+				.whenClicked(nextButtonListener(this, this.jobsPane))
+				.build());
+		
+		return panel;
 	}
-
+	
 	private GuiItem createOfferIcon(Job job) 
 	{
 		ItemStack basicIcon = JobIconFactory.create(job, this.messageService);
@@ -130,7 +145,7 @@ public class JobBoardGUI extends ChestGui
 		{
 			List<Job> playerJobs = this.jobBoard.getJobsOfferedBy(this.player.getUniqueId());
 			
-			new PlayerJobsGUI(this, this.messageService, playerJobs, this.orderComparator).show(this.player);
+			new PlayerJobsGUI(this, this.messageService, playerJobs).show(this.player);
 		});
 	}
 }

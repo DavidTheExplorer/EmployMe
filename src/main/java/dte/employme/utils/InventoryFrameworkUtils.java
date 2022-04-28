@@ -5,6 +5,7 @@ import static dte.employme.utils.InventoryUtils.createWall;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -27,14 +28,6 @@ import dte.employme.utils.items.ItemBuilder;
 
 public class InventoryFrameworkUtils
 {
-	@SuppressWarnings("deprecation")
-	public static final ItemBuilder
-	BACK_BUTTON = new ItemBuilder(Material.PLAYER_HEAD)
-	.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer("MHF_ArrowLeft"))),
-
-	NEXT_BUTTON = new ItemBuilder(Material.PLAYER_HEAD)
-	.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer("MHF_ArrowRight")));
-
 	/*
 	 * Shapes
 	 */
@@ -56,6 +49,7 @@ public class InventoryFrameworkUtils
 	{
 		PatternPane background = new PatternPane(0, 0, 9, gui.getRows(), createWallsPattern(gui));
 		background.bindItem('W', new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE)));
+		background.setPriority(priority);
 
 		return background;
 	}
@@ -63,7 +57,7 @@ public class InventoryFrameworkUtils
 
 
 	/*
-	 * Single Item
+	 * Single Item Pane
 	 */
 	public static StaticPane createItemPane(int x, int y, GuiItem item) 
 	{
@@ -83,7 +77,7 @@ public class InventoryFrameworkUtils
 	/*
 	 * InventoryClickEvent Handlers
 	 */
-	public static Consumer<InventoryClickEvent> createBackButtonListener(Gui gui, PaginatedPane pages)
+	public static Consumer<InventoryClickEvent> backButtonListener(Gui gui, PaginatedPane pages)
 	{
 		return event -> 
 		{
@@ -95,7 +89,7 @@ public class InventoryFrameworkUtils
 		};
 	}
 
-	public static Consumer<InventoryClickEvent> createNextButtonListener(Gui gui, PaginatedPane pages)
+	public static Consumer<InventoryClickEvent> nextButtonListener(Gui gui, PaginatedPane pages)
 	{
 		return event -> 
 		{
@@ -106,9 +100,9 @@ public class InventoryFrameworkUtils
 			gui.update();
 		};
 	}
-	
 
-	
+
+
 	/*
 	 * Patterns
 	 */
@@ -123,5 +117,53 @@ public class InventoryFrameworkUtils
 		pattern.add(StringUtils.repeat("W", 9));
 
 		return new Pattern(pattern.toArray(new String[0]));
+	}
+
+
+
+	/*
+	 * PaginatedPane
+	 */
+	public static OutlinePane createPage(PaginatedPane pages) 
+	{
+		return new OutlinePane(0, 0, pages.getLength(), pages.getHeight());
+	}
+
+	public static void addItem(GuiItem item, PaginatedPane pages, Gui gui) 
+	{
+		addItem(lastPage -> item, pages, gui);
+	}
+
+	public static void addItem(Function<OutlinePane, GuiItem> itemByLastPage, PaginatedPane pages, Gui gui) 
+	{
+		OutlinePane lastPage = (OutlinePane) pages.getPanes(pages.getPages()-1).iterator().next();
+
+		if(lastPage.getItems().size() == (pages.getHeight() * pages.getLength()))
+		{
+			lastPage = createPage(pages);
+			pages.addPane(pages.getPages(), lastPage);
+		}
+
+		lastPage.addItem(itemByLastPage.apply(lastPage));
+		gui.update();
+	}
+	
+	
+	
+	/*
+	 * Items
+	 */
+	@SuppressWarnings("deprecation")
+	public static ItemBuilder backButtonBuilder() 
+	{
+		return new ItemBuilder(Material.PLAYER_HEAD)
+				.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer("MHF_ArrowLeft")));
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static ItemBuilder nextButtonBuilder() 
+	{
+		return new ItemBuilder(Material.PLAYER_HEAD)
+				.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer("MHF_ArrowRight")));
 	}
 }

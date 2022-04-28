@@ -4,7 +4,6 @@ import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orienta
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createWalls;
 
-import java.util.Comparator;
 import java.util.List;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -21,14 +20,12 @@ public class PlayerJobsGUI extends ChestGui
 {
 	private final List<Job> jobsToDisplay;
 	private final MessageService messageService;
-	private final Comparator<Job> orderComparator;
 	
-	public PlayerJobsGUI(JobBoardGUI jobBoardGUI, MessageService messageService, List<Job> jobsToDisplay, Comparator<Job> orderComparator)
+	public PlayerJobsGUI(JobBoardGUI jobBoardGUI, MessageService messageService, List<Job> jobsToDisplay)
 	{
 		super(6, messageService.getMessage(INVENTORY_PLAYER_JOBS_TITLE).first());
 		
 		this.jobsToDisplay = jobsToDisplay;
-		this.orderComparator = orderComparator;
 		this.messageService = messageService;
 		
 		setOnTopClick(event -> event.setCancelled(true));
@@ -45,7 +42,6 @@ public class PlayerJobsGUI extends ChestGui
 		pane.setOrientation(HORIZONTAL);
 
 		this.jobsToDisplay.stream()
-		.sorted(this.orderComparator)
 		.map(job -> JobIconFactory.create(job, this.messageService))
 		.map(GuiItem::new)
 		.forEach(pane::addItem);

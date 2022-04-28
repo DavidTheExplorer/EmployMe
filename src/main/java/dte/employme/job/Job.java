@@ -1,8 +1,5 @@
 package dte.employme.job;
 
-import static java.util.Comparator.comparing;
-
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -22,10 +19,6 @@ public class Job implements ConfigurationSerializable
 	private final OfflinePlayer employer;
 	private final ItemStack goal;
 	private final Reward reward;
-	
-	public static final Comparator<Job>
-	ORDER_BY_EMPLOYER_NAME = comparing(job -> job.getEmployer().getName().toLowerCase()),
-	ORDER_BY_GOAL_NAME = comparing(job -> job.getGoal().getType().name());
 
 	private Job(Builder builder) 
 	{
