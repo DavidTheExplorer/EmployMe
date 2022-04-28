@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -23,16 +22,13 @@ public class ConfigFile
 	{
 		PLUGIN_FOLDER.mkdirs();
 	}
-
+	
 	private ConfigFile(File file) 
 	{
 		this.file = file;
 		reload();
 	}
-
-	/*
-	 * factory methods
-	 */
+	
 	public static ConfigFile byPath(String path) 
 	{
 		return byPath(path, false);
@@ -45,7 +41,6 @@ public class ConfigFile
 
 	private static ConfigFile byPath(String path, boolean isResource)
 	{
-		//normalize the path
 		path = path.replace("/", File.separator);
 
 		if(!path.endsWith(".yml"))
@@ -58,10 +53,7 @@ public class ConfigFile
 
 		return new ConfigFile(file);
 	}
-
-	/*
-	 * creation methods
-	 */
+	
 	public static void createIfAbsent(ConfigFile config) throws IOException
 	{
 		if(config.exists()) 
@@ -70,20 +62,6 @@ public class ConfigFile
 		File file = config.getFile();
 		file.getParentFile().mkdirs();
 		file.createNewFile();
-	}
-
-	public static boolean createIfAbsent(ConfigFile config, Consumer<IOException> exceptionHandler)
-	{
-		try
-		{
-			createIfAbsent(config);
-			return true;
-		} 
-		catch (IOException exception) 
-		{
-			exceptionHandler.accept(exception);
-			return false;
-		}
 	}
 
 	public YamlConfiguration getConfig() 
@@ -113,38 +91,10 @@ public class ConfigFile
 		this.config.save(this.file);
 	}
 
-	public boolean clear(Consumer<IOException> exceptionHandler) 
-	{
-		try 
-		{
-			clear();
-			return true;
-		}
-		catch(IOException exception) 
-		{
-			exceptionHandler.accept(exception);
-			return false;
-		}
-	}
-
 	public void clear() throws IOException
 	{
 		this.config.getKeys(false).forEach(key -> this.config.set(key, null));
 		save();
-	}
-
-	public boolean save(Consumer<IOException> exceptionHandler) 
-	{
-		try 
-		{
-			save();
-			return true;
-		}
-		catch(IOException exception) 
-		{
-			exceptionHandler.accept(exception);
-			return false;
-		}
 	}
 
 	public void reload() 

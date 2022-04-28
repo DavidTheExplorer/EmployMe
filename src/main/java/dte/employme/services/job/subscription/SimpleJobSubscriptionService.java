@@ -72,7 +72,14 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 		.collect(toMap(UUID::toString, this::getSubscribedMaterialsNames))
 		.forEach((stringUUID, goalsNames) -> this.subscriptionsConfig.getConfig().set(stringUUID, goalsNames));
 
-		this.subscriptionsConfig.save(IOException::printStackTrace);
+		try 
+		{
+			this.subscriptionsConfig.save();
+		}
+		catch(IOException exception) 
+		{
+			exception.printStackTrace();
+		}
 	}
 	
 	private String getSubscribedMaterialsNames(UUID playerUUID) 

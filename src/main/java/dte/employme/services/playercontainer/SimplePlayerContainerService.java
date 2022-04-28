@@ -86,16 +86,24 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	
 	private static void saveContainers(ConfigFile containersConfig, Map<UUID, PlayerContainerGUI> containers) 
 	{
-		containersConfig.clear(IOException::printStackTrace);
-		
-		containers.forEach((playerUUID, container) -> 
+		try
 		{
-			List<ItemStack> items = container.getStoredItems();
+			containersConfig.clear();
 			
-			for(int i = 0; i < items.size(); i++) 
-				containersConfig.getConfig().set(playerUUID.toString() + "." + i, items.get(i)); 
-		});
-		
-		containersConfig.save(IOException::printStackTrace);
+			containers.forEach((playerUUID, container) -> 
+			{
+				List<ItemStack> items = container.getStoredItems();
+				
+				for(int i = 0; i < items.size(); i++) 
+					containersConfig.getConfig().set(playerUUID.toString() + "." + i, items.get(i)); 
+			});
+			
+			containersConfig.save();
+			
+		} 
+		catch(IOException exception)
+		{
+			exception.printStackTrace();
+		}
 	}
 }
