@@ -98,13 +98,13 @@ public class ConfigFileFactory
 	{
 		ExceptionHandler creationExceptionHandler, saveExceptionHandler;
 
-		public Builder handleCreationException(ExceptionHandler handler) 
+		public Builder onCreationException(ExceptionHandler handler) 
 		{
 			this.creationExceptionHandler = handler;
 			return this;
 		}
 
-		public Builder handleSaveException(ExceptionHandler handler) 
+		public Builder onSaveException(ExceptionHandler handler) 
 		{
 			this.saveExceptionHandler = handler;
 			return this;
