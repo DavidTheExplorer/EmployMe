@@ -149,7 +149,7 @@ public class Messages
 			.put(MATERIAL_NOT_FOUND, "&cThe specified Material doesn't exist!")
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
-			.put(PLUGIN_RELOADED, "&fReload completed!")
+			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
 
 			//Job Containers GUI
 			.put(INVENTORY_JOB_CONTAINERS_GUI_TITLE, "Personal Job Containers")

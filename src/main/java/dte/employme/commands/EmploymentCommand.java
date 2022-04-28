@@ -2,8 +2,9 @@ package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
 import static dte.employme.messages.MessageKey.PREFIX;
+import static dte.employme.messages.Placeholders.RELOAD_TIME;
 
-import java.util.List;
+import java.time.Duration;
 
 import org.bukkit.entity.Player;
 
@@ -15,12 +16,13 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
+import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.JobBoardDisplayer;
 import dte.employme.inventories.JobContainersGUI;
-import dte.employme.reloadable.Reloadable;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.utils.java.TimingUtils;
 
 @CommandAlias("employment|emp")
 @Description("The main entry of EmployMe commands.")
@@ -30,15 +32,13 @@ public class EmploymentCommand extends BaseCommand
 	private final JobBoardDisplayer jobBoardDisplayer;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
-	private final List<Reloadable> reloadables;
 
-	public EmploymentCommand(JobBoard globalJobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer, List<Reloadable> reloadables) 
+	public EmploymentCommand(JobBoard globalJobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
-		this.reloadables = reloadables;
 	}
 
 	@HelpCommand
@@ -47,7 +47,7 @@ public class EmploymentCommand extends BaseCommand
 	{
 		help.showHelp();
 	}
-	
+
 	@Subcommand("mycontainers")
 	@Description("Claim the items that either people gathered for you OR from completed jobs.")
 	@CommandPermission("employme.jobs.mycontainers")
@@ -55,7 +55,7 @@ public class EmploymentCommand extends BaseCommand
 	{
 		new JobContainersGUI(this.messageService, playerContainerService).show(player);
 	}
-	
+
 	@Subcommand("view")
 	@Description("Search through all the Available Jobs.")
 	@CommandPermission("employme.jobs.view")
@@ -68,10 +68,15 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.reload")
 	public void reload(Player player)
 	{
-		this.reloadables.forEach(Reloadable::reload);
+		Duration reloadTime = TimingUtils.time(() -> 
+		{
+			EmployMe.getInstance().onDisable();
+			EmployMe.getInstance().onEnable();
+		});
 
 		this.messageService.getMessage(PLUGIN_RELOADED)
 		.prefixed(this.messageService.getMessage(PREFIX).first())
+		.inject(RELOAD_TIME, String.valueOf(reloadTime.toMillis()))
 		.sendTo(player);
 	}
 }
