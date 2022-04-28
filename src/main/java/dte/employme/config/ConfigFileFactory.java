@@ -20,9 +20,16 @@ public class ConfigFileFactory
 	{
 		ConfigFile config = ConfigFile.byPath(path);
 		
-		boolean success = ConfigFile.createIfAbsent(config, exception -> this.creationExceptionHandler.handle(exception, config));
-
-		return success ? config : null;
+		try 
+		{
+			ConfigFile.createIfAbsent(config);
+			return config;
+		}
+		catch(IOException exception) 
+		{
+			this.creationExceptionHandler.handle(exception, config);
+			return null;
+		}
 	}
 	
 	public ConfigFile loadContainer(String subject) 
@@ -45,7 +52,16 @@ public class ConfigFileFactory
 
 	private boolean save(ConfigFile config) 
 	{
-		return config.save(exception -> this.saveExceptionHandler.handle(exception, config));
+		try 
+		{
+			config.save();
+			return true;
+		} 
+		catch(IOException exception)
+		{
+			this.saveExceptionHandler.handle(exception, config);
+			return false;
+		}
 	}
 	
 	private static void regenerateMissingMessages(ConfigFile languageConfig, Messages defaultsProvider) 
@@ -99,6 +115,4 @@ public class ConfigFileFactory
 			return new ConfigFileFactory(this);
 		}
 	}
-	
-	
 }

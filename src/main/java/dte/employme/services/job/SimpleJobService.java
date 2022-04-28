@@ -39,6 +39,14 @@ public class SimpleJobService implements JobService
 	public void saveJobs() 
 	{
 		this.jobsConfig.getConfig().set("Jobs", this.globalJobBoard.getOfferedJobs());
-		this.jobsConfig.save(IOException::printStackTrace);
+		
+		try 
+		{
+			this.jobsConfig.save();
+		} 
+		catch(IOException exception) 
+		{
+			exception.printStackTrace();
+		}
 	}
 }

@@ -74,6 +74,14 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	public void savePlayersNotifiers() 
 	{
 		this.playersNotifiers.forEach((playerUUID, playerPolicy) -> this.notifiersConfig.getConfig().set(playerUUID.toString(), playerPolicy.getName()));
-		this.notifiersConfig.save(IOException::printStackTrace);
+		
+		try 
+		{
+			this.notifiersConfig.save();
+		} 
+		catch(IOException exception)
+		{
+			exception.printStackTrace();
+		}
 	}
 }
