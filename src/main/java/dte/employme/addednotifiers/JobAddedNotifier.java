@@ -1,4 +1,4 @@
-package dte.employme.addnotifiers;
+package dte.employme.addednotifiers;
 
 import org.bukkit.entity.Player;
 

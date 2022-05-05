@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import dte.employme.addnotifiers.JobAddedNotifier;
+import dte.employme.addednotifiers.JobAddedNotifier;
 
 public interface JobAddedNotifierService
 {
