@@ -1,13 +1,12 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_GUI_TITLE;
-import static dte.employme.messages.MessageKey.ITEMS;
-import static dte.employme.messages.MessageKey.ITEMS_CONTAINER_DESCRIPTION;
-import static dte.employme.messages.MessageKey.REWARD;
-import static dte.employme.messages.MessageKey.REWARDS_CONTAINER_DESCRIPTION;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
-import static org.bukkit.ChatColor.LIGHT_PURPLE;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -22,7 +21,6 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import dte.employme.messages.MessageKey;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.items.ItemBuilder;
@@ -34,7 +32,7 @@ public class JobContainersGUI extends ChestGui
 	
 	public JobContainersGUI(MessageService messageService, PlayerContainerService playerContainerService) 
 	{
-		super(1, messageService.getMessage(INVENTORY_JOB_CONTAINERS_GUI_TITLE).first());
+		super(1, messageService.getMessage(INVENTORY_JOB_CONTAINERS_TITLE).first());
 		
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
@@ -50,16 +48,16 @@ public class JobContainersGUI extends ChestGui
 		OutlinePane pane = new OutlinePane(2, 0, 9, 1, Priority.LOW);
 		pane.setGap(3);
 		
-		pane.addItem(createContainerIcon(ITEMS, Material.CHEST, this.playerContainerService::getItemsContainer, this.messageService.getMessage(ITEMS_CONTAINER_DESCRIPTION).toArray()));
-		pane.addItem(createContainerIcon(REWARD, Material.CHEST, this.playerContainerService::getRewardsContainer, this.messageService.getMessage(REWARDS_CONTAINER_DESCRIPTION).toArray()));
+		pane.addItem(createContainerIcon(this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME).first(), this.playerContainerService::getItemsContainer, this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE).toArray()));
+		pane.addItem(createContainerIcon(this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME).first(), this.playerContainerService::getRewardsContainer, this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE).toArray()));
 		
 		return pane;
 	}
 	
-	private GuiItem createContainerIcon(MessageKey name, Material material, Function<UUID, PlayerContainerGUI> containerGetter, String... description) 
+	private GuiItem createContainerIcon(String name, Function<UUID, PlayerContainerGUI> containerGetter, String... description) 
 	{
-		ItemStack item = new ItemBuilder(material)
-				.named(LIGHT_PURPLE + this.messageService.getMessage(name).first())
+		ItemStack item = new ItemBuilder(Material.CHEST)
+				.named(name)
 				.withLore(description)
 				.createCopy();
 		

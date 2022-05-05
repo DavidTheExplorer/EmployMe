@@ -1,7 +1,9 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_BACK;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
 import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
@@ -72,12 +74,18 @@ public class PlayerJobsGUI extends ChestGui
 		panel.setGap(3);
 		
 		panel.addItem(new GuiItemBuilder()
-				.forItem(backButtonBuilder().named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_BACK).first()).createCopy())
+				.forItem(backButtonBuilder()
+						.named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
+						.createCopy())
 				.whenClicked(backButtonListener(this, this.jobsPane))
 				.build());
 		
 		panel.addItem(new GuiItemBuilder()
-				.forItem(nextButtonBuilder().named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE).first()).createCopy())
+				.forItem(nextButtonBuilder()
+						.named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
+						.createCopy())
 				.whenClicked(nextButtonListener(this, this.jobsPane))
 				.build());
 		

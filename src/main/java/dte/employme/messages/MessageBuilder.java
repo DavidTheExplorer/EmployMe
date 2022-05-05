@@ -2,6 +2,7 @@ package dte.employme.messages;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
@@ -21,9 +22,26 @@ public class MessageBuilder
 {
 	private final List<String> lines;
 	
-	public MessageBuilder(String... lines) 
+	public MessageBuilder(String message) 
 	{
-		this.lines = Arrays.asList(lines);
+		this(Arrays.asList(message));
+	}
+	
+	public MessageBuilder(Collection<String> lines) 
+	{
+		this.lines = new ArrayList<>(lines);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static MessageBuilder from(Object message) 
+	{
+		if(message instanceof String)
+			return new MessageBuilder((String) message);
+		
+		if(message instanceof Collection)
+			return new MessageBuilder(((Collection<String>) message));
+		
+		throw new IllegalArgumentException(String.format("The specified object(%s) doesn't represent a message!", message));
 	}
 	
 	public MessageBuilder map(UnaryOperator<String> transformer)

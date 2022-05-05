@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import dte.employme.messages.MessageKey;
-import dte.employme.utils.java.EnumUtils;
+import dte.employme.services.message.TranslatedMessageService;
 
 public class ConfigFileFactory
 {
@@ -67,21 +67,16 @@ public class ConfigFileFactory
 	private static void regenerateMissingMessages(ConfigFile languageConfig, Messages defaultsProvider) 
 	{
 		Arrays.stream(MessageKey.VALUES)
-		.filter(key -> !languageConfig.getConfig().contains(getPath(key)))
+		.filter(key -> !languageConfig.getConfig().contains(TranslatedMessageService.getConfigPath(key)))
 		.forEach(missingKey -> 
 		{
 			String[] lines = defaultsProvider.getLines(missingKey);
 			Object message = lines.length == 1 ? lines[0] : Arrays.asList(lines);
 			
-			languageConfig.getConfig().addDefault(getPath(missingKey), message);
+			languageConfig.getConfig().addDefault(TranslatedMessageService.getConfigPath(missingKey), message);
 		});
 		
 		languageConfig.getConfig().options().copyDefaults(true);
-	}
-	
-	private static String getPath(MessageKey messageKey) 
-	{
-		return "Messages." + EnumUtils.fixEnumName(messageKey);
 	}
 	
 	

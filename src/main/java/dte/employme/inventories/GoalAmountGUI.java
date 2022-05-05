@@ -3,6 +3,7 @@ package dte.employme.inventories;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createItemPane;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.BLACK;
@@ -23,7 +24,7 @@ public class GoalAmountGUI extends AnvilGui
 
 	public GoalAmountGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService)
 	{
-		super("Specify the Amount:");
+		super(messageService.getMessage(INVENTORY_GOAL_AMOUNT_TITLE).first());
 
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.messageService = messageService;

@@ -7,7 +7,7 @@ import dte.employme.messages.MessageKey;
 public interface MessageService
 {
 	/**
-	 * Retrieves the message that corresponds to the provided {@code key} - which is its unique identifier.
+	 * Retrieves the message that corresponds to the provided {@code key}(its unique identifier) inside a Builder, for easier building.
 	 * 
 	 * @param key The key that identifies the message.
 	 * @return The message.

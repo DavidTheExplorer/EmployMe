@@ -1,7 +1,6 @@
 package dte.employme.config;
 
 import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
-import static dte.employme.messages.MessageKey.CONTAINER_HELP_ITEM_NAME;
 import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
@@ -11,6 +10,7 @@ import static dte.employme.messages.MessageKey.GOAL;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
@@ -32,12 +32,20 @@ import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_NEXT_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_NEXT_PAGE_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PREVIOUS_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_GUI_TITLE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE;
@@ -45,11 +53,15 @@ import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_TITLE;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INSTRUCTION;
 import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_BACK;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_NEXT_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_NEXT_PAGE_NAME;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_LORE;
+import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_TITLE;
-import static dte.employme.messages.MessageKey.ITEMS;
-import static dte.employme.messages.MessageKey.ITEMS_CONTAINER_DESCRIPTION;
 import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
@@ -77,8 +89,6 @@ import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
 import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.REWARD;
-import static dte.employme.messages.MessageKey.REWARDS;
-import static dte.employme.messages.MessageKey.REWARDS_CONTAINER_DESCRIPTION;
 import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
@@ -86,8 +96,6 @@ import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -143,8 +151,6 @@ public class Messages
 			.put(GET, "Get")
 			.put(GOAL, "Goal")
 			.put(REWARD, "Reward")
-			.put(ITEMS, "Items")
-			.put(REWARDS, "Rewards")
 			.put(MUST_NOT_BE_CONVERSING, "&cYou have to finish your current conversation.")
 			.put(MATERIAL_NOT_FOUND, "&cThe specified Material doesn't exist!")
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
@@ -152,15 +158,18 @@ public class Messages
 			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
 
 			//Job Containers GUI
-			.put(INVENTORY_JOB_CONTAINERS_GUI_TITLE, "Personal Job Containers")
-			.put(ITEMS_CONTAINER_DESCRIPTION, "&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here.")
-			.put(REWARDS_CONTAINER_DESCRIPTION, "&fThis is where Reward Items are stored", "&fafter you complete a job that pays them.")
+			.put(INVENTORY_JOB_CONTAINERS_TITLE, "Personal Job Containers")
+			.put(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME, "&dRewards")
+			.put(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE, "&fThis is where Reward Items are stored", "&fafter you complete a job that pays them.")
+			.put(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME, "&dItems")
+			.put(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE, "&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here.")
 			.put(CONTAINER_CLAIM_INSTRUCTION, "Claim your %container subject%:")
-			.put(CONTAINER_HELP_ITEM_NAME, "&aHelp")
 			
 			//Player Container GUI
-			.put(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE, GREEN + "Next Page")
-			.put(INVENTORY_PLAYER_CONTAINER_BACK, RED + "Back")
+			.put(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME, "&aNext")
+			.put(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE, "&fClick to open the next page")
+			.put(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME, "&cBack")
+			.put(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
 
 			//Job Icon
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
@@ -175,9 +184,17 @@ public class Messages
 			.put(INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED, "&cYou didn't complete this Job.")
 			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
 			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
+			.put(INVENTORY_JOB_BOARD_NEXT_PAGE_NAME, "&aNext")
+			.put(INVENTORY_JOB_BOARD_NEXT_PAGE_LORE, "&fClick to open the next page")
+			.put(INVENTORY_JOB_BOARD_PREVIOUS_PAGE_NAME, "&cBack")
+			.put(INVENTORY_JOB_BOARD_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
 			
 			//Player Jobs GUI
 			.put(INVENTORY_PLAYER_JOBS_TITLE, "Your Jobs")
+			.put(INVENTORY_PLAYER_JOBS_NEXT_PAGE_NAME, "&aNext")
+			.put(INVENTORY_PLAYER_JOBS_NEXT_PAGE_LORE, "&fClick to open the next page")
+			.put(INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_NAME, "&cBack")
+			.put(INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
 			
 			//Job Deletion GUI
 			.put(INVENTORY_JOB_DELETION_TITLE, "Select Jobs to Delete")
@@ -232,6 +249,7 @@ public class Messages
 			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name")
 			
 			//Goal Amount GUI
+			.put(INVENTORY_GOAL_AMOUNT_TITLE, "Specify the Amount:")
 			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME, "&aContinue")
 			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE, "&fClick to set the new amount.")
 			.put(INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "&cEnter Numeric Amount:");
