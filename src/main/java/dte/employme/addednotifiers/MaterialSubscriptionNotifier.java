@@ -1,4 +1,4 @@
-package dte.employme.addnotifiers;
+package dte.employme.addednotifiers;
 
 import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
 import static dte.employme.messages.Placeholders.REWARDS;
