@@ -1,6 +1,5 @@
 package dte.employme;
 
-import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
 import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
@@ -21,7 +20,6 @@ import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.addednotifiers.AllJobsNotifier;
 import dte.employme.addednotifiers.DoNotNotify;
-import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
@@ -32,14 +30,12 @@ import dte.employme.board.listenable.JobGoalTransferListener;
 import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
-import dte.employme.commands.sub.employment.EmploymentAddNotifierCommands;
 import dte.employme.commands.sub.employment.EmploymentManageCommands;
 import dte.employme.commands.sub.employment.EmploymentSubscriptionCommands;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
 import dte.employme.job.Job;
-import dte.employme.messages.Placeholders;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
@@ -211,19 +207,6 @@ public class EmployMe extends ModernJavaPlugin
 
 			return material;
 		});
-
-		commandManager.getCommandContexts().registerContext(JobAddedNotifier.class, context -> 
-		{
-			String notifierName = context.joinArgs();
-			JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
-
-			if(notifier == null) 
-				throw new InvalidCommandArgument(this.messageService.getMessage(JOB_ADDED_NOTIFIER_NOT_FOUND)
-						.inject(Placeholders.JOB_ADDED_NOTIFIER, notifierName)
-						.first(), false);
-
-			return notifier;
-		});
 		
 		commandManager.getCommandContexts().registerIssuerOnlyContext(List.class, context -> 
 		{
@@ -238,9 +221,8 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.playerContainerService, inventoryBoardDisplayer));
+		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.playerContainerService, inventoryBoardDisplayer));
 		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService));
-		commandManager.registerCommand(new EmploymentAddNotifierCommands(this.jobAddedNotifierService, this.messageService));
 		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
 	}
 }
