@@ -1,7 +1,6 @@
 package dte.employme.job;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,18 +19,20 @@ public class Job implements ConfigurationSerializable
 	private final ItemStack goal;
 	private final Reward reward;
 
-	private Job(Builder builder) 
+	public Job(OfflinePlayer employer, ItemStack goal, Reward reward) 
 	{
-		this.employer = builder.employer;
-		this.goal = builder.goal;
-		this.reward = builder.reward;
+		this.employer = employer;
+		this.goal = goal;
+		this.reward = reward;
 	}
-	
+
 	public Job(Map<String, Object> serialized) 
 	{
-		this.employer = Bukkit.getOfflinePlayer(UUID.fromString((String) serialized.get("Employer UUID")));
-		this.goal = (ItemStack) serialized.get("Goal");
-		this.reward = (Reward) serialized.get("Reward");
+		this(
+				Bukkit.getOfflinePlayer(UUID.fromString((String) serialized.get("Employer UUID"))), 
+				(ItemStack) serialized.get("Goal"), 
+				(Reward) serialized.get("Reward")
+				);
 	}
 
 	public OfflinePlayer getEmployer() 
@@ -48,7 +49,7 @@ public class Job implements ConfigurationSerializable
 	{
 		return this.reward;
 	}
-	
+
 	@Override
 	public Map<String, Object> serialize()
 	{
@@ -58,46 +59,10 @@ public class Job implements ConfigurationSerializable
 				.put("Reward", this.reward)
 				.build();
 	}
-	
+
 	@Override
 	public String toString() 
 	{
-		return String.format("SimpleJob [employer=%s, goal=%s, reward=%s]", this.employer.getUniqueId().toString(), this.goal, this.reward);
-	}
-	
-	
-	
-	public static class Builder
-	{
-		OfflinePlayer employer;
-		ItemStack goal;
-		Reward reward;
-
-		public Builder byEmployer(OfflinePlayer employer) 
-		{
-			this.employer = employer;
-			return this;
-		}
-
-		public Builder withGoal(ItemStack goal) 
-		{
-			this.goal = goal;
-			return this;
-		}
-
-		public Builder thatRewards(Reward reward) 
-		{
-			this.reward = reward;
-			return this;
-		}
-
-		public Job build() 
-		{
-			Objects.requireNonNull(this.employer);
-			Objects.requireNonNull(this.goal);
-			Objects.requireNonNull(this.reward);
-
-			return new Job(this);
-		}
+		return String.format("Job [employer=%s, goal=%s, reward=%s]", this.employer.getUniqueId().toString(), this.goal, this.reward);
 	}
 }

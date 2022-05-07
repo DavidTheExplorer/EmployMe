@@ -221,14 +221,8 @@ public class GoalCustomizationGUI extends ChestGui
 
 			Player player = (Player) event.getWhoClicked();
 			closeWithoutRefund(player);
-
-			Job job = new Job.Builder()
-					.byEmployer(player)
-					.withGoal(createGoal())
-					.thatRewards(this.reward)
-					.build();
-
-			this.jobBoard.addJob(job);
+			
+			this.jobBoard.addJob(new Job(player, createGoal(), this.reward));
 		});
 	}
 	

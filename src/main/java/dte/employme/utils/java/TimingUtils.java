@@ -4,9 +4,6 @@ import java.time.Duration;
 
 public class TimingUtils 
 {
-	//Container of static methods
-	private TimingUtils(){}
-	
 	public static Duration time(Runnable runnable) 
 	{
 		long before = System.currentTimeMillis();
