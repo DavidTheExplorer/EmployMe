@@ -30,7 +30,6 @@ import dte.employme.board.listenable.JobGoalTransferListener;
 import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
 import dte.employme.commands.EmploymentCommand;
-import dte.employme.commands.sub.employment.EmploymentManageCommands;
 import dte.employme.commands.sub.employment.EmploymentSubscriptionCommands;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
@@ -221,8 +220,7 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.playerContainerService, inventoryBoardDisplayer));
-		commandManager.registerCommand(new EmploymentManageCommands(this.globalJobBoard, this.economy, this.jobRewardService, this.messageService, this.playerContainerService));
+		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobRewardService, this.jobAddedNotifierService, this.playerContainerService, inventoryBoardDisplayer));
 		commandManager.registerCommand(new EmploymentSubscriptionCommands(this.jobSubscriptionService, this.messageService));
 	}
 }
