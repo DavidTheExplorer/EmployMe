@@ -19,7 +19,9 @@ import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.displayers.JobBoardDisplayer;
+import dte.employme.inventories.JobAddNotifiersGUI;
 import dte.employme.inventories.JobContainersGUI;
+import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.java.TimingUtils;
@@ -30,13 +32,15 @@ public class EmploymentCommand extends BaseCommand
 {
 	private final JobBoard globalJobBoard;
 	private final JobBoardDisplayer jobBoardDisplayer;
+	private final JobAddedNotifierService jobAddedNotifierService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
 
-	public EmploymentCommand(JobBoard globalJobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
+	public EmploymentCommand(JobBoard globalJobBoard, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.messageService = messageService;
+		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.playerContainerService = playerContainerService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
 	}
@@ -54,6 +58,12 @@ public class EmploymentCommand extends BaseCommand
 	public void openPersonalContainers(Player player) 
 	{
 		new JobContainersGUI(this.messageService, playerContainerService).show(player);
+	}
+	
+	@Subcommand("addnotifiers")
+	public void showSubscriptions(Player player) 
+	{
+		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId()).show(player);
 	}
 
 	@Subcommand("view")

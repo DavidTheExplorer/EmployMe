@@ -43,7 +43,7 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	@Override
 	public JobAddedNotifier getPlayerNotifier(UUID playerUUID) 
 	{
-		return this.notifierByName.getOrDefault(playerUUID, DoNotNotify.INSTANCE);
+		return this.playersNotifiers.getOrDefault(playerUUID, DoNotNotify.INSTANCE);
 	}
 
 	@Override

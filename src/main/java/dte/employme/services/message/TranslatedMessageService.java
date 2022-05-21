@@ -1,101 +1,6 @@
 package dte.employme.services.message;
 
-import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
-import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
-import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
-import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
-import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
-import static dte.employme.messages.MessageKey.GET;
-import static dte.employme.messages.MessageKey.GOAL;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_NEXT_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_NEXT_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PREVIOUS_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PREVIOUS_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INSTRUCTION;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_NEXT_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_NEXT_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_JOBS_TITLE;
-import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
-import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
-import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
-import static dte.employme.messages.MessageKey.JOB_ADDED_NOTIFIER_NOT_FOUND;
-import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
-import static dte.employme.messages.MessageKey.JOB_CANCELLED_REWARD_REFUNDED;
-import static dte.employme.messages.MessageKey.JOB_COMPLETED;
-import static dte.employme.messages.MessageKey.JOB_ICON_ENCHANT_DESCRIPTION;
-import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
-import static dte.employme.messages.MessageKey.JOB_ICON_ITEMS_PAYMENT_DESCRIPTION;
-import static dte.employme.messages.MessageKey.JOB_ICON_MONEY_PAYMENT_DESCRIPTION;
-import static dte.employme.messages.MessageKey.JOB_ICON_NAME;
-import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_DELETED;
-import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
-import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
-import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
-import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_A_NUMBER;
-import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_ENOUGH;
-import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
-import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
-import static dte.employme.messages.MessageKey.NEW_JOB_POSTED;
-import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
-import static dte.employme.messages.MessageKey.NONE;
-import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
-import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
-import static dte.employme.messages.MessageKey.PREFIX;
-import static dte.employme.messages.MessageKey.REWARD;
-import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
-import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
-import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
-import static dte.employme.messages.MessageKey.THE_JOB_ADDED_NOTIFIERS_ARE;
-import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
-import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
-import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
+import static dte.employme.messages.MessageKey.*;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
@@ -124,9 +29,7 @@ public class TranslatedMessageService implements MessageService
 			.put(JOB_CANCELLED_REWARD_REFUNDED, toConfigPath("Jobs", "Reward Refunded"))
 
 			//Job Added Notifiers
-			.put(JOB_ADDED_NOTIFIER_NOT_FOUND, toConfigPath("Job Add Notifiers", "Notifier Not Found"))
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, toConfigPath("Job Add Notifiers", "Your New Notifier Is"))
-			.put(THE_JOB_ADDED_NOTIFIERS_ARE, toConfigPath("Job Add Notifiers", "The Job Add Notifiers Are"))
 			.put(NEW_JOB_POSTED, toConfigPath("Job Add Notifiers", "New Job Posted"))
 
 			//Subscriptions
@@ -244,6 +147,16 @@ public class TranslatedMessageService implements MessageService
 			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME, toConfigPath("Inventory", "Goal Amount", "Items", "Finish Item", "Name"))
 			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE, toConfigPath("Inventory", "Goal Amount", "Items", "Finish Item", "Lore"))
 			.put(INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, toConfigPath("Inventory", "Goal Amount", "Numeric Amount Title"))
+
+			//Job Added Notifiers GUI
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_TITLE, toConfigPath("Inventory", "Job Added Notifiers", "Title"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "All Jobs", "Name"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "All Jobs", "Lore"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "Material Subscriptions", "Name"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "Material Subscriptions", "Lore"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "No Jobs", "Name"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "No Jobs", "Lore"))
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SELECTED, toConfigPath("Inventory", "Job Added Notifiers", "Currently Selected"))
 			.build();
 
 	public TranslatedMessageService(ConfigFile languageConfig) 
@@ -255,7 +168,7 @@ public class TranslatedMessageService implements MessageService
 	public MessageBuilder getMessage(MessageKey key) 
 	{
 		Object message = this.languageConfig.getConfig().get(getConfigPath(key));
-		
+
 		return MessageBuilder.from(message).map(ChatColorUtils::colorize);
 	}
 
