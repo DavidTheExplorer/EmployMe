@@ -279,7 +279,7 @@ public class GoalCustomizationGUI extends ChestGui
 			HumanEntity player = event.getWhoClicked();
 			
 			closeWithoutRefund(player);
-			new ItemPaletteGUI(this, this.messageService, this.jobRewardService, this.reward).show(player);
+			new TypeItemPaletteGUI(this.messageService, this.jobRewardService, this, this.reward).show(player);
 		});
 	}
 	

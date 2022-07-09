@@ -14,14 +14,16 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -34,23 +36,18 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
-import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.MaterialUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.utils.java.MapBuilder;
 
 public class ItemPaletteGUI extends ChestGui
 {
-	private final GoalCustomizationGUI goalCustomizationGUI;
-	private final ConversationFactory typeConversationFactory;
 	private final MessageService messageService;
-	private final JobRewardService jobRewardService;
+	private final Function<ItemStack, GuiItem> itemCreator;
+	private final ConversationFactory typeConversationFactory;
+	private Consumer<InventoryClickEvent> englishItemClickHandler;
 	private PaginatedPane itemsPane;
-	
-	private boolean showGoalCustomizationGUIOnClose = true;
-	
+
 	private static final List<ItemStack> ALL_ITEMS = Arrays.stream(Material.values())
 			.filter(MaterialUtils::isObtainable)
 			.map(ItemStack::new)
@@ -59,57 +56,33 @@ public class ItemPaletteGUI extends ChestGui
 	private static final int
 	ITEMS_PER_PAGE = 9*5,
 	PAGES_AMOUNT = (ALL_ITEMS.size() / ITEMS_PER_PAGE) +1;
-
-	public ItemPaletteGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService, JobRewardService jobRewardService, Reward reward)
+	
+	public ItemPaletteGUI(MessageService messageService, Function<ItemStack, GuiItem> itemCreator, Consumer<ConversationFactory> typeConversationFactoryCustomizer)
 	{
 		super(6, messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first());
 
-		this.jobRewardService = jobRewardService;
-		this.goalCustomizationGUI = goalCustomizationGUI;
-		this.typeConversationFactory = createTypeConversationFactory(messageService, reward);
 		this.messageService = messageService;
+		this.itemCreator = itemCreator;
+
+		this.typeConversationFactory = Conversations.createFactory(messageService)
+				.withLocalEcho(false)
+				.withFirstPrompt(new JobGoalPrompt(messageService));
 		
+		typeConversationFactoryCustomizer.accept(this.typeConversationFactory);
+
 		setOnTopClick(event -> event.setCancelled(true));
-		
-		setOnClose(event -> 
-		{
-			if(!this.showGoalCustomizationGUIOnClose)
-				return;
-			
-			goalCustomizationGUI.setRefundRewardOnClose(true);
-			goalCustomizationGUI.show(event.getPlayer());
-		});
-		
 		addPane(createItemsPane());
 		addPane(createControlPane());
 		addPane(createRectangle(Priority.LOWEST, 1, 5, 7, 1, new GuiItem(new ItemStack(createWall(Material.BLACK_STAINED_GLASS_PANE)))));
 		update();
 	}
 	
-	private ConversationFactory createTypeConversationFactory(MessageService messageService, Reward reward) 
+	protected void setEnglishItemClickHandler(Consumer<InventoryClickEvent> handler) 
 	{
-		return Conversations.createFactory(messageService)
-				.withLocalEcho(false)
-				.withFirstPrompt(new JobGoalPrompt(messageService))
-				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-				.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.jobRewardService))
-				.addConversationAbandonedListener(event -> 
-				{
-					if(!event.gracefulExit())
-						return;
-
-					//re-open the goal customization gui
-					Player player = (Player) event.getContext().getForWhom();
-					Material material = (Material) event.getContext().getSessionData("material");
-					
-					this.goalCustomizationGUI.setRefundRewardOnClose(true);
-					this.goalCustomizationGUI.setType(material);
-					this.goalCustomizationGUI.show(player);
-				});
+		this.englishItemClickHandler = handler;
 	}
-	
-	
-	
+
+
 	/*
 	 * Panes
 	 */
@@ -118,18 +91,18 @@ public class ItemPaletteGUI extends ChestGui
 		OutlinePane pane = new OutlinePane(0, 5, 9, 1, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
 		pane.setGap(3);
-		
+
 		pane.addItem(createController("MHF_ArrowLeft", this.messageService.getMessage(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME).first(), currentPage -> currentPage > 0, currentPage -> --currentPage));
 		pane.addItem(createEnglishSearchItem());
 		pane.addItem(createController("MHF_ArrowRight", this.messageService.getMessage(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME).first(), currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
 
 		return pane;
 	}
-	
+
 	private Pane createItemsPane() 
 	{
 		Deque<GuiItem> remainingItems = ALL_ITEMS.stream()
-				.map(this::toRedirectItem)
+				.map(this.itemCreator::apply)
 				.collect(toCollection(LinkedList::new));
 
 		PaginatedPane pane = new PaginatedPane(0, 0, 9, 6, Priority.LOWEST);
@@ -138,9 +111,9 @@ public class ItemPaletteGUI extends ChestGui
 			pane.addPane(i, createPage(remainingItems));
 
 		pane.setPage(0);
-		
+
 		this.itemsPane = pane;
-		
+
 		return pane;
 	}
 
@@ -157,9 +130,9 @@ public class ItemPaletteGUI extends ChestGui
 
 		return itemsPane;
 	}
-	
-	
-	
+
+
+
 	/*
 	 * Items
 	 */
@@ -182,15 +155,6 @@ public class ItemPaletteGUI extends ChestGui
 		});
 	}
 
-	private GuiItem toRedirectItem(ItemStack item) 
-	{
-		return new GuiItem(item, event -> 
-		{
-			this.goalCustomizationGUI.setType(item.getType());
-			event.getWhoClicked().closeInventory();
-		});
-	}
-
 	private GuiItem createEnglishSearchItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.NAME_TAG)
@@ -199,13 +163,13 @@ public class ItemPaletteGUI extends ChestGui
 				.createCopy(), 
 				event -> 
 		{
-			Player player = (Player) event.getWhoClicked();
-			this.showGoalCustomizationGUIOnClose = false;
-			player.closeInventory();
+			if(this.englishItemClickHandler != null)
+				this.englishItemClickHandler.accept(event);
 			
-			Conversation conversation = this.typeConversationFactory.buildConversation(player);
-			conversation.getContext().setSessionData("goal inventory", this);
-			conversation.begin();
+			Player player = (Player) event.getWhoClicked();
+			player.closeInventory();
+
+			this.typeConversationFactory.buildConversation(player).begin();
 		});
 	}
 }
