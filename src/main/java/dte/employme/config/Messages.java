@@ -165,5 +165,26 @@ public class Messages
 			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE, "&fJobs that items for which", "&fYou were subscribed via &e/emp subscriptions&f.")
 			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, "&aNone")
 			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, "&cNo Jobs &f(Default)")
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SELECTED, "&bCurrently Selected");
+			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SELECTED, "&bCurrently Selected")
+
+			//Player Subscriptions GUI
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_TITLE, "Your Job Subscriptions")
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME, "&dYour Subscriptions")
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE, "&fSee what items you are subscribed for.")
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME, "&bSubscribe")
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "&fGet an instant notification once an", "&fitem you need is offered as a reward", "&ffor a job, once that job is posted.")
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "&cUnsubscribe")
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "&fRemove your subscription from a certain item.")
+
+			//Subscribe Item Palette
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_TITLE, "What item to subscribe for?")
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION, "&fWhat item you want to subscribe to?")
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, "&f%item%")
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, "&aSend me a notification for this item.")
+			
+			//Unsubscribe from Items Palette
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "Notifications Removal")
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "&fWhat item you want to unsubscribe from?")
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "&f%item%")
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "&cClick to stop getting notifications for this item.");
 }

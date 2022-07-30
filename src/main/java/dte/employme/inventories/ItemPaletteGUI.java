@@ -4,7 +4,6 @@ import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orienta
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.stream.Collectors.toCollection;
@@ -18,6 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
+import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -34,42 +34,36 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import dte.employme.conversations.Conversations;
-import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.MaterialUtils;
 import dte.employme.utils.items.ItemBuilder;
 
 public class ItemPaletteGUI extends ChestGui
 {
-	private final MessageService messageService;
-	private final Function<ItemStack, GuiItem> itemCreator;
+	protected final MessageService messageService;
+	private final Predicate<Material> itemFilter;
+	private final Function<Material, GuiItem> itemTransformer;
 	private final ConversationFactory typeConversationFactory;
-	private Consumer<InventoryClickEvent> englishItemClickHandler;
+	private Consumer<InventoryClickEvent> englishItemClickListener = (event) -> {};
 	private PaginatedPane itemsPane;
 
-	private static final List<ItemStack> ALL_ITEMS = Arrays.stream(Material.values())
+	private static final List<Material> ALL_MATERIALS = Arrays.stream(Material.values())
 			.filter(MaterialUtils::isObtainable)
-			.map(ItemStack::new)
 			.collect(toList());
-
-	private static final int
-	ITEMS_PER_PAGE = 9*5,
-	PAGES_AMOUNT = (ALL_ITEMS.size() / ITEMS_PER_PAGE) +1;
 	
-	public ItemPaletteGUI(MessageService messageService, Function<ItemStack, GuiItem> itemCreator, Consumer<ConversationFactory> typeConversationFactoryCustomizer)
+	private static final int ITEMS_PER_PAGE = 9 * 5;
+	
+	protected ItemPaletteGUI(String title, MessageService messageService, Function<Material, GuiItem> itemTransformer, Predicate<Material> itemFilter, ConversationFactory typeConversationFactory) 
 	{
-		super(6, messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first());
-
-		this.messageService = messageService;
-		this.itemCreator = itemCreator;
-
-		this.typeConversationFactory = Conversations.createFactory(messageService)
-				.withLocalEcho(false)
-				.withFirstPrompt(new JobGoalPrompt(messageService));
+		super(6, title);
 		
-		typeConversationFactoryCustomizer.accept(this.typeConversationFactory);
-
+		this.messageService = messageService;
+		this.itemTransformer = itemTransformer;
+		this.itemFilter = itemFilter;
+		
+		this.typeConversationFactory = typeConversationFactory
+				.withLocalEcho(false);
+		
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createItemsPane());
 		addPane(createControlPane());
@@ -77,9 +71,16 @@ public class ItemPaletteGUI extends ChestGui
 		update();
 	}
 	
+	private ItemPaletteGUI(Builder builder) 
+	{
+		this(builder.title, builder.messageService, builder.itemTransformer, builder.itemFilter, builder.typeConversationFactory);
+		
+		this.englishItemClickListener = builder.englishItemClickListener;
+	}
+	
 	protected void setEnglishItemClickHandler(Consumer<InventoryClickEvent> handler) 
 	{
-		this.englishItemClickHandler = handler;
+		this.englishItemClickListener = handler;
 	}
 
 
@@ -101,14 +102,15 @@ public class ItemPaletteGUI extends ChestGui
 
 	private Pane createItemsPane() 
 	{
-		Deque<GuiItem> remainingItems = ALL_ITEMS.stream()
-				.map(this.itemCreator::apply)
+		Deque<GuiItem> remaining = ALL_MATERIALS.stream()
+				.filter(this.itemFilter)
+				.map(this.itemTransformer)
 				.collect(toCollection(LinkedList::new));
 
 		PaginatedPane pane = new PaginatedPane(0, 0, 9, 6, Priority.LOWEST);
 
-		for(int i = 0; i < PAGES_AMOUNT; i++)
-			pane.addPane(i, createPage(remainingItems));
+		for(int i = 0, pagesAmount = (remaining.size() / ITEMS_PER_PAGE) +1; i < pagesAmount; i++)
+			pane.addPane(i, createPage(remaining));
 
 		pane.setPage(0);
 
@@ -117,20 +119,20 @@ public class ItemPaletteGUI extends ChestGui
 		return pane;
 	}
 
-	private Pane createPage(Deque<GuiItem> items) 
+	private Pane createPage(Deque<GuiItem> items)
 	{
-		OutlinePane itemsPane = new OutlinePane(0, 0, 9, 6, Priority.LOWEST);
-		itemsPane.setOrientation(HORIZONTAL);
+		OutlinePane page = new OutlinePane(0, 0, 9, 6, Priority.LOWEST);
+		
+		page.setOrientation(HORIZONTAL);
 
 		for(int i = 1; i <= ITEMS_PER_PAGE; i++) 
 		{
 			if(!items.isEmpty()) //a little trick to avoid NoSuchElementException at the last page
-				itemsPane.addItem(items.removeFirst());
+				page.addItem(items.removeFirst());
 		}
 
-		return itemsPane;
+		return page;
 	}
-
 
 
 	/*
@@ -160,16 +162,60 @@ public class ItemPaletteGUI extends ChestGui
 		return new GuiItem(new ItemBuilder(Material.NAME_TAG)
 				.named(this.messageService.getMessage(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
 				.glowing()
-				.createCopy(), 
+				.createCopy(),
 				event -> 
 		{
-			if(this.englishItemClickHandler != null)
-				this.englishItemClickHandler.accept(event);
+			this.englishItemClickListener.accept(event);
 			
 			Player player = (Player) event.getWhoClicked();
 			player.closeInventory();
 
 			this.typeConversationFactory.buildConversation(player).begin();
 		});
+	}
+	
+	public static class Builder
+	{
+		String title;
+		MessageService messageService;
+		Function<Material, GuiItem> itemTransformer;
+		Predicate<Material> itemFilter;
+		ConversationFactory typeConversationFactory;
+		Consumer<InventoryClickEvent> englishItemClickListener;
+		
+		public Builder(String title, MessageService messageService) 
+		{
+			this.title = title;
+			this.messageService = messageService;
+		}
+		
+		public Builder transform(Function<Material, GuiItem> itemTransformer) 
+		{
+			this.itemTransformer = itemTransformer;
+			return this;
+		}
+		
+		public Builder withInitialTypeConversationFactory(ConversationFactory typeConversationFactory) 
+		{
+			this.typeConversationFactory = typeConversationFactory;
+			return this;
+		}
+		
+		public Builder withEnglishItemClickListener(Consumer<InventoryClickEvent> listener) 
+		{
+			this.englishItemClickListener = listener;
+			return this;
+		}
+		
+		public Builder filter(Predicate<Material> itemFilter) 
+		{
+			this.itemFilter = itemFilter;
+			return this;
+		}
+		
+		public ItemPaletteGUI build() 
+		{
+			return new ItemPaletteGUI(this);
+		}
 	}
 }
