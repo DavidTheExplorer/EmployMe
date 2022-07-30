@@ -1,8 +1,8 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_DELETE_INSTRUCTION;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_DELETION_TITLE;
+import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_DELETE_INSTRUCTION;
+import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_TITLE;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_DELETED;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
@@ -38,7 +38,7 @@ public class JobDeletionGUI extends ChestGui
 
 	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobRewardService jobRewardService) 
 	{
-		super(6, messageService.getMessage(INVENTORY_JOB_DELETION_TITLE).first());
+		super(6, messageService.getMessage(GUI_JOB_DELETION_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.jobsToDisplay = jobsToDisplay;
@@ -68,7 +68,7 @@ public class JobDeletionGUI extends ChestGui
 		ItemStack item = new ItemBuilder(JobIconFactory.create(job, this.messageService))
 				.addToLore(true,
 						createSeparationLine(GRAY, 23),
-						this.messageService.getMessage(INVENTORY_JOB_DELETION_DELETE_INSTRUCTION).first(),
+						this.messageService.getMessage(GUI_JOB_DELETION_DELETE_INSTRUCTION).first(),
 						createSeparationLine(GRAY, 23))
 				.createCopy();
 

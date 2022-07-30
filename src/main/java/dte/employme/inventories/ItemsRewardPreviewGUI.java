@@ -1,6 +1,6 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_PREVIEW_TITLE;
+import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_PREVIEW_TITLE;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +19,7 @@ public class ItemsRewardPreviewGUI extends ChestGui
 	
 	public ItemsRewardPreviewGUI(ItemsReward itemsReward, MessageService messageService) 
 	{
-		super(6, messageService.getMessage(INVENTORY_ITEMS_REWARD_PREVIEW_TITLE).first());
+		super(6, messageService.getMessage(GUI_ITEMS_REWARD_PREVIEW_TITLE).first());
 		
 		this.itemsReward = itemsReward;
 		

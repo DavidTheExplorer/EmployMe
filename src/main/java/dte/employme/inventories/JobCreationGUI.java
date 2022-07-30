@@ -1,11 +1,11 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_MONEY_JOB_ICON_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CREATION_TITLE;
+import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_MONEY_JOB_ICON_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_MONEY_JOB_ICON_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 
@@ -41,7 +41,7 @@ public class JobCreationGUI extends ChestGui
 	
 	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, Economy economy, PlayerContainerService playerContainerService, JobRewardService jobRewardService)
 	{
-		super(3, messageService.getMessage(INVENTORY_JOB_CREATION_TITLE).first());
+		super(3, messageService.getMessage(GUI_JOB_CREATION_TITLE).first());
 		
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
@@ -78,8 +78,8 @@ public class JobCreationGUI extends ChestGui
 		
 		//add the money job icon
 		pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
-				.named(this.messageService.getMessage(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
+				.withLore(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
 				.createCopy(), 
 				event -> 
 		{
@@ -91,8 +91,8 @@ public class JobCreationGUI extends ChestGui
 		
 		//add the items job icon
 		pane.addItem(new GuiItem(new ItemBuilder(Material.CHEST)
-				.named(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
+				.withLore(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
 				.createCopy(),
 				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.jobRewardService, this.jobSubscriptionService).show(event.getWhoClicked())));
 		

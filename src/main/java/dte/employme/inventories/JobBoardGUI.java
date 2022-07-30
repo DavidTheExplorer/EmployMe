@@ -1,14 +1,14 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_NEXT_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_NEXT_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_COMPLETED;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PREVIOUS_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_PREVIOUS_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_BOARD_TITLE;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_COMPLETED;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_NOT_COMPLETED;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_TITLE;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
 import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
@@ -55,7 +55,7 @@ public class JobBoardGUI extends ChestGui
 
 	public JobBoardGUI(Player player, JobBoard jobBoard, JobService jobService, MessageService messageService)
 	{
-		super(6, messageService.getMessage(INVENTORY_JOB_BOARD_TITLE).first());
+		super(6, messageService.getMessage(GUI_JOB_BOARD_TITLE).first());
 
 		this.player = player;
 		this.jobBoard = jobBoard;
@@ -85,8 +85,8 @@ public class JobBoardGUI extends ChestGui
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(INVENTORY_JOB_BOARD_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_JOB_BOARD_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_JOB_BOARD_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_JOB_BOARD_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.jobsPane))
 				.build());
@@ -95,8 +95,8 @@ public class JobBoardGUI extends ChestGui
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(INVENTORY_JOB_BOARD_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_JOB_BOARD_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_JOB_BOARD_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_JOB_BOARD_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.jobsPane))
 				.build());
@@ -111,7 +111,7 @@ public class JobBoardGUI extends ChestGui
 
 		//add the status and ID to the lore
 		String separator = createSeparationLine(finished ? WHITE : DARK_RED, finished ? 25 : 29);
-		String finishMessage = this.messageService.getMessage(finished ? INVENTORY_JOB_BOARD_OFFER_COMPLETED : INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED).first();
+		String finishMessage = this.messageService.getMessage(finished ? GUI_JOB_BOARD_OFFER_COMPLETED : GUI_JOB_BOARD_OFFER_NOT_COMPLETED).first();
 
 		List<String> lore = basicIcon.getItemMeta().getLore();
 		lore.add(separator);
@@ -144,9 +144,9 @@ public class JobBoardGUI extends ChestGui
 	private GuiItem createPersonalJobsItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.PLAYER_HEAD)
-				.named(this.messageService.getMessage(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
+				.named(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
 				.withItemMeta(SkullMeta.class, meta -> meta.setOwningPlayer(this.player))
-				.withLore(this.messageService.getMessage(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
+				.withLore(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
 				.createCopy();
 		
 		return new GuiItem(item, event -> 

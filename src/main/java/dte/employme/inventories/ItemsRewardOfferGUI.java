@@ -1,9 +1,9 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEMS_REWARD_OFFER_TITLE;
+import static dte.employme.messages.MessageKey.GUI_ITEMS_JOB_NO_ITEMS_WARNING;
+import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_TITLE;
 import static dte.employme.messages.MessageKey.PREFIX;
 import static java.util.stream.Collectors.toList;
 
@@ -42,7 +42,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobRewardService jobRewardService, JobSubscriptionService jobSubscriptionService) 
 	{
-		super(6, messageService.getMessage(INVENTORY_ITEMS_REWARD_OFFER_TITLE).first());
+		super(6, messageService.getMessage(GUI_ITEMS_REWARD_OFFER_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
@@ -56,7 +56,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 			if(getOfferedItems().isEmpty()) 
 			{
-				messageService.getMessage(INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING)
+				messageService.getMessage(GUI_ITEMS_JOB_NO_ITEMS_WARNING)
 				.prefixed(messageService.getMessage(PREFIX).first())
 				.sendTo(player);
 			}
@@ -89,8 +89,8 @@ public class ItemsRewardOfferGUI extends ChestGui
 	private GuiItem createConfirmationButton() 
 	{
 		ItemStack buttonItem = new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(this.messageService.getMessage(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE).toArray())
 				.createCopy();
 
 		this.confirmationButton = buttonItem;

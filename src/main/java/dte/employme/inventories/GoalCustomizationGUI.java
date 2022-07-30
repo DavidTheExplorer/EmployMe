@@ -1,16 +1,16 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_TITLE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TITLE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
@@ -71,7 +71,7 @@ public class GoalCustomizationGUI extends ChestGui
 
 	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobRewardService jobRewardService, JobBoard jobBoard, Reward reward)
 	{
-		super(6, messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TITLE).first());
+		super(6, messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.jobSubscriptionService = jobSubscriptionService;
@@ -122,7 +122,7 @@ public class GoalCustomizationGUI extends ChestGui
 			
 			ItemStack updatedItem = new ItemBuilder(item)
 					.ofType(material) //set the new material
-					.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
+					.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
 					.withItemFlags(HIDE_ATTRIBUTES)
 					.createCopy();
 			
@@ -215,7 +215,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createFinishItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
+				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
 				.createCopy(), 
 				event ->
 		{
@@ -239,15 +239,15 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createNoItemIcon() 
 	{
 		return new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
+				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
 				.createCopy());
 	}
 	
 	private GuiItem createEnchantmentsItem() 
 	{
 		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy();
 
@@ -264,8 +264,8 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createAmountItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.ARROW)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
+				.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy(), 
 				event -> 
@@ -280,8 +280,8 @@ public class GoalCustomizationGUI extends ChestGui
 	private GuiItem createTypeChoosingItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.ANVIL)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
 				.glowing()
 				.createCopy(), 
 				event ->
@@ -317,7 +317,7 @@ public class GoalCustomizationGUI extends ChestGui
 
 		public TypeItemPaletteGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobRewardService jobRewardService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 		{
-			super(messageService.getMessage(INVENTORY_ITEM_PALETTE_TITLE).first(),
+			super(messageService.getMessage(GUI_ITEM_PALETTE_TITLE).first(),
 					messageService,
 
 					item -> new GuiItemBuilder()

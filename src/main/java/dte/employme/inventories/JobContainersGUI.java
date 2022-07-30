@@ -1,10 +1,10 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_CONTAINERS_TITLE;
+import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_REWARDS_CONTAINER_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_REWARDS_CONTAINER_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 
@@ -32,7 +32,7 @@ public class JobContainersGUI extends ChestGui
 	
 	public JobContainersGUI(MessageService messageService, PlayerContainerService playerContainerService) 
 	{
-		super(1, messageService.getMessage(INVENTORY_JOB_CONTAINERS_TITLE).first());
+		super(1, messageService.getMessage(GUI_JOB_CONTAINERS_TITLE).first());
 		
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
@@ -48,8 +48,8 @@ public class JobContainersGUI extends ChestGui
 		OutlinePane pane = new OutlinePane(2, 0, 9, 1, Priority.LOW);
 		pane.setGap(3);
 		
-		pane.addItem(createContainerIcon(this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME).first(), this.playerContainerService::getItemsContainer, this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE).toArray()));
-		pane.addItem(createContainerIcon(this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME).first(), this.playerContainerService::getRewardsContainer, this.messageService.getMessage(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE).toArray()));
+		pane.addItem(createContainerIcon(this.messageService.getMessage(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME).first(), this.playerContainerService::getItemsContainer, this.messageService.getMessage(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE).toArray()));
+		pane.addItem(createContainerIcon(this.messageService.getMessage(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_NAME).first(), this.playerContainerService::getRewardsContainer, this.messageService.getMessage(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_LORE).toArray()));
 		
 		return pane;
 	}

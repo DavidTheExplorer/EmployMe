@@ -1,12 +1,12 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_TITLE;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_TITLE;
 import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
@@ -41,7 +41,7 @@ public class JobAddNotifiersGUI extends ChestGui
 
 	public JobAddNotifiersGUI(JobAddedNotifierService jobAddedNotifierService, MessageService messageService, UUID playerUUID)
 	{
-		super(3, messageService.getMessage(INVENTORY_JOB_ADDED_NOTIFIERS_TITLE).first());
+		super(3, messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_TITLE).first());
 
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
@@ -73,9 +73,9 @@ public class JobAddNotifiersGUI extends ChestGui
 		subscriptionsNotifier = this.jobAddedNotifierService.getByName("Material Subscriptions"),
 		noneNotifier = this.jobAddedNotifierService.getByName("None");
 
-		pane.addItem(createNotifierIcon(allJobsNotifier, INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, playerUUID, Material.NETHER_STAR, this.messageService.getMessage(INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE).toArray()));
-		pane.addItem(createNotifierIcon(subscriptionsNotifier, INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, playerUUID, Material.PAPER, this.messageService.getMessage(INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE).toArray()));
-		pane.addItem(createNotifierIcon(noneNotifier, INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, playerUUID, Material.BARRIER, this.messageService.getMessage(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE).toArray()));
+		pane.addItem(createNotifierIcon(allJobsNotifier, GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, playerUUID, Material.NETHER_STAR, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE).toArray()));
+		pane.addItem(createNotifierIcon(subscriptionsNotifier, GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, playerUUID, Material.PAPER, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE).toArray()));
+		pane.addItem(createNotifierIcon(noneNotifier, GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, playerUUID, Material.BARRIER, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE).toArray()));
 		
 		return pane;
 	}
@@ -85,7 +85,7 @@ public class JobAddNotifiersGUI extends ChestGui
 		List<String> nicerDescription = Lists.newArrayList(description);
 
 		if(this.jobAddedNotifierService.getPlayerNotifier(playerUUID).equals(notifier)) 
-			nicerDescription.addAll(Arrays.asList(" ", this.messageService.getMessage(MessageKey.INVENTORY_JOB_ADDED_NOTIFIERS_SELECTED).first()));
+			nicerDescription.addAll(Arrays.asList(" ", this.messageService.getMessage(MessageKey.GUI_JOB_ADDED_NOTIFIERS_SELECTED).first()));
 
 		ItemStack icon = new ItemBuilder(material)
 				.named(this.messageService.getMessage(notifierItemNameKey).first())
