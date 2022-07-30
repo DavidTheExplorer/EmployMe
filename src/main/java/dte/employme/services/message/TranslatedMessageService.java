@@ -157,6 +157,27 @@ public class TranslatedMessageService implements MessageService
 			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "No Jobs", "Name"))
 			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "No Jobs", "Lore"))
 			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SELECTED, toConfigPath("Inventory", "Job Added Notifiers", "Currently Selected"))
+			
+			//Player Subscriptions GUI
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_TITLE, toConfigPath("Inventory", "Player Subscriptions", "Title"))
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME, toConfigPath("Inventory", "Player Subscriptions", "Items", "Your Subscriptions", "Name"))
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE, toConfigPath("Inventory", "Player Subscriptions", "Items", "Your Subscriptions", "Lore"))
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Player Subscriptions", "Items", "Subscribe", "Name"))
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Player Subscriptions", "Items", "Subscribe", "Lore"))
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Player Subscriptions", "Items", "Unsubscribe", "Name"))
+			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Player Subscriptions", "Items", "Unsubscribe", "Lore"))
+			
+			//Subscribe Item Palette
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_TITLE, toConfigPath("Inventory", "Subscribe Item Palette", "Title"))
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION, toConfigPath("Inventory", "Subscribe Item Palette", "Subscribe Question"))
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Subscribe Item Palette", "Items", "Name"))
+			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Subscribe Item Palette", "Items", "Lore"))
+			
+			//Unsubscribe from Items Item Palette,
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_TITLE, toConfigPath("Inventory", "Unsubscribe From Items", "Title"))
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, toConfigPath("Inventory", "Unsubscribe From Items", "Unsubscribe Question"))
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Unsubscribe From Items", "Items", "Name"))
+			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Unsubscribe From Items", "Items", "Lore"))
 			.build();
 
 	public TranslatedMessageService(ConfigFile languageConfig) 

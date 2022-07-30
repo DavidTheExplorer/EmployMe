@@ -23,6 +23,7 @@ import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPaymentPrompt;
 import dte.employme.rewards.MoneyReward;
+import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
@@ -34,16 +35,18 @@ public class JobCreationGUI extends ChestGui
 	private final JobBoard jobBoard;
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
+	private final JobSubscriptionService jobSubscriptionService;
 	private final ConversationFactory moneyJobConversationFactory;
 	private final JobRewardService jobRewardService;
 	
-	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, Economy economy, PlayerContainerService playerContainerService, JobRewardService jobRewardService)
+	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, Economy economy, PlayerContainerService playerContainerService, JobRewardService jobRewardService)
 	{
 		super(3, messageService.getMessage(INVENTORY_JOB_CREATION_TITLE).first());
 		
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
+		this.jobSubscriptionService = jobSubscriptionService;
 		this.jobRewardService = jobRewardService;
 		
 		//init the goal's type conversation factory
@@ -58,7 +61,7 @@ public class JobCreationGUI extends ChestGui
 					Player player = (Player) event.getContext().getForWhom();
 					MoneyReward moneyReward = (MoneyReward) event.getContext().getSessionData("reward");
 					
-					new GoalCustomizationGUI(messageService, jobRewardService, jobBoard, moneyReward).show(player);
+					new GoalCustomizationGUI(messageService, jobSubscriptionService, jobRewardService, jobBoard, moneyReward).show(player);
 				});
 		
 		setOnTopClick(event -> event.setCancelled(true));
@@ -91,7 +94,7 @@ public class JobCreationGUI extends ChestGui
 				.named(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
 				.withLore(this.messageService.getMessage(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
 				.createCopy(),
-				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.jobRewardService).show(event.getWhoClicked())));
+				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.jobRewardService, this.jobSubscriptionService).show(event.getWhoClicked())));
 		
 		return pane;
 	}

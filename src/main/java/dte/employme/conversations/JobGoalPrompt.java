@@ -1,6 +1,5 @@
 package dte.employme.conversations;
 
-import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 
 import org.bukkit.Material;
@@ -13,16 +12,18 @@ import dte.employme.services.message.MessageService;
 public class JobGoalPrompt extends ValidatingPrompt
 {
 	private final MessageService messageService;
+	private final String question;
 	
-	public JobGoalPrompt(MessageService messageService) 
+	public JobGoalPrompt(MessageService messageService, String question) 
 	{
 		this.messageService = messageService;
+		this.question = question;
 	}
 
 	@Override
 	public String getPromptText(ConversationContext context)
 	{
-		return this.messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first();
+		return this.question;
 	}
 
 	@Override

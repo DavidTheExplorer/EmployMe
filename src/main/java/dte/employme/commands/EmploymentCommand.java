@@ -26,8 +26,10 @@ import dte.employme.inventories.JobAddNotifiersGUI;
 import dte.employme.inventories.JobContainersGUI;
 import dte.employme.inventories.JobCreationGUI;
 import dte.employme.inventories.JobDeletionGUI;
+import dte.employme.inventories.PlayerSubscriptionsGUI;
 import dte.employme.job.Job;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
+import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
@@ -43,10 +45,11 @@ public class EmploymentCommand extends BaseCommand
 	private final JobBoardDisplayer jobBoardDisplayer;
 	private final JobRewardService jobRewardService;
 	private final JobAddedNotifierService jobAddedNotifierService;
+	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
 
-	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, MessageService messageService, JobRewardService jobRewardService, JobAddedNotifierService jobAddedNotifierService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
+	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, MessageService messageService, JobRewardService jobRewardService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
 	{
 		this.economy = economy;
 		this.jobRewardService = jobRewardService;
@@ -54,6 +57,7 @@ public class EmploymentCommand extends BaseCommand
 		this.messageService = messageService;
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.playerContainerService = playerContainerService;
+		this.jobSubscriptionService = jobSubscriptionService;
 		this.jobBoardDisplayer = jobBoardDisplayer;
 	}
 	
@@ -70,7 +74,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.economy, this.playerContainerService, this.jobRewardService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService, this.jobRewardService).show(employer);
 	}
 
 	@Subcommand("delete")
@@ -85,15 +89,21 @@ public class EmploymentCommand extends BaseCommand
 	@Subcommand("mycontainers")
 	@Description("Claim the items that either people gathered for you OR from completed jobs.")
 	@CommandPermission("employme.jobs.mycontainers")
-	public void openPersonalContainers(Player player) 
+	public void showPersonalContainers(Player player) 
 	{
-		new JobContainersGUI(this.messageService, playerContainerService).show(player);
+		new JobContainersGUI(this.messageService, this.playerContainerService).show(player);
 	}
 	
 	@Subcommand("addnotifiers")
-	public void showSubscriptions(Player player) 
+	public void showNotifiers(Player player) 
 	{
 		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId()).show(player);
+	}
+
+	@Subcommand("mysubscriptions")
+	public void showPersonalSubscriptions(Player player) 
+	{
+		new PlayerSubscriptionsGUI(this.messageService, this.jobSubscriptionService).show(player);
 	}
 
 	@Subcommand("reload")
