@@ -77,7 +77,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		if(this.economy == null) 
 		{
-			disableWithError(RED + "Economy wasn't found! Shutting Down...");
+			disableWithError(RED + "You must install both Vault + an Economy Provider(e.g. EssentialsX)! Shutting Down...");
 			return;
 		}
 		ServiceLocator.register(Economy.class, this.economy);
