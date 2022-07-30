@@ -29,7 +29,7 @@ public class GoalAmountGUI extends AnvilGui
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.messageService = messageService;
 
-		setOnGlobalClick(event -> event.setCancelled(true));
+		setOnTopClick(event -> event.setCancelled(true));
 		
 		setOnClose(event -> 
 		{

@@ -46,7 +46,7 @@ public class JobAddNotifiersGUI extends ChestGui
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
 
-		setOnGlobalClick(event -> event.setCancelled(true));
+		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createWalls(this, Priority.LOWEST));
 		addPane(createBackground());
 		addPane(createNotifiersPane(playerUUID));

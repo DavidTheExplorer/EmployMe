@@ -37,7 +37,7 @@ public class JobContainersGUI extends ChestGui
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
 		
-		setOnGlobalClick(event -> event.setCancelled(true));
+		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 1, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(createContainersPane());
 		update();

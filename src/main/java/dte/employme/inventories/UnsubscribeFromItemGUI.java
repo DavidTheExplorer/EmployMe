@@ -43,6 +43,8 @@ public class UnsubscribeFromItemGUI extends ItemPaletteGUI
 
 					unsubscribe(player, material, messageService, jobSubscriptionService);
 				}));
+		
+		setOnTopClick(event -> event.setCancelled(true));
 	}
 
 	private static Function<Material, GuiItem> toUnsubscribeItem(Player player, MessageService messageService, JobSubscriptionService jobSubscriptionService)
