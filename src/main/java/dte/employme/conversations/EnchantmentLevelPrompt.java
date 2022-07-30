@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
 import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
 import static dte.employme.messages.Placeholders.ENCHANTMENT;
-import static dte.employme.messages.Placeholders.ENCHANTMENT_MAX_LEVEL;
 import static dte.employme.messages.Placeholders.ENCHANTMENT_MIN_LEVEL;
 
 import org.bukkit.conversations.ConversationContext;
@@ -62,7 +61,6 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	{
 		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
 				.inject(ENCHANTMENT_MIN_LEVEL, String.valueOf(this.enchantment.getStartLevel()))
-				.inject(ENCHANTMENT_MAX_LEVEL, String.valueOf(this.enchantment.getMaxLevel()))
 				.first();
 	}
 

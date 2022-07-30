@@ -1,9 +1,9 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION;
+import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE;
+import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION;
 import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
 import static dte.employme.messages.Placeholders.GOAL;
@@ -28,12 +28,12 @@ public class UnsubscribeFromItemGUI extends ItemPaletteGUI
 {
 	public UnsubscribeFromItemGUI(Player player, MessageService messageService, JobSubscriptionService jobSubscriptionService)
 	{
-		super(messageService.getMessage(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_TITLE).first(), 
+		super(messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE).first(), 
 				messageService,
 				toUnsubscribeItem(player, messageService, jobSubscriptionService),
 				material -> jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material),
 				Conversations.createFactory(messageService)
-				.withFirstPrompt(new JobGoalPrompt(messageService, messageService.getMessage(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION).first()))
+				.withFirstPrompt(new JobGoalPrompt(messageService, messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION).first()))
 				.addConversationAbandonedListener(event -> 
 				{
 					if(!event.gracefulExit())
@@ -49,14 +49,14 @@ public class UnsubscribeFromItemGUI extends ItemPaletteGUI
 	{
 		return material -> 
 		{
-			String name = messageService.getMessage(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME)
+			String name = messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME)
 					.inject(ITEM, EnumUtils.fixEnumName(material))
 					.first();
 			
 			return new GuiItemBuilder()
 					.forItem(new ItemBuilder(material)
 							.named(name)
-							.withLore(messageService.getMessage(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE).toArray())
+							.withLore(messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE).toArray())
 							.createCopy())
 					.whenClicked(event -> unsubscribe(player, material, messageService, jobSubscriptionService))
 					.build();

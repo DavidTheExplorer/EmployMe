@@ -1,9 +1,9 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
 import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
 import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
 import static dte.employme.utils.InventoryFrameworkUtils.createPage;
@@ -72,16 +72,16 @@ public class PlayerContainerGUI extends ChestGui
 
 		panel.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.itemsPane))
 				.build());
 
 		panel.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.itemsPane))
 				.build());

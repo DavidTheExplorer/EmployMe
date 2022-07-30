@@ -1,12 +1,8 @@
 package dte.employme.services.message;
 
 import static dte.employme.messages.MessageKey.*;
-import static java.util.stream.Collectors.joining;
 
-import java.util.Arrays;
 import java.util.Map;
-
-import org.apache.commons.text.WordUtils;
 
 import dte.employme.config.ConfigFile;
 import dte.employme.messages.MessageBuilder;
@@ -21,163 +17,163 @@ public class TranslatedMessageService implements MessageService
 	private static final Map<MessageKey, String> MESSAGE_KEY_PATHS = new MapBuilder<MessageKey, String>()
 
 			//Jobs
-			.put(JOB_ADDED_TO_BOARD, toConfigPath("Jobs", "Added To Board"))
-			.put(JOB_COMPLETED, toConfigPath("Jobs", "Completed"))
-			.put(ITEMS_JOB_COMPLETED, toConfigPath("Jobs", "Item Job Completed"))
-			.put(PLAYER_COMPLETED_YOUR_JOB, toConfigPath("Jobs", "Player Completed Your Job"))
-			.put(YOU_OFFERED_TOO_MANY_JOBS, toConfigPath("Jobs", "You Have Too Many Jobs"))
-			.put(JOB_CANCELLED_REWARD_REFUNDED, toConfigPath("Jobs", "Reward Refunded"))
+			.put(JOB_ADDED_TO_BOARD, "Jobs.Added To Board")
+			.put(JOB_COMPLETED, "Jobs.Completed")
+			.put(ITEMS_JOB_COMPLETED, "Jobs.Item Job Completed")
+			.put(PLAYER_COMPLETED_YOUR_JOB, "Jobs.Player Completed Your Job")
+			.put(YOU_OFFERED_TOO_MANY_JOBS, "Jobs.You Have Too Many Jobs")
+			.put(JOB_CANCELLED_REWARD_REFUNDED, "Jobs.Reward Refunded")
 
 			//Job Added Notifiers
-			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, toConfigPath("Job Add Notifiers", "Your New Notifier Is"))
-			.put(NEW_JOB_POSTED, toConfigPath("Job Add Notifiers", "New Job Posted"))
+			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "Job Add Notifiers.Your New Notifier Is")
+			.put(NEW_JOB_POSTED, "Job Add Notifiers.New Job Posted")
 
 			//Subscriptions
-			.put(SUCCESSFULLY_SUBSCRIBED_TO_GOAL, toConfigPath("Subscriptions", "Successfully Subscribed to Goal"))
-			.put(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, toConfigPath("Subscriptions", "Successfully Unsubscribed from Goal"))
-			.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, toConfigPath("Subscriptions", "Subscription Notification"))
-			.put(MUST_BE_SUBSCRIBED_TO_GOAL, toConfigPath("Subscriptions", "Must be Subscribed to Goal"))
-			.put(YOUR_SUBSCRIPTIONS_ARE, toConfigPath("Subscriptions", "Your Subscriptions Are"))
+			.put(SUCCESSFULLY_SUBSCRIBED_TO_GOAL, "Subscriptions.Successfully Subscribed to Goal")
+			.put(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, "Subscriptions.Successfully Unsubscribed from Goal")
+			.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, "Subscriptions.Subscription Notification")
+			.put(MUST_BE_SUBSCRIBED_TO_GOAL, "Subscriptions.Must be Subscribed to Goal")
+			.put(YOUR_SUBSCRIPTIONS_ARE, "Subscriptions.Your Subscriptions Are")
 
 			//General
-			.put(PREFIX, toConfigPath("General", "Prefix"))
-			.put(NONE, toConfigPath("General", "None"))
-			.put(GET, toConfigPath("General", "Get"))
-			.put(GOAL, toConfigPath("General", "Goal"))
-			.put(REWARD, toConfigPath("General", "Reward"))
-			.put(MUST_NOT_BE_CONVERSING, toConfigPath("General", "Must Not Be Conversing"))
-			.put(MATERIAL_NOT_FOUND, toConfigPath("General", "Material Not Found"))
-			.put(NEW_UPDATE_AVAILABLE, toConfigPath("General", "New Update Available"))
-			.put(CURRENCY_SYMBOL, toConfigPath("General", "Currency Symbol"))
-			.put(PLUGIN_RELOADED, toConfigPath("General", "Plugin Reloaded"))
+			.put(PREFIX, "General.Prefix")
+			.put(NONE, "General.None")
+			.put(GET, "General.Get")
+			.put(GOAL, "General.Goal")
+			.put(REWARD, "General.Reward")
+			.put(MUST_NOT_BE_CONVERSING, "General.Must Not Be Conversing")
+			.put(MATERIAL_NOT_FOUND, "General.Material Not Found")
+			.put(NEW_UPDATE_AVAILABLE, "General.New Update Available")
+			.put(CURRENCY_SYMBOL, "General.Currency Symbol")
+			.put(PLUGIN_RELOADED, "General.Plugin Reloaded")
 
 			//Job Containers GUI
-			.put(INVENTORY_JOB_CONTAINERS_TITLE, toConfigPath("Inventory", "Player Containers", "Title"))
-			.put(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_NAME, toConfigPath("Inventory", "Player Containers", "Items", "Rewards Container", "Name"))
-			.put(INVENTORY_JOB_CONTAINERS_REWARDS_CONTAINER_LORE, toConfigPath("Inventory", "Player Containers", "Items", "Rewards Container", "Lore"))
-			.put(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_NAME, toConfigPath("Inventory", "Player Containers", "Items", "Items Container", "Name"))
-			.put(INVENTORY_JOB_CONTAINERS_ITEMS_CONTAINER_LORE, toConfigPath("Inventory", "Player Containers", "Items", "Items Container", "Lore"))
-			.put(CONTAINER_CLAIM_INSTRUCTION, toConfigPath("Inventory", "Player Containers", "Claim Instruction"))
+			.put(GUI_JOB_CONTAINERS_TITLE, "GUIs.Player Containers.Title")
+			.put(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_NAME, "GUIs.Player Containers.Items.Rewards Container.Name")
+			.put(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_LORE, "GUIs.Player Containers.Items.Rewards Container.Lore")
+			.put(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME, "GUIs.Player Containers.Items.Items Container.Name")
+			.put(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE, "GUIs.Player Containers.Items.Items Container.Lore")
+			.put(CONTAINER_CLAIM_INSTRUCTION, "GUIs.Player Containers.Claim Instruction")
 
 			//Player Container GUI
-			.put(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_NAME, toConfigPath("Inventory", "Player Container", "Items", "Next Page", "Name"))
-			.put(INVENTORY_PLAYER_CONTAINER_NEXT_PAGE_LORE, toConfigPath("Inventory", "Player Container", "Items", "Next Page", "Lore"))
-			.put(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME, toConfigPath("Inventory", "Player Container", "Items", "Back", "Name"))
-			.put(INVENTORY_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE, toConfigPath("Inventory", "Player Container", "Items", "Back", "Lore"))
+			.put(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME, "GUIs.Player Container.Items.Next Page.Name")
+			.put(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE, "GUIs.Player Container.Items.Next Page.Lore")
+			.put(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME, "GUIs.Player Container.Items.Back.Name")
+			.put(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE, "GUIs.Player Container.Items.Back.Lore")
 
 			//Job Icon
-			.put(JOB_ICON_NAME, toConfigPath("Items", "Job Icon", "Name"))
-			.put(JOB_ICON_GOAL_INSTRUCTIONS, toConfigPath("Items", "Job Icon", "Goal Instructions"))
-			.put(JOB_ICON_ENCHANT_DESCRIPTION, toConfigPath("Items", "Job Icon", "Enchant Description"))
-			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, toConfigPath("Items", "Job Icon", "Money Payment Description"))
-			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, toConfigPath("Items", "Job Icon", "Items Payment Description"))
+			.put(JOB_ICON_NAME, "Items.Job Icon.Name")
+			.put(JOB_ICON_GOAL_INSTRUCTIONS, "Items.Job Icon.Goal Instructions")
+			.put(JOB_ICON_ENCHANT_DESCRIPTION, "Items.Job Icon.Enchant Description")
+			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "Items.Job Icon.Money Payment Description")
+			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "Items.Job Icon.Items Payment Description")
 
 			//Job Board GUI
-			.put(INVENTORY_JOB_BOARD_TITLE, toConfigPath("Inventory", "Job Board", "Title"))
-			.put(INVENTORY_JOB_BOARD_OFFER_COMPLETED, toConfigPath("Inventory", "Job Board", "Offer Completed"))
-			.put(INVENTORY_JOB_BOARD_OFFER_NOT_COMPLETED, toConfigPath("Inventory", "Job Board", "Offer Not Completed"))
-			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, toConfigPath("Inventory", "Job Board", "Items", "Your Jobs", "Name"))
-			.put(INVENTORY_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, toConfigPath("Inventory", "Job Board", "Items", "Your Jobs", "Lore"))
-			.put(INVENTORY_JOB_BOARD_NEXT_PAGE_NAME, toConfigPath("Inventory", "Job Board", "Items", "Next Page", "Name"))
-			.put(INVENTORY_JOB_BOARD_NEXT_PAGE_LORE, toConfigPath("Inventory", "Job Board", "Items", "Next Page", "Lore"))
-			.put(INVENTORY_JOB_BOARD_PREVIOUS_PAGE_NAME, toConfigPath("Inventory", "Job Board", "Items", "Previous Page", "Name"))
-			.put(INVENTORY_JOB_BOARD_PREVIOUS_PAGE_LORE, toConfigPath("Inventory", "Job Board", "Items", "Previous Page", "Lore"))
+			.put(GUI_JOB_BOARD_TITLE, "GUIs.Job Board.Title")
+			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "GUIs.Job Board.Offer Completed")
+			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "GUIs.Job Board.Offer Not Completed")
+			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "GUIs.Job Board.Items.Your Jobs.Name")
+			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "GUIs.Job Board.Items.Your Jobs.Lore")
+			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "GUIs.Job Board.Items.Next Page.Name")
+			.put(GUI_JOB_BOARD_NEXT_PAGE_LORE, "GUIs.Job Board.Items.Next Page.Lore")
+			.put(GUI_JOB_BOARD_PREVIOUS_PAGE_NAME, "GUIs.Job Board.Items.Previous Page.Name")
+			.put(GUI_JOB_BOARD_PREVIOUS_PAGE_LORE, "GUIs.Job Board.Items.Previous Page.Lore")
 
 			//Player Jobs GUI
-			.put(INVENTORY_PLAYER_JOBS_TITLE, toConfigPath("Inventory", "Player Jobs", "Title"))
-			.put(INVENTORY_PLAYER_JOBS_NEXT_PAGE_NAME, toConfigPath("Inventory", "Player Jobs", "Items", "Next Page", "Name"))
-			.put(INVENTORY_PLAYER_JOBS_NEXT_PAGE_LORE, toConfigPath("Inventory", "Player Jobs", "Items", "Next Page", "Lore"))
-			.put(INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_NAME, toConfigPath("Inventory", "Player Jobs", "Items", "Previous Page", "Name"))
-			.put(INVENTORY_PLAYER_JOBS_PREVIOUS_PAGE_LORE, toConfigPath("Inventory", "Player Jobs", "Items", "Previous Page", "Lore"))
+			.put(GUI_PLAYER_JOBS_TITLE, "GUIs.Player Jobs.Title")
+			.put(GUI_PLAYER_JOBS_NEXT_PAGE_NAME, "GUIs.Player Jobs.Items.Next Page.Name")
+			.put(GUI_PLAYER_JOBS_NEXT_PAGE_LORE, "GUIs.Player Jobs.Items.Next Page.Lore")
+			.put(GUI_PLAYER_JOBS_PREVIOUS_PAGE_NAME, "GUIs.Player Jobs.Items.Previous Page.Name")
+			.put(GUI_PLAYER_JOBS_PREVIOUS_PAGE_LORE, "GUIs.Player Jobs.Items.Previous Page.Lore")
 
 			//Job Deletion GUI
-			.put(INVENTORY_JOB_DELETION_TITLE, toConfigPath("Inventory", "Job Deletion", "Title"))
-			.put(INVENTORY_JOB_DELETION_DELETE_INSTRUCTION, toConfigPath("Inventory", "Job Deletion", "Instruction"))
-			.put(JOB_SUCCESSFULLY_DELETED, toConfigPath("Inventory", "Job Deletion", "Job Successfully Deleted"))
+			.put(GUI_JOB_DELETION_TITLE, "GUIs.Job Deletion.Title")
+			.put(GUI_JOB_DELETION_DELETE_INSTRUCTION, "GUIs.Job Deletion.Instruction")
+			.put(JOB_SUCCESSFULLY_DELETED, "GUIs.Job Deletion.Job Successfully Deleted")
 
 			//Job Creation GUI
-			.put(INVENTORY_JOB_CREATION_TITLE, toConfigPath("Inventory", "Job Creation", "Title"))
-			.put(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_NAME, toConfigPath("Inventory", "Job Creation", "Items", "Money Job", "Name"))
-			.put(INVENTORY_JOB_CREATION_MONEY_JOB_ICON_LORE, toConfigPath("Inventory", "Job Creation", "Items", "Money Job", "Lore"))
-			.put(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_NAME, toConfigPath("Inventory", "Job Creation", "Items", "Items Job", "Name"))
-			.put(INVENTORY_JOB_CREATION_ITEMS_JOB_ICON_LORE, toConfigPath("Inventory", "Job Creation", "Items", "Items Job", "Lore"))
-			.put(MONEY_PAYMENT_AMOUNT_QUESTION, toConfigPath("Inventory", "Job Creation", "Money Payment Amount Question"))
-			.put(MONEY_REWARD_ERROR_NEGATIVE, toConfigPath("Inventory", "Job Creation", "Money Reward Negative Error"))
-			.put(MONEY_REWARD_NOT_ENOUGH, toConfigPath("Inventory", "Job Creation", "Money Reward Not Enough"))
-			.put(MONEY_REWARD_NOT_A_NUMBER, toConfigPath("Inventory", "Job Creation", "Money Reward Not A Number"))
+			.put(GUI_JOB_CREATION_TITLE, "GUIs.Job Creation.Title")
+			.put(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME, "GUIs.Job Creation.Items.Money Job.Name")
+			.put(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE, "GUIs.Job Creation.Items.Money Job.Lore")
+			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME, "GUIs.Job Creation.Items.Items Job.Name")
+			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE, "GUIs.Job Creation.Items.Items Job.Lore")
+			.put(MONEY_PAYMENT_AMOUNT_QUESTION, "GUIs.Job Creation.Money Payment Amount Question")
+			.put(MONEY_REWARD_ERROR_NEGATIVE, "GUIs.Job Creation.Money Reward Negative Error")
+			.put(MONEY_REWARD_NOT_ENOUGH, "GUIs.Job Creation.Money Reward Not Enough")
+			.put(MONEY_REWARD_NOT_A_NUMBER, "GUIs.Job Creation.Money Reward Not A Number")
 
 			//Items Reward Preview GUI
-			.put(INVENTORY_ITEMS_REWARD_PREVIEW_TITLE, toConfigPath("Inventory", "Items Reward Preview", "Title"))
+			.put(GUI_ITEMS_REWARD_PREVIEW_TITLE, "GUIs.Items Reward Preview.Title")
 
 			//Items Reward Offer GUI
-			.put(INVENTORY_ITEMS_REWARD_OFFER_TITLE, toConfigPath("Inventory", "Items Reward Offer", "Title"))
-			.put(INVENTORY_ITEMS_JOB_NO_ITEMS_WARNING, toConfigPath("Inventory", "Items Reward Offer", "No Items Warning"))
-			.put(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME, toConfigPath("Inventory", "Items Reward Offer", "Items", "Confirmation Item", "Name"))
-			.put(INVENTORY_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE, toConfigPath("Inventory", "Items Reward Offer", "Items", "Confirmation Item", "Lore"))
+			.put(GUI_ITEMS_REWARD_OFFER_TITLE, "GUIs.Items Reward Offer.Title")
+			.put(GUI_ITEMS_JOB_NO_ITEMS_WARNING, "GUIs.Items Reward Offer.No Items Warning")
+			.put(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME, "GUIs.Items Reward Offer.Items.Confirmation Item.Name")
+			.put(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE, "GUIs.Items Reward Offer.Items.Confirmation Item.Lore")
 
 			//Goal Enchantment Selection GUI
-			.put(INVENTORY_GOAL_ENCHANTMENT_SELECTION_TITLE, toConfigPath("Inventory", "Goal Enchantment Selection", "Title"))
-			.put(INVENTORY_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE, toConfigPath("Inventory", "Goal Enchantment Selection", "Items", "Goal Enchantment Selection", "Lore"))
-			.put(ENTER_ENCHANTMENT_LEVEL, toConfigPath("Inventory", "Goal Enchantment Selection", "Enter Enchantment Level"))
-			.put(ENCHANTMENT_LEVEL_NOT_A_NUMBER, toConfigPath("Inventory", "Goal Enchantment Selection", "Enchantment Level Not A Number"))
-			.put(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, toConfigPath("Inventory", "Goal Enchantment Selection", "Enchantment Level Out Of Bounds"))
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_TITLE, "GUIs.Goal Enchantment Selection.Title")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE, "GUIs.Goal Enchantment Selection.Items.Goal Enchantment Selection.Lore")
+			.put(ENTER_ENCHANTMENT_LEVEL, "GUIs.Goal Enchantment Selection.Enter Enchantment Level")
+			.put(ENCHANTMENT_LEVEL_NOT_A_NUMBER, "GUIs.Goal Enchantment Selection.Enchantment Level Not A Number")
+			.put(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, "GUIs.Goal Enchantment Selection.Enchantment Level Out Of Bounds")
 
 			//Goal Customization GUI
-			.put(INVENTORY_GOAL_CUSTOMIZATION_TITLE, toConfigPath("Inventory", "Goal Customization", "Title"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME, toConfigPath("Inventory", "Goal Customization", "Items", "Current Item", "Name"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME, toConfigPath("Inventory", "Goal Customization", "Items", "No Current Item", "Name"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, toConfigPath("Inventory", "Goal Customization", "Items", "Finish Item", "Name"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, toConfigPath("Inventory", "Goal Customization", "Items", "Type Item", "Name"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, toConfigPath("Inventory", "Goal Customization", "Items", "Type Item", "Lore"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, toConfigPath("Inventory", "Goal Customization", "Items", "Amount Item", "Name"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, toConfigPath("Inventory", "Goal Customization", "Items", "Amount Item", "Lore"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, toConfigPath("Inventory", "Goal Customization", "Items", "Enchantments Item", "Name"))
-			.put(INVENTORY_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, toConfigPath("Inventory", "Goal Customization", "Items", "Enchantments Item", "Lore"))
-			.put(ITEM_GOAL_FORMAT_QUESTION, toConfigPath("Inventory", "Goal Customization", "Item Goal Format Question"))
-			.put(ITEM_GOAL_INVALID, toConfigPath("Inventory", "Goal Customization", "Invalid Goal Item"))
+			.put(GUI_GOAL_CUSTOMIZATION_TITLE, "GUIs.Goal Customization.Title")
+			.put(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME, "GUIs.Goal Customization.Items.Current Item.Name")
+			.put(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME, "GUIs.Goal Customization.Items.No Current Item.Name")
+			.put(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "GUIs.Goal Customization.Items.Finish Item.Name")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "GUIs.Goal Customization.Items.Type Item.Name")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "GUIs.Goal Customization.Items.Type Item.Lore")
+			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "GUIs.Goal Customization.Items.Amount Item.Name")
+			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "GUIs.Goal Customization.Items.Amount Item.Lore")
+			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "GUIs.Goal Customization.Items.Enchantments Item.Name")
+			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "GUIs.Goal Customization.Items.Enchantments Item.Lore")
+			.put(ITEM_GOAL_FORMAT_QUESTION, "GUIs.Goal Customization.Item Goal Format Question")
+			.put(ITEM_GOAL_INVALID, "GUIs.Goal Customization.Invalid Goal Item")
 
 			//Item Palette GUI
-			.put(INVENTORY_ITEM_PALETTE_TITLE, toConfigPath("Inventory", "Item Palette", "Title"))
-			.put(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME, toConfigPath("Inventory", "Item Palette", "Items", "Next Item", "Name"))
-			.put(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME, toConfigPath("Inventory", "Item Palette", "Items", "Back Item", "Name"))
-			.put(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, toConfigPath("Inventory", "Item Palette", "Items", "English Search Item", "Name"))
+			.put(GUI_ITEM_PALETTE_TITLE, "GUIs.Item Palette.Title")
+			.put(GUI_ITEM_PALETTE_NEXT_ITEM_NAME, "GUIs.Item Palette.Items.Next Item.Name")
+			.put(GUI_ITEM_PALETTE_BACK_ITEM_NAME, "GUIs.Item Palette.Items.Back Item.Name")
+			.put(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "GUIs.Item Palette.Items.English Search Item.Name")
 
 			//Goal Amount GUI
-			.put(INVENTORY_GOAL_AMOUNT_TITLE, toConfigPath("Inventory", "Goal Amount", "Title"))
-			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME, toConfigPath("Inventory", "Goal Amount", "Items", "Finish Item", "Name"))
-			.put(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE, toConfigPath("Inventory", "Goal Amount", "Items", "Finish Item", "Lore"))
-			.put(INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, toConfigPath("Inventory", "Goal Amount", "Numeric Amount Title"))
+			.put(GUI_GOAL_AMOUNT_TITLE, "GUIs.Goal Amount.Title")
+			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME, "GUIs.Goal Amount.Items.Finish Item.Name")
+			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE, "GUIs.Goal Amount.Items.Finish Item.Lore")
+			.put(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "GUIs.Goal Amount.Numeric Amount Title")
 
 			//Job Added Notifiers GUI
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_TITLE, toConfigPath("Inventory", "Job Added Notifiers", "Title"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "All Jobs", "Name"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "All Jobs", "Lore"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "Material Subscriptions", "Name"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "Material Subscriptions", "Lore"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, toConfigPath("Inventory", "Job Added Notifiers", "Items", "No Jobs", "Name"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, toConfigPath("Inventory", "Job Added Notifiers", "Items", "No Jobs", "Lore"))
-			.put(INVENTORY_JOB_ADDED_NOTIFIERS_SELECTED, toConfigPath("Inventory", "Job Added Notifiers", "Currently Selected"))
+			.put(GUI_JOB_ADDED_NOTIFIERS_TITLE, "GUIs.Job Added Notifiers.Title")
+			.put(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, "GUIs.Job Added Notifiers.Items.All Jobs.Name")
+			.put(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE, "GUIs.Job Added Notifiers.Items.All Jobs.Lore")
+			.put(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, "GUIs.Job Added Notifiers.Items.Material Subscriptions.Name")
+			.put(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE, "GUIs.Job Added Notifiers.Items.Material Subscriptions.Lore")
+			.put(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, "GUIs.Job Added Notifiers.Items.No Jobs.Name")
+			.put(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, "GUIs.Job Added Notifiers.Items.No Jobs.Lore")
+			.put(GUI_JOB_ADDED_NOTIFIERS_SELECTED, "GUIs.Job Added Notifiers.Currently Selected")
 			
 			//Player Subscriptions GUI
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_TITLE, toConfigPath("Inventory", "Player Subscriptions", "Title"))
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME, toConfigPath("Inventory", "Player Subscriptions", "Items", "Your Subscriptions", "Name"))
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE, toConfigPath("Inventory", "Player Subscriptions", "Items", "Your Subscriptions", "Lore"))
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Player Subscriptions", "Items", "Subscribe", "Name"))
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Player Subscriptions", "Items", "Subscribe", "Lore"))
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Player Subscriptions", "Items", "Unsubscribe", "Name"))
-			.put(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Player Subscriptions", "Items", "Unsubscribe", "Lore"))
+			.put(GUI_PLAYER_SUBSCRIPTIONS_TITLE, "GUIs.Player Subscriptions.Title")
+			.put(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME, "GUIs.Player Subscriptions.Items.Your Subscriptions.Name")
+			.put(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE, "GUIs.Player Subscriptions.Items.Your Subscriptions.Lore")
+			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME, "GUIs.Player Subscriptions.Items.Subscribe.Name")
+			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Subscribe.Lore")
+			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "GUIs.Player Subscriptions.Items.Unsubscribe.Name")
+			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Unsubscribe.Lore")
 			
 			//Subscribe Item Palette
-			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_TITLE, toConfigPath("Inventory", "Subscribe Item Palette", "Title"))
-			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION, toConfigPath("Inventory", "Subscribe Item Palette", "Subscribe Question"))
-			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Subscribe Item Palette", "Items", "Name"))
-			.put(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Subscribe Item Palette", "Items", "Lore"))
+			.put(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Subscribe Item Palette.Title")
+			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION, "GUIs.Subscribe Item Palette.Subscribe Question")
+			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, "GUIs.Subscribe Item Palette.Items.Name")
+			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, "GUIs.Subscribe Item Palette.Items.Lore")
 			
 			//Unsubscribe from Items Item Palette,
-			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_TITLE, toConfigPath("Inventory", "Unsubscribe From Items", "Title"))
-			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, toConfigPath("Inventory", "Unsubscribe From Items", "Unsubscribe Question"))
-			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, toConfigPath("Inventory", "Unsubscribe From Items", "Items", "Name"))
-			.put(INVENTORY_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, toConfigPath("Inventory", "Unsubscribe From Items", "Items", "Lore"))
+			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Unsubscribe From Items.Title")
+			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "GUIs.Unsubscribe From Items.Unsubscribe Question")
+			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "GUIs.Unsubscribe From Items.Items.Name")
+			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "GUIs.Unsubscribe From Items.Items.Lore")
 			.build();
 
 	public TranslatedMessageService(ConfigFile languageConfig) 
@@ -196,12 +192,5 @@ public class TranslatedMessageService implements MessageService
 	public static String getConfigPath(MessageKey key) 
 	{
 		return MESSAGE_KEY_PATHS.get(key);
-	}
-
-	private static String toConfigPath(String... path) 
-	{
-		return Arrays.stream(path)
-				.map(key -> WordUtils.capitalizeFully(key).replace('_', ' '))
-				.collect(joining("."));
 	}
 }

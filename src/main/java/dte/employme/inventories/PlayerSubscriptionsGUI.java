@@ -1,16 +1,16 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION;
-import static dte.employme.messages.MessageKey.INVENTORY_SUBSCRIBE_ITEM_PALETTE_TITLE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_TITLE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION;
+import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
@@ -50,7 +50,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 
 	public PlayerSubscriptionsGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService) 
 	{
-		super(3, messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_TITLE).first());
+		super(3, messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_TITLE).first());
 
 		this.messageService = messageService;
 		this.jobSubscriptionService = jobSubscriptionService;
@@ -76,8 +76,8 @@ public class PlayerSubscriptionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -105,18 +105,18 @@ public class PlayerSubscriptionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.WRITABLE_BOOK)
-						.named(this.messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
 					Player player = (Player) event.getWhoClicked();
 
-					new ItemPaletteGUI.Builder(this.messageService.getMessage(INVENTORY_SUBSCRIBE_ITEM_PALETTE_TITLE).first(), this.messageService)
+					new ItemPaletteGUI.Builder(this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE).first(), this.messageService)
 					.transform(toSubscribeItem())
 					.filter(material -> !this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
 					.withInitialTypeConversationFactory(Conversations.createFactory(this.messageService)
-							.withFirstPrompt(new JobGoalPrompt(this.messageService, this.messageService.getMessage(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION).first()))
+							.withFirstPrompt(new JobGoalPrompt(this.messageService, this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION).first()))
 							.addConversationAbandonedListener(abandonedEvent -> 
 							{
 								if(!abandonedEvent.gracefulExit())
@@ -136,8 +136,8 @@ public class PlayerSubscriptionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.BARRIER)
-						.named(this.messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(INVENTORY_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE).toArray())
+						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> new UnsubscribeFromItemGUI((Player) event.getWhoClicked(), this.messageService, this.jobSubscriptionService).show(event.getWhoClicked()))
 				.build();
@@ -147,14 +147,14 @@ public class PlayerSubscriptionsGUI extends ChestGui
 	{
 		return material -> 
 		{
-			String name = this.messageService.getMessage(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME)
+			String name = this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME)
 					.inject(ITEM, EnumUtils.fixEnumName(material))
 					.first();
 
 			return new GuiItemBuilder()
 					.forItem(new ItemBuilder(material)
 							.named(name)
-							.withLore(this.messageService.getMessage(INVENTORY_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE).toArray())
+							.withLore(this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE).toArray())
 							.createCopy())
 					.whenClicked(event -> unsubscribe((Player) event.getWhoClicked(), material))
 					.build();

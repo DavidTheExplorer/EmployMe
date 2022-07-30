@@ -1,9 +1,9 @@
 package dte.employme.inventories;
 
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
-import static dte.employme.messages.MessageKey.INVENTORY_GOAL_AMOUNT_TITLE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_FINISH_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_FINISH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_TITLE;
 import static dte.employme.utils.InventoryFrameworkUtils.createItemPane;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static org.bukkit.ChatColor.BLACK;
@@ -24,7 +24,7 @@ public class GoalAmountGUI extends AnvilGui
 
 	public GoalAmountGUI(GoalCustomizationGUI goalCustomizationGUI, MessageService messageService)
 	{
-		super(messageService.getMessage(INVENTORY_GOAL_AMOUNT_TITLE).first());
+		super(messageService.getMessage(GUI_GOAL_AMOUNT_TITLE).first());
 
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.messageService = messageService;
@@ -57,8 +57,8 @@ public class GoalAmountGUI extends AnvilGui
 	private GuiItem createFinishItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(this.messageService.getMessage(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(INVENTORY_GOAL_AMOUNT_FINISH_ITEM_LORE).toArray())
+				.named(this.messageService.getMessage(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME).first())
+				.withLore(this.messageService.getMessage(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE).toArray())
 				.createCopy(), 
 				event -> 
 		{
@@ -68,7 +68,7 @@ public class GoalAmountGUI extends AnvilGui
 
 			if(enteredAmount == null)
 			{
-				setTitle(this.messageService.getMessage(INVENTORY_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE).first());
+				setTitle(this.messageService.getMessage(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE).first());
 				update();
 				return;
 			}

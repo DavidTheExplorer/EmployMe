@@ -16,7 +16,6 @@ public class Placeholders
 	JOB_ADDED_NOTIFIERS = create("job added notifiers"),
 	ENCHANTMENT = create("enchantment"),
 	ENCHANTMENT_MIN_LEVEL = create("enchantment min level"),
-	ENCHANTMENT_MAX_LEVEL = create("enchantment max level"),
 	NEW_VERSION = create("new version"),
 	GOAL_AMOUNT = create("goal amount"),
 	EMPLOYER = create("employer"),

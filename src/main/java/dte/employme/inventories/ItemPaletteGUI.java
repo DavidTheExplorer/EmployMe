@@ -1,9 +1,9 @@
 package dte.employme.inventories;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
-import static dte.employme.messages.MessageKey.INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_BACK_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_NEXT_ITEM_NAME;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.stream.Collectors.toCollection;
@@ -93,9 +93,9 @@ public class ItemPaletteGUI extends ChestGui
 		pane.setOrientation(HORIZONTAL);
 		pane.setGap(3);
 
-		pane.addItem(createController("MHF_ArrowLeft", this.messageService.getMessage(INVENTORY_ITEM_PALETTE_BACK_ITEM_NAME).first(), currentPage -> currentPage > 0, currentPage -> --currentPage));
+		pane.addItem(createController("MHF_ArrowLeft", this.messageService.getMessage(GUI_ITEM_PALETTE_BACK_ITEM_NAME).first(), currentPage -> currentPage > 0, currentPage -> --currentPage));
 		pane.addItem(createEnglishSearchItem());
-		pane.addItem(createController("MHF_ArrowRight", this.messageService.getMessage(INVENTORY_ITEM_PALETTE_NEXT_ITEM_NAME).first(), currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
+		pane.addItem(createController("MHF_ArrowRight", this.messageService.getMessage(GUI_ITEM_PALETTE_NEXT_ITEM_NAME).first(), currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
 
 		return pane;
 	}
@@ -160,7 +160,7 @@ public class ItemPaletteGUI extends ChestGui
 	private GuiItem createEnglishSearchItem() 
 	{
 		return new GuiItem(new ItemBuilder(Material.NAME_TAG)
-				.named(this.messageService.getMessage(INVENTORY_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
+				.named(this.messageService.getMessage(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
 				.glowing()
 				.createCopy(),
 				event -> 
