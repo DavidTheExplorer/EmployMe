@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -24,6 +25,7 @@ import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.board.listenable.EmployerNotificationListener;
+import dte.employme.board.listenable.JobAddDiscordWebhook;
 import dte.employme.board.listenable.JobAddNotificationListener;
 import dte.employme.board.listenable.JobCompletedMessagesListener;
 import dte.employme.board.listenable.JobGoalTransferListener;
@@ -63,7 +65,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private JobRewardService jobRewardService;
-	private ConfigFile jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	private ConfigFile mainConfig, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 
 	private static EmployMe INSTANCE;
 
@@ -92,13 +94,14 @@ public class EmployMe extends ModernJavaPlugin
 				.onSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
 				.build();
 		
+		this.mainConfig = configFileFactory.loadMainConfig();
 		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
 		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
 		this.itemsContainersConfig = configFileFactory.loadContainer("items");
 		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
 		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
 		
-		if(this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
+		if(this.mainConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
 			return;
 		
 		
@@ -137,6 +140,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		//register commands, listeners, metrics
 		registerCommands();
+		setupWebhooks();
 
 		setDisableListener(() -> 
 		{
@@ -220,5 +224,13 @@ public class EmployMe extends ModernJavaPlugin
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
 		
 		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobRewardService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, inventoryBoardDisplayer));
+	}
+	
+	private void setupWebhooks() 
+	{
+		ConfigurationSection jobAddedSection = this.mainConfig.getConfig().getConfigurationSection("Discord Webhooks.On Job Create");
+		
+		if(jobAddedSection.getBoolean("Enabled")) 
+			this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(jobAddedSection.getString("URL"), jobAddedSection.getString("Title"), jobAddedSection.getString("Message")));		
 	}
 }

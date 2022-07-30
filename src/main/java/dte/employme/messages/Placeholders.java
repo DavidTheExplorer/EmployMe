@@ -24,7 +24,8 @@ public class Placeholders
 	CONTAINER_SUBJECT = create("container subject"),
 	CURRENCY_SYMBOL = create("currency symbol"),
 	RELOAD_TIME = create("reload time"),
-	ITEM = create("item");
+	ITEM = create("item"),
+	REWARD = create("reward");
 
 	private static String create(String value) 
 	{
