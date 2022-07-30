@@ -23,8 +23,13 @@ public class JobAddNotificationListener implements JobAddListener
 		{
 			Player player = Bukkit.getPlayer(playerUUID);
 
-			if(playerNotifier.shouldNotify(player, job))
-				playerNotifier.notify(player, job);
+			if(player.getUniqueId().equals(job.getEmployer().getUniqueId()))
+				return;
+
+			if(!playerNotifier.shouldNotify(player, job))
+				return;
+
+			playerNotifier.notify(player, job);
 		});
 	}
 }
