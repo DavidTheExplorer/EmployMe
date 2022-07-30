@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.text.WordUtils;
 
 import dte.employme.config.ConfigFile;
 import dte.employme.messages.MessageBuilder;
