@@ -162,7 +162,7 @@ public class Messages
 			.put(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, "&aAll Jobs")
 			.put(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE, "&fAll jobs whenever they're posted.")
 			.put(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, "&aSubscriptions")
-			.put(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE, "&fJobs that items for which", "&fYou were subscribed via &e/emp subscriptions&f.")
+			.put(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE, "&fJobs that items for which", "&fYou were subscribed via &e/emp mysubscriptions&f.")
 			.put(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, "&aNone")
 			.put(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, "&cNo Jobs &f(Default)")
 			.put(GUI_JOB_ADDED_NOTIFIERS_SELECTED, "&bCurrently Selected")
