@@ -7,6 +7,7 @@ import static dte.employme.messages.Placeholders.RELOAD_TIME;
 import java.time.Duration;
 import java.util.List;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import co.aikar.commands.BaseCommand;
@@ -108,7 +109,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("reload")
 	@CommandPermission("employme.reload")
-	public void reload(Player player)
+	public void reload(CommandSender sender)
 	{
 		Duration reloadTime = TimingUtils.time(() -> 
 		{
@@ -119,7 +120,7 @@ public class EmploymentCommand extends BaseCommand
 		this.messageService.getMessage(PLUGIN_RELOADED)
 		.prefixed(this.messageService.getMessage(PREFIX).first())
 		.inject(RELOAD_TIME, String.valueOf(reloadTime.toMillis()))
-		.sendTo(player);
+		.sendTo(sender);
 	}
 	
 	@HelpCommand
