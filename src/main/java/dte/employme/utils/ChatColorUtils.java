@@ -5,7 +5,7 @@ import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 import static org.bukkit.ChatColor.UNDERLINE;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 
 public class ChatColorUtils
