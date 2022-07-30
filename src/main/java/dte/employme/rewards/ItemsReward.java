@@ -1,5 +1,7 @@
 package dte.employme.rewards;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +15,7 @@ import com.google.common.collect.Lists;
 
 import dte.employme.inventories.PlayerContainerGUI;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
 
@@ -47,6 +50,14 @@ public class ItemsReward implements Reward, Iterable<ItemStack>
 	public List<ItemStack> getItems() 
 	{
 		return Lists.newArrayList(this.items);
+	}
+	
+	@Override
+	public String getDescription() 
+	{
+		return this.items.stream()
+				.map(ItemStackUtils::describe)
+				.collect(joining(", "));
 	}
 
 	@Override

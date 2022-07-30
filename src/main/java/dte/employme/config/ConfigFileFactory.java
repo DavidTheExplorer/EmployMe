@@ -32,6 +32,22 @@ public class ConfigFileFactory
 		}
 	}
 	
+	public ConfigFile loadMainConfig() 
+	{
+		ConfigFile config = loadConfig("config");
+		
+		if(config == null)
+			return null;
+		
+		config.getConfig().addDefault("Discord Webhooks.On Job Create.Enabled", false);
+		config.getConfig().addDefault("Discord Webhooks.On Job Create.URL", "");
+		config.getConfig().addDefault("Discord Webhooks.On Job Create.Title", "New Job Posted!");
+		config.getConfig().addDefault("Discord Webhooks.On Job Create.Message", "Test Message");
+		config.getConfig().options().copyDefaults(true);
+		
+		return save(config) ? config : null;
+	}
+	
 	public ConfigFile loadContainer(String subject) 
 	{
 		return loadConfig(String.format("containers/%s containers", subject));
