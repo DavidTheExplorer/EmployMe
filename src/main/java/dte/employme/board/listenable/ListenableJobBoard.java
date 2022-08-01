@@ -14,6 +14,7 @@ public class ListenableJobBoard extends ForwardingJobBoard
 {
 	private final Set<JobAddListener> addListeners = new LinkedHashSet<>();
 	private final Set<JobCompleteListener> completeListeners = new LinkedHashSet<>();
+	private final Set<JobRemovalListener> removalListeners = new LinkedHashSet<>();
 	
 	public ListenableJobBoard(JobBoard jobBoard) 
 	{
@@ -36,6 +37,14 @@ public class ListenableJobBoard extends ForwardingJobBoard
 		this.completeListeners.forEach(listener -> listener.onJobCompleted(this, job, whoCompleted));
 	}
 	
+	@Override
+	public void removeJob(Job job) 
+	{
+		super.removeJob(job);
+		
+		this.removalListeners.forEach(listener -> listener.onJobRemoved(this, job));
+	}
+	
 	public void registerAddListener(JobAddListener... listeners) 
 	{
 		Arrays.stream(listeners).forEach(this.addListeners::add);
@@ -44,5 +53,10 @@ public class ListenableJobBoard extends ForwardingJobBoard
 	public void registerCompleteListener(JobCompleteListener... listeners) 
 	{
 		Arrays.stream(listeners).forEach(this.completeListeners::add);
+	}
+	
+	public void registerRemovalListener(JobRemovalListener... listeners) 
+	{
+		Arrays.stream(listeners).forEach(this.removalListeners::add);
 	}
 }
