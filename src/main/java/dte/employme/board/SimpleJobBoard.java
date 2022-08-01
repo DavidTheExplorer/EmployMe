@@ -3,8 +3,11 @@ package dte.employme.board;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -13,18 +16,18 @@ import dte.employme.job.Job;
 
 public class SimpleJobBoard implements JobBoard
 {
-	private final List<Job> jobs = new ArrayList<>();
+	private final Map<UUID, Job> jobByUUID = new HashMap<>();
 	
 	@Override
 	public void addJob(Job job) 
 	{
-		this.jobs.add(job);
+		this.jobByUUID.put(job.getUUID(), job);
 	}
 	
 	@Override
 	public void removeJob(Job job) 
 	{
-		this.jobs.remove(job);
+		this.jobByUUID.remove(job.getUUID());
 	}
 	
 	@Override
@@ -36,13 +39,19 @@ public class SimpleJobBoard implements JobBoard
 	@Override
 	public List<Job> getOfferedJobs()
 	{
-		return new ArrayList<>(this.jobs);
+		return new ArrayList<>(this.jobByUUID.values());
+	}
+	
+	@Override
+	public Optional<Job> getJobByUUID(UUID uuid) 
+	{
+		return Optional.ofNullable(this.jobByUUID.get(uuid));
 	}
 	
 	@Override
 	public List<Job> getJobsOfferedBy(UUID employerUUID) 
 	{
-		return this.jobs.stream()
+		return this.jobByUUID.values().stream()
 				.filter(job -> job.getEmployer().getUniqueId().equals(employerUUID))
 				.collect(toList());
 	}
@@ -50,6 +59,6 @@ public class SimpleJobBoard implements JobBoard
 	@Override
 	public Iterator<Job> iterator() 
 	{
-		return this.jobs.iterator();
+		return this.jobByUUID.values().iterator();
 	}
 }

@@ -2,6 +2,7 @@ package dte.employme.board;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -39,6 +40,12 @@ public abstract class ForwardingJobBoard implements JobBoard
 	public List<Job> getOfferedJobs() 
 	{
 		return this.delegate.getOfferedJobs();
+	}
+	
+	@Override
+	public Optional<Job> getJobByUUID(UUID uuid) 
+	{
+		return this.delegate.getJobByUUID(uuid);
 	}
 
 	@Override
