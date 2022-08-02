@@ -46,7 +46,6 @@ public class Messages
 			.put(SUCCESSFULLY_SUBSCRIBED_TO_GOAL, "&fYou just &asubscribed &fto &e%goal% &fJobs!")
 			.put(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, "&fSuccessfully &4unsubscribed &ffrom &e%goal% &fJobs.")
 			.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, "&fA player just posted a job that offers &b&l%rewards%&f!")
-			.put(MUST_BE_SUBSCRIBED_TO_GOAL, "&cYou have to be subscribed to this Goal!")
 			.put(YOUR_SUBSCRIPTIONS_ARE, "&fYou are subscribed to: &6%goal subscriptions%")
 
 			//General
@@ -56,7 +55,6 @@ public class Messages
 			.put(GOAL, "Goal")
 			.put(REWARD, "Reward")
 			.put(MUST_NOT_BE_CONVERSING, "&cYou have to finish your current conversation.")
-			.put(MATERIAL_NOT_FOUND, "&cThe specified Material doesn't exist!")
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
 			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")

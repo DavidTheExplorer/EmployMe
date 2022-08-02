@@ -3,7 +3,6 @@ package dte.employme.services.job;
 import static dte.employme.messages.MessageKey.GET;
 import static dte.employme.messages.MessageKey.GOAL;
 import static dte.employme.messages.MessageKey.JOB_AUTO_REMOVED;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.REWARD;
 import static dte.employme.utils.ChatColorUtils.colorize;
 
@@ -161,7 +160,6 @@ public class SimpleJobService implements JobService
 				String jobDescription = describeInGame(job);
 				
 				this.messageService.getMessage(JOB_AUTO_REMOVED)
-				.prefixed(this.messageService.getMessage(PREFIX).first())
 				.stream()
 				.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new Text(jobDescription))).create())
 				.forEach(message -> employerPlayer.spigot().sendMessage(message));

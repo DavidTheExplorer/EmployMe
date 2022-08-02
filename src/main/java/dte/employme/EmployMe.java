@@ -1,7 +1,5 @@
 package dte.employme;
 
-import static dte.employme.messages.MessageKey.MATERIAL_NOT_FOUND;
-import static dte.employme.messages.MessageKey.MUST_BE_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static org.bukkit.ChatColor.RED;
@@ -11,7 +9,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -186,12 +183,6 @@ public class EmployMe extends ModernJavaPlugin
 			if(context.getPlayer().isConversing())
 				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING).first(), false);
 		});
-
-		commandManager.getCommandConditions().addCondition(Material.class, "Subscribed To Goal", (handler, context, material) -> 
-		{
-			if(!this.jobSubscriptionService.isSubscribedTo(context.getPlayer().getUniqueId(), material))
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_BE_SUBSCRIBED_TO_GOAL).first(), false);
-		});
 		
 		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
 		{
@@ -205,16 +196,6 @@ public class EmployMe extends ModernJavaPlugin
 		});
 		
 		//register contexts
-		commandManager.getCommandContexts().registerContext(Material.class, context -> 
-		{
-			Material material = Material.matchMaterial(context.popFirstArg());
-
-			if(material == null)
-				throw new InvalidCommandArgument(this.messageService.getMessage(MATERIAL_NOT_FOUND).first(), false);
-
-			return material;
-		});
-		
 		commandManager.getCommandContexts().registerIssuerOnlyContext(List.class, context -> 
 		{
 			if(!context.hasFlag("Jobs Able To Delete"))

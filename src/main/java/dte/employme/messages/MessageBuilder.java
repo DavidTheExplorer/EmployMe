@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.OfflinePlayerUtils;
 
 /**
  * This class, along with {@link MessageService}, allows implementing multi-line messages in an encapsulated and relatively clean way.
@@ -97,8 +98,7 @@ public class MessageBuilder
 	
 	public void sendIfOnline(OfflinePlayer offlinePlayer)
 	{
-		if(offlinePlayer.isOnline())
-			sendTo(offlinePlayer.getPlayer());
+		OfflinePlayerUtils.ifOnline(offlinePlayer, this::sendTo);
 	}
 
 	@Override
