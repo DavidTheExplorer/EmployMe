@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import dte.employme.EmployMe;
@@ -80,6 +81,13 @@ public class ConfigFile
 				.map(type::cast)
 				.collect(toList());
 	}
+	
+	public ConfigurationSection getSection(String path) 
+	{
+		ConfigurationSection section = this.config.getConfigurationSection(path);
+		
+		return section != null ? section : this.config.createSection(path);
+	}
 
 	public boolean exists() 
 	{
@@ -89,6 +97,11 @@ public class ConfigFile
 	public void save() throws IOException
 	{
 		this.config.save(this.file);
+	}
+	
+	public void delete(String path) 
+	{
+		this.config.set(path, null);
 	}
 
 	public void clear() throws IOException

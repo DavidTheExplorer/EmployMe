@@ -35,7 +35,8 @@ public class Messages
 			.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment myrewards\"")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs!")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! Please delete one to proceed.")
-			.put(JOB_CANCELLED_REWARD_REFUNDED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
+			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
+			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
 
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "&aYou will get notifications for &e%job added notifier%&a!")
@@ -102,7 +103,6 @@ public class Messages
 			//Job Deletion GUI
 			.put(GUI_JOB_DELETION_TITLE, "Select Jobs to Delete")
 			.put(GUI_JOB_DELETION_DELETE_INSTRUCTION, "&4&lClick to Delete!")
-			.put(JOB_SUCCESSFULLY_DELETED, "&eYou successfully deleted this Job!")
 
 			//Job Creation GUI
 			.put(GUI_JOB_CREATION_TITLE, "Create a new Job")

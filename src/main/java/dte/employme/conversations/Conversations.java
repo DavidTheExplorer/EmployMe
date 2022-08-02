@@ -2,14 +2,14 @@ package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.PREFIX;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.entity.Player;
 
 import dte.employme.EmployMe;
+import dte.employme.messages.MessageKey;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.rewards.JobRewardService;
 
 public class Conversations
 {
@@ -22,7 +22,7 @@ public class Conversations
 				.withPrefix(context -> messageService.getMessage(PREFIX).first());
 	}
 
-	public static ConversationAbandonedListener refundRewardIfAbandoned(JobRewardService jobRewardService) 
+	public static ConversationAbandonedListener refundRewardIfAbandoned(MessageService messageService, MessageKey messageToSend) 
 	{
 		return event ->
 		{
@@ -30,11 +30,16 @@ public class Conversations
 				return;
 
 			Reward reward = (Reward) event.getContext().getSessionData("Reward");
+			Player player = (Player) event.getContext().getForWhom();
 
 			if(reward == null)
 				return;
-
-			jobRewardService.refund((OfflinePlayer) event.getContext().getForWhom(), reward);
+			
+			reward.giveTo(player);
+			
+			messageService.getMessage(messageToSend)
+			.prefixed(messageService.getMessage(PREFIX).first())
+			.sendIfOnline(player);
 		};
 	}
 }

@@ -6,6 +6,7 @@ import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static org.bukkit.ChatColor.RED;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,6 +25,7 @@ import dte.employme.addednotifiers.DoNotNotify;
 import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
+import dte.employme.board.listenable.AutoJobDeleteListeners;
 import dte.employme.board.listenable.EmployerNotificationListener;
 import dte.employme.board.listenable.JobAddDiscordWebhook;
 import dte.employme.board.listenable.JobAddNotificationListener;
@@ -52,6 +54,7 @@ import dte.employme.services.rewards.JobRewardService;
 import dte.employme.services.rewards.SimpleJobRewardService;
 import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
+import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
 import net.milkbowl.vault.economy.Economy;
 
@@ -60,12 +63,12 @@ public class EmployMe extends ModernJavaPlugin
 	private Economy economy;
 	private ListenableJobBoard globalJobBoard;
 	private JobService jobService;
+	private JobRewardService jobRewardService;
 	private PlayerContainerService playerContainerService;
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
-	private JobRewardService jobRewardService;
-	private ConfigFile mainConfig, jobsConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	private ConfigFile mainConfig, jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 
 	private static EmployMe INSTANCE;
 
@@ -94,14 +97,15 @@ public class EmployMe extends ModernJavaPlugin
 				.onSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
 				.build();
 		
-		this.mainConfig = configFileFactory.loadMainConfig();
+		this.mainConfig = configFileFactory.loadResource("config");
+		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("auto deletion");
 		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
 		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
 		this.itemsContainersConfig = configFileFactory.loadContainer("items");
 		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
 		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
 		
-		if(this.mainConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
+		if(this.mainConfig == null || this.jobsAutoDeletionConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
 			return;
 		
 		
@@ -119,32 +123,33 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
-		this.jobRewardService = new SimpleJobRewardService(this.messageService);
-		
 		this.jobsConfig = configFileFactory.loadConfig("jobs");
 		
 		if(this.jobsConfig == null)
 			return;
 		
-		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobsConfig);
+		this.jobRewardService = new SimpleJobRewardService(this.messageService);
+		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.messageService);
 		this.jobService.loadJobs();
-
+		
 		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
 		this.jobAddedNotifierService.register(new DoNotNotify());
 		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
 		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
 		this.jobAddedNotifierService.loadPlayersNotifiers();
 
-		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService));
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
 
 		//register commands, listeners, metrics
 		registerCommands();
 		setupWebhooks();
+		setupAutoJobDeletion();
 
 		setDisableListener(() -> 
 		{
 			this.jobService.saveJobs();
+			this.jobService.saveAutoDeletionData();
 			this.playerContainerService.saveContainers();
 			this.jobSubscriptionService.saveSubscriptions();
 			this.jobAddedNotifierService.savePlayersNotifiers();
@@ -223,14 +228,32 @@ public class EmployMe extends ModernJavaPlugin
 		//register commands
 		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
 		
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobRewardService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, inventoryBoardDisplayer));
+		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, inventoryBoardDisplayer));
 	}
 	
 	private void setupWebhooks() 
 	{
 		ConfigurationSection jobAddedSection = this.mainConfig.getConfig().getConfigurationSection("Discord Webhooks.On Job Create");
 		
-		if(jobAddedSection.getBoolean("Enabled")) 
-			this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(jobAddedSection.getString("URL"), jobAddedSection.getString("Title"), jobAddedSection.getString("Message")));		
+		if(jobAddedSection.getBoolean("Enabled"))
+			this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(jobAddedSection.getString("URL"), jobAddedSection.getString("Title"), jobAddedSection.getString("Message"), this.jobRewardService));		
+	}
+	
+	private void setupAutoJobDeletion()
+	{
+		ConfigurationSection deletionSection = this.mainConfig.getConfig().getConfigurationSection("Auto Delete Jobs");
+		
+		if(!deletionSection.getBoolean("Enabled"))
+			return;
+		
+		this.jobService.loadAutoDeletionData();
+		
+		Duration delay = TimeUtils.toDuration(deletionSection.getString("After"));
+		
+		AutoJobDeleteListeners listeners = new AutoJobDeleteListeners(delay, this.jobService);
+		
+		this.globalJobBoard.registerAddListener(listeners);
+		this.globalJobBoard.registerRemovalListener(listeners);
+		this.globalJobBoard.registerCompleteListener(listeners);
 	}
 }

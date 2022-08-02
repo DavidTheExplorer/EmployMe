@@ -2,6 +2,7 @@ package dte.employme.inventories;
 
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_TITLE;
+import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static java.util.Comparator.comparing;
@@ -24,7 +25,6 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.EnchantmentLevelPrompt;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.MapBuilder;
@@ -34,20 +34,18 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 	private final MessageService messageService;
 	private final GoalCustomizationGUI goalCustomizationGUI;
 	private final Reward reward;
-	private final JobRewardService jobRewardService;
 	
 	private boolean showCustomizationGUIOnClose = true;
 
 	private static final Comparator<Enchantment> ORDER_BY_NAME = comparing(enchantment -> enchantment.getKey().getKey());
 
-	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward, JobRewardService jobRewardService)
+	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
 		super(6, messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
 		this.reward = reward;
-		this.jobRewardService = jobRewardService;
 
 		setOnClose(event -> 
 		{
@@ -93,7 +91,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 			Conversations.createFactory(this.messageService)
 			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
 			.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
-			.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.jobRewardService))
+			.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
 			.addConversationAbandonedListener(abandonedEvent -> 
 			{
 				if(!abandonedEvent.gracefulExit())

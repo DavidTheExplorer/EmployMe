@@ -1,6 +1,7 @@
 package dte.employme.board;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ public interface JobBoard extends Iterable<Job>
 	void removeJob(Job job);
 	void completeJob(Job job, Player whoCompleted);
 	
+	Optional<Job> getJobByUUID(UUID uuid);
 	List<Job> getOfferedJobs();
 	List<Job> getJobsOfferedBy(UUID employerUUID);
 }
