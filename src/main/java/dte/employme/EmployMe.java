@@ -98,7 +98,7 @@ public class EmployMe extends ModernJavaPlugin
 				.build();
 		
 		this.mainConfig = configFileFactory.loadResource("config");
-		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("auto deletion");
+		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("boards/global/auto deletion");
 		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
 		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
 		this.itemsContainersConfig = configFileFactory.loadContainer("items");
@@ -123,7 +123,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
-		this.jobsConfig = configFileFactory.loadConfig("jobs");
+		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
 		
 		if(this.jobsConfig == null)
 			return;
