@@ -1,4 +1,4 @@
-package dte.employme.board.listenable;
+package dte.employme.board.listenable.addition;
 
 import static dte.employme.messages.Placeholders.EMPLOYER;
 import static dte.employme.messages.Placeholders.GOAL;

@@ -1,4 +1,4 @@
-package dte.employme.board.listenable;
+package dte.employme.board.listenable.completion;
 
 import java.util.UUID;
 
