@@ -1,12 +1,13 @@
 package dte.employme.services.rewards;
 
-import static dte.employme.messages.MessageKey.JOB_CANCELLED_REWARD_REFUNDED;
-import static dte.employme.messages.MessageKey.PREFIX;
+import static java.util.stream.Collectors.joining;
 
-import org.bukkit.OfflinePlayer;
-
+import dte.employme.messages.MessageKey;
+import dte.employme.rewards.ItemsReward;
+import dte.employme.rewards.MoneyReward;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.ItemStackUtils;
 
 public class SimpleJobRewardService implements JobRewardService
 {
@@ -18,11 +19,21 @@ public class SimpleJobRewardService implements JobRewardService
 	}
 	
 	@Override
-	public void refund(OfflinePlayer employer, Reward reward) 
+	public String describe(Reward reward) 
 	{
-		reward.giveTo(employer);
-		this.messageService.getMessage(JOB_CANCELLED_REWARD_REFUNDED)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.sendIfOnline(employer);
+		if(reward instanceof MoneyReward) 
+		{
+			String currencySymbol = this.messageService.getMessage(MessageKey.CURRENCY_SYMBOL).first();
+			
+			return String.format("%.2f%s", ((MoneyReward) reward).getPayment(), currencySymbol);
+		}
+		else if(reward instanceof ItemsReward) 
+		{
+			return ((ItemsReward) reward).getItems().stream()
+					.map(ItemStackUtils::describe)
+					.collect(joining(", "));
+		}
+		
+		throw new IllegalArgumentException("Cannot describe the provided reward!");
 	}
 }

@@ -22,8 +22,9 @@ public class TranslatedMessageService implements MessageService
 			.put(ITEMS_JOB_COMPLETED, "Jobs.Item Job Completed")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "Jobs.Player Completed Your Job")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "Jobs.You Have Too Many Jobs")
-			.put(JOB_CANCELLED_REWARD_REFUNDED, "Jobs.Reward Refunded")
-
+			.put(JOB_SUCCESSFULLY_CANCELLED, "Jobs.Cancelled")
+			.put(JOB_AUTO_REMOVED, "Jobs.Auto Removed")
+			
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "Job Add Notifiers.Your New Notifier Is")
 			.put(NEW_JOB_POSTED, "Job Add Notifiers.New Job Posted")
@@ -89,7 +90,6 @@ public class TranslatedMessageService implements MessageService
 			//Job Deletion GUI
 			.put(GUI_JOB_DELETION_TITLE, "GUIs.Job Deletion.Title")
 			.put(GUI_JOB_DELETION_DELETE_INSTRUCTION, "GUIs.Job Deletion.Instruction")
-			.put(JOB_SUCCESSFULLY_DELETED, "GUIs.Job Deletion.Job Successfully Deleted")
 
 			//Job Creation GUI
 			.put(GUI_JOB_CREATION_TITLE, "GUIs.Job Creation.Title")

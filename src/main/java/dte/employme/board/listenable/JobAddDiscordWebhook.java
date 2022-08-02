@@ -9,6 +9,7 @@ import java.io.IOException;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
+import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.java.DiscordWebhook;
 import dte.employme.utils.java.DiscordWebhook.EmbedObject;
@@ -16,12 +17,14 @@ import dte.employme.utils.java.DiscordWebhook.EmbedObject;
 public class JobAddDiscordWebhook implements JobAddListener
 {
 	private final String webhookURL, title, message;
+	private final JobRewardService jobRewardService;
 
-	public JobAddDiscordWebhook(String webhookURL, String title, String message) 
+	public JobAddDiscordWebhook(String webhookURL, String title, String message, JobRewardService jobRewardService) 
 	{
 		this.webhookURL = webhookURL;
 		this.title = title;
 		this.message = message;
+		this.jobRewardService = jobRewardService;
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class JobAddDiscordWebhook implements JobAddListener
 		return new MessageBuilder(text)
 				.inject(EMPLOYER, job.getEmployer().getName())
 				.inject(GOAL, ItemStackUtils.describe(job.getGoal()))
-				.inject(REWARD, job.getReward().getDescription())
+				.inject(REWARD, this.jobRewardService.describe(job.getReward()))
 				.first();
 	}
 }

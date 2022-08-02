@@ -33,8 +33,7 @@ import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
-import dte.employme.services.rewards.JobRewardService;
-import dte.employme.utils.java.TimingUtils;
+import dte.employme.utils.java.TimeUtils;
 import net.milkbowl.vault.economy.Economy;
 
 @CommandAlias("employment|emp")
@@ -44,16 +43,14 @@ public class EmploymentCommand extends BaseCommand
 	private final Economy economy;
 	private final JobBoard globalJobBoard;
 	private final JobBoardDisplayer jobBoardDisplayer;
-	private final JobRewardService jobRewardService;
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
 
-	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, MessageService messageService, JobRewardService jobRewardService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
+	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
 	{
 		this.economy = economy;
-		this.jobRewardService = jobRewardService;
 		this.globalJobBoard = globalJobBoard;
 		this.messageService = messageService;
 		this.jobAddedNotifierService = jobAddedNotifierService;
@@ -75,7 +72,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService, this.jobRewardService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService).show(employer);
 	}
 
 	@Subcommand("delete")
@@ -84,7 +81,7 @@ public class EmploymentCommand extends BaseCommand
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
 		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService, this.jobRewardService).show(player);
+		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
 	@Subcommand("mycontainers")
@@ -111,7 +108,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.reload")
 	public void reload(CommandSender sender)
 	{
-		Duration reloadTime = TimingUtils.time(() -> 
+		Duration reloadTime = TimeUtils.time(() -> 
 		{
 			EmployMe.getInstance().onDisable();
 			EmployMe.getInstance().onEnable();

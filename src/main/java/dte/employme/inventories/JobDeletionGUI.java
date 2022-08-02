@@ -3,7 +3,8 @@ package dte.employme.inventories;
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
 import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_DELETE_INSTRUCTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_TITLE;
-import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_DELETED;
+import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
@@ -26,7 +27,6 @@ import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobDeletionGUI extends ChestGui
@@ -34,16 +34,14 @@ public class JobDeletionGUI extends ChestGui
 	private final JobBoard jobBoard;
 	private final List<Job> jobsToDisplay;
 	private final MessageService messageService;
-	private final JobRewardService jobRewardService;
 
-	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService, JobRewardService jobRewardService) 
+	public JobDeletionGUI(JobBoard jobBoard, List<Job> jobsToDisplay, MessageService messageService) 
 	{
 		super(6, messageService.getMessage(GUI_JOB_DELETION_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.jobsToDisplay = jobsToDisplay;
 		this.messageService = messageService;
-		this.jobRewardService = jobRewardService;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createJobsPane());
@@ -85,12 +83,15 @@ public class JobDeletionGUI extends ChestGui
 			}
 			
 			//delete the job
-			else 
+			else
 			{
 				player.closeInventory();
 				this.jobBoard.removeJob(job);
-				this.jobRewardService.refund(job.getEmployer(), job.getReward());
-				this.messageService.getMessage(JOB_SUCCESSFULLY_DELETED).sendTo(player);
+				job.getReward().giveTo(job.getEmployer());
+				
+				this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED)
+				.prefixed(this.messageService.getMessage(PREFIX).first())
+				.sendTo(player);
 			}
 		});
 	}

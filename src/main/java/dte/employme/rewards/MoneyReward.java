@@ -39,12 +39,6 @@ public class MoneyReward implements Reward
 	{
 		return this.payment;
 	}
-	
-	@Override
-	public String getDescription() 
-	{
-		return String.format("%.2f$", this.payment);
-	}
 
 	@Override
 	public Map<String, Object> serialize() 

@@ -12,6 +12,8 @@ import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
+import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
+import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
@@ -27,7 +29,6 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -37,8 +38,8 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
-import com.google.common.base.Predicates;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.google.common.base.Predicates;
 
 import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
@@ -47,7 +48,6 @@ import dte.employme.job.Job;
 import dte.employme.rewards.Reward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
@@ -59,7 +59,6 @@ public class GoalCustomizationGUI extends ChestGui
 	private final JobSubscriptionService jobSubscriptionService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
-	private final JobRewardService jobRewardService;
 
 	//temp data(items, panes, etc)
 	private StaticPane itemPane, optionsPane;
@@ -69,7 +68,7 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobRewardService jobRewardService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobBoard jobBoard, Reward reward)
 	{
 		super(6, messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TITLE).first());
 		
@@ -77,14 +76,21 @@ public class GoalCustomizationGUI extends ChestGui
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
-		this.jobRewardService = jobRewardService;
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		
 		setOnClose(event -> 
 		{
-			if(this.refundRewardOnClose)
-				jobRewardService.refund((OfflinePlayer) event.getPlayer(), reward);
+			if(this.refundRewardOnClose) 
+			{
+				Player player = (Player) event.getPlayer();
+				
+				reward.giveTo(player);
+				
+				this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED)
+				.prefixed(this.messageService.getMessage(PREFIX).first())
+				.sendTo(player);
+			}
 		});
 
 		addPane(createSquare(Priority.LOWEST, 0, 0, 3, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
@@ -257,7 +263,7 @@ public class GoalCustomizationGUI extends ChestGui
 				return;
 			
 			closeWithoutRefund(event.getWhoClicked());
-			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward, this.jobRewardService).show(event.getWhoClicked());
+			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward).show(event.getWhoClicked());
 		});
 	}
 	
@@ -289,7 +295,7 @@ public class GoalCustomizationGUI extends ChestGui
 			HumanEntity player = event.getWhoClicked();
 			
 			closeWithoutRefund(player);
-			new TypeItemPaletteGUI(this.messageService, this.jobSubscriptionService, this.jobRewardService, this, this.reward).show(player);
+			new TypeItemPaletteGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
 		});
 	}
 	
@@ -315,7 +321,7 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		private boolean showGoalCustomizationGUIOnClose = true;
 
-		public TypeItemPaletteGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobRewardService jobRewardService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
+		public TypeItemPaletteGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 		{
 			super(messageService.getMessage(GUI_ITEM_PALETTE_TITLE).first(),
 					messageService,
@@ -334,7 +340,7 @@ public class GoalCustomizationGUI extends ChestGui
 					Conversations.createFactory(messageService)
 					.withFirstPrompt(new JobGoalPrompt(messageService, messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
 					.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-					.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(jobRewardService))
+					.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(messageService, JOB_SUCCESSFULLY_CANCELLED))
 					.addConversationAbandonedListener(event -> 
 					{
 						if(!event.gracefulExit())

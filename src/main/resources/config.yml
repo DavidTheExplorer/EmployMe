@@ -1,0 +1,12 @@
+Discord Webhooks:
+  On Job Create:
+    Enabled: false
+    URL: ''
+    Title: 'New Job Posted!'
+    Message: '%employer% needs %goal% and will pay %reward%'
+    
+# Define a maximum time after which a job will be automatically deleted.
+# ATTENTION: All time units must be plural(seconds, days, etc) and the maximum unit is days!
+Auto Delete Jobs:
+  Enabled: false
+  After: 1 weeks
