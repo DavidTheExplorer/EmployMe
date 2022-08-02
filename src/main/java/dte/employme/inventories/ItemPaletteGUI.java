@@ -35,6 +35,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.MaterialUtils;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -141,39 +142,43 @@ public class ItemPaletteGUI extends ChestGui
 	@SuppressWarnings("deprecation")
 	private GuiItem createController(String ownerName, String itemName, IntPredicate shouldContinue, IntUnaryOperator nextPage) 
 	{
-		return new GuiItem(new ItemBuilder(Material.PLAYER_HEAD)
-				.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(ownerName)))
-				.named(itemName)
-				.createCopy(),
-				event -> 
-		{
-			int currentPage = this.itemsPane.getPage();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.PLAYER_HEAD)
+						.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(ownerName)))
+						.named(itemName)
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					int currentPage = this.itemsPane.getPage();
 
-			if(!shouldContinue.test(currentPage))
-				return;
+					if(!shouldContinue.test(currentPage))
+						return;
 
-			this.itemsPane.setPage(nextPage.applyAsInt(currentPage));
-			update();
-		});
+					this.itemsPane.setPage(nextPage.applyAsInt(currentPage));
+					update();
+				})
+				.build();
 	}
 
 	private GuiItem createEnglishSearchItem() 
 	{
-		return new GuiItem(new ItemBuilder(Material.NAME_TAG)
-				.named(this.messageService.getMessage(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
-				.glowing()
-				.createCopy(),
-				event -> 
-		{
-			this.englishItemClickListener.accept(event);
-			
-			Player player = (Player) event.getWhoClicked();
-			player.closeInventory();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.NAME_TAG)
+						.named(this.messageService.getMessage(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
+						.glowing()
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					this.englishItemClickListener.accept(event);
 
-			this.typeConversationFactory.buildConversation(player).begin();
-		});
+					Player player = (Player) event.getWhoClicked();
+					player.closeInventory();
+
+					this.typeConversationFactory.buildConversation(player).begin();
+				})
+				.build();
 	}
-	
+
 	public static class Builder
 	{
 		String title;

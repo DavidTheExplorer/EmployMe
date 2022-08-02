@@ -26,6 +26,7 @@ import dte.employme.rewards.ItemsReward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.items.ItemBuilder;
 
@@ -85,31 +86,34 @@ public class ItemsRewardOfferGUI extends ChestGui
 	 */
 	private GuiItem createConfirmationButton() 
 	{
-		ItemStack buttonItem = new ItemBuilder(Material.GREEN_TERRACOTTA)
+		ItemStack button = new ItemBuilder(Material.GREEN_TERRACOTTA)
 				.named(this.messageService.getMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME).first())
 				.withLore(this.messageService.getMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE).toArray())
 				.createCopy();
 
-		this.confirmationButton = buttonItem;
+		this.confirmationButton = button;
 
-		return new GuiItem(buttonItem, event ->
-		{
-			Player player = (Player) event.getWhoClicked();
-			List<ItemStack> offeredItems = getOfferedItems();
+		return new GuiItemBuilder()
+				.forItem(this.confirmationButton)
+				.whenClicked(event ->
+				{
+					Player player = (Player) event.getWhoClicked();
+					List<ItemStack> offeredItems = getOfferedItems();
 
-			//block confirming if the player didn't offer anything
-			if(offeredItems.isEmpty())
-				return;
+					//block confirming if the player didn't offer anything
+					if(offeredItems.isEmpty())
+						return;
 
-			//disable the item return mechanism
-			setOnClose(closeEvent -> {});
+					//disable the item return mechanism
+					setOnClose(closeEvent -> {});
 
-			//open the Goal Customization GUI
-			ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
-			GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.jobSubscriptionService, this.jobBoard, itemsReward);
+					//open the Goal Customization GUI
+					ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
+					GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.jobSubscriptionService, this.jobBoard, itemsReward);
 
-			Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
-		});
+					Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
+				})
+				.build();
 	}
 
 	private List<ItemStack> getOfferedItems()

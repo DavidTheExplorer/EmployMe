@@ -13,7 +13,6 @@ import java.util.function.Function;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -23,6 +22,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobContainersGUI extends ChestGui
@@ -56,16 +56,17 @@ public class JobContainersGUI extends ChestGui
 	
 	private GuiItem createContainerIcon(String name, Function<UUID, PlayerContainerGUI> containerGetter, String... description) 
 	{
-		ItemStack item = new ItemBuilder(Material.CHEST)
-				.named(name)
-				.withLore(description)
-				.createCopy();
-		
-		return new GuiItem(item, event -> 
-		{
-			Player employer = (Player) event.getWhoClicked();
-			
-			containerGetter.apply(employer.getUniqueId()).show(employer);
-		});
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.CHEST)
+						.named(name)
+						.withLore(description)
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					Player employer = (Player) event.getWhoClicked();
+
+					containerGetter.apply(employer.getUniqueId()).show(employer);
+				})
+				.build();
 	}
 }

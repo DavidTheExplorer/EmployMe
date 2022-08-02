@@ -19,7 +19,6 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -32,6 +31,7 @@ import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.messages.MessageKey;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobAddNotifiersGUI extends ChestGui
@@ -87,22 +87,23 @@ public class JobAddNotifiersGUI extends ChestGui
 		if(this.jobAddedNotifierService.getPlayerNotifier(playerUUID).equals(notifier)) 
 			nicerDescription.addAll(Arrays.asList(" ", this.messageService.getMessage(MessageKey.GUI_JOB_ADDED_NOTIFIERS_SELECTED).first()));
 
-		ItemStack icon = new ItemBuilder(material)
-				.named(this.messageService.getMessage(notifierItemNameKey).first())
-				.withLore(nicerDescription.toArray(new String[0]))
-				.createCopy();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(material)
+						.named(this.messageService.getMessage(notifierItemNameKey).first())
+						.withLore(nicerDescription.toArray(new String[0]))
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					Player player = (Player) event.getWhoClicked();
+					player.closeInventory();
 
-		return new GuiItem(icon, event ->
-		{
-			Player player = (Player) event.getWhoClicked();
-			player.closeInventory();
-			
-			this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
-			
-			this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
-			.prefixed(this.messageService.getMessage(PREFIX).first())
-			.inject(JOB_ADDED_NOTIFIER, notifier.getName())
-			.sendTo(player);
-		});
+					this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
+
+					this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
+					.prefixed(this.messageService.getMessage(PREFIX).first())
+					.inject(JOB_ADDED_NOTIFIER, notifier.getName())
+					.sendTo(player);
+				})
+				.build();
 	}
 }

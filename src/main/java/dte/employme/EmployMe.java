@@ -26,13 +26,13 @@ import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.board.listenable.AutoJobDeleteListeners;
-import dte.employme.board.listenable.EmployerNotificationListener;
-import dte.employme.board.listenable.JobAddDiscordWebhook;
-import dte.employme.board.listenable.JobAddNotificationListener;
-import dte.employme.board.listenable.JobCompletedMessagesListener;
-import dte.employme.board.listenable.JobGoalTransferListener;
-import dte.employme.board.listenable.JobRewardGiveListener;
 import dte.employme.board.listenable.ListenableJobBoard;
+import dte.employme.board.listenable.addition.EmployerNotificationListener;
+import dte.employme.board.listenable.addition.JobAddDiscordWebhook;
+import dte.employme.board.listenable.addition.JobAddNotificationListener;
+import dte.employme.board.listenable.completion.JobCompletedMessagesListener;
+import dte.employme.board.listenable.completion.JobGoalTransferListener;
+import dte.employme.board.listenable.completion.JobRewardGiveListener;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
@@ -233,22 +233,28 @@ public class EmployMe extends ModernJavaPlugin
 	
 	private void setupWebhooks() 
 	{
-		ConfigurationSection jobAddedSection = this.mainConfig.getConfig().getConfigurationSection("Discord Webhooks.On Job Create");
+		ConfigurationSection section = this.mainConfig.getSection("Discord Webhooks.On Job Create");
 		
-		if(jobAddedSection.getBoolean("Enabled"))
-			this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(jobAddedSection.getString("URL"), jobAddedSection.getString("Title"), jobAddedSection.getString("Message"), this.jobRewardService));		
+		if(!section.getBoolean("Enabled"))
+			return;
+		
+		String url = section.getString("URL");
+		String title = section.getString("Title");
+		String message = section.getString("Message");
+		
+		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService));		
 	}
 	
 	private void setupAutoJobDeletion()
 	{
-		ConfigurationSection deletionSection = this.mainConfig.getConfig().getConfigurationSection("Auto Delete Jobs");
+		ConfigurationSection section = this.mainConfig.getSection("Auto Delete Jobs");
 		
-		if(!deletionSection.getBoolean("Enabled"))
+		if(!section.getBoolean("Enabled"))
 			return;
 		
 		this.jobService.loadAutoDeletionData();
 		
-		Duration delay = TimeUtils.toDuration(deletionSection.getString("After"));
+		Duration delay = TimeUtils.toDuration(section.getString("After"));
 		
 		AutoJobDeleteListeners listeners = new AutoJobDeleteListeners(delay, this.jobService);
 		

@@ -5,6 +5,9 @@ import java.time.Duration;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.listenable.addition.JobAddListener;
+import dte.employme.board.listenable.completion.JobCompleteListener;
+import dte.employme.board.listenable.removal.JobRemovalListener;
 import dte.employme.job.Job;
 import dte.employme.services.job.JobService;
 

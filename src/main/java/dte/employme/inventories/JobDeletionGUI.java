@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -27,6 +26,7 @@ import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobDeletionGUI extends ChestGui
@@ -63,36 +63,37 @@ public class JobDeletionGUI extends ChestGui
 
 	private GuiItem createDeletionIcon(Job job) 
 	{
-		ItemStack item = new ItemBuilder(JobIconFactory.create(job, this.messageService))
-				.addToLore(true,
-						createSeparationLine(GRAY, 23),
-						this.messageService.getMessage(GUI_JOB_DELETION_DELETE_INSTRUCTION).first(),
-						createSeparationLine(GRAY, 23))
-				.createCopy();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(JobIconFactory.create(job, this.messageService))
+						.addToLore(true,
+								createSeparationLine(GRAY, 23),
+								this.messageService.getMessage(GUI_JOB_DELETION_DELETE_INSTRUCTION).first(),
+								createSeparationLine(GRAY, 23))
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					Player player = (Player) event.getWhoClicked();
 
-		return new GuiItem(item, event -> 
-		{
-			Player player = (Player) event.getWhoClicked();
+					//Right click = preview mode for jobs that offer items
+					if(event.isRightClick() && job.getReward() instanceof ItemsReward)
+					{
+						ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
+						gui.setOnClose(closeEvent -> show(player));
+						gui.show(player);
+					}
 
-			//Right click = preview mode for jobs that offer items
-			if(event.isRightClick() && job.getReward() instanceof ItemsReward)
-			{
-				ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
-				gui.setOnClose(closeEvent -> show(player));
-				gui.show(player);
-			}
-			
-			//delete the job
-			else
-			{
-				player.closeInventory();
-				this.jobBoard.removeJob(job);
-				job.getReward().giveTo(job.getEmployer());
-				
-				this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED)
-				.prefixed(this.messageService.getMessage(PREFIX).first())
-				.sendTo(player);
-			}
-		});
+					//delete the job
+					else
+					{
+						player.closeInventory();
+						this.jobBoard.removeJob(job);
+						job.getReward().giveTo(job.getEmployer());
+
+						this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED)
+						.prefixed(this.messageService.getMessage(PREFIX).first())
+						.sendTo(player);
+					}
+				})
+				.build();
 	}
 }

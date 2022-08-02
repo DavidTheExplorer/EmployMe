@@ -220,83 +220,90 @@ public class GoalCustomizationGUI extends ChestGui
 	 */
 	private GuiItem createFinishItem() 
 	{
-		return new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
-				.createCopy(), 
-				event ->
-		{
-			Material type = this.currentItem.getItem().getType();
-			
-			//the user didn't select an item
-			if(type == NO_ITEM_TYPE)
-				return;
-			
-			//the goal is a non-enchanted enchanted book lmfao
-			if(type == Material.ENCHANTED_BOOK && getEnchantments(getCurrentItem()).isEmpty())
-				return;
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
+						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					Material type = this.currentItem.getItem().getType();
 
-			Player player = (Player) event.getWhoClicked();
-			closeWithoutRefund(player);
-			
-			this.jobBoard.addJob(new Job(player, createGoal(), this.reward));
-		});
+					//the user didn't select an item
+					if(type == NO_ITEM_TYPE)
+						return;
+
+					//the goal is a non-enchanted enchanted book lmfao
+					if(type == Material.ENCHANTED_BOOK && getEnchantments(getCurrentItem()).isEmpty())
+						return;
+
+					Player player = (Player) event.getWhoClicked();
+					closeWithoutRefund(player);
+
+					this.jobBoard.addJob(new Job(player, createGoal(), this.reward));
+				})
+				.build();
 	}
-	
+
 	private GuiItem createNoItemIcon() 
 	{
 		return new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
 				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
 				.createCopy());
 	}
-	
+
 	private GuiItem createEnchantmentsItem() 
 	{
-		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
-				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
-				.glowing()
-				.createCopy();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.ENCHANTED_BOOK)
+						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
+						.glowing()
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					if(getType() == NO_ITEM_TYPE)
+						return;
 
-		return new GuiItem(item, event -> 
-		{
-			if(getType() == NO_ITEM_TYPE)
-				return;
-			
-			closeWithoutRefund(event.getWhoClicked());
-			new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward).show(event.getWhoClicked());
-		});
+					closeWithoutRefund(event.getWhoClicked());
+					new GoalEnchantmentSelectionGUI(this.messageService, this, this.reward).show(event.getWhoClicked());
+				})
+				.build();
 	}
-	
+
 	private GuiItem createAmountItem() 
 	{
-		return new GuiItem(new ItemBuilder(Material.ARROW)
-				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
-				.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
-				.glowing()
-				.createCopy(), 
-				event -> 
-		{
-			HumanEntity player = event.getWhoClicked();
-			
-			closeWithoutRefund(player);
-			new GoalAmountGUI(this, this.messageService).show(player);
-		});
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.ARROW)
+						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, String.valueOf(this.amount)).first())
+						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
+						.glowing()
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					HumanEntity player = event.getWhoClicked();
+
+					closeWithoutRefund(player);
+					new GoalAmountGUI(this, this.messageService).show(player);
+				})
+				.build();
 	}
-	
+
 	private GuiItem createTypeChoosingItem() 
 	{
-		return new GuiItem(new ItemBuilder(Material.ANVIL)
-				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
-				.glowing()
-				.createCopy(), 
-				event ->
-		{
-			HumanEntity player = event.getWhoClicked();
-			
-			closeWithoutRefund(player);
-			new TypeItemPaletteGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
-		});
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.ANVIL)
+						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
+						.glowing()
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					HumanEntity player = event.getWhoClicked();
+
+					closeWithoutRefund(player);
+					new TypeItemPaletteGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+				})
+				.build();
 	}
 	
 	private void updateCurrentItem(UnaryOperator<ItemStack> update) 

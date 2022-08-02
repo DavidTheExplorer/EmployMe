@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 
 import dte.employme.board.ForwardingJobBoard;
 import dte.employme.board.JobBoard;
+import dte.employme.board.listenable.addition.JobAddListener;
+import dte.employme.board.listenable.completion.JobCompleteListener;
+import dte.employme.board.listenable.removal.JobRemovalListener;
 import dte.employme.job.Job;
 
 public class ListenableJobBoard extends ForwardingJobBoard
