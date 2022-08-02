@@ -3,7 +3,6 @@ package dte.employme.board.listenable.completion;
 import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.Placeholders.COMPLETER;
 
 import org.bukkit.entity.Player;
@@ -33,16 +32,13 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 	@Override
 	public void onJobCompleted(JobBoard board, Job job, Player whoCompleted) 
 	{
-		this.messageService.getMessage((job.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : JOB_COMPLETED))
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.sendTo(whoCompleted);
+		this.messageService.getMessage((job.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : JOB_COMPLETED)).sendTo(whoCompleted);
 
 		OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
 		{
 			String jobDescription = this.jobService.describeInGame(job);
 			
 			this.messageService.getMessage(PLAYER_COMPLETED_YOUR_JOB)
-			.prefixed(this.messageService.getMessage(PREFIX).first())
 			.inject(COMPLETER, whoCompleted.getName())
 			.stream()
 			.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new Text(jobDescription))).create())

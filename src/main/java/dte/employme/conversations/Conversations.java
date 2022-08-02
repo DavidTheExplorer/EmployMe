@@ -36,10 +36,7 @@ public class Conversations
 				return;
 			
 			reward.giveTo(player);
-			
-			messageService.getMessage(messageToSend)
-			.prefixed(messageService.getMessage(PREFIX).first())
-			.sendIfOnline(player);
+			messageService.getMessage(messageToSend).sendIfOnline(player);
 		};
 	}
 }

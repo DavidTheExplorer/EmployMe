@@ -7,7 +7,6 @@ import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_TITLE;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static dte.employme.utils.InventoryFrameworkUtils.createWalls;
@@ -100,7 +99,6 @@ public class JobAddNotifiersGUI extends ChestGui
 					this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
 
 					this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
-					.prefixed(this.messageService.getMessage(PREFIX).first())
 					.inject(JOB_ADDED_NOTIFIER, notifier.getName())
 					.sendTo(player);
 				})

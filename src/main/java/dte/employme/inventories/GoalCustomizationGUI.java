@@ -13,7 +13,6 @@ import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_
 import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
@@ -86,10 +85,7 @@ public class GoalCustomizationGUI extends ChestGui
 				Player player = (Player) event.getPlayer();
 				
 				reward.giveTo(player);
-				
-				this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED)
-				.prefixed(this.messageService.getMessage(PREFIX).first())
-				.sendTo(player);
+				this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(player);
 			}
 		});
 

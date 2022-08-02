@@ -12,7 +12,6 @@ import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCR
 import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION;
 import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.NONE;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.Placeholders.GOAL;
@@ -94,7 +93,6 @@ public class PlayerSubscriptionsGUI extends ChestGui
 					subscriptionsNames += WHITE + ".";
 
 					this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
-					.prefixed(this.messageService.getMessage(PREFIX).first())
 					.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
 					.sendTo(player);
 				})
@@ -166,7 +164,6 @@ public class PlayerSubscriptionsGUI extends ChestGui
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
 
 		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
 		.inject(GOAL, EnumUtils.fixEnumName(material))
 		.sendTo(player);
 

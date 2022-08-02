@@ -1,7 +1,6 @@
 package dte.employme.board.listenable.addition;
 
 import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
-import static dte.employme.messages.MessageKey.PREFIX;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
@@ -19,8 +18,6 @@ public class EmployerNotificationListener implements JobAddListener
 	@Override
 	public void onJobAdded(JobBoard jobBoard, Job job) 
 	{
-		this.messageService.getMessage(JOB_ADDED_TO_BOARD)
-		.prefixed(this.messageService.getMessage(PREFIX).first())
-		.sendIfOnline(job.getEmployer());
+		this.messageService.getMessage(JOB_ADDED_TO_BOARD).sendIfOnline(job.getEmployer());
 	}
 }

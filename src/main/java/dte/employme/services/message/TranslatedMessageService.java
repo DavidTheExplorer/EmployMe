@@ -33,7 +33,6 @@ public class TranslatedMessageService implements MessageService
 			.put(SUCCESSFULLY_SUBSCRIBED_TO_GOAL, "Subscriptions.Successfully Subscribed to Goal")
 			.put(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, "Subscriptions.Successfully Unsubscribed from Goal")
 			.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, "Subscriptions.Subscription Notification")
-			.put(MUST_BE_SUBSCRIBED_TO_GOAL, "Subscriptions.Must be Subscribed to Goal")
 			.put(YOUR_SUBSCRIPTIONS_ARE, "Subscriptions.Your Subscriptions Are")
 
 			//General
@@ -43,7 +42,6 @@ public class TranslatedMessageService implements MessageService
 			.put(GOAL, "General.Goal")
 			.put(REWARD, "General.Reward")
 			.put(MUST_NOT_BE_CONVERSING, "General.Must Not Be Conversing")
-			.put(MATERIAL_NOT_FOUND, "General.Material Not Found")
 			.put(NEW_UPDATE_AVAILABLE, "General.New Update Available")
 			.put(CURRENCY_SYMBOL, "General.Currency Symbol")
 			.put(PLUGIN_RELOADED, "General.Plugin Reloaded")
@@ -186,7 +184,13 @@ public class TranslatedMessageService implements MessageService
 	{
 		Object message = this.languageConfig.getConfig().get(getConfigPath(key));
 
-		return MessageBuilder.from(message).map(ChatColorUtils::colorize);
+		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
+		
+		//add the plugin's prefix to the message if needed
+		if(key.isPrefixed())
+			messageBuilder.prefixed(getMessage(PREFIX).first());
+		
+		return messageBuilder;
 	}
 
 	public static String getConfigPath(MessageKey key) 

@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.GUI_ITEMS_JOB_NO_ITEMS_WARNING;
 import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_TITLE;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -54,9 +53,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 			if(getOfferedItems().isEmpty()) 
 			{
-				messageService.getMessage(GUI_ITEMS_JOB_NO_ITEMS_WARNING)
-				.prefixed(messageService.getMessage(PREFIX).first())
-				.sendTo(player);
+				messageService.getMessage(GUI_ITEMS_JOB_NO_ITEMS_WARNING).sendTo(player);
 			}
 
 			player.closeInventory();

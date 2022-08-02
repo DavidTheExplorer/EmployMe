@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_TITL
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
 import static dte.employme.messages.Placeholders.GOAL;
 import static dte.employme.messages.Placeholders.ITEM;
@@ -70,7 +69,6 @@ public class UnsubscribeFromItemGUI extends ItemPaletteGUI
 		jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
 
 		messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
-		.prefixed(messageService.getMessage(PREFIX).first())
 		.inject(GOAL, EnumUtils.fixEnumName(material))
 		.sendTo(player);
 

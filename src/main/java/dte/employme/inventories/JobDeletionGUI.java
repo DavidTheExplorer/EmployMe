@@ -4,7 +4,6 @@ import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orienta
 import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_DELETE_INSTRUCTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_TITLE;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
-import static dte.employme.messages.MessageKey.PREFIX;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
@@ -88,10 +87,7 @@ public class JobDeletionGUI extends ChestGui
 						player.closeInventory();
 						this.jobBoard.removeJob(job);
 						job.getReward().giveTo(job.getEmployer());
-
-						this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED)
-						.prefixed(this.messageService.getMessage(PREFIX).first())
-						.sendTo(player);
+						this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(player);
 					}
 				})
 				.build();
