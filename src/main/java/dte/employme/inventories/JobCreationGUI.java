@@ -26,6 +26,7 @@ import dte.employme.rewards.MoneyReward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import net.milkbowl.vault.economy.Economy;
 
@@ -74,25 +75,29 @@ public class JobCreationGUI extends ChestGui
 		pane.setGap(3);
 		
 		//add the money job icon
-		pane.addItem(new GuiItem(new ItemBuilder(Material.GOLD_INGOT)
-				.named(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
-				.withLore(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
-				.createCopy(), 
-				event -> 
-		{
-			Player player = (Player) event.getWhoClicked();
-			
-			player.closeInventory();
-			this.moneyJobConversationFactory.buildConversation(player).begin();
-		}));
-		
+		pane.addItem(new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.GOLD_INGOT)
+						.named(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					Player player = (Player) event.getWhoClicked();
+
+					player.closeInventory();
+					this.moneyJobConversationFactory.buildConversation(player).begin();
+				})
+				.build());
+
 		//add the items job icon
-		pane.addItem(new GuiItem(new ItemBuilder(Material.CHEST)
-				.named(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
-				.withLore(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
-				.createCopy(),
-				event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.jobSubscriptionService).show(event.getWhoClicked())));
-		
+		pane.addItem(new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.CHEST)
+						.named(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
+						.createCopy())
+				.whenClicked(event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.jobSubscriptionService).show(event.getWhoClicked()))
+				.build());
+
 		return pane;
 	}
 }

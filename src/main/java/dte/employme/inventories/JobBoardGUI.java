@@ -118,42 +118,44 @@ public class JobBoardGUI extends ChestGui
 		lore.add(StringUtils.repeat(" ", finished ? 8 : 4) + finishMessage);
 		lore.add(separator);
 
-		ItemStack item = new ItemBuilder(basicIcon)
-				.withLore(lore.toArray(new String[0]))
-				.createCopy();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(basicIcon)
+						.withLore(lore.toArray(new String[0]))
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					//Right click = preview mode for jobs that offer items
+					if(event.isRightClick() && job.getReward() instanceof ItemsReward)
+					{
+						ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
+						gui.setOnClose(closeEvent -> this.player.openInventory(event.getInventory()));
+						gui.show(this.player);
+					}
 
-		return new GuiItem(item, event -> 
-		{
-			//Right click = preview mode for jobs that offer items
-			if(event.isRightClick() && job.getReward() instanceof ItemsReward)
-			{
-				ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
-				gui.setOnClose(closeEvent -> this.player.openInventory(event.getInventory()));
-				gui.show(this.player);
-			}
-
-			//the user wants to finish the job
-			else if(this.jobService.hasFinished(this.player, job))
-			{
-				this.player.closeInventory();
-				this.jobBoard.completeJob(job, this.player);
-			}
-		});
+					//the user wants to finish the job
+					else if(this.jobService.hasFinished(this.player, job))
+					{
+						this.player.closeInventory();
+						this.jobBoard.completeJob(job, this.player);
+					}
+				})
+				.build();
 	}
-	
+
 	private GuiItem createPersonalJobsItem() 
 	{
-		ItemStack item = new ItemBuilder(Material.PLAYER_HEAD)
-				.named(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
-				.withItemMeta(SkullMeta.class, meta -> meta.setOwningPlayer(this.player))
-				.withLore(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
-				.createCopy();
-		
-		return new GuiItem(item, event -> 
-		{
-			List<Job> playerJobs = this.jobBoard.getJobsOfferedBy(this.player.getUniqueId());
-			
-			new PlayerJobsGUI(this, this.messageService, playerJobs).show(this.player);
-		});
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.PLAYER_HEAD)
+						.named(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
+						.withItemMeta(SkullMeta.class, meta -> meta.setOwningPlayer(this.player))
+						.withLore(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					List<Job> playerJobs = this.jobBoard.getJobsOfferedBy(this.player.getUniqueId());
+
+					new PlayerJobsGUI(this, this.messageService, playerJobs).show(this.player);
+				})
+				.build();
 	}
 }

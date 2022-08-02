@@ -13,7 +13,6 @@ import java.util.Comparator;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -26,6 +25,7 @@ import dte.employme.conversations.EnchantmentLevelPrompt;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.MapBuilder;
 
@@ -76,35 +76,36 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 	private GuiItem createEnchantedBook(Enchantment enchantment) 
 	{
-		ItemStack item = new ItemBuilder(Material.ENCHANTED_BOOK)
-				.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
-				.withLore(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE).toArray())
-				.createCopy();
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.ENCHANTED_BOOK)
+						.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
+						.withLore(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE).toArray())
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					this.showCustomizationGUIOnClose = false;
 
-		return new GuiItem(item, event -> 
-		{
-			this.showCustomizationGUIOnClose = false;
-			
-			Player player = (Player) event.getWhoClicked();
-			player.closeInventory();
-			
-			Conversations.createFactory(this.messageService)
-			.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
-			.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
-			.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
-			.addConversationAbandonedListener(abandonedEvent -> 
-			{
-				if(!abandonedEvent.gracefulExit())
-					return;
-				
-				int level = (int) abandonedEvent.getContext().getSessionData("level");
-				
-				this.goalCustomizationGUI.addEnchantment(enchantment, level);
-				this.goalCustomizationGUI.setRefundRewardOnClose(true);
-				this.goalCustomizationGUI.show(player);
-			})
-			.buildConversation(player)
-			.begin();
-		});
+					Player player = (Player) event.getWhoClicked();
+					player.closeInventory();
+
+					Conversations.createFactory(this.messageService)
+					.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
+					.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
+					.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
+					.addConversationAbandonedListener(abandonedEvent -> 
+					{
+						if(!abandonedEvent.gracefulExit())
+							return;
+						
+						int level = (int) abandonedEvent.getContext().getSessionData("level");
+						
+						this.goalCustomizationGUI.addEnchantment(enchantment, level);
+						this.goalCustomizationGUI.setRefundRewardOnClose(true);
+						this.goalCustomizationGUI.show(player);
+					})
+					.buildConversation(player)
+					.begin();
+				})
+				.build();
 	}
 }

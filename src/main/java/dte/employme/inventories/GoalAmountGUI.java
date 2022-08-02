@@ -14,6 +14,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
 
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.NumberUtils;
 
@@ -56,26 +57,28 @@ public class GoalAmountGUI extends AnvilGui
 
 	private GuiItem createFinishItem() 
 	{
-		return new GuiItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(this.messageService.getMessage(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE).toArray())
-				.createCopy(), 
-				event -> 
-		{
-			Integer enteredAmount = NumberUtils.parseInt(getRenameText())
-					.filter(amount -> amount > 0)
-					.orElse(null);
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
+						.named(this.messageService.getMessage(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME).first())
+						.withLore(this.messageService.getMessage(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE).toArray())
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					Integer enteredAmount = NumberUtils.parseInt(getRenameText())
+							.filter(amount -> amount > 0)
+							.orElse(null);
 
-			if(enteredAmount == null)
-			{
-				setTitle(this.messageService.getMessage(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE).first());
-				update();
-				return;
-			}
-			
-			event.getWhoClicked().closeInventory();
-			
-			this.goalCustomizationGUI.setAmount(enteredAmount);
-		});
+					if(enteredAmount == null)
+					{
+						setTitle(this.messageService.getMessage(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE).first());
+						update();
+						return;
+					}
+
+					event.getWhoClicked().closeInventory();
+
+					this.goalCustomizationGUI.setAmount(enteredAmount);
+				})
+				.build();
 	}
 }
