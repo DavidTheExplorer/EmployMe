@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -25,6 +24,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.StringUtils;
 
 public class InventoryFrameworkUtils
 {
