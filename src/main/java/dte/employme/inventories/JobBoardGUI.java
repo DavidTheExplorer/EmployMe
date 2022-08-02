@@ -21,7 +21,6 @@ import static org.bukkit.ChatColor.WHITE;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -43,6 +42,7 @@ import dte.employme.services.message.MessageService;
 import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.InventoryFrameworkUtils;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.StringUtils;
 
 public class JobBoardGUI extends ChestGui
 {

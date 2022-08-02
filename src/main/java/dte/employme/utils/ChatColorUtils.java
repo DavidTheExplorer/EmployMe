@@ -5,8 +5,9 @@ import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 import static org.bukkit.ChatColor.UNDERLINE;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
+
+import dte.employme.utils.java.StringUtils;
 
 public class ChatColorUtils
 {

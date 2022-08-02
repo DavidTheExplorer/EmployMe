@@ -12,7 +12,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -133,8 +132,8 @@ public class InventoryUtils
 	
 	public static boolean containsAtLeast(Inventory inventory, Predicate<ItemStack> tester, int amount) 
 	{
-		Validate.notNull(inventory);
-		Validate.notNull(tester);
+		Objects.requireNonNull(inventory);
+		Objects.requireNonNull(tester);
 		
         for(ItemStack item : inventory.getStorageContents()) 
         {
@@ -173,7 +172,7 @@ public class InventoryUtils
 	}
 	public static void fillEmptySlots(Inventory inventory, ItemStack with)
 	{
-		Validate.notNull(with);
+		Objects.requireNonNull(with);
 
 		emptySlotsStream(inventory).forEach(slot -> inventory.setItem(slot, with));
 	}
@@ -183,14 +182,14 @@ public class InventoryUtils
 	}
 	public static void fillRange(Inventory inventory, int startInclusive, int endExclusive, int jumpDistance, ItemStack with)
 	{
-		Validate.notNull(inventory);
+		Objects.requireNonNull(inventory);
 
 		for(int i = startInclusive; i < endExclusive; i += jumpDistance)
 			inventory.setItem(i, with);
 	}
 	public static void fillSquare(Inventory inventory, ItemStack with, int start, int length) 
 	{
-		Validate.notNull(with);
+		Objects.requireNonNull(with);
 		
 		int currentLine = toLineAndIndex(start)[0];
 		int currentIndex = toLineAndIndex(start)[1];
@@ -243,7 +242,7 @@ public class InventoryUtils
 	 */
 	public static int firstSlotThat(Inventory inventory, Predicate<ItemStack> itemMatcher)
 	{
-		Validate.notNull(itemMatcher);
+		Objects.requireNonNull(itemMatcher);
 		
 		return allSlotsThat(inventory, itemMatcher)
 				.min()
@@ -251,7 +250,7 @@ public class InventoryUtils
 	}
 	public static int lastSlotThat(Inventory inventory, Predicate<ItemStack> itemMatcher) 
 	{
-		Validate.notNull(itemMatcher);
+		Objects.requireNonNull(itemMatcher);
 		
 		return allSlotsThat(inventory, itemMatcher)
 				.max()
@@ -276,13 +275,13 @@ public class InventoryUtils
 	 */
 	public static IntStream slotsStream(Inventory inventory)
 	{
-		Validate.notNull(inventory);
+		Objects.requireNonNull(inventory);
 
 		return IntStream.range(0, inventory.getSize());
 	}
 	public static Stream<ItemStack> itemsStream(Inventory inventory, boolean includeSpecialSlots)
 	{
-		Validate.notNull(inventory);
+		Objects.requireNonNull(inventory);
 
 		return Arrays.stream(includeSpecialSlots ? inventory.getContents() : inventory.getStorageContents())
 				.filter(Objects::nonNull);
@@ -299,7 +298,7 @@ public class InventoryUtils
 	}
 	public static IntStream allSlotsThat(Inventory inventory, Predicate<ItemStack> itemMatcher) 
 	{
-		Validate.notNull(itemMatcher);
+		Objects.requireNonNull(itemMatcher);
 
 		return dataStream(inventory)
 				.filter(itemData -> itemMatcher.test(itemData.getValue()))
@@ -317,7 +316,7 @@ public class InventoryUtils
 	 */
 	public static void buildWalls(Inventory inventory, ItemStack with)
 	{
-		Validate.notNull(inventory);
+		Objects.requireNonNull(inventory);
 
 		int size = inventory.getSize();
 
@@ -341,7 +340,7 @@ public class InventoryUtils
 	 */
 	private static void validateRow(Inventory inventory, int row)
 	{
-		Validate.notNull(inventory);
+		Objects.requireNonNull(inventory);
 
 		int rowsAmount = (inventory.getSize()/9)-1;
 
