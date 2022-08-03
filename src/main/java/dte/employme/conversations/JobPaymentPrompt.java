@@ -38,7 +38,7 @@ public class JobPaymentPrompt extends NumericPrompt
 		Double employerMoney = NumberUtils.limit(this.economy.getBalance((Player) context.getForWhom()), 2);
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
-				.inject(PLAYER_MONEY, employerMoney.toString())
+				.inject(PLAYER_MONEY, employerMoney)
 				.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
 				.first();
 	}
