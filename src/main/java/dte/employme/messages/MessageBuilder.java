@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.OfflinePlayerUtils;
 
 /**
  * This class along with {@link MessageService}, allows implementing multi-line messages in an encapsulated and clean way.
@@ -87,11 +84,6 @@ public class MessageBuilder
 	public void sendTo(CommandSender sender) 
 	{
 		this.lines.forEach(sender::sendMessage);
-	}
-	
-	public void sendIfOnline(OfflinePlayer offlinePlayer)
-	{
-		OfflinePlayerUtils.ifOnline(offlinePlayer, this::sendTo);
 	}
 
 	@Override
