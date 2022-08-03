@@ -114,7 +114,7 @@ public class EmploymentCommand extends BaseCommand
 		});
 
 		this.messageService.getMessage(PLUGIN_RELOADED)
-		.inject(RELOAD_TIME, String.valueOf(reloadTime.toMillis()))
+		.inject(RELOAD_TIME, reloadTime.toMillis())
 		.sendTo(sender);
 	}
 	

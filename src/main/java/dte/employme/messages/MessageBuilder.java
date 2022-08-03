@@ -54,9 +54,9 @@ public class MessageBuilder
 		return map(line -> prefix + line);
 	}
 	
-	public MessageBuilder inject(String placeholder, String value) 
+	public MessageBuilder inject(String placeholder, Object value) 
 	{
-		return map(line -> line.replace(placeholder, value));
+		return map(line -> line.replace(placeholder, value.toString()));
 	}
 	
 	public MessageBuilder inject(Map<String, String> placeholders) 
