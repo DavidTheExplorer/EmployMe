@@ -15,9 +15,7 @@ import dte.employme.services.message.MessageService;
 import dte.employme.utils.OfflinePlayerUtils;
 
 /**
- * This class, along with {@link MessageService}, allows implementing multi-line messages in an encapsulated and relatively clean way.
- * 
- * @see MessageService
+ * This class along with {@link MessageService}, allows implementing multi-line messages in an encapsulated and clean way.
  */
 public class MessageBuilder
 {
