@@ -76,9 +76,7 @@ public class JobDeletionGUI extends ChestGui
 					//Right click = preview mode for jobs that offer items
 					if(event.isRightClick() && job.getReward() instanceof ItemsReward)
 					{
-						ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
-						gui.setOnClose(closeEvent -> show(player));
-						gui.show(player);
+						new ItemsRewardPreviewGUI(player, this, (ItemsReward) job.getReward(), this.messageService).show(player);
 					}
 
 					//delete the job

@@ -2,10 +2,12 @@ package dte.employme.inventories;
 
 import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_PREVIEW_TITLE;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
@@ -17,13 +19,14 @@ public class ItemsRewardPreviewGUI extends ChestGui
 {
 	private final ItemsReward itemsReward;
 	
-	public ItemsRewardPreviewGUI(ItemsReward itemsReward, MessageService messageService) 
+	public ItemsRewardPreviewGUI(Player player, Gui openOnClose, ItemsReward itemsReward, MessageService messageService) 
 	{
 		super(6, messageService.getMessage(GUI_ITEMS_REWARD_PREVIEW_TITLE).first());
 		
 		this.itemsReward = itemsReward;
 		
 		setOnTopClick(event -> event.setCancelled(true));
+		setOnClose(event -> openOnClose.show(player));
 		addPane(createItemsPane());
 		update();
 	}
