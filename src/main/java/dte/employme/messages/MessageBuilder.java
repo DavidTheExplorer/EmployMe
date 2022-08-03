@@ -74,9 +74,10 @@ public class MessageBuilder
 	{
 		return this.lines.get(0);
 	}
+	
 	public List<String> toList() 
 	{
-		return new ArrayList<>(this.lines);
+		return this.lines;
 	}
 	
 	public String[] toArray() 
