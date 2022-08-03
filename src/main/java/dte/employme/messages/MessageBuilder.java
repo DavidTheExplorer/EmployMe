@@ -59,12 +59,6 @@ public class MessageBuilder
 		return map(line -> line.replace(placeholder, value.toString()));
 	}
 	
-	public MessageBuilder inject(Map<String, String> placeholders) 
-	{
-		placeholders.forEach(this::inject);
-		return this;
-	}
-	
 	
 	
 	/*
