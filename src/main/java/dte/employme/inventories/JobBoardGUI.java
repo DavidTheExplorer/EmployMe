@@ -127,9 +127,7 @@ public class JobBoardGUI extends ChestGui
 					//Right click = preview mode for jobs that offer items
 					if(event.isRightClick() && job.getReward() instanceof ItemsReward)
 					{
-						ItemsRewardPreviewGUI gui = new ItemsRewardPreviewGUI((ItemsReward) job.getReward(), this.messageService);
-						gui.setOnClose(closeEvent -> this.player.openInventory(event.getInventory()));
-						gui.show(this.player);
+						new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) job.getReward(), this.messageService).show(this.player);
 					}
 
 					//the user wants to finish the job

@@ -137,7 +137,14 @@ public class PlayerSubscriptionsGUI extends ChestGui
 						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME).first())
 						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE).toArray())
 						.createCopy())
-				.whenClicked(event -> new UnsubscribeFromItemGUI((Player) event.getWhoClicked(), this.messageService, this.jobSubscriptionService).show(event.getWhoClicked()))
+				.whenClicked(event -> 
+				{
+					Player player = (Player) event.getWhoClicked();
+					
+					UnsubscribeFromItemGUI gui = new UnsubscribeFromItemGUI(player, this.messageService, this.jobSubscriptionService);
+					gui.setOnClose(closeEvent -> show(player));
+					gui.show(event.getWhoClicked());
+				})
 				.build();
 	}
 
