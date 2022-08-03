@@ -64,8 +64,10 @@ public class JobContainersGUI extends ChestGui
 				.whenClicked(event -> 
 				{
 					Player employer = (Player) event.getWhoClicked();
-
-					containerGetter.apply(employer.getUniqueId()).show(employer);
+					
+					PlayerContainerGUI container = containerGetter.apply(employer.getUniqueId());
+					container.setOnClose(closeEvent -> show(employer));
+					container.show(employer);
 				})
 				.build();
 	}
