@@ -1,4 +1,4 @@
-package dte.employme.inventories;
+package dte.employme.guis;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;

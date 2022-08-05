@@ -1,4 +1,4 @@
-package dte.employme.inventories;
+package dte.employme.guis;
 
 import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME;

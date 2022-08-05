@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.inventories.PlayerContainerGUI;
+import dte.employme.guis.PlayerContainerGUI;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;

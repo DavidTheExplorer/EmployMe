@@ -1,4 +1,4 @@
-package dte.employme.inventories;
+package dte.employme.guis;
 
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_TITLE;

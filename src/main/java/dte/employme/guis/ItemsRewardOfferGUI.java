@@ -1,4 +1,4 @@
-package dte.employme.inventories;
+package dte.employme.guis;
 
 import static dte.employme.messages.MessageKey.GUI_ITEMS_JOB_NO_ITEMS_WARNING;
 import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE;

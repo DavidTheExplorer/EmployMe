@@ -1,4 +1,4 @@
-package dte.employme.inventories;
+package dte.employme.guis;
 
 import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_FINISH_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_FINISH_ITEM_NAME;
