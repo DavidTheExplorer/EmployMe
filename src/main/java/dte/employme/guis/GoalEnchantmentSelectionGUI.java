@@ -3,8 +3,8 @@ package dte.employme.guis;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_TITLE;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static java.util.Comparator.comparing;
 import static org.bukkit.ChatColor.GREEN;
 
@@ -25,7 +25,7 @@ import dte.employme.conversations.EnchantmentLevelPrompt;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.MapBuilder;
 

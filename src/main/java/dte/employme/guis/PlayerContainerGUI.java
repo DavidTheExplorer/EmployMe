@@ -4,13 +4,13 @@ import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_LO
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
-import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
-import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
-import static dte.employme.utils.InventoryFrameworkUtils.createPage;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
-import static dte.employme.utils.InventoryFrameworkUtils.nextButtonBuilder;
-import static dte.employme.utils.InventoryFrameworkUtils.nextButtonListener;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.backButtonBuilder;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.backButtonListener;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createPage;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonBuilder;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonListener;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -26,8 +26,8 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
-import dte.employme.utils.InventoryFrameworkUtils;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
 
 public class PlayerContainerGUI extends ChestGui
 {
@@ -91,38 +91,23 @@ public class PlayerContainerGUI extends ChestGui
 
 	private GuiItem createStoredItem(ItemStack item, OutlinePane page) 
 	{
-		GuiItem guiItem = new GuiItem(item);
-		
-		guiItem.setAction(event -> 
-		{
-			boolean givenToPlayer = !event.getWhoClicked().getInventory().addItem(item).isEmpty();
-			
-			//do nothing if the player can't get the item
-			if(givenToPlayer)
-				return;
+		return new GuiItemBuilder().forItem(item)
+				.whenClicked((event, guiItem) -> 
+				{
+					//do nothing if the player can't get the item
+					if(!event.getWhoClicked().getInventory().addItem(item).isEmpty())
+						return;
 
-			//remove the clicked item
-			page.removeItem(guiItem);
-
-			//delete the page if it's now empty, unless it's the only page left
-			if(page.getItems().isEmpty() && this.itemsPane.getPages() > 1)
-			{
-				int previousPage = this.itemsPane.getPage() == 0 ? 0 : this.itemsPane.getPage()-1;
-
-				this.itemsPane.deletePage(this.itemsPane.getPage());
-				this.itemsPane.setPage(previousPage);
-			}
-			
-			update();
-		});
-
-		return guiItem;
+					InventoryFrameworkUtils.removeItem(this.itemsPane, page, guiItem);
+					update();
+				})
+				.build();
 	}
 
 	private void setAbuseListeners() 
 	{
 		setOnTopClick(event -> event.setCancelled(true));
-		
+
 		//shifting items into the inventory
 		setOnBottomClick(event ->
 		{

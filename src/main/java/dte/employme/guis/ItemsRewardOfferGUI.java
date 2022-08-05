@@ -25,8 +25,8 @@ import dte.employme.rewards.ItemsReward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
-import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.InventoryUtils;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class ItemsRewardOfferGUI extends ChestGui

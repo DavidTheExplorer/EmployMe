@@ -17,8 +17,8 @@ import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
 import static dte.employme.messages.Placeholders.GOAL;
 import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
 import static dte.employme.messages.Placeholders.ITEM;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static java.util.stream.Collectors.joining;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.WHITE;
@@ -38,7 +38,7 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.EnumUtils;
 

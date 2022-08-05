@@ -5,8 +5,8 @@ import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_DELETE_INSTRUCTI
 import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_TITLE;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static org.bukkit.ChatColor.GRAY;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobDeletionGUI extends ChestGui

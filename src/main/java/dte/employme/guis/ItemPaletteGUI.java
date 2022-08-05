@@ -4,8 +4,8 @@ import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orienta
 import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_BACK_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_NEXT_ITEM_NAME;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
@@ -35,8 +35,8 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
 import dte.employme.utils.MaterialUtils;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class ItemPaletteGUI extends ChestGui

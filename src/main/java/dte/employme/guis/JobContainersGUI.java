@@ -5,8 +5,8 @@ import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINE
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_REWARDS_CONTAINER_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_REWARDS_CONTAINER_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_TITLE;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -22,7 +22,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobContainersGUI extends ChestGui

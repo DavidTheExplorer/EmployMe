@@ -19,9 +19,9 @@ import static dte.employme.utils.EnchantmentUtils.enchant;
 import static dte.employme.utils.EnchantmentUtils.getEnchantments;
 import static dte.employme.utils.EnchantmentUtils.isEnchantable;
 import static dte.employme.utils.EnchantmentUtils.removeEnchantment;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
-import static dte.employme.utils.InventoryFrameworkUtils.createSquare;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.Map;
@@ -48,7 +48,7 @@ import dte.employme.rewards.Reward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.MapBuilder;
 

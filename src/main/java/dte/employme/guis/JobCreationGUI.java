@@ -6,8 +6,8 @@ import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_ITEMS_JOB_ICON_N
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_MONEY_JOB_ICON_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_MONEY_JOB_ICON_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_TITLE;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationFactory;
@@ -26,7 +26,7 @@ import dte.employme.rewards.MoneyReward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import net.milkbowl.vault.economy.Economy;
 
