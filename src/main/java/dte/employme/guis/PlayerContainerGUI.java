@@ -91,38 +91,23 @@ public class PlayerContainerGUI extends ChestGui
 
 	private GuiItem createStoredItem(ItemStack item, OutlinePane page) 
 	{
-		GuiItem guiItem = new GuiItem(item);
-		
-		guiItem.setAction(event -> 
-		{
-			boolean givenToPlayer = !event.getWhoClicked().getInventory().addItem(item).isEmpty();
-			
-			//do nothing if the player can't get the item
-			if(givenToPlayer)
-				return;
+		return new GuiItemBuilder().forItem(item)
+				.whenClicked((event, guiItem) -> 
+				{
+					//do nothing if the player can't get the item
+					if(!event.getWhoClicked().getInventory().addItem(item).isEmpty())
+						return;
 
-			//remove the clicked item
-			page.removeItem(guiItem);
-
-			//delete the page if it's now empty, unless it's the only page left
-			if(page.getItems().isEmpty() && this.itemsPane.getPages() > 1)
-			{
-				int previousPage = this.itemsPane.getPage() == 0 ? 0 : this.itemsPane.getPage()-1;
-
-				this.itemsPane.deletePage(this.itemsPane.getPage());
-				this.itemsPane.setPage(previousPage);
-			}
-			
-			update();
-		});
-
-		return guiItem;
+					InventoryFrameworkUtils.removeItem(this.itemsPane, page, guiItem);
+					update();
+				})
+				.build();
 	}
 
 	private void setAbuseListeners() 
 	{
 		setOnTopClick(event -> event.setCancelled(true));
-		
+
 		//shifting items into the inventory
 		setOnBottomClick(event ->
 		{

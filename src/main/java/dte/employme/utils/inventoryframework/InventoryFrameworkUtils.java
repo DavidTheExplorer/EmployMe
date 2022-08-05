@@ -137,7 +137,8 @@ public class InventoryFrameworkUtils
 	public static void addItem(Function<OutlinePane, GuiItem> itemByLastPage, PaginatedPane pages, Gui gui) 
 	{
 		OutlinePane lastPage = (OutlinePane) pages.getPanes(pages.getPages()-1).iterator().next();
-
+		
+		//if the last page is full, create another page
 		if(lastPage.getItems().size() == (pages.getHeight() * pages.getLength()))
 		{
 			lastPage = createPage(pages);
@@ -147,9 +148,23 @@ public class InventoryFrameworkUtils
 		lastPage.addItem(itemByLastPage.apply(lastPage));
 		gui.update();
 	}
-	
-	
-	
+
+	public static void removeItem(PaginatedPane pages, OutlinePane page, GuiItem item) 
+	{
+		//remove the clicked item
+		page.removeItem(item);
+
+		//don't do anything if more items are left or it's the first page
+		if(!page.getItems().isEmpty() || pages.getPages() == 1)
+			return;
+
+		int previousPage = pages.getPage() == 0 ? 0 : pages.getPage()-1;
+		pages.deletePage(pages.getPage());
+		pages.setPage(previousPage);
+	}
+
+
+
 	/*
 	 * Items
 	 */
@@ -159,7 +174,7 @@ public class InventoryFrameworkUtils
 		return new ItemBuilder(Material.PLAYER_HEAD)
 				.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer("MHF_ArrowLeft")));
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static ItemBuilder nextButtonBuilder() 
 	{
