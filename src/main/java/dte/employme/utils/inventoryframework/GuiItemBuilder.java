@@ -1,4 +1,4 @@
-package dte.employme.utils;
+package dte.employme.utils.inventoryframework;
 
 import java.util.function.Consumer;
 

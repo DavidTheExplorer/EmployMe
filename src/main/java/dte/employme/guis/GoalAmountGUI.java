@@ -4,8 +4,8 @@ import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_FINISH_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_FINISH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_AMOUNT_TITLE;
-import static dte.employme.utils.InventoryFrameworkUtils.createItemPane;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createItemPane;
 import static org.bukkit.ChatColor.BLACK;
 
 import org.bukkit.Material;
@@ -14,7 +14,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
 
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.NumberUtils;
 

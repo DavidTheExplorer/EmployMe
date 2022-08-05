@@ -1,4 +1,4 @@
-package dte.employme.utils;
+package dte.employme.utils.inventoryframework;
 
 import static dte.employme.utils.InventoryUtils.createWall;
 

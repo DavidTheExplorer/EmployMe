@@ -5,13 +5,13 @@ import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_NA
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_JOBS_TITLE;
-import static dte.employme.utils.InventoryFrameworkUtils.backButtonBuilder;
-import static dte.employme.utils.InventoryFrameworkUtils.backButtonListener;
-import static dte.employme.utils.InventoryFrameworkUtils.createPage;
-import static dte.employme.utils.InventoryFrameworkUtils.createRectangle;
-import static dte.employme.utils.InventoryFrameworkUtils.nextButtonBuilder;
-import static dte.employme.utils.InventoryFrameworkUtils.nextButtonListener;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.backButtonBuilder;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.backButtonListener;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createPage;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonBuilder;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonListener;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
-import dte.employme.utils.InventoryFrameworkUtils;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
 
 public class PlayerJobsGUI extends ChestGui
 {

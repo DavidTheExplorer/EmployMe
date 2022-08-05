@@ -19,7 +19,7 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.EnumUtils;
 

@@ -9,8 +9,8 @@ import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPT
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_TITLE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
-import static dte.employme.utils.InventoryFrameworkUtils.createWalls;
 import static dte.employme.utils.InventoryUtils.createWall;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createWalls;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +30,7 @@ import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.messages.MessageKey;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobAddNotifiersGUI extends ChestGui
