@@ -3,7 +3,7 @@ package dte.employme.board.displayers;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
-import dte.employme.inventories.JobBoardGUI;
+import dte.employme.guis.JobBoardGUI;
 import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
 
