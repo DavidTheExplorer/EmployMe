@@ -1,4 +1,4 @@
-package dte.employme.board.listenable.addition;
+package dte.employme.board.listeners.addition;
 
 import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
 

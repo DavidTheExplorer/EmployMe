@@ -1,4 +1,4 @@
-package dte.employme.board.listenable.completion;
+package dte.employme.board.listeners.completion;
 
 import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.JOB_COMPLETED;

@@ -1,13 +1,13 @@
-package dte.employme.board.listenable;
+package dte.employme.board.listeners;
 
 import java.time.Duration;
 
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
-import dte.employme.board.listenable.addition.JobAddListener;
-import dte.employme.board.listenable.completion.JobCompleteListener;
-import dte.employme.board.listenable.removal.JobRemovalListener;
+import dte.employme.board.listeners.addition.JobAddListener;
+import dte.employme.board.listeners.completion.JobCompleteListener;
+import dte.employme.board.listeners.removal.JobRemovalListener;
 import dte.employme.job.Job;
 import dte.employme.services.job.JobService;
 
