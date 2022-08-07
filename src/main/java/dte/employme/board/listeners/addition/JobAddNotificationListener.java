@@ -1,4 +1,4 @@
-package dte.employme.board.listenable.addition;
+package dte.employme.board.listeners.addition;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

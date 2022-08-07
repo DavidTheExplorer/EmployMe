@@ -3,37 +3,72 @@ package dte.employme.board;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import dte.employme.board.listeners.addition.JobAddListener;
+import dte.employme.board.listeners.completion.JobCompleteListener;
+import dte.employme.board.listeners.removal.JobRemovalListener;
 import dte.employme.job.Job;
 
 public class SimpleJobBoard implements JobBoard
 {
 	private final Map<UUID, Job> jobByUUID = new HashMap<>();
 	
+	//listeners
+	private final Set<JobAddListener> addListeners = new LinkedHashSet<>();
+	private final Set<JobCompleteListener> completeListeners = new LinkedHashSet<>();
+	private final Set<JobRemovalListener> removalListeners = new LinkedHashSet<>();
+	
 	@Override
 	public void addJob(Job job) 
 	{
 		this.jobByUUID.put(job.getUUID(), job);
+		
+		this.addListeners.forEach(listener -> listener.onJobAdded(this, job));
 	}
 	
 	@Override
 	public void removeJob(Job job) 
 	{
 		this.jobByUUID.remove(job.getUUID());
+		
+		this.removalListeners.forEach(listener -> listener.onJobRemoved(this, job));
 	}
 	
 	@Override
 	public void completeJob(Job job, Player whoCompleted) 
 	{
-		removeJob(job);
+		JobBoard.super.completeJob(job, whoCompleted);
+		
+		this.completeListeners.forEach(listener -> listener.onJobCompleted(this, job, whoCompleted));
+	}
+	
+	@Override
+	public void registerAddListener(JobAddListener... listeners) 
+	{
+		Arrays.stream(listeners).forEach(this.addListeners::add);
+	}
+
+	@Override
+	public void registerCompleteListener(JobCompleteListener... listeners) 
+	{
+		Arrays.stream(listeners).forEach(this.completeListeners::add);
+	}
+
+	@Override
+	public void registerRemovalListener(JobRemovalListener... listeners) 
+	{
+		Arrays.stream(listeners).forEach(this.removalListeners::add);
 	}
 	
 	@Override

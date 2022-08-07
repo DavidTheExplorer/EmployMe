@@ -20,16 +20,16 @@ import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.addednotifiers.AllJobsNotifier;
 import dte.employme.addednotifiers.DoNotNotify;
 import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
+import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.displayers.InventoryBoardDisplayer;
-import dte.employme.board.listenable.AutoJobDeleteListeners;
-import dte.employme.board.listenable.ListenableJobBoard;
-import dte.employme.board.listenable.addition.EmployerNotificationListener;
-import dte.employme.board.listenable.addition.JobAddDiscordWebhook;
-import dte.employme.board.listenable.addition.JobAddNotificationListener;
-import dte.employme.board.listenable.completion.JobCompletedMessagesListener;
-import dte.employme.board.listenable.completion.JobGoalTransferListener;
-import dte.employme.board.listenable.completion.JobRewardGiveListener;
+import dte.employme.board.listeners.AutoJobDeleteListeners;
+import dte.employme.board.listeners.addition.EmployerNotificationListener;
+import dte.employme.board.listeners.addition.JobAddDiscordWebhook;
+import dte.employme.board.listeners.addition.JobAddNotificationListener;
+import dte.employme.board.listeners.completion.JobCompletedMessagesListener;
+import dte.employme.board.listeners.completion.JobGoalTransferListener;
+import dte.employme.board.listeners.completion.JobRewardGiveListener;
 import dte.employme.commands.EmploymentCommand;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
@@ -58,7 +58,7 @@ import net.milkbowl.vault.economy.Economy;
 public class EmployMe extends ModernJavaPlugin
 {
 	private Economy economy;
-	private ListenableJobBoard globalJobBoard;
+	private JobBoard globalJobBoard;
 	private JobService jobService;
 	private JobRewardService jobRewardService;
 	private PlayerContainerService playerContainerService;
@@ -108,7 +108,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the global job board, services, factories, etc.
-		this.globalJobBoard = new ListenableJobBoard(new SimpleJobBoard());
+		this.globalJobBoard = new SimpleJobBoard();
 		
 		this.messageService = new TranslatedMessageService(this.messagesConfig);
 		

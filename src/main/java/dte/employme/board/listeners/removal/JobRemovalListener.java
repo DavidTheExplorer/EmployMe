@@ -1,4 +1,4 @@
-package dte.employme.board.listenable.removal;
+package dte.employme.board.listeners.removal;
 
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
