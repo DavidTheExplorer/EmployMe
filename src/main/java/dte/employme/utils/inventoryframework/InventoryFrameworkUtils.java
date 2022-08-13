@@ -28,8 +28,17 @@ import dte.employme.utils.java.StringUtils;
 
 public class InventoryFrameworkUtils
 {
-	/*
-	 * Shapes
+	/**
+	 * Creates a Pane in a rectangular shape, and completely fills it with the provided {@code item}. 
+	 * The shape starts in the provided {@code x, y} and has the provided {@code length, height}.
+	 * 
+	 * @param priority The priority of the pane.
+	 * @param x The start X of the pane.
+	 * @param y The start Y of the pane.
+	 * @param length The length of the pane.
+	 * @param height The height of the pane.
+	 * @param item The item to fill the pane with.
+	 * @return A rectangle-like pane.
 	 */
 	public static Pane createRectangle(Priority priority, int x, int y, int length, int height, GuiItem item) 
 	{
@@ -40,11 +49,30 @@ public class InventoryFrameworkUtils
 		return pane;
 	}
 
+	/**
+	 * Creates a Pane in a square shape, and completely fills it with the provided {@code item}.
+	 * The shape starts in the provided {@code x, y} and its vertical/horizontal heights are the provided {@code length}.
+	 * 
+	 * @param priority The priority of the pane.
+	 * @param x The start X of the pane.
+	 * @param y The start Y of the pane.
+	 * @param length The vertical/horizontal heights of the pane.
+	 * @param item The item to fill the pane with.
+	 * @return A square-like pane.
+	 */
 	public static Pane createSquare(Priority priority, int x, int y, int length, GuiItem item) 
 	{
 		return createRectangle(priority, x, y, length, length, item);
 	}
 
+	/**
+	 * Creates a Pane that represents a border that surrounds the entire provided {@code pane}, and fills it with the provided {@code item}.
+	 * 
+	 * @param gui The GUI to create walls for.
+	 * @param priority The priority of the pane.
+	 * @param item The item to fill the pane with.
+	 * @return A border pane for the provided GUI.
+	 */
 	public static Pane createWalls(ChestGui gui, Priority priority) 
 	{
 		PatternPane background = new PatternPane(0, 0, 9, gui.getRows(), createWallsPattern(gui));
@@ -53,17 +81,28 @@ public class InventoryFrameworkUtils
 
 		return background;
 	}
-
-
-
-	/*
-	 * Single Item Pane
-	 */
+	
+	
+	
+	/**
+     * Creates a pane for a single item, at the provided {@code x, y} position.
+     * 
+     * @param x The pane's X position.
+     * @param y The pane's Y position.
+     * @param priority The pane's priority.
+     * @param item The item to put in the pane.
+     * @return A pane for the provided item.
+     */
 	public static StaticPane createItemPane(int x, int y, GuiItem item) 
 	{
 		return createItemPane(x, y, Priority.NORMAL, item);
 	}
-
+	
+	/**
+	 * Works like {@link InventoryFrameworkUtils#createItemPane(int, int, GuiItem)} but the priority is passed instead of defaulting to {@code NORMAL}.
+	 * 
+	 * @see InventoryFrameworkUtils#createItemPane(int, int, GuiItem)
+	 */
 	public static StaticPane createItemPane(int x, int y, Priority priority, GuiItem item) 
 	{
 		StaticPane pane = new StaticPane(x, y, 1, 1, priority);
@@ -71,12 +110,9 @@ public class InventoryFrameworkUtils
 
 		return pane;
 	}
-
-
-
-	/*
-	 * InventoryClickEvent Handlers
-	 */
+	
+	
+	
 	public static Consumer<InventoryClickEvent> backButtonListener(Gui gui, PaginatedPane pages)
 	{
 		return event -> 
@@ -100,12 +136,9 @@ public class InventoryFrameworkUtils
 			gui.update();
 		};
 	}
-
-
-
-	/*
-	 * Patterns
-	 */
+	
+	
+	
 	public static Pattern createWallsPattern(ChestGui gui) 
 	{
 		List<String> pattern = new ArrayList<>();
@@ -118,26 +151,40 @@ public class InventoryFrameworkUtils
 
 		return new Pattern(pattern.toArray(new String[0]));
 	}
-
-
-
-	/*
-	 * PaginatedPane
+	
+	
+	/**
+	 * Creates a page for the provided {@code PaginatedPage} which starts at {@code 0, 0} and ends in its bottom right corner.
+	 * 
+	 * @param pages The PaginatedPage to create a page for.
+	 * @return The page.
 	 */
 	public static OutlinePane createPage(PaginatedPane pages) 
 	{
 		return new OutlinePane(0, 0, pages.getLength(), pages.getHeight());
 	}
-
+	
+	/**
+	 * Works like {@link #addItem(Function, PaginatedPane, Gui)} but an {@code item} is passed about the last page object.
+	 * 
+	 * @see #addItem(Function, PaginatedPane, Gui)
+	 */
 	public static void addItem(GuiItem item, PaginatedPane pages, Gui gui) 
 	{
 		addItem(lastPage -> item, pages, gui);
 	}
-
+	
+	/**
+	 * Adds an item(calculated using the last page) to the last page in {@code pages}, automatically creating a new page(using {@link #createPage(PaginatedPane)} if the last page is full.
+	 * 
+	 * @param itemByLastPage The function that determins the item to add, using the last page - which can be the current one, or a new one if the current is full.
+	 * @param pages The PaginatedPane.
+	 * @param gui The GUI where the PaginatedPane is inside.
+	 */
 	public static void addItem(Function<OutlinePane, GuiItem> itemByLastPage, PaginatedPane pages, Gui gui) 
 	{
 		OutlinePane lastPage = (OutlinePane) pages.getPanes(pages.getPages()-1).iterator().next();
-		
+
 		//if the last page is full, create another page
 		if(lastPage.getItems().size() == (pages.getHeight() * pages.getLength()))
 		{
@@ -148,7 +195,14 @@ public class InventoryFrameworkUtils
 		lastPage.addItem(itemByLastPage.apply(lastPage));
 		gui.update();
 	}
-
+	
+	/**
+	 * Removes the provided {@code item} from the provided {@code page}, automatically removing the page if consequently it became empty AND <b>is not the first page</b>.
+	 * 
+	 * @param pages The PaginatedPane.
+	 * @param page The page to remove the item from.
+	 * @param item The item to remove.
+	 */
 	public static void removeItem(PaginatedPane pages, OutlinePane page, GuiItem item) 
 	{
 		//remove the clicked item
@@ -162,12 +216,9 @@ public class InventoryFrameworkUtils
 		pages.deletePage(pages.getPage());
 		pages.setPage(previousPage);
 	}
-
-
-
-	/*
-	 * Items
-	 */
+	
+	
+	
 	@SuppressWarnings("deprecation")
 	public static ItemBuilder backButtonBuilder() 
 	{
