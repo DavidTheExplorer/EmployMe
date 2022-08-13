@@ -13,7 +13,7 @@ public class GuiItemBuilder
 {
 	private ItemStack item;
 
-	//Sometimes the listener needs access to the GuiItem itself, that's why Consumer<InventoryClickEvent> is used
+	//Sometimes the listener needs access to the GuiItem itself, that's why GuiItem is also passed
 	private BiConsumer<InventoryClickEvent, GuiItem> clickListener;
 
 	public GuiItemBuilder forItem(ItemStack item) 
