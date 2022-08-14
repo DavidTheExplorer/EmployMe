@@ -10,6 +10,7 @@ import java.util.function.Function;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -231,5 +232,19 @@ public class InventoryFrameworkUtils
 	{
 		return new ItemBuilder(Material.PLAYER_HEAD)
 				.withItemMeta(SkullMeta.class, skullMeta -> skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer("MHF_ArrowRight")));
+	}
+	
+	
+	/**
+	 * Converts the provided {@code gui item} into a stackable minecraft item.
+	 * 
+	 * @param item The gui item to convert.
+	 * @return The equivalent minecraft item.
+	 */
+	public static ItemStack toMinecraftItem(GuiItem guiItem) 
+	{
+		return new ItemBuilder(guiItem.getItem())
+				.withExtendedMeta(meta -> meta.getPersistentDataContainer().remove(GuiItem.KEY_UUID))
+				.createCopy();
 	}
 }

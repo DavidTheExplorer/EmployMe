@@ -11,9 +11,11 @@ import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.crea
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonBuilder;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonListener;
+import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.toMinecraftItem;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +47,6 @@ public class PlayerContainerGUI extends ChestGui
 		this.itemsPane = new PaginatedPane(0, 0, 9, ITEMS_PER_PAGE / 9, Priority.LOWEST);
 		this.itemsPane.addPane(0, createPage(this.itemsPane));
 
-		setOnTopClick(event -> event.setCancelled(true));
 		setAbuseListeners();	
 		addPane(createControlPanel(this.itemsPane));
 		addPane(createRectangle(Priority.LOWEST, 0, 5, 9, 1, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
@@ -94,11 +95,14 @@ public class PlayerContainerGUI extends ChestGui
 		return new GuiItemBuilder().forItem(item)
 				.whenClicked((event, guiItem) -> 
 				{
-					//do nothing if the player can't get the item
-					if(!event.getWhoClicked().getInventory().addItem(item).isEmpty())
-						return;
+					Map<Integer, ItemStack> left = event.getWhoClicked().getInventory().addItem(toMinecraftItem(guiItem));
 
-					InventoryFrameworkUtils.removeItem(this.itemsPane, page, guiItem);
+					//remove the item if it fitted in the player's inventory
+					if(left.isEmpty()) 
+						InventoryFrameworkUtils.removeItem(this.itemsPane, page, guiItem);
+					else
+						guiItem.getItem().setAmount(left.get(0).getAmount());
+					
 					update();
 				})
 				.build();
