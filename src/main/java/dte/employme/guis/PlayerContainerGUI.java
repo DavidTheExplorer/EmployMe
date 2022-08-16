@@ -28,6 +28,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
 
@@ -54,9 +55,14 @@ public class PlayerContainerGUI extends ChestGui
 		update();
 	}
 
-	public void addItem(ItemStack item) 
+	public void addItem(ItemStack item)
 	{
-		InventoryFrameworkUtils.addItem(lastPage -> createStoredItem(item, lastPage), this.itemsPane, this);
+		/*
+		 * InventoryFramework can't handle big items, meaning ItemStack(Material.SNOWBALL, 40) would be shown with the amount of 16.
+		 * ItemStackUtils#divideBigItem offers a solution: it splits the item into multiple, each one with the max stack amount.
+		 */
+		for(ItemStack smallerItem : ItemStackUtils.divideBigItem(item))
+			InventoryFrameworkUtils.addItem(lastPage -> createStoredItem(smallerItem, lastPage), this.itemsPane, this);
 	}
 
 	public List<ItemStack> getStoredItems()
