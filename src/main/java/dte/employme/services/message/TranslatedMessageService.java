@@ -186,8 +186,7 @@ public class TranslatedMessageService implements MessageService
 
 		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
 		
-		//add the plugin's prefix to the message if needed
-		if(key.isPrefixed())
+		if(key.shouldBePrefixed())
 			messageBuilder.prefixed(getMessage(PREFIX).first());
 		
 		return messageBuilder;

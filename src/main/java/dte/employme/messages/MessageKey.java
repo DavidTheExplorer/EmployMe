@@ -177,7 +177,7 @@ public enum MessageKey
 	
 	MessageKey()
 	{
-		this(false);
+		this.prefixed = false;
 	}
 	
 	MessageKey(boolean prefixed)
@@ -185,7 +185,7 @@ public enum MessageKey
 		this.prefixed = prefixed;
 	}
 	
-	public boolean isPrefixed() 
+	public boolean shouldBePrefixed() 
 	{
 		return this.prefixed;
 	}
