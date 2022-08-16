@@ -45,8 +45,6 @@ public class ItemStackUtils
 			ItemStack newItem = item.clone();
 			int sizeToRemove = sizeLeft > maxSize ? maxSize : sizeLeft;
 			
-			System.out.println(sizeToRemove + " of " + item.getType());
-			
 			newItem.setAmount(sizeToRemove);
 			sizeLeft -= sizeToRemove;
 			items.add(newItem);
