@@ -4,7 +4,7 @@ public enum MessageKey
 {
 	//Jobs
 	JOB_ADDED_TO_BOARD(true),
-	JOB_COMPLETED(true),
+	MONEY_JOB_COMPLETED(true),
 	ITEMS_JOB_COMPLETED(true),
 	PLAYER_COMPLETED_YOUR_JOB(true),
 	YOU_OFFERED_TOO_MANY_JOBS,

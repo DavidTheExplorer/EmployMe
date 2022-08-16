@@ -18,7 +18,7 @@ public class TranslatedMessageService implements MessageService
 
 			//Jobs
 			.put(JOB_ADDED_TO_BOARD, "Jobs.Added To Board")
-			.put(JOB_COMPLETED, "Jobs.Completed")
+			.put(MONEY_JOB_COMPLETED, "Jobs.Money Job Completed")
 			.put(ITEMS_JOB_COMPLETED, "Jobs.Item Job Completed")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "Jobs.Player Completed Your Job")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "Jobs.You Have Too Many Jobs")

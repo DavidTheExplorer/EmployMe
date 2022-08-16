@@ -31,7 +31,7 @@ public class Messages
 
 			//Jobs
 			.put(JOB_ADDED_TO_BOARD, "&aYour offer was added to the &eJobs Board&a!")
-			.put(JOB_COMPLETED, "&aYou successfully completed this Job!")
+			.put(MONEY_JOB_COMPLETED, "&aYou successfully completed this Job!")
 			.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment myrewards\"")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs!")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! Please delete one to proceed.")
