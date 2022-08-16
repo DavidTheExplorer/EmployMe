@@ -207,7 +207,7 @@ public class EmployMe extends ModernJavaPlugin
 		});
 
 		//register commands
-		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.jobService, this.messageService);
+		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.messageService);
 		
 		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, inventoryBoardDisplayer));
 	}

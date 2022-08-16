@@ -8,9 +8,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
+import de.tr7zw.nbtapi.NBTItem;
 import dte.employme.rewards.Reward;
+import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.MapBuilder;
 
 @SerializableAs("Job")
@@ -63,7 +67,29 @@ public class Job implements ConfigurationSerializable
 	{
 		return this.reward;
 	}
-
+	
+	public boolean hasFinished(Player player) 
+	{
+		return InventoryUtils.containsAtLeast(player.getInventory(), this::isGoal, this.goal.getAmount());
+	}
+	
+	public boolean isGoal(ItemStack item) 
+	{
+		NBTItem nbtItem = new NBTItem(item);
+		nbtItem.removeKey("RepairCost");
+		ItemStack finalItem = nbtItem.getItem();
+		
+		//basic check that the item is the required goal
+		if(!finalItem.isSimilar(this.goal))
+			return false;
+		
+		//damaged goals are unacceptable
+		if(finalItem.getItemMeta() instanceof Damageable && ((Damageable) finalItem.getItemMeta()).hasDamage())
+			return false;
+		
+		return true;
+	}
+	
 	@Override
 	public Map<String, Object> serialize()
 	{

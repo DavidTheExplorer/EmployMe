@@ -37,7 +37,6 @@ import dte.employme.board.JobBoard;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
-import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
@@ -48,18 +47,16 @@ public class JobBoardGUI extends ChestGui
 {
 	private final Player player;
 	private final JobBoard jobBoard;
-	private final JobService jobService;
 	private final MessageService messageService;
 	
 	private final PaginatedPane jobsPane;
 
-	public JobBoardGUI(Player player, JobBoard jobBoard, JobService jobService, MessageService messageService)
+	public JobBoardGUI(Player player, JobBoard jobBoard, MessageService messageService)
 	{
 		super(6, messageService.getMessage(GUI_JOB_BOARD_TITLE).first());
 
 		this.player = player;
 		this.jobBoard = jobBoard;
-		this.jobService = jobService;
 		this.messageService = messageService;
 		
 		this.jobsPane = new PaginatedPane(1, 1, 7, 4, Priority.LOWEST);
@@ -107,7 +104,7 @@ public class JobBoardGUI extends ChestGui
 	private GuiItem createOfferIcon(Job job) 
 	{
 		ItemStack basicIcon = JobIconFactory.create(job, this.messageService);
-		boolean finished = this.jobService.hasFinished(this.player, job);
+		boolean finished = job.hasFinished(this.player);
 
 		//add the status and ID to the lore
 		String separator = createSeparationLine(finished ? WHITE : DARK_RED, finished ? 25 : 29);
@@ -131,7 +128,7 @@ public class JobBoardGUI extends ChestGui
 					}
 
 					//the user wants to finish the job
-					else if(this.jobService.hasFinished(this.player, job))
+					else if(job.hasFinished(this.player))
 					{
 						this.player.closeInventory();
 						this.jobBoard.completeJob(job, this.player);
