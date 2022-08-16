@@ -16,8 +16,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import dte.employme.EmployMe;
@@ -26,7 +24,6 @@ import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.rewards.JobRewardService;
-import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -49,14 +46,6 @@ public class SimpleJobService implements JobService
 		this.autoDeletionConfig = autoDeletionConfig;
 		this.messageService = messageService;
 		this.jobRewardService = jobRewardService;
-	}
-	
-	@Override
-	public boolean hasFinished(Player player, Job job) 
-	{
-		ItemStack goal = job.getGoal();
-		
-		return InventoryUtils.containsAtLeast(player.getInventory(), item -> JobService.isGoal(item, goal), goal.getAmount());
 	}
 	
 	@Override
