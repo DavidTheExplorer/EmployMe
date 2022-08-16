@@ -18,7 +18,7 @@ public class TranslatedMessageService implements MessageService
 
 			//Jobs
 			.put(JOB_ADDED_TO_BOARD, "Jobs.Added To Board")
-			.put(JOB_COMPLETED, "Jobs.Completed")
+			.put(MONEY_JOB_COMPLETED, "Jobs.Money Job Completed")
 			.put(ITEMS_JOB_COMPLETED, "Jobs.Item Job Completed")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "Jobs.Player Completed Your Job")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "Jobs.You Have Too Many Jobs")
@@ -186,8 +186,7 @@ public class TranslatedMessageService implements MessageService
 
 		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
 		
-		//add the plugin's prefix to the message if needed
-		if(key.isPrefixed())
+		if(key.shouldBePrefixed())
 			messageBuilder.prefixed(getMessage(PREFIX).first());
 		
 		return messageBuilder;
