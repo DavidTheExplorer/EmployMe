@@ -1,28 +1,20 @@
 package dte.employme;
 
-import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
-import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import co.aikar.commands.BukkitCommandManager;
-import co.aikar.commands.ConditionFailedException;
-import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.addednotifiers.AllJobsNotifier;
 import dte.employme.addednotifiers.DoNotNotify;
 import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
-import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.board.listeners.AutoJobDeleteListeners;
 import dte.employme.board.listeners.addition.EmployerNotificationListener;
 import dte.employme.board.listeners.addition.JobAddDiscordWebhook;
@@ -30,7 +22,7 @@ import dte.employme.board.listeners.addition.JobAddNotificationListener;
 import dte.employme.board.listeners.completion.JobCompletedMessagesListener;
 import dte.employme.board.listeners.completion.JobGoalTransferListener;
 import dte.employme.board.listeners.completion.JobRewardGiveListener;
-import dte.employme.commands.EmploymentCommand;
+import dte.employme.commands.ACF;
 import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
@@ -49,7 +41,6 @@ import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
 import dte.employme.services.rewards.SimpleJobRewardService;
-import dte.employme.utils.PermissionUtils;
 import dte.employme.utils.java.ServiceLocator;
 import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
@@ -139,7 +130,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
 
 		//register commands, listeners, metrics
-		registerCommands();
+		new ACF(this.globalJobBoard, this.economy, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 
@@ -169,47 +160,6 @@ public class EmployMe extends ModernJavaPlugin
 			return null;
 
 		return provider.getProvider();
-	}
-
-	@SuppressWarnings("deprecation")
-	private void registerCommands() 
-	{
-		BukkitCommandManager commandManager = new BukkitCommandManager(this);
-		commandManager.enableUnstableAPI("help");
-
-		//register conditions
-		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
-		{
-			if(context.getPlayer().isConversing())
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING).first(), false);
-		});
-		
-		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
-		{
-			String jobPermission = PermissionUtils.findPermission(player, permission -> permission.startsWith("employme.jobs.allowed."))
-					.orElse("employme.jobs.allowed.3");
-			
-			int allowedJobs = Integer.parseInt(jobPermission.split("\\.")[jobPermission.split("\\.").length-1]);
-			
-			if(this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).size() >= allowedJobs)
-				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS).first());
-		});
-		
-		//register contexts
-		commandManager.getCommandContexts().registerIssuerOnlyContext(List.class, context -> 
-		{
-			if(!context.hasFlag("Jobs Able To Delete"))
-				return null;
-			
-			Player player = context.getPlayer();
-			
-			return player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
-		});
-
-		//register commands
-		InventoryBoardDisplayer inventoryBoardDisplayer = new InventoryBoardDisplayer(this.messageService);
-		
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, inventoryBoardDisplayer));
 	}
 	
 	private void setupWebhooks() 
