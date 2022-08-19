@@ -14,10 +14,10 @@ import dte.employme.rewards.ItemsReward;
 import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.OfflinePlayerUtils;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
-import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class JobCompletedMessagesListener implements JobCompleteListener
 {
@@ -42,13 +42,20 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 			this.messageService.getMessage(PLAYER_COMPLETED_YOUR_JOB)
 			.inject(COMPLETER, whoCompleted.getName())
 			.stream()
-			.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new Text( this.jobService.describeInGame(job)))).create())
-			.forEach(message -> employer.spigot().sendMessage(message));
+			.map(message -> displayHoverDescription(message, job))
+			.forEach(employer.spigot()::sendMessage);
 		});
 	}
 	
 	private static MessageKey getRewardMessage(Job job) 
 	{
 		return job.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : MONEY_JOB_COMPLETED;
+	}
+	
+	private BaseComponent[] displayHoverDescription(String message, Job job) 
+	{
+		return new ComponentBuilder(message)
+				.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(this.jobService.describeInGame(job)).create()))
+				.create();
 	}
 }

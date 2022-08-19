@@ -29,7 +29,6 @@ import dte.employme.utils.OfflinePlayerUtils;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
-import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class SimpleJobService implements JobService
 {
@@ -146,12 +145,10 @@ public class SimpleJobService implements JobService
 			//notify the employer
 			OfflinePlayerUtils.ifOnline(employer, employerPlayer -> 
 			{
-				String jobDescription = describeInGame(job);
-				
 				this.messageService.getMessage(JOB_AUTO_REMOVED)
 				.stream()
-				.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new Text(jobDescription))).create())
-				.forEach(message -> employerPlayer.spigot().sendMessage(message));
+				.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(describeInGame(job)).create())).create())
+				.forEach(employerPlayer.spigot()::sendMessage);
 			});
 			
 			this.autoDeletion.remove(job);
