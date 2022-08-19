@@ -2,12 +2,15 @@ package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.ValidatingPrompt;
 
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.MaterialUtils;
 
 public class JobGoalPrompt extends ValidatingPrompt
 {
@@ -31,10 +34,9 @@ public class JobGoalPrompt extends ValidatingPrompt
 	{
 		Material material = Material.matchMaterial(input);
 		
-		if(material == null)
-			return false;
-		
-		return !material.isAir() && material != Material.BARRIER;
+		return Optional.ofNullable(material)
+				.filter(MaterialUtils::isObtainable)
+				.isPresent();
 	}
 	
 	@Override
