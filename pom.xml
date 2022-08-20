@@ -83,6 +83,8 @@
 							<artifact>com.github.cryptomorin:XSeries</artifact>
 							<includes>
 								<include>com/cryptomorin/xseries/XMaterial*</include>
+								<include>com/cryptomorin/xseries/XTag*</include>
+								<include>com/cryptomorin/xseries/XEnchantment*</include>
 							</includes>
 						</filter>
 					</filters>
