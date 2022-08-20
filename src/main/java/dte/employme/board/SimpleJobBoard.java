@@ -54,6 +54,26 @@ public class SimpleJobBoard implements JobBoard
 	}
 	
 	@Override
+	public Optional<Job> getJobByUUID(UUID uuid) 
+	{
+		return Optional.ofNullable(this.jobByUUID.get(uuid));
+	}
+	
+	@Override
+	public List<Job> getJobsOfferedBy(UUID employerUUID) 
+	{
+		return this.jobByUUID.values().stream()
+				.filter(job -> job.getEmployer().getUniqueId().equals(employerUUID))
+				.collect(toList());
+	}
+	
+	@Override
+	public List<Job> getOfferedJobs()
+	{
+		return new ArrayList<>(this.jobByUUID.values());
+	}
+	
+	@Override
 	public void registerAddListener(JobAddListener... listeners) 
 	{
 		Arrays.stream(listeners).forEach(this.addListeners::add);
@@ -72,23 +92,21 @@ public class SimpleJobBoard implements JobBoard
 	}
 	
 	@Override
-	public List<Job> getOfferedJobs()
+	public void removeAddListener(JobAddListener... listeners) 
 	{
-		return new ArrayList<>(this.jobByUUID.values());
+		Arrays.stream(listeners).forEach(this.addListeners::remove);
 	}
 	
 	@Override
-	public Optional<Job> getJobByUUID(UUID uuid) 
+	public void removeCompleteListener(JobCompleteListener... listeners) 
 	{
-		return Optional.ofNullable(this.jobByUUID.get(uuid));
+		Arrays.stream(listeners).forEach(this.completeListeners::remove);
 	}
 	
 	@Override
-	public List<Job> getJobsOfferedBy(UUID employerUUID) 
+	public void removeRemovalListener(JobRemovalListener... listeners) 
 	{
-		return this.jobByUUID.values().stream()
-				.filter(job -> job.getEmployer().getUniqueId().equals(employerUUID))
-				.collect(toList());
+		Arrays.stream(listeners).forEach(this.removalListeners::remove);
 	}
 	
 	@Override
