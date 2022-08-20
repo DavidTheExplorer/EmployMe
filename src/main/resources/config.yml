@@ -9,4 +9,4 @@ Discord Webhooks:
 # ATTENTION: All time units must be plural(seconds, days, etc) and the maximum unit is days!
 Auto Delete Jobs:
   Enabled: false
-  After: 1 weeks
+  After: 1 days

@@ -57,6 +57,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
 	private ConfigFile mainConfig, jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	private AutoJobDeleteListeners autoJobDeleteListeners;
 
 	private static EmployMe INSTANCE;
 
@@ -178,19 +179,27 @@ public class EmployMe extends ModernJavaPlugin
 	
 	private void setupAutoJobDeletion()
 	{
+		removeAutoJobDeletionListeners();
+		
 		ConfigurationSection section = this.mainConfig.getSection("Auto Delete Jobs");
 		
 		if(!section.getBoolean("Enabled"))
 			return;
 		
+		Duration deleteAfter = TimeUtils.toDuration(section.getString("After"));
+
 		this.jobService.loadAutoDeletionData();
 		
-		Duration delay = TimeUtils.toDuration(section.getString("After"));
-		
-		AutoJobDeleteListeners listeners = new AutoJobDeleteListeners(delay, this.jobService);
-		
-		this.globalJobBoard.registerAddListener(listeners);
-		this.globalJobBoard.registerRemovalListener(listeners);
-		this.globalJobBoard.registerCompleteListener(listeners);
+		this.autoJobDeleteListeners = new AutoJobDeleteListeners(deleteAfter, this.jobService);
+		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.registerCompleteListener(this.autoJobDeleteListeners);
+	}
+
+	private void removeAutoJobDeletionListeners() 
+	{
+		this.globalJobBoard.removeAddListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.removeCompleteListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
 	}
 }

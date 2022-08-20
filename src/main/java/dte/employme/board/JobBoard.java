@@ -20,14 +20,17 @@ public interface JobBoard extends Iterable<Job>
 	{
 		removeJob(job);
 	}
-	
+
+	//query
+	Optional<Job> getJobByUUID(UUID uuid);
+	List<Job> getJobsOfferedBy(UUID employerUUID);
+	List<Job> getOfferedJobs();
+
 	//listeners
 	void registerAddListener(JobAddListener... listeners);
 	void registerCompleteListener(JobCompleteListener... listeners);
 	void registerRemovalListener(JobRemovalListener... listeners);
-	
-	//query
-	Optional<Job> getJobByUUID(UUID uuid);
-	List<Job> getOfferedJobs();
-	List<Job> getJobsOfferedBy(UUID employerUUID);
+	void removeAddListener(JobAddListener... listeners);
+	void removeCompleteListener(JobCompleteListener... listeners);
+	void removeRemovalListener(JobRemovalListener... listeners);
 }
