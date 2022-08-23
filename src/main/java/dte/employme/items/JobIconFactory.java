@@ -85,7 +85,7 @@ public class JobIconFactory
 
 		else if(reward instanceof ItemsReward)
 			return messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
-					.inject(ITEMS_AMOUNT, String.valueOf(((ItemsReward) reward).getItems().size()))
+					.inject(ITEMS_AMOUNT, ((ItemsReward) reward).getItems().size())
 					.first();
 
 		else

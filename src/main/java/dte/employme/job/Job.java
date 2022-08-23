@@ -104,7 +104,7 @@ public class Job implements ConfigurationSerializable
 	@Override
 	public String toString()
 	{
-		return String.format("Job [uuid=%s, employer=%s, goal=%s, reward=%s]", this.uuid, this.employer.getUniqueId().toString(), this.goal, this.reward);
+		return String.format("Job [uuid=%s, employer=%s, goal=%s, reward=%s]", this.uuid, this.employer.getUniqueId(), this.goal, this.reward);
 	}
 
 	@Override
