@@ -12,7 +12,6 @@ import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.board.displayers.InventoryBoardDisplayer;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
@@ -82,7 +81,7 @@ public class ACF
 	
 	private void registerCommands(BukkitCommandManager commandManager) 
 	{
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, new InventoryBoardDisplayer(this.messageService)));
+		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService));
 	}
 	
 	private int getAllowedJobsAmount(Player player) 

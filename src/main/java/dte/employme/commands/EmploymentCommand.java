@@ -21,8 +21,8 @@ import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.board.displayers.JobBoardDisplayer;
 import dte.employme.guis.JobAddNotifiersGUI;
+import dte.employme.guis.JobBoardGUI;
 import dte.employme.guis.JobContainersGUI;
 import dte.employme.guis.JobCreationGUI;
 import dte.employme.guis.JobDeletionGUI;
@@ -41,13 +41,12 @@ public class EmploymentCommand extends BaseCommand
 {
 	private final Economy economy;
 	private final JobBoard globalJobBoard;
-	private final JobBoardDisplayer jobBoardDisplayer;
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
 
-	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobBoardDisplayer jobBoardDisplayer) 
+	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService) 
 	{
 		this.economy = economy;
 		this.globalJobBoard = globalJobBoard;
@@ -55,7 +54,6 @@ public class EmploymentCommand extends BaseCommand
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
-		this.jobBoardDisplayer = jobBoardDisplayer;
 	}
 	
 	@Subcommand("view")
@@ -63,7 +61,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.view")
 	public void view(Player player)
 	{
-		this.jobBoardDisplayer.display(player, this.globalJobBoard);
+		new JobBoardGUI(player, this.globalJobBoard, this.messageService).show(player);
 	}
 	
 	@Subcommand("offer")
