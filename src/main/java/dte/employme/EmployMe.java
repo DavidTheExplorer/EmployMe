@@ -174,8 +174,11 @@ public class EmployMe extends ModernJavaPlugin
 	
 	private void setupAutoJobDeletion()
 	{
-		removeAutoJobDeletionListeners();
-		
+		//if "/emp reload" was executed after auto deletion was changed to false - remove the listeners
+		this.globalJobBoard.removeAddListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.removeCompleteListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
+
 		ConfigurationSection section = this.mainConfig.getSection("Auto Delete Jobs");
 		
 		if(!section.getBoolean("Enabled"))
@@ -189,12 +192,5 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerCompleteListener(this.autoJobDeleteListeners);
-	}
-
-	private void removeAutoJobDeletionListeners() 
-	{
-		this.globalJobBoard.removeAddListener(this.autoJobDeleteListeners);
-		this.globalJobBoard.removeCompleteListener(this.autoJobDeleteListeners);
-		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
 	}
 }
