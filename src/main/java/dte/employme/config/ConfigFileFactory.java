@@ -102,6 +102,13 @@ public class ConfigFileFactory
 	public static class Builder
 	{
 		ExceptionHandler creationExceptionHandler, saveExceptionHandler;
+		
+		@SafeVarargs
+		public final Builder withSerializables(Class<? extends ConfigurationSerializable>... serializableClasses) 
+		{
+			Arrays.stream(serializableClasses).forEach(ConfigurationSerialization::registerClass);
+			return this;
+		}
 
 		public Builder onCreationException(ExceptionHandler handler) 
 		{

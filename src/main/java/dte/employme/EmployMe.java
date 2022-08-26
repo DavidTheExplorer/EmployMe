@@ -3,11 +3,9 @@ package dte.employme;
 import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import dte.employme.addednotifiers.AllJobsNotifier;
@@ -79,9 +77,8 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the configs
-		Stream.of(Job.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
-		
 		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
+				.withSerializables(Job.class, MoneyReward.class, ItemsReward.class)
 				.onCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
 				.onSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
 				.build();
