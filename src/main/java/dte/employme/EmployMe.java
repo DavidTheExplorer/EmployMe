@@ -3,11 +3,9 @@ package dte.employme;
 import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import dte.employme.addednotifiers.AllJobsNotifier;
@@ -67,11 +65,13 @@ public class EmployMe extends ModernJavaPlugin
 		INSTANCE = this;
 
 		//init economy
-		this.economy = getEconomy();
-		
-		if(this.economy == null) 
+		try 
 		{
-			disableWithError(RED + "You must install both Vault + an Economy Provider(e.g. EssentialsX)! Shutting Down...");
+			this.economy = loadEconomy();
+		}
+		catch(RuntimeException exception) 
+		{
+			disableWithError(RED + exception.getMessage() + "!", RED + "Shutting down...");
 			return;
 		}
 		ServiceLocator.register(Economy.class, this.economy);
@@ -79,14 +79,14 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		//init the configs
-		Stream.of(Job.class, MoneyReward.class, ItemsReward.class).forEach(ConfigurationSerialization::registerClass);
-		
 		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
+				.withSerializables(Job.class, MoneyReward.class, ItemsReward.class)
 				.onCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
 				.onSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
 				.build();
 		
 		this.mainConfig = configFileFactory.loadResource("config");
+		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
 		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("boards/global/auto deletion");
 		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
 		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
@@ -94,7 +94,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
 		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
 		
-		if(this.mainConfig == null || this.jobsAutoDeletionConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
+		if(configFileFactory.anyCreationException()) 
 			return;
 		
 		
@@ -111,11 +111,6 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig, this.messageService);
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
-		
-		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
-		
-		if(this.jobsConfig == null)
-			return;
 		
 		this.jobRewardService = new SimpleJobRewardService(this.messageService);
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.messageService);
@@ -150,15 +145,15 @@ public class EmployMe extends ModernJavaPlugin
 		return INSTANCE;
 	}
 
-	private Economy getEconomy() 
+	private Economy loadEconomy() 
 	{
 		if(Bukkit.getPluginManager().getPlugin("Vault") == null)
-			return null;
-
+			throw new RuntimeException("Vault must be installed on the server");
+		
 		RegisteredServiceProvider<Economy> provider = Bukkit.getServicesManager().getRegistration(Economy.class);
 
 		if(provider == null)
-			return null;
+			throw new RuntimeException("No economy plugin is installed on the server(e.g. EssentialsX)");
 
 		return provider.getProvider();
 	}
@@ -179,8 +174,11 @@ public class EmployMe extends ModernJavaPlugin
 	
 	private void setupAutoJobDeletion()
 	{
-		removeAutoJobDeletionListeners();
-		
+		//if "/emp reload" was executed after auto deletion was changed to false - remove the listeners
+		this.globalJobBoard.removeAddListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.removeCompleteListener(this.autoJobDeleteListeners);
+		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
+
 		ConfigurationSection section = this.mainConfig.getSection("Auto Delete Jobs");
 		
 		if(!section.getBoolean("Enabled"))
@@ -194,12 +192,5 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerCompleteListener(this.autoJobDeleteListeners);
-	}
-
-	private void removeAutoJobDeletionListeners() 
-	{
-		this.globalJobBoard.removeAddListener(this.autoJobDeleteListeners);
-		this.globalJobBoard.removeCompleteListener(this.autoJobDeleteListeners);
-		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
 	}
 }

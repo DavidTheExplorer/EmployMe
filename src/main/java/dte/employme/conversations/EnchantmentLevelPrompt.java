@@ -60,7 +60,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
 		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
-				.inject(ENCHANTMENT_MIN_LEVEL, String.valueOf(this.enchantment.getStartLevel()))
+				.inject(ENCHANTMENT_MIN_LEVEL, this.enchantment.getStartLevel())
 				.first();
 	}
 
