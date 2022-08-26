@@ -67,7 +67,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init economy
 		try 
 		{
-			this.economy = getEconomy();
+			this.economy = loadEconomy();
 		}
 		catch(RuntimeException exception) 
 		{
@@ -149,7 +149,7 @@ public class EmployMe extends ModernJavaPlugin
 		return INSTANCE;
 	}
 
-	private Economy getEconomy() 
+	private Economy loadEconomy() 
 	{
 		if(Bukkit.getPluginManager().getPlugin("Vault") == null)
 			throw new RuntimeException("Vault must be installed on the server");
