@@ -65,11 +65,13 @@ public class EmployMe extends ModernJavaPlugin
 		INSTANCE = this;
 
 		//init economy
-		this.economy = getEconomy();
-		
-		if(this.economy == null) 
+		try 
 		{
-			disableWithError(RED + "You must install both Vault + an Economy Provider(e.g. EssentialsX)! Shutting Down...");
+			this.economy = getEconomy();
+		}
+		catch(RuntimeException exception) 
+		{
+			disableWithError(RED + exception.getMessage() + "!", RED + "Shutting down...");
 			return;
 		}
 		ServiceLocator.register(Economy.class, this.economy);
@@ -150,12 +152,12 @@ public class EmployMe extends ModernJavaPlugin
 	private Economy getEconomy() 
 	{
 		if(Bukkit.getPluginManager().getPlugin("Vault") == null)
-			return null;
-
+			throw new RuntimeException("Vault must be installed on the server");
+		
 		RegisteredServiceProvider<Economy> provider = Bukkit.getServicesManager().getRegistration(Economy.class);
 
 		if(provider == null)
-			return null;
+			throw new RuntimeException("No economy plugin is installed on the server(e.g. EssentialsX)");
 
 		return provider.getProvider();
 	}
