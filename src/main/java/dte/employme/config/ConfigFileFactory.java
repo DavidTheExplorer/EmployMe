@@ -3,12 +3,17 @@ package dte.employme.config;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+
 import dte.employme.messages.MessageKey;
 import dte.employme.services.message.TranslatedMessageService;
 
 public class ConfigFileFactory
 {
 	private final ExceptionHandler creationExceptionHandler, saveExceptionHandler;
+	
+	private boolean creationException, saveException;
 
 	private ConfigFileFactory(Builder builder) 
 	{
@@ -28,6 +33,7 @@ public class ConfigFileFactory
 		catch(IOException exception) 
 		{
 			this.creationExceptionHandler.handle(exception, config);
+			this.creationException = true;
 			return null;
 		}
 	}
@@ -58,6 +64,16 @@ public class ConfigFileFactory
 		
 		return save(config) ? config : null;
 	}
+	
+	public boolean anyCreationException() 
+	{
+		return this.creationException;
+	}
+	
+	public boolean anySaveException() 
+	{
+		return this.saveException;
+	}
 
 
 	private boolean save(ConfigFile config) 
@@ -70,6 +86,7 @@ public class ConfigFileFactory
 		catch(IOException exception)
 		{
 			this.saveExceptionHandler.handle(exception, config);
+			this.saveException = true;
 			return false;
 		}
 	}

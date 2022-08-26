@@ -86,6 +86,7 @@ public class EmployMe extends ModernJavaPlugin
 				.build();
 		
 		this.mainConfig = configFileFactory.loadResource("config");
+		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
 		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("boards/global/auto deletion");
 		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
 		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
@@ -93,7 +94,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
 		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
 		
-		if(this.mainConfig == null || this.jobsAutoDeletionConfig == null || this.subscriptionsConfig == null || this.jobAddNotifiersConfig == null || this.itemsContainersConfig == null || this.rewardsContainersConfig == null || this.messagesConfig == null)
+		if(configFileFactory.anyCreationException()) 
 			return;
 		
 		
@@ -110,11 +111,6 @@ public class EmployMe extends ModernJavaPlugin
 		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig, this.messageService);
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
-		
-		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
-		
-		if(this.jobsConfig == null)
-			return;
 		
 		this.jobRewardService = new SimpleJobRewardService(this.messageService);
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.messageService);
