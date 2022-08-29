@@ -53,26 +53,32 @@ public class ConfigFileFactory
 		return loadConfig(String.format("containers/%s containers", subject));
 	}
 	
-	public ConfigFile loadMessagesConfig(Messages defaultProvider) 
+	public ConfigFile loadMessagesConfig(Messages defaultMessages) 
 	{
 		ConfigFile config = loadConfig("messages");
 		
 		if(config == null)
 			return null;
 		
-		regenerateMissingMessages(config, defaultProvider);
+		//regenerate the missing messages from the provided defaults
+		Arrays.stream(MessageKey.VALUES)
+		.filter(key -> !config.getConfig().contains(TranslatedMessageService.getConfigPath(key)))
+		.forEach(missingKey -> 
+		{
+			String[] lines = defaultMessages.getLines(missingKey);
+			Object message = lines.length == 1 ? lines[0] : Arrays.asList(lines);
+			
+			config.getConfig().addDefault(TranslatedMessageService.getConfigPath(missingKey), message);
+		});
+		
+		config.getConfig().options().copyDefaults(true);
 		
 		return save(config) ? config : null;
 	}
 	
 	public boolean anyCreationException() 
 	{
-		return this.creationException;
-	}
-	
-	public boolean anySaveException() 
-	{
-		return this.saveException;
+		return this.creationException || this.saveException;
 	}
 
 
@@ -89,21 +95,6 @@ public class ConfigFileFactory
 			this.saveException = true;
 			return false;
 		}
-	}
-	
-	private static void regenerateMissingMessages(ConfigFile languageConfig, Messages defaultsProvider) 
-	{
-		Arrays.stream(MessageKey.VALUES)
-		.filter(key -> !languageConfig.getConfig().contains(TranslatedMessageService.getConfigPath(key)))
-		.forEach(missingKey -> 
-		{
-			String[] lines = defaultsProvider.getLines(missingKey);
-			Object message = lines.length == 1 ? lines[0] : Arrays.asList(lines);
-			
-			languageConfig.getConfig().addDefault(TranslatedMessageService.getConfigPath(missingKey), message);
-		});
-		
-		languageConfig.getConfig().options().copyDefaults(true);
 	}
 	
 	
