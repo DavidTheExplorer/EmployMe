@@ -9,7 +9,7 @@
 	</properties>
 
 	<build>
-		<finalName>EmployMe Premium ${project.version}</finalName>
+		<finalName>EmployMe ${project.version}</finalName>
 
 		<resources>
 			<resource>

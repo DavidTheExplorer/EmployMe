@@ -1,4 +1,4 @@
-name: EmployMe-Premium
+name: EmployMe
 main: dte.employme.EmployMe
 version: ${project.version}
 description: Automate resources gathering by employing players.
