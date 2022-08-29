@@ -165,7 +165,7 @@
 		<dependency>
 			<groupId>com.github.DavidTheExplorer</groupId>
 			<artifactId>ModernJavaPlugin</artifactId>
-			<version>master-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!-- InventoryFramework -->
