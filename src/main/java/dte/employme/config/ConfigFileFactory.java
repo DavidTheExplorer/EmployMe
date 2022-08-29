@@ -67,12 +67,7 @@ public class ConfigFileFactory
 	
 	public boolean anyCreationException() 
 	{
-		return this.creationException;
-	}
-	
-	public boolean anySaveException() 
-	{
-		return this.saveException;
+		return this.creationException || this.saveException;
 	}
 
 
