@@ -90,12 +90,14 @@ public class EmploymentCommand extends BaseCommand
 	}
 	
 	@Subcommand("addnotifiers")
+	@CommandPermission("employme.addnotifiers")
 	public void showNotifiers(Player player) 
 	{
 		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId()).show(player);
 	}
 
 	@Subcommand("mysubscriptions")
+	@CommandPermission("employme.mysubscriptions")
 	public void showPersonalSubscriptions(Player player) 
 	{
 		new PlayerSubscriptionsGUI(this.messageService, this.jobSubscriptionService).show(player);
