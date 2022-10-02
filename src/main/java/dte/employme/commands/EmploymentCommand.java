@@ -83,7 +83,7 @@ public class EmploymentCommand extends BaseCommand
 
 	@Subcommand("mycontainers")
 	@Description("Claim the items that either people gathered for you OR from completed jobs.")
-	@CommandPermission("employme.jobs.mycontainers")
+	@CommandPermission("employme.mycontainers")
 	public void showPersonalContainers(Player player) 
 	{
 		new JobContainersGUI(this.messageService, this.playerContainerService).show(player);
