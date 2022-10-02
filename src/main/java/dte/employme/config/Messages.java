@@ -128,6 +128,10 @@ public class Messages
 			.put(ENTER_ENCHANTMENT_LEVEL, "&fWhat level for &a%enchantment%&f?")
 			.put(ENCHANTMENT_LEVEL_NOT_A_NUMBER, "&cThe Level must be an Integer!")
 			.put(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, "&cThe provided level is out of bounds! (min level is &4%enchantment min level%&c)")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_NAME, "&cBack")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME, "&aNext")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE, "&fClick to open the next page")
 
 			//Goal Customization GUI
 			.put(GUI_GOAL_CUSTOMIZATION_TITLE, "What should the Goal Item be?")

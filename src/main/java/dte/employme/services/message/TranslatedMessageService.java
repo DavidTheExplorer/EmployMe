@@ -115,6 +115,10 @@ public class TranslatedMessageService implements MessageService
 			.put(ENTER_ENCHANTMENT_LEVEL, "GUIs.Goal Enchantment Selection.Enter Enchantment Level")
 			.put(ENCHANTMENT_LEVEL_NOT_A_NUMBER, "GUIs.Goal Enchantment Selection.Enchantment Level Not A Number")
 			.put(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, "GUIs.Goal Enchantment Selection.Enchantment Level Out Of Bounds")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_NAME, "GUIs.Goal Enchantment Selection.Items.Previous Page.Name")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_LORE, "GUIs.Goal Enchantment Selection.Items.Previous Page.Lore")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME, "GUIs.Goal Enchantment Selection.Items.Next Page.Name")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE, "GUIs.Goal Enchantment Selection.Items.Next Page.Lore")
 
 			//Goal Customization GUI
 			.put(GUI_GOAL_CUSTOMIZATION_TITLE, "GUIs.Goal Customization.Title")
@@ -167,7 +171,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, "GUIs.Subscribe Item Palette.Items.Name")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, "GUIs.Subscribe Item Palette.Items.Lore")
 			
-			//Unsubscribe from Items Item Palette,
+			//Unsubscribe from Items Item Palette
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Unsubscribe From Items.Title")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "GUIs.Unsubscribe From Items.Unsubscribe Question")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "GUIs.Unsubscribe From Items.Items.Name")
