@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.playercontainer;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME;

@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.playercontainer;
 
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME;

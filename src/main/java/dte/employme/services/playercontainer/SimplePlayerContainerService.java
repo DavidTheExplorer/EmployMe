@@ -15,7 +15,7 @@ import java.util.function.Function;
 import org.bukkit.inventory.ItemStack;
 
 import dte.employme.config.ConfigFile;
-import dte.employme.guis.PlayerContainerGUI;
+import dte.employme.guis.playercontainer.PlayerContainerGUI;
 import dte.employme.services.message.MessageService;
 
 public class SimplePlayerContainerService implements PlayerContainerService

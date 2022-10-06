@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs.creation;
 
 import static dte.employme.conversations.Conversations.refundRewardIfAbandoned;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;

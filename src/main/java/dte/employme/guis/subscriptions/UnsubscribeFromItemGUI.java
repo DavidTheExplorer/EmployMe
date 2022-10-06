@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.subscriptions;
 
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE;
@@ -17,6 +17,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
+import dte.employme.guis.ItemPaletteGUI;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
