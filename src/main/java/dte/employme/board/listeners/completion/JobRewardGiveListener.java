@@ -2,14 +2,14 @@ package dte.employme.board.listeners.completion;
 
 import org.bukkit.entity.Player;
 
-import dte.employme.board.JobBoard;
+import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.job.Job;
 
 public class JobRewardGiveListener implements JobCompleteListener
 {
 	@Override
-	public void onJobCompleted(JobBoard board, Job job, Player whoCompleted) 
+	public void onJobCompleted(Job job, Player whoCompleted, JobCompletionContext context) 
 	{
-		job.getReward().giveTo(whoCompleted);
+		context.getReward().giveTo(whoCompleted);
 	}
 }

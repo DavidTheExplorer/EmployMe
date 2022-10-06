@@ -4,11 +4,15 @@ import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_COMPLETED;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_NOT_COMPLETED;
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_TITLE;
+import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
+import static dte.employme.services.job.JobService.FinishState.FULLY;
+import static dte.employme.services.job.JobService.FinishState.PARTIALLY;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.backButtonBuilder;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.backButtonListener;
@@ -18,6 +22,7 @@ import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.next
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.nextButtonListener;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.stripColor;
 
 import java.util.List;
 
@@ -34,29 +39,37 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
+import dte.employme.rewards.PartialReward;
+import dte.employme.rewards.Reward;
+import dte.employme.services.job.JobService;
+import dte.employme.services.job.JobService.FinishState;
 import dte.employme.services.message.MessageService;
+import dte.employme.services.rewards.PartialCompletionInfo;
+import dte.employme.utils.CenteredMessage;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.utils.java.StringUtils;
 
 public class JobBoardGUI extends ChestGui
 {
 	private final Player player;
 	private final JobBoard jobBoard;
+	private final JobService jobService;
 	private final MessageService messageService;
 	
 	private final PaginatedPane jobsPane;
 
-	public JobBoardGUI(Player player, JobBoard jobBoard, MessageService messageService)
+	public JobBoardGUI(Player player, JobBoard jobBoard, JobService jobService, MessageService messageService)
 	{
 		super(6, messageService.getMessage(GUI_JOB_BOARD_TITLE).first());
 
 		this.player = player;
 		this.jobBoard = jobBoard;
+		this.jobService = jobService;
 		this.messageService = messageService;
 		
 		this.jobsPane = new PaginatedPane(1, 1, 7, 4, Priority.LOWEST);
@@ -100,19 +113,19 @@ public class JobBoardGUI extends ChestGui
 		
 		return panel;
 	}
-	
-	private GuiItem createOfferIcon(Job job) 
+
+	private GuiItem createOfferIcon(Job job)
 	{
 		ItemStack basicIcon = JobIconFactory.create(job, this.messageService);
-		boolean finished = job.hasFinished(this.player);
+		FinishState currentState = this.jobService.getFinishState(this.player, job);
 
 		//add the status and ID to the lore
-		String separator = createSeparationLine(finished ? WHITE : DARK_RED, finished ? 25 : 29);
-		String finishMessage = this.messageService.getMessage(finished ? GUI_JOB_BOARD_OFFER_COMPLETED : GUI_JOB_BOARD_OFFER_NOT_COMPLETED).first();
-
+		String statusMessage = getJobStatusMessage(job, currentState);
+		String separator = createSeparationLine(currentState.hasFinished() ? WHITE : DARK_RED, stripColor(statusMessage).length());
+		
 		List<String> lore = basicIcon.getItemMeta().getLore();
 		lore.add(separator);
-		lore.add(StringUtils.repeat(" ", finished ? 8 : 4) + finishMessage);
+		lore.add(CenteredMessage.of(statusMessage, separator));
 		lore.add(separator);
 
 		return new GuiItemBuilder()
@@ -121,18 +134,28 @@ public class JobBoardGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
+					Reward reward = job.getReward();
+					
 					//Right click = preview mode for jobs that offer items
-					if(event.isRightClick() && job.getReward() instanceof ItemsReward)
+					if(event.isRightClick() && reward instanceof ItemsReward)
 					{
-						new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) job.getReward(), this.messageService).show(this.player);
+						new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) reward, this.messageService).show(this.player);
+						return;
 					}
 
 					//the user wants to finish the job
-					else if(job.hasFinished(this.player))
-					{
-						this.player.closeInventory();
-						this.jobBoard.completeJob(job, this.player);
-					}
+					FinishState finishState = this.jobService.getFinishState(this.player, job);
+
+					if(!finishState.hasFinished())
+						return;
+
+					JobCompletionContext context = createCompletionContext(job, finishState);
+
+					this.player.closeInventory();
+					this.jobBoard.completeJob(job, this.player, context);
+
+					if(!context.isJobCompleted())
+						updatePartialJob(job, context.getPartialInfo());
 				})
 				.build();
 	}
@@ -152,5 +175,32 @@ public class JobBoardGUI extends ChestGui
 					new PlayerJobsGUI(this, this.messageService, playerJobs).show(this.player);
 				})
 				.build();
+	}
+
+	public String getJobStatusMessage(Job job, FinishState finishState) 
+	{
+		if(finishState == FinishState.NEGATIVE) 
+			return this.messageService.getMessage(GUI_JOB_BOARD_OFFER_NOT_COMPLETED).first();
+		
+		return this.messageService.getMessage((finishState == PARTIALLY ? GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED : GUI_JOB_BOARD_OFFER_COMPLETED))
+				.inject(GOAL_AMOUNT, createCompletionContext(job, finishState).getGoal().getAmount())
+				.first();
+	}
+
+	private JobCompletionContext createCompletionContext(Job job, FinishState finishState) 
+	{
+		return finishState == FULLY ? JobCompletionContext.normal(job) : JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job));
+	}
+
+	private void updatePartialJob(Job job, PartialCompletionInfo partialCompletionInfo) 
+	{
+		ItemStack newGoal = new ItemBuilder(job.getGoal())
+				.amounted(job.getGoal().getAmount() - partialCompletionInfo.getGoal().getAmount())
+				.createCopy();
+
+		PartialReward newReward = ((PartialReward) job.getReward()).afterPartialCompletion(partialCompletionInfo.getPercentage());
+
+		job.setGoal(newGoal);
+		job.setReward(newReward);
 	}
 }

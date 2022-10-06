@@ -3,11 +3,12 @@ package dte.employme.board.listeners.completion;
 import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.MONEY_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
+import static dte.employme.messages.MessageKey.PLAYER_PARTIALLY_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.Placeholders.COMPLETER;
 
 import org.bukkit.entity.Player;
 
-import dte.employme.board.JobBoard;
+import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageKey;
 import dte.employme.rewards.ItemsReward;
@@ -31,31 +32,39 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 	}
 	
 	@Override
-	public void onJobCompleted(JobBoard board, Job job, Player whoCompleted) 
+	public void onJobCompleted(Job job, Player whoCompleted, JobCompletionContext context)
 	{
 		//send a message to who completed
-		this.messageService.getMessage(getRewardMessage(job)).sendTo(whoCompleted);
+		this.messageService.getMessage(getCompleterMessage(context)).sendTo(whoCompleted);
 		
-		//notify the employer
-		OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
+		//notify the employer if the completion percentage is above 20%
+		if(context.isJobCompleted() || context.getPartialInfo().getPercentage() > 20) 
 		{
-			this.messageService.getMessage(PLAYER_COMPLETED_YOUR_JOB)
-			.inject(COMPLETER, whoCompleted.getName())
-			.stream()
-			.map(message -> displayHoverDescription(message, job))
-			.forEach(employer.spigot()::sendMessage);
-		});
+			OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
+			{
+				this.messageService.getMessage(getEmployerMessage(context))
+				.inject(COMPLETER, whoCompleted.getName())
+				.stream()
+				.map(message -> displayHoverDescription(message, job, context))
+				.forEach(employer.spigot()::sendMessage);
+			});
+		}	
 	}
 	
-	private static MessageKey getRewardMessage(Job job) 
+	private static MessageKey getCompleterMessage(JobCompletionContext context) 
 	{
-		return job.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : MONEY_JOB_COMPLETED;
+		return context.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : MONEY_JOB_COMPLETED;
 	}
 	
-	private BaseComponent[] displayHoverDescription(String message, Job job) 
+	private static MessageKey getEmployerMessage(JobCompletionContext context) 
+	{
+		return context.isJobCompleted() ? PLAYER_COMPLETED_YOUR_JOB : PLAYER_PARTIALLY_COMPLETED_YOUR_JOB;
+	}
+	
+	private BaseComponent[] displayHoverDescription(String message, Job job, JobCompletionContext context) 
 	{
 		return new ComponentBuilder(message)
-				.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(this.jobService.describeInGame(job)).create()))
+				.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(this.jobService.describeCompletionInGame(job, context)).create()))
 				.create();
 	}
 }

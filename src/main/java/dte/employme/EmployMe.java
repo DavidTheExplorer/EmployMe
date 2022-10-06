@@ -126,7 +126,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
 
 		//register commands, listeners, metrics
-		new ACF(this.globalJobBoard, this.economy, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService).setup();
+		new ACF(this.globalJobBoard, this.economy, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 

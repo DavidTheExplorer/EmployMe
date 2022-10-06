@@ -4,6 +4,9 @@ import static dte.employme.messages.MessageKey.GET;
 import static dte.employme.messages.MessageKey.GOAL;
 import static dte.employme.messages.MessageKey.JOB_AUTO_REMOVED;
 import static dte.employme.messages.MessageKey.REWARD;
+import static dte.employme.services.job.JobService.FinishState.FULLY;
+import static dte.employme.services.job.JobService.FinishState.NEGATIVE;
+import static dte.employme.services.job.JobService.FinishState.PARTIALLY;
 import static dte.employme.utils.ChatColorUtils.colorize;
 
 import java.io.IOException;
@@ -16,16 +19,25 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitTask;
 
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
+import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
+import dte.employme.rewards.PartialReward;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.rewards.JobRewardService;
+import dte.employme.services.rewards.PartialCompletionInfo;
+import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
+import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.Percentages;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
@@ -48,15 +60,54 @@ public class SimpleJobService implements JobService
 	}
 	
 	@Override
+	public FinishState getFinishState(Player player, Job job) 
+	{
+		PlayerInventory playerInventory = player.getInventory();
+		
+		if(!InventoryUtils.containsAtLeast(playerInventory, job::isGoal, 1))
+			return NEGATIVE;
+		
+		if(InventoryUtils.containsAtLeast(playerInventory, job::isGoal, job.getGoal().getAmount()))
+			return FULLY;
+		
+		return PARTIALLY;
+	}
+	
+	@Override
+	public PartialCompletionInfo getPartialCompletionInfo(Player player, Job job)
+	{
+		if(!(job.getReward() instanceof PartialReward))
+			throw new IllegalArgumentException("Cannot calculate completion percentage for a job whose reward is not partial!");
+		
+		ItemStack partialGoal = getPartialGoal(player.getInventory(), job);
+		double completionPercentage = Percentages.of(partialGoal.getAmount(), job.getGoal().getAmount());
+		PartialReward partialReward = ((PartialReward) job.getReward()).afterPartialCompletion(100 - completionPercentage);
+		
+		return new PartialCompletionInfo(completionPercentage, partialGoal, partialReward);
+	}
+	
+	@Override
 	public String describeInGame(Job job) 
 	{
-		String goal = this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(job.getGoal());
-		
-		return colorize(String.format("&6%s: &f%s &8&l| &6%s: &f%s", 
+		return String.format(colorize("&6%s: &f%s &8&l| &6%s: &f%s"), 
 				this.messageService.getMessage(GOAL).first(),
-				goal,
+				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(job.getGoal()),
 				this.messageService.getMessage(REWARD).first(),
-				this.jobRewardService.describe(job.getReward())));
+				this.jobRewardService.describe(job.getReward()));
+	}
+	
+	@Override
+	public String describeCompletionInGame(Job job, JobCompletionContext context) 
+	{
+		if(context.isJobCompleted()) 
+			return describeInGame(job);
+		
+		return String.format(colorize("&6%s: &f%s (&6%.1f%% done&f) &8&l| &6%s: &f%s"),
+				this.messageService.getMessage(GOAL).first(),
+				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(context.getGoal()),
+				context.getPartialInfo().getPercentage(),
+				this.messageService.getMessage(REWARD).first(),
+				this.jobRewardService.describe(context.getReward()));
 	}
 
 	@Override
@@ -154,5 +205,16 @@ public class SimpleJobService implements JobService
 			this.autoDeletion.remove(job);
 			
 		}, delay.getSeconds() * 20);
+	}
+	
+	private static ItemStack getPartialGoal(PlayerInventory playerInventory, Job job) 
+	{
+		int goalAmountInInventory = InventoryUtils.allSlotsThat(playerInventory, job::isGoal)
+				.map(i -> playerInventory.getItem(i).getAmount())
+				.sum();
+		
+		return new ItemBuilder(job.getGoal())
+				.amounted(goalAmountInInventory)
+				.createCopy();
 	}
 }

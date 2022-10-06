@@ -1,5 +1,7 @@
 package dte.employme.rewards;
 
+import static dte.employme.utils.java.Percentages.toFraction;
+
 import java.util.Map;
 
 import org.bukkit.OfflinePlayer;
@@ -10,7 +12,7 @@ import dte.employme.utils.java.ServiceLocator;
 import net.milkbowl.vault.economy.Economy;
 
 @SerializableAs("Money Reward")
-public class MoneyReward implements Reward
+public class MoneyReward implements PartialReward
 {
 	private final Economy economy;
 	private final double payment;
@@ -33,6 +35,12 @@ public class MoneyReward implements Reward
 	public void giveTo(OfflinePlayer offlinePlayer)
 	{
 		this.economy.depositPlayer(offlinePlayer, this.payment);
+	}
+	
+	@Override
+	public MoneyReward afterPartialCompletion(double percentage)
+	{
+		return new MoneyReward(this.economy, this.payment - (this.payment * toFraction(percentage)));
 	}
 
 	public double getPayment() 

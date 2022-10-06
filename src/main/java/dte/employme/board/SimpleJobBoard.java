@@ -46,11 +46,12 @@ public class SimpleJobBoard implements JobBoard
 	}
 	
 	@Override
-	public void completeJob(Job job, Player whoCompleted) 
+	public void completeJob(Job job, Player whoCompleted, JobCompletionContext context) 
 	{
-		JobBoard.super.completeJob(job, whoCompleted);
+		this.completeListeners.forEach(listener -> listener.onJobCompleted(job, whoCompleted, context));
 		
-		this.completeListeners.forEach(listener -> listener.onJobCompleted(this, job, whoCompleted));
+		if(context.isJobCompleted())
+			removeJob(job);
 	}
 	
 	@Override
