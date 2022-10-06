@@ -73,6 +73,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "GUIs.Job Board.Offer Completed")
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "GUIs.Job Board.Offer Not Completed")
 			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "GUIs.Job Board.Offer Partially Completed")
+			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "GUIs.Job Board.Offer Not Contained")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "GUIs.Job Board.Items.Your Jobs.Name")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "GUIs.Job Board.Items.Your Jobs.Lore")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "GUIs.Job Board.Items.Next Page.Name")

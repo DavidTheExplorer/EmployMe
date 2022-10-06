@@ -46,6 +46,12 @@ public class SimpleJobBoard implements JobBoard
 	}
 	
 	@Override
+	public boolean containsJob(Job job)
+	{
+		return this.jobByUUID.containsKey(job.getUUID());
+	}
+	
+	@Override
 	public void completeJob(Job job, Player whoCompleted, JobCompletionContext context) 
 	{
 		this.completeListeners.forEach(listener -> listener.onJobCompleted(job, whoCompleted, context));

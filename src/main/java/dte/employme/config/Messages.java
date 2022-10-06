@@ -86,6 +86,7 @@ public class Messages
 			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "&a&lClick to Finish!")
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "&cYou didn't complete this Job.")
 			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "&aClick to &2&lPartially Complete &awith &2&l%goal amount% &aitems.")
+			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "&cUnable to complete the job because it's not offered anymore!")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "&aNext")

@@ -18,6 +18,7 @@ public interface JobBoard extends Iterable<Job>
 {
 	void addJob(Job job);
 	void removeJob(Job job);
+	boolean containsJob(Job job);
 	void completeJob(Job job, Player whoCompleted, JobCompletionContext context);
 
 	//query

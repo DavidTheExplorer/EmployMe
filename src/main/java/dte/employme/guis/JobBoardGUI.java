@@ -1,5 +1,6 @@
 package dte.employme.guis;
 
+import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_JOB_NOT_CONTAINED;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_COMPLETED;
@@ -134,6 +135,14 @@ public class JobBoardGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
+					//fix dangerous exploit where if 2 players have the board open, both can complete the same job - in order to dupe the reward
+					if(!this.jobBoard.containsJob(job)) 
+					{
+						this.messageService.getMessage(GUI_JOB_BOARD_JOB_NOT_CONTAINED).sendTo(this.player);
+						this.player.closeInventory();
+						return;
+					}
+					
 					Reward reward = job.getReward();
 					
 					//Right click = preview mode for jobs that offer items
