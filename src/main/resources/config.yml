@@ -1,8 +1,12 @@
+# EmployMe ${project.version} Configuration File
+# Personal note: Thank you for buying the plugin, you and many others helped me to developing this plugin to the amazing state it's at.
+# You can find an organized FAQ in our wiki: https://github.com/DavidTheExplorer/EmployMe/wiki
+
+
 # This section allows you to send custom messages in your discord servers once a certain event happens in the plugin.
 # This is done using web-hooks, which discord has a built-in support for!
 # The most important detail is the URL, which determines to which channel the message will be sent to.
-# If you don't know how to get it, Follow https://github.com/DavidTheExplorer/EmployMe/wiki
-# Lastly, you can turn off any webhook you want :)
+# If you don't know how to get it, follow the wiki!
 Discord Webhooks:
   On Job Create:
     Enabled: false
