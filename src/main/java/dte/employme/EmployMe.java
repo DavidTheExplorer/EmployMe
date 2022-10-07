@@ -10,6 +10,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import dte.employme.addednotifiers.AllJobsNotifier;
 import dte.employme.addednotifiers.DoNotNotify;
+import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
@@ -116,9 +117,10 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.messageService);
 		this.jobService.loadJobs();
 		
-		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
+		JobAddedNotifier allJobsNotifier = new AllJobsNotifier(this.messageService);
+		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig, allJobsNotifier);
 		this.jobAddedNotifierService.register(new DoNotNotify());
-		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
+		this.jobAddedNotifierService.register(allJobsNotifier);
 		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
 		this.jobAddedNotifierService.loadPlayersNotifiers();
 
