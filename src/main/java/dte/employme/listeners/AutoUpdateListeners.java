@@ -6,7 +6,6 @@ import static dte.employme.messages.Placeholders.NEW_VERSION;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import dte.employme.services.message.MessageService;
@@ -24,11 +23,6 @@ public class AutoUpdateListeners implements Listener
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) 
-	{
-		handle(event);
-	}
-
-	private void handle(PlayerEvent event)
 	{
 		Player player = event.getPlayer();
 		

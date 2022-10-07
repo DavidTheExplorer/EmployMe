@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -26,6 +27,7 @@ import dte.employme.config.ConfigFile;
 import dte.employme.config.ConfigFileFactory;
 import dte.employme.config.Messages;
 import dte.employme.job.Job;
+import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
@@ -40,6 +42,7 @@ import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
 import dte.employme.services.rewards.SimpleJobRewardService;
+import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.java.ServiceLocator;
 import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
@@ -150,6 +153,13 @@ public class EmployMe extends ModernJavaPlugin
 			this.jobSubscriptionService.saveSubscriptions();
 			this.jobAddedNotifierService.savePlayersNotifiers();
 		});
+		
+		new Metrics(this, 16573);
+
+		AutoUpdater.forPlugin(this, 105476)
+		.onNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
+		.onFailedRequest(exception -> disableWithError(RED + "There was an internet error while checking for an update!"))
+		.check();
 	}
 
 	public static EmployMe getInstance()
