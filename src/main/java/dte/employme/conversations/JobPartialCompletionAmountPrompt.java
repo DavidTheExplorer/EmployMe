@@ -20,8 +20,6 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	private final Job job;
 	private final Player player;
 	
-	private Integer goalAmountInInventory;
-	
 	public JobPartialCompletionAmountPrompt(MessageService messageService, JobService jobService, Job job, Player player) 
 	{
 		this.messageService = messageService;
@@ -34,7 +32,7 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	public String getPromptText(ConversationContext context)
 	{
 		return this.messageService.getMessage(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION)
-				.inject(GOAL_AMOUNT, refreshGoalAmountInInventory())
+				.inject(GOAL_AMOUNT, getGoalAmountInInventory())
 				.first();
 	}
 	
@@ -43,7 +41,7 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	{
 		int amount = input.intValue();
 		
-		return amount > 0 && amount <= refreshGoalAmountInInventory();
+		return amount > 0 && amount <= getGoalAmountInInventory();
 	}
 	
 	@Override
@@ -55,13 +53,13 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	@Override
 	protected Prompt acceptValidatedInput(ConversationContext context, Number input) 
 	{
-		context.setSessionData("Amount To Use", this.goalAmountInInventory);
+		context.setSessionData("Amount To Use", input);
 		
 		return Prompt.END_OF_CONVERSATION;
 	}
 	
-	private int refreshGoalAmountInInventory() 
+	private int getGoalAmountInInventory() 
 	{
-		return this.goalAmountInInventory = this.jobService.getGoalAmountInInventory(this.job, this.player.getInventory());
+		return this.jobService.getGoalAmountInInventory(this.job, this.player.getInventory());
 	}
 }
