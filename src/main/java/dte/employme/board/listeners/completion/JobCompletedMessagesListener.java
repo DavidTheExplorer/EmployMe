@@ -24,11 +24,13 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 {
 	private final MessageService messageService;
 	private final JobService jobService;
+	private final double percentageToNotifyFrom;
 	
-	public JobCompletedMessagesListener(MessageService messageService, JobService jobService) 
+	public JobCompletedMessagesListener(MessageService messageService, JobService jobService, double percentageToNotifyFrom) 
 	{
 		this.messageService = messageService;
 		this.jobService = jobService;
+		this.percentageToNotifyFrom = percentageToNotifyFrom;
 	}
 	
 	@Override
@@ -38,7 +40,7 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 		this.messageService.getMessage(getCompleterMessage(context)).sendTo(whoCompleted);
 		
 		//notify the employer if the completion percentage is above 20%
-		if(context.isJobCompleted() || context.getPartialInfo().getPercentage() > 20) 
+		if(context.isJobCompleted() || context.getPartialInfo().getPercentage() > this.percentageToNotifyFrom) 
 		{
 			OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
 			{

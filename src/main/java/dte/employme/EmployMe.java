@@ -101,7 +101,6 @@ public class EmployMe extends ModernJavaPlugin
 		if(configFileFactory.anyCreationException()) 
 			return;
 		
-		
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
 		
@@ -137,7 +136,7 @@ public class EmployMe extends ModernJavaPlugin
 			return;
 		}
 
-		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService));
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getConfig().getDouble("Partial Job Completions.Notify Employers Above Percentage")));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
 
 		//register commands, listeners, metrics
