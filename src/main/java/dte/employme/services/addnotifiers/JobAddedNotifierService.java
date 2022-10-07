@@ -11,7 +11,7 @@ public interface JobAddedNotifierService
 	Set<JobAddedNotifier> getNotifiers();
 	void register(JobAddedNotifier notifier);
 	
-	JobAddedNotifier getPlayerNotifier(UUID playerUUID);
+	JobAddedNotifier getPlayerNotifier(UUID playerUUID, JobAddedNotifier defaultNotifier);
 	void setPlayerNotifier(UUID playerUUID, JobAddedNotifier notifier);
 	
 	void loadPlayersNotifiers();

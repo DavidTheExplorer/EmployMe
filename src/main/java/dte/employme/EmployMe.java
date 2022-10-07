@@ -99,7 +99,6 @@ public class EmployMe extends ModernJavaPlugin
 			return;
 		
 		
-		
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
 		
@@ -117,18 +116,29 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.messageService);
 		this.jobService.loadJobs();
 		
-		JobAddedNotifier allJobsNotifier = new AllJobsNotifier(this.messageService);
-		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig, allJobsNotifier);
+		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
 		this.jobAddedNotifierService.register(new DoNotNotify());
-		this.jobAddedNotifierService.register(allJobsNotifier);
+		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
 		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
 		this.jobAddedNotifierService.loadPlayersNotifiers();
+		
+		JobAddedNotifier defaultJobAddNotifier;
+		
+		try
+		{
+			defaultJobAddNotifier = parseDefaultJobAddNotifier();
+		}
+		catch(RuntimeException exception) 
+		{
+			disableWithError(RED + exception.getMessage(), RED + "Shutting down...");
+			return;
+		}
 
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService));
-		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
 
 		//register commands, listeners, metrics
-		new ACF(this.globalJobBoard, this.economy, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService).setup();
+		new ACF(this.globalJobBoard, this.economy, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 
@@ -194,5 +204,16 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerCompleteListener(this.autoJobDeleteListeners);
+	}
+	
+	private JobAddedNotifier parseDefaultJobAddNotifier() 
+	{
+		String notifierName = this.mainConfig.getConfig().getString("Default Job Add Notifier");
+		JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
+		
+		if(notifier == null)
+			throw new RuntimeException(String.format("Cannot parse the default job add notifier: %s", notifierName));
+		
+		return notifier;
 	}
 }

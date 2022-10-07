@@ -14,13 +14,11 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 {
 	private final Map<String, JobAddedNotifier> notifierByName = new HashMap<>();
 	private final Map<UUID, JobAddedNotifier> playersNotifiers = new HashMap<>();
-	private final JobAddedNotifier defaultNotifier;
 	private final ConfigFile notifiersConfig;
 	
-	public SimpleJobAddedNotifierService(ConfigFile notifiersConfig, JobAddedNotifier defaultNotifier) 
+	public SimpleJobAddedNotifierService(ConfigFile notifiersConfig) 
 	{
 		this.notifiersConfig = notifiersConfig;
-		this.defaultNotifier = defaultNotifier;
 	}
 	
 	@Override
@@ -42,9 +40,9 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	}
 
 	@Override
-	public JobAddedNotifier getPlayerNotifier(UUID playerUUID) 
+	public JobAddedNotifier getPlayerNotifier(UUID playerUUID, JobAddedNotifier defaultNotifier) 
 	{
-		return this.playersNotifiers.getOrDefault(playerUUID, this.defaultNotifier);
+		return this.playersNotifiers.getOrDefault(playerUUID, defaultNotifier);
 	}
 
 	@Override

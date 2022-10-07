@@ -37,13 +37,15 @@ public class JobAddNotifiersGUI extends ChestGui
 {
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final MessageService messageService;
+	private final JobAddedNotifier defaultNotifier;
 
-	public JobAddNotifiersGUI(JobAddedNotifierService jobAddedNotifierService, MessageService messageService, UUID playerUUID)
+	public JobAddNotifiersGUI(JobAddedNotifierService jobAddedNotifierService, MessageService messageService, UUID playerUUID, JobAddedNotifier defaultNotifier)
 	{
 		super(3, messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_TITLE).first());
 
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.messageService = messageService;
+		this.defaultNotifier = defaultNotifier;
 
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createWalls(this, Priority.LOWEST));
@@ -83,7 +85,7 @@ public class JobAddNotifiersGUI extends ChestGui
 	{
 		List<String> nicerDescription = Lists.newArrayList(description);
 
-		if(this.jobAddedNotifierService.getPlayerNotifier(playerUUID).equals(notifier)) 
+		if(this.jobAddedNotifierService.getPlayerNotifier(playerUUID, this.defaultNotifier).equals(notifier)) 
 			nicerDescription.addAll(Arrays.asList(" ", this.messageService.getMessage(MessageKey.GUI_JOB_ADDED_NOTIFIERS_SELECTED).first()));
 
 		return new GuiItemBuilder()

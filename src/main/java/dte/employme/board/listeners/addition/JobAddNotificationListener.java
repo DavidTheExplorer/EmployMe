@@ -13,10 +13,12 @@ import dte.employme.services.addnotifiers.JobAddedNotifierService;
 public class JobAddNotificationListener implements JobAddListener
 {
 	private final JobAddedNotifierService jobAddedNotifierService;
+	private final JobAddedNotifier defaultNotifier;
 
-	public JobAddNotificationListener(JobAddedNotifierService jobAddedNotifierService) 
+	public JobAddNotificationListener(JobAddedNotifierService jobAddedNotifierService, JobAddedNotifier defaultNotifier) 
 	{
 		this.jobAddedNotifierService = jobAddedNotifierService;
+		this.defaultNotifier = defaultNotifier;
 	}
 
 	@Override
@@ -30,7 +32,7 @@ public class JobAddNotificationListener implements JobAddListener
 			if(player.getUniqueId().equals(employerUUID))
 				continue;
 			
-			JobAddedNotifier playerNotifier = this.jobAddedNotifierService.getPlayerNotifier(player.getUniqueId());
+			JobAddedNotifier playerNotifier = this.jobAddedNotifierService.getPlayerNotifier(player.getUniqueId(), this.defaultNotifier);
 			
 			if(!playerNotifier.shouldNotify(player, job))
 				continue;

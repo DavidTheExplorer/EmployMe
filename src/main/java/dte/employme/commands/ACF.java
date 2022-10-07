@@ -11,6 +11,7 @@ import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.EmployMe;
+import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.job.JobService;
@@ -29,8 +30,9 @@ public class ACF
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
+	private final JobAddedNotifier defaultNotifier;
 	
-	public ACF(JobBoard globalJobBoard, Economy economy, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService) 
+	public ACF(JobBoard globalJobBoard, Economy economy, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.economy = economy;
@@ -39,6 +41,7 @@ public class ACF
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.playerContainerService = playerContainerService;
+		this.defaultNotifier = defaultNotifier;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -84,7 +87,7 @@ public class ACF
 	
 	private void registerCommands(BukkitCommandManager commandManager) 
 	{
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService));
+		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, this.defaultNotifier));
 	}
 	
 	private int getAllowedJobsAmount(Player player) 

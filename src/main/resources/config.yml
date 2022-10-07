@@ -10,3 +10,9 @@ Discord Webhooks:
 Auto Delete Jobs:
   Enabled: false
   After: 1 days
+  
+# Define the default notification policy once a job is created; Players set their own using "/emp addnotifiers".
+# 'None' - Don't notify about any job.
+# 'All Jobs' - Notifications for all jobs by default.
+# 'Material Subscriptions' - Notify only if the created job's reward includes items that the player subscribed for.
+Default Job Add Notifier: All Jobs

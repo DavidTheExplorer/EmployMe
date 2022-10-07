@@ -20,6 +20,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
+import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.guis.JobAddNotifiersGUI;
 import dte.employme.guis.JobBoardGUI;
@@ -47,8 +48,9 @@ public class EmploymentCommand extends BaseCommand
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
+	private final JobAddedNotifier defaultNotifier;
 
-	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService) 
+	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier) 
 	{
 		this.economy = economy;
 		this.globalJobBoard = globalJobBoard;
@@ -57,6 +59,7 @@ public class EmploymentCommand extends BaseCommand
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
+		this.defaultNotifier = defaultNotifier;
 	}
 	
 	@Subcommand("view")
@@ -96,7 +99,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.addnotifiers")
 	public void showNotifiers(Player player) 
 	{
-		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId()).show(player);
+		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
 	}
 
 	@Subcommand("mysubscriptions")
