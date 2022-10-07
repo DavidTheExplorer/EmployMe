@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitTask;
@@ -74,19 +75,6 @@ public class SimpleJobService implements JobService
 	}
 	
 	@Override
-	public PartialCompletionInfo getPartialCompletionInfo(Player player, Job job)
-	{
-		if(!(job.getReward() instanceof PartialReward))
-			throw new IllegalArgumentException("Cannot calculate completion percentage for a job whose reward is not partial!");
-		
-		ItemStack partialGoal = getPartialGoal(player.getInventory(), job);
-		double completionPercentage = Percentages.of(partialGoal.getAmount(), job.getGoal().getAmount());
-		PartialReward partialReward = ((PartialReward) job.getReward()).afterPartialCompletion(100 - completionPercentage);
-		
-		return new PartialCompletionInfo(completionPercentage, partialGoal, partialReward);
-	}
-	
-	@Override
 	public String describeInGame(Job job) 
 	{
 		return String.format(colorize("&6%s: &f%s &8&l| &6%s: &f%s"), 
@@ -108,6 +96,31 @@ public class SimpleJobService implements JobService
 				context.getPartialInfo().getPercentage(),
 				this.messageService.getMessage(REWARD).first(),
 				this.jobRewardService.describe(context.getReward()));
+	}
+	
+	@Override
+	public PartialCompletionInfo getPartialCompletionInfo(Player player, Job job, int maxGoalAmount)
+	{
+		if(!(job.getReward() instanceof PartialReward))
+			throw new IllegalArgumentException("Cannot calculate completion percentage for a job whose reward is not partial!");
+		
+		int goalAmount = Math.min(getGoalAmountInInventory(job, player.getInventory()), maxGoalAmount);
+		double completionPercentage = Percentages.of(goalAmount, job.getGoal().getAmount());
+		PartialReward partialReward = ((PartialReward) job.getReward()).afterPartialCompletion(100 - completionPercentage);
+		
+		ItemStack partialGoal = new ItemBuilder(job.getGoal())
+				.amounted(goalAmount)
+				.createCopy();
+		
+		return new PartialCompletionInfo(completionPercentage, partialGoal, partialReward);
+	}
+
+	@Override
+	public int getGoalAmountInInventory(Job job, Inventory inventory) 
+	{
+		return InventoryUtils.allSlotsThat(inventory, job::isGoal)
+				.map(i -> inventory.getItem(i).getAmount())
+				.sum();
 	}
 
 	@Override
@@ -205,16 +218,5 @@ public class SimpleJobService implements JobService
 			this.autoDeletion.remove(job);
 			
 		}, delay.getSeconds() * 20);
-	}
-	
-	private static ItemStack getPartialGoal(PlayerInventory playerInventory, Job job) 
-	{
-		int goalAmountInInventory = InventoryUtils.allSlotsThat(playerInventory, job::isGoal)
-				.map(i -> playerInventory.getItem(i).getAmount())
-				.sum();
-		
-		return new ItemBuilder(job.getGoal())
-				.amounted(goalAmountInInventory)
-				.createCopy();
 	}
 }

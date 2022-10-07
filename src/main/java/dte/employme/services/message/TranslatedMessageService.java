@@ -74,6 +74,8 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "GUIs.Job Board.Offer Not Completed")
 			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "GUIs.Job Board.Offer Partially Completed")
 			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "GUIs.Job Board.Offer Not Contained")
+			.put(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION, "GUIs.Job Board.Partial Goal Amount To Use Question")
+			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "GUIs.Job Board.Invalid Partial Goal Amount Error")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "GUIs.Job Board.Items.Your Jobs.Name")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "GUIs.Job Board.Items.Your Jobs.Lore")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "GUIs.Job Board.Items.Next Page.Name")
