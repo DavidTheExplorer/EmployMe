@@ -1,6 +1,7 @@
 # EmployMe ${project.version} Configuration File
-# Personal note: Thank you for buying the plugin, you and many others helped me to developing this plugin to the amazing state it's at.
-# You can find an organized FAQ in our wiki: https://github.com/DavidTheExplorer/EmployMe/wiki
+# Personal note: Thank you for buying the plugin, you helped me developing EmployMe to the amazing state it's at.
+# Organized FAQ can be found in our wiki: https://github.com/DavidTheExplorer/EmployMe/wiki
+
 
 
 # This section allows you to send custom messages in your discord servers once a certain event happens in the plugin.
@@ -13,18 +14,21 @@ Discord Webhooks:
     URL: ''
     Title: 'New Job Posted!'
     Message: '%employer% needs %goal% and will pay %reward%'
-    
+
+
 # Define a maximum time after which a job will be automatically deleted.
 # ATTENTION: All time units must be plural(seconds, days, etc) and the maximum unit is days!
 Auto Delete Jobs:
   Enabled: false
   After: 1 days
-  
+
+
 # Define the default notification policy once a job is created; Players set their own using "/emp addnotifiers".
 # 'None' - Don't notify about any job.
 # 'All Jobs' - Notifications for all jobs by default.
 # 'Material Subscriptions' - Notify only if the created job's reward includes items that the player subscribed for.
 Default Job Add Notifier: All Jobs
+
 
 # This section is about the ability to complete jobs even if the player didn't collect enough of the job's goal.
 # For example: If we have a job of getting 1000 glass that pays $100, a player can complete it with 100 glass and receive $10 as a reward.
