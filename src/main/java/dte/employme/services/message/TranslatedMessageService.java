@@ -4,15 +4,15 @@ import static dte.employme.messages.MessageKey.*;
 
 import java.util.Map;
 
-import dte.employme.config.ConfigFile;
 import dte.employme.messages.MessageBuilder;
 import dte.employme.messages.MessageKey;
 import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.java.MapBuilder;
+import dte.spigotconfiguration.SpigotConfig;
 
 public class TranslatedMessageService implements MessageService
 {
-	private final ConfigFile languageConfig;
+	private final SpigotConfig languageConfig;
 
 	private static final Map<MessageKey, String> MESSAGE_KEY_PATHS = new MapBuilder<MessageKey, String>()
 
@@ -183,7 +183,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "GUIs.Unsubscribe From Items.Items.Lore")
 			.build();
 
-	public TranslatedMessageService(ConfigFile languageConfig) 
+	public TranslatedMessageService(SpigotConfig languageConfig) 
 	{
 		this.languageConfig = languageConfig;
 	}
@@ -191,7 +191,7 @@ public class TranslatedMessageService implements MessageService
 	@Override
 	public MessageBuilder getMessage(MessageKey key) 
 	{
-		Object message = this.languageConfig.getConfig().get(getConfigPath(key));
+		Object message = this.languageConfig.get(getConfigPath(key));
 
 		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
 		

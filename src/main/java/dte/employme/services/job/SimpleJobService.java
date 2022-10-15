@@ -28,7 +28,6 @@ import org.bukkit.scheduler.BukkitTask;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.JobBoard.JobCompletionContext;
-import dte.employme.config.ConfigFile;
 import dte.employme.job.Job;
 import dte.employme.rewards.PartialReward;
 import dte.employme.services.message.MessageService;
@@ -39,6 +38,7 @@ import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.Percentages;
+import dte.spigotconfiguration.SpigotConfig;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
@@ -49,9 +49,9 @@ public class SimpleJobService implements JobService
 	private final MessageService messageService;
 	private final JobRewardService jobRewardService;
 	private final Map<Job, JobDeletionInfo> autoDeletion = new HashMap<>();
-	private final ConfigFile jobsConfig, autoDeletionConfig;
+	private final SpigotConfig jobsConfig, autoDeletionConfig;
 
-	public SimpleJobService(JobBoard globalJobBoard, JobRewardService jobRewardService, ConfigFile jobsConfig, ConfigFile autoDeletionConfig, MessageService messageService) 
+	public SimpleJobService(JobBoard globalJobBoard, JobRewardService jobRewardService, SpigotConfig jobsConfig, SpigotConfig autoDeletionConfig, MessageService messageService) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.jobsConfig = jobsConfig;
@@ -132,7 +132,7 @@ public class SimpleJobService implements JobService
 	@Override
 	public void saveJobs() 
 	{
-		this.jobsConfig.getConfig().set("Jobs", this.globalJobBoard.getOfferedJobs());
+		this.jobsConfig.set("Jobs", this.globalJobBoard.getOfferedJobs());
 		
 		try 
 		{
