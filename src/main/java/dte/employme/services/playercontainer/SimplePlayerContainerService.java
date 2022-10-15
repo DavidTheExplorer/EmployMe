@@ -14,9 +14,9 @@ import java.util.function.Function;
 
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.config.ConfigFile;
 import dte.employme.guis.playercontainer.PlayerContainerGUI;
 import dte.employme.services.message.MessageService;
+import dte.spigotconfiguration.SpigotConfig;
 
 public class SimplePlayerContainerService implements PlayerContainerService
 {
@@ -24,10 +24,10 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	itemsContainers = new HashMap<>(),
 	rewardsContainers = new HashMap<>();
 
-	private final ConfigFile itemsContainersConfig, rewardsContainersConfig;
+	private final SpigotConfig itemsContainersConfig, rewardsContainersConfig;
 	private final MessageService messageService;
 
-	public SimplePlayerContainerService(ConfigFile itemsContainersConfig, ConfigFile rewardsContainersConfig, MessageService messageService) 
+	public SimplePlayerContainerService(SpigotConfig itemsContainersConfig, SpigotConfig rewardsContainersConfig, MessageService messageService) 
 	{
 		this.itemsContainersConfig = itemsContainersConfig;
 		this.rewardsContainersConfig = rewardsContainersConfig;
@@ -67,14 +67,14 @@ public class SimplePlayerContainerService implements PlayerContainerService
 				.first();
 	}
 	
-	private Map<UUID, PlayerContainerGUI> loadContainers(ConfigFile containersConfig, String subject) 
+	private Map<UUID, PlayerContainerGUI> loadContainers(SpigotConfig containersConfig, String subject) 
 	{
-		return containersConfig.getConfig().getKeys(false).stream()
+		return containersConfig.getKeys(false).stream()
 				.map(UUID::fromString)
 				.collect(toMap(Function.identity(), playerUUID -> 
 				{
-					List<ItemStack> playerItems = containersConfig.getConfig().getConfigurationSection(playerUUID.toString()).getKeys(false).stream()
-							.map(slot -> containersConfig.getConfig().getItemStack(playerUUID + "." + slot))
+					List<ItemStack> playerItems = containersConfig.getSection(playerUUID.toString()).getKeys(false).stream()
+							.map(slot -> containersConfig.getItemStack(playerUUID + "." + slot))
 							.collect(toList());
 
 					PlayerContainerGUI container = new PlayerContainerGUI(subject, this.messageService);
@@ -84,7 +84,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 				}));
 	}
 	
-	private static void saveContainers(ConfigFile containersConfig, Map<UUID, PlayerContainerGUI> containers) 
+	private static void saveContainers(SpigotConfig containersConfig, Map<UUID, PlayerContainerGUI> containers) 
 	{
 		try
 		{
@@ -95,7 +95,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 				List<ItemStack> items = container.getStoredItems();
 				
 				for(int i = 0; i < items.size(); i++) 
-					containersConfig.getConfig().set(playerUUID.toString() + "." + i, items.get(i)); 
+					containersConfig.set(playerUUID.toString() + "." + i, items.get(i)); 
 			});
 			
 			containersConfig.save();

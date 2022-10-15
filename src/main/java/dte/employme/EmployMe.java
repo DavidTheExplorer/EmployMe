@@ -23,9 +23,9 @@ import dte.employme.board.listeners.completion.JobCompletedMessagesListener;
 import dte.employme.board.listeners.completion.JobGoalTransferListener;
 import dte.employme.board.listeners.completion.JobRewardGiveListener;
 import dte.employme.commands.ACF;
-import dte.employme.config.ConfigFile;
-import dte.employme.config.ConfigFileFactory;
-import dte.employme.config.Messages;
+import dte.employme.configs.MainConfig;
+import dte.employme.configs.MessagesConfig;
+import dte.employme.configs.PlayerContainerConfig;
 import dte.employme.job.Job;
 import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.rewards.ItemsReward;
@@ -46,6 +46,8 @@ import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.java.ServiceLocator;
 import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
+import dte.spigotconfiguration.SpigotConfig;
+import dte.spigotconfiguration.exceptions.ConfigLoadException;
 import net.milkbowl.vault.economy.Economy;
 
 public class EmployMe extends ModernJavaPlugin
@@ -58,9 +60,11 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
-	private ConfigFile mainConfig, jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	private AutoJobDeleteListeners autoJobDeleteListeners;
-
+	
+	private MainConfig mainConfig;
+	private SpigotConfig jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	
 	private static EmployMe INSTANCE;
 
 	@Override
@@ -82,25 +86,25 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		
-		//init the configs
-		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
-				.withSerializables(Job.class, MoneyReward.class, ItemsReward.class)
-				.onCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
-				.onSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
-				.build();
-		
-		this.mainConfig = configFileFactory.loadResource("config");
-		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
-		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("boards/global/auto deletion");
-		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
-		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
-		this.itemsContainersConfig = configFileFactory.loadContainer("items");
-		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
-		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
-		
-		if(configFileFactory.anyCreationException()) 
+		try 
+		{
+			SpigotConfig.register(Job.class, MoneyReward.class, ItemsReward.class);
+
+			this.mainConfig = new MainConfig(this);
+			this.jobsConfig = SpigotConfig.byPath(this, "boards/global/jobs");
+			this.jobsAutoDeletionConfig = SpigotConfig.byPath(this, "boards/global/auto deletion");
+			this.subscriptionsConfig = SpigotConfig.byPath(this, "subscriptions");
+			this.jobAddNotifiersConfig = SpigotConfig.byPath(this, "job add notifiers");
+			this.itemsContainersConfig = new PlayerContainerConfig(this, "items");
+			this.rewardsContainersConfig = new PlayerContainerConfig(this, "rewards");
+			this.messagesConfig = new MessagesConfig(this, MessagesConfig.ENGLISH);
+		}
+		catch(ConfigLoadException exception) 
+		{
+			disableWithError(RED + String.format("Error while saving %s: %s", exception.getPath(), exception.getMessage()));
 			return;
-		
+		}
+
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
 		
@@ -128,7 +132,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		try
 		{
-			defaultJobAddNotifier = parseDefaultJobAddNotifier();
+			defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddedNotifierService);
 		}
 		catch(RuntimeException exception) 
 		{
@@ -136,7 +140,7 @@ public class EmployMe extends ModernJavaPlugin
 			return;
 		}
 
-		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getConfig().getDouble("Partial Job Completions.Notify Employers Above Percentage")));
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
 
 		//register commands, listeners, metrics
@@ -213,16 +217,5 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerCompleteListener(this.autoJobDeleteListeners);
-	}
-	
-	private JobAddedNotifier parseDefaultJobAddNotifier() 
-	{
-		String notifierName = this.mainConfig.getConfig().getString("Default Job Add Notifier");
-		JobAddedNotifier notifier = this.jobAddedNotifierService.getByName(notifierName);
-		
-		if(notifier == null)
-			throw new RuntimeException(String.format("Cannot parse the default job add notifier: %s", notifierName));
-		
-		return notifier;
 	}
 }

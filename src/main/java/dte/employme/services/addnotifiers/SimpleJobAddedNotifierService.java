@@ -8,15 +8,15 @@ import java.util.Set;
 import java.util.UUID;
 
 import dte.employme.addednotifiers.JobAddedNotifier;
-import dte.employme.config.ConfigFile;
+import dte.spigotconfiguration.SpigotConfig;
 
 public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 {
 	private final Map<String, JobAddedNotifier> notifierByName = new HashMap<>();
 	private final Map<UUID, JobAddedNotifier> playersNotifiers = new HashMap<>();
-	private final ConfigFile notifiersConfig;
+	private final SpigotConfig notifiersConfig;
 	
-	public SimpleJobAddedNotifierService(ConfigFile notifiersConfig) 
+	public SimpleJobAddedNotifierService(SpigotConfig notifiersConfig) 
 	{
 		this.notifiersConfig = notifiersConfig;
 	}
@@ -52,9 +52,9 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	}
 
 	@Override
-	public void loadPlayersNotifiers() 
+	public void loadPlayersNotifiers()
 	{
-		this.notifiersConfig.getConfig().getValues(false).forEach((uuidString, policyName) -> 
+		this.notifiersConfig.getValues(false).forEach((uuidString, policyName) -> 
 		{
 			UUID playerUUID = UUID.fromString(uuidString);
 			JobAddedNotifier playerNotifier = getByName((String) policyName);
@@ -66,7 +66,7 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 	@Override
 	public void savePlayersNotifiers() 
 	{
-		this.playersNotifiers.forEach((playerUUID, playerPolicy) -> this.notifiersConfig.getConfig().set(playerUUID.toString(), playerPolicy.getName()));
+		this.playersNotifiers.forEach((playerUUID, playerPolicy) -> this.notifiersConfig.set(playerUUID.toString(), playerPolicy.getName()));
 		
 		try 
 		{
