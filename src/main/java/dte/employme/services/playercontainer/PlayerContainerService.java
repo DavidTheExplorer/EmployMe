@@ -2,7 +2,7 @@ package dte.employme.services.playercontainer;
 
 import java.util.UUID;
 
-import dte.employme.guis.PlayerContainerGUI;
+import dte.employme.guis.playercontainer.PlayerContainerGUI;
 
 public interface PlayerContainerService
 {

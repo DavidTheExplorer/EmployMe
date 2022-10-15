@@ -15,14 +15,14 @@ import java.util.function.Function;
 
 import org.bukkit.Material;
 
-import dte.employme.config.ConfigFile;
+import dte.spigotconfiguration.SpigotConfig;
 
 public class SimpleJobSubscriptionService implements JobSubscriptionService
 {
 	private final Map<UUID, Set<Material>> subscriptions = new HashMap<>();
-	private final ConfigFile subscriptionsConfig;
+	private final SpigotConfig subscriptionsConfig;
 	
-	public SimpleJobSubscriptionService(ConfigFile subscriptionsConfig) 
+	public SimpleJobSubscriptionService(SpigotConfig subscriptionsConfig) 
 	{
 		this.subscriptionsConfig = subscriptionsConfig;
 	}
@@ -58,9 +58,9 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 	@Override
 	public void loadSubscriptions() 
 	{
-		this.subscriptionsConfig.getConfig().getKeys(false).stream()
+		this.subscriptionsConfig.getKeys(false).stream()
 		.map(UUID::fromString)
-		.collect(toMap(Function.identity(), playerUUID -> parseMaterials(this.subscriptionsConfig.getConfig().getString(playerUUID.toString()))))
+		.collect(toMap(Function.identity(), playerUUID -> parseMaterials(this.subscriptionsConfig.getString(playerUUID.toString()))))
 		.forEach(this.subscriptions::put);
 	}
 
@@ -70,7 +70,7 @@ public class SimpleJobSubscriptionService implements JobSubscriptionService
 		this.subscriptions.keySet()
 		.stream()
 		.collect(toMap(UUID::toString, this::getSubscribedMaterialsNames))
-		.forEach((stringUUID, goalsNames) -> this.subscriptionsConfig.getConfig().set(stringUUID, goalsNames));
+		.forEach(this.subscriptionsConfig::set);
 
 		try 
 		{

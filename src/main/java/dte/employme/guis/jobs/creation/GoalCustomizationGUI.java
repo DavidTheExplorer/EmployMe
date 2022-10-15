@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs.creation;
 
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
@@ -43,6 +43,7 @@ import com.google.common.base.Predicates;
 import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
+import dte.employme.guis.ItemPaletteGUI;
 import dte.employme.job.Job;
 import dte.employme.rewards.Reward;
 import dte.employme.services.job.subscription.JobSubscriptionService;

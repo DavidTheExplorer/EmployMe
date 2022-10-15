@@ -36,13 +36,13 @@ public class AutoUpdater
 		return new AutoUpdater(plugin, pluginID);
 	}
 
-	public AutoUpdater ifNewUpdate(Consumer<String> newVersionAction) 
+	public AutoUpdater onNewUpdate(Consumer<String> newVersionAction) 
 	{
 		this.newVersionAction = newVersionAction;
 		return this;
 	}
 
-	public AutoUpdater ifRequestFailed(Consumer<IOException> errorHandler) 
+	public AutoUpdater onFailedRequest(Consumer<IOException> errorHandler) 
 	{
 		this.requestErrorHandler = errorHandler;
 		return this;

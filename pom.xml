@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dte</groupId>
 	<artifactId>employeme</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 
 	<properties>
 		<shade.base>dte.employme.shaded</shade.base>
@@ -74,6 +74,11 @@
 						<relocation>
 							<pattern>com.cryptomorin.xseries</pattern>
 							<shadedPattern>${shade.base}.xseries</shadedPattern>
+						</relocation>
+
+						<relocation>
+							<pattern>dte.spigotconfiguration</pattern>
+							<shadedPattern>${shade.base}.spigotconfiguration</shadedPattern>
 						</relocation>
 
 					</relocations>
@@ -187,6 +192,13 @@
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
 			<version>9.1.0</version>
+		</dependency>
+
+		<!-- Spigot Configuration -->
+		<dependency>
+			<groupId>dte</groupId>
+			<artifactId>spigotconfiguration</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

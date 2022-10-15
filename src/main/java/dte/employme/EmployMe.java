@@ -4,12 +4,14 @@ import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import dte.employme.addednotifiers.AllJobsNotifier;
 import dte.employme.addednotifiers.DoNotNotify;
+import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
@@ -21,10 +23,11 @@ import dte.employme.board.listeners.completion.JobCompletedMessagesListener;
 import dte.employme.board.listeners.completion.JobGoalTransferListener;
 import dte.employme.board.listeners.completion.JobRewardGiveListener;
 import dte.employme.commands.ACF;
-import dte.employme.config.ConfigFile;
-import dte.employme.config.ConfigFileFactory;
-import dte.employme.config.Messages;
+import dte.employme.configs.MainConfig;
+import dte.employme.configs.MessagesConfig;
+import dte.employme.configs.PlayerContainerConfig;
 import dte.employme.job.Job;
+import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
@@ -39,9 +42,12 @@ import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
 import dte.employme.services.rewards.SimpleJobRewardService;
+import dte.employme.utils.AutoUpdater;
 import dte.employme.utils.java.ServiceLocator;
 import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
+import dte.spigotconfiguration.SpigotConfig;
+import dte.spigotconfiguration.exceptions.ConfigLoadException;
 import net.milkbowl.vault.economy.Economy;
 
 public class EmployMe extends ModernJavaPlugin
@@ -54,9 +60,11 @@ public class EmployMe extends ModernJavaPlugin
 	private JobSubscriptionService jobSubscriptionService;
 	private JobAddedNotifierService jobAddedNotifierService;
 	private MessageService messageService;
-	private ConfigFile mainConfig, jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	private AutoJobDeleteListeners autoJobDeleteListeners;
-
+	
+	private MainConfig mainConfig;
+	private SpigotConfig jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
+	
 	private static EmployMe INSTANCE;
 
 	@Override
@@ -78,27 +86,25 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		
-		//init the configs
-		ConfigFileFactory configFileFactory = new ConfigFileFactory.Builder()
-				.withSerializables(Job.class, MoneyReward.class, ItemsReward.class)
-				.onCreationException((exception, config) -> disableWithError(RED + String.format("Error while creating %s: %s", config.getFile().getName(), exception.getMessage())))
-				.onSaveException((exception, config) -> disableWithError(RED + String.format("Error while saving %s: %s", config.getFile().getName(), exception.getMessage())))
-				.build();
-		
-		this.mainConfig = configFileFactory.loadResource("config");
-		this.jobsConfig = configFileFactory.loadConfig("boards/global/jobs");
-		this.jobsAutoDeletionConfig = configFileFactory.loadConfig("boards/global/auto deletion");
-		this.subscriptionsConfig = configFileFactory.loadConfig("subscriptions");
-		this.jobAddNotifiersConfig = configFileFactory.loadConfig("job add notifiers");
-		this.itemsContainersConfig = configFileFactory.loadContainer("items");
-		this.rewardsContainersConfig = configFileFactory.loadContainer("rewards");
-		this.messagesConfig = configFileFactory.loadMessagesConfig(Messages.ENGLISH);
-		
-		if(configFileFactory.anyCreationException()) 
+		try 
+		{
+			SpigotConfig.register(Job.class, MoneyReward.class, ItemsReward.class);
+
+			this.mainConfig = new MainConfig(this);
+			this.jobsConfig = SpigotConfig.byPath(this, "boards/global/jobs");
+			this.jobsAutoDeletionConfig = SpigotConfig.byPath(this, "boards/global/auto deletion");
+			this.subscriptionsConfig = SpigotConfig.byPath(this, "subscriptions");
+			this.jobAddNotifiersConfig = SpigotConfig.byPath(this, "job add notifiers");
+			this.itemsContainersConfig = new PlayerContainerConfig(this, "items");
+			this.rewardsContainersConfig = new PlayerContainerConfig(this, "rewards");
+			this.messagesConfig = new MessagesConfig(this, MessagesConfig.ENGLISH);
+		}
+		catch(ConfigLoadException exception) 
+		{
+			disableWithError(RED + String.format("Error while saving %s: %s", exception.getPath(), exception.getMessage()));
 			return;
-		
-		
-		
+		}
+
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
 		
@@ -121,12 +127,24 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
 		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
 		this.jobAddedNotifierService.loadPlayersNotifiers();
+		
+		JobAddedNotifier defaultJobAddNotifier;
+		
+		try
+		{
+			defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddedNotifierService);
+		}
+		catch(RuntimeException exception) 
+		{
+			disableWithError(RED + exception.getMessage(), RED + "Shutting down...");
+			return;
+		}
 
-		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService));
-		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService));
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
 
 		//register commands, listeners, metrics
-		new ACF(this.globalJobBoard, this.economy, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService).setup();
+		new ACF(this.globalJobBoard, this.economy, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 
@@ -138,6 +156,13 @@ public class EmployMe extends ModernJavaPlugin
 			this.jobSubscriptionService.saveSubscriptions();
 			this.jobAddedNotifierService.savePlayersNotifiers();
 		});
+		
+		new Metrics(this, 16573);
+
+		AutoUpdater.forPlugin(this, 105476)
+		.onNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
+		.onFailedRequest(exception -> disableWithError(RED + "There was an internet error while checking for an update!"))
+		.check();
 	}
 
 	public static EmployMe getInstance()

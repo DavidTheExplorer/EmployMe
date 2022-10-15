@@ -1,32 +1,73 @@
-package dte.employme.config;
+package dte.employme.configs;
 
 import static dte.employme.messages.MessageKey.*;
+import static java.util.stream.Collectors.toMap;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import dte.employme.messages.MessageKey;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
-public class Messages
+import dte.employme.messages.MessageKey;
+import dte.employme.services.message.TranslatedMessageService;
+import dte.spigotconfiguration.SpigotConfig;
+import dte.spigotconfiguration.exceptions.ConfigLoadException;
+
+public class MessagesConfig extends SpigotConfig
 {
-	private final Map<MessageKey, String[]> messages = new HashMap<>();
-	
-	public Messages put(MessageKey messageKey, String... lines) 
+	public MessagesConfig(Plugin plugin, Messages defaultMessages) throws ConfigLoadException
 	{
-		this.messages.put(messageKey, lines);
-		return this;
+		super(new Builder(plugin)
+				.byPath("messages")
+				.supplyDefaults(config -> 
+				{
+					//regenerate the missing messages based on the provided defaults
+					return Arrays.stream(MessageKey.VALUES)
+							.filter(key -> isMissing(config, key))
+							.collect(toMap(TranslatedMessageService::getConfigPath, missingKey -> getDefaultMessage(missingKey, defaultMessages)));
+				})
+				.loadDefaults());
 	}
-	
-	public String[] getLines(MessageKey messageKey) 
+
+	private static boolean isMissing(YamlConfiguration config, MessageKey key) 
 	{
-		return this.messages.get(messageKey);
+		return !config.contains(TranslatedMessageService.getConfigPath(key));
 	}
-	
-	public Map<MessageKey, String[]> toMap()
+
+	private static Object getDefaultMessage(MessageKey missingKey, Messages defaultMessages) 
 	{
-		return this.messages;
+		String[] lines = defaultMessages.getLines(missingKey);
+
+		return lines.length == 1 ? lines[0] : Arrays.asList(lines);
 	}
-	
+
+
+
+	public static class Messages
+	{
+		private final Map<MessageKey, String[]> messages = new HashMap<>();
+
+		public Messages put(MessageKey messageKey, String... lines) 
+		{
+			this.messages.put(messageKey, lines);
+			return this;
+		}
+
+		public String[] getLines(MessageKey messageKey) 
+		{
+			return this.messages.get(messageKey);
+		}
+
+		public Map<MessageKey, String[]> toMap()
+		{
+			return this.messages;
+		}
+	}
+
+
+
 	public static final Messages ENGLISH = new Messages()
 
 			//Jobs
@@ -34,6 +75,7 @@ public class Messages
 			.put(MONEY_JOB_COMPLETED, "&aYou successfully completed this Job!")
 			.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment mycontainers\"")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs! &nHover for more info.")
+			.put(PLAYER_PARTIALLY_COMPLETED_YOUR_JOB, "&b%completer% &djust partially completed one of your Jobs! &nHover for more info.")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! You must delete one to proceed.")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
 			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
@@ -66,7 +108,7 @@ public class Messages
 			.put(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME, "&dItems")
 			.put(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE, "&fWhen someone completes one of your jobs,", "&fThe items they got for you are stored here.")
 			.put(CONTAINER_CLAIM_INSTRUCTION, "Claim your %container subject%:")
-			
+
 			//Player Container GUI
 			.put(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME, "&aNext")
 			.put(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE, "&fClick to open the next page")
@@ -79,25 +121,29 @@ public class Messages
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%money payment%%currency symbol%")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")
-			
+
 			//Job Board GUI
 			.put(GUI_JOB_BOARD_TITLE, "Available Jobs")
 			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "&a&lClick to Finish!")
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "&cYou didn't complete this Job.")
+			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "&aYou can &2&lPartially complete &athis job!", "&aClick to continue")
+			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "&cUnable to complete the job because it's not offered anymore!")
+			.put(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION, "&fYour inventory has &a%goal amount% &fitems, how many of them should be used for completion?")
+			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "You either don't have enough of the required amount or it's <= 0!")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "&aNext")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_LORE, "&fClick to open the next page")
 			.put(GUI_JOB_BOARD_PREVIOUS_PAGE_NAME, "&cBack")
 			.put(GUI_JOB_BOARD_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
-			
+
 			//Player Jobs GUI
 			.put(GUI_PLAYER_JOBS_TITLE, "Your Jobs")
 			.put(GUI_PLAYER_JOBS_NEXT_PAGE_NAME, "&aNext")
 			.put(GUI_PLAYER_JOBS_NEXT_PAGE_LORE, "&fClick to open the next page")
 			.put(GUI_PLAYER_JOBS_PREVIOUS_PAGE_NAME, "&cBack")
 			.put(GUI_PLAYER_JOBS_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
-			
+
 			//Job Deletion GUI
 			.put(GUI_JOB_DELETION_TITLE, "Select Jobs to Delete")
 			.put(GUI_JOB_DELETION_DELETE_INSTRUCTION, "&4&lClick to Delete!")
@@ -128,6 +174,10 @@ public class Messages
 			.put(ENTER_ENCHANTMENT_LEVEL, "&fWhat level for &a%enchantment%&f?")
 			.put(ENCHANTMENT_LEVEL_NOT_A_NUMBER, "&cThe Level must be an Integer!")
 			.put(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, "&cThe provided level is out of bounds! (min level is &4%enchantment min level%&c)")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_NAME, "&cBack")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_LORE, "&fClick to open the previous page")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME, "&aNext")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE, "&fClick to open the next page")
 
 			//Goal Customization GUI
 			.put(GUI_GOAL_CUSTOMIZATION_TITLE, "What should the Goal Item be?")
@@ -142,19 +192,19 @@ public class Messages
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "&fClick to add an enchantment that", "&fthe goal must have on it.")
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
 			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
-			
+
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "Select the Goal Item:")
 			.put(GUI_ITEM_PALETTE_BACK_ITEM_NAME, "&cBack")
 			.put(GUI_ITEM_PALETTE_NEXT_ITEM_NAME, "&aNext")
 			.put(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name")
-			
+
 			//Goal Amount GUI
 			.put(GUI_GOAL_AMOUNT_TITLE, "Specify the Amount:")
 			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME, "&aContinue")
 			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE, "&fClick to set the new amount.")
 			.put(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "&cEnter Numeric Amount:")
-			
+
 			//Job Added Notifiers GUI
 			.put(GUI_JOB_ADDED_NOTIFIERS_TITLE, "Receive Notifications For:")
 			.put(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, "&aAll Jobs")
@@ -179,7 +229,7 @@ public class Messages
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION, "&fWhat item you want to subscribe to?")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, "&f%item%")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, "&aSend me a notification for this item.")
-			
+
 			//Unsubscribe from Items Palette
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "Notifications Removal")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "&fWhat item you want to unsubscribe from?")

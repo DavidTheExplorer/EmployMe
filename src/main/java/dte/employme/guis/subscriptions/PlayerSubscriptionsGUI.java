@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.subscriptions;
 
 import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME;
@@ -36,6 +36,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
+import dte.employme.guis.ItemPaletteGUI;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;

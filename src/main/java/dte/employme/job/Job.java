@@ -8,13 +8,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 import de.tr7zw.nbtapi.NBTItem;
 import dte.employme.rewards.Reward;
-import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.MapBuilder;
 
 @SerializableAs("Job")
@@ -22,8 +20,8 @@ public class Job implements ConfigurationSerializable
 {
 	private final UUID uuid;
 	private final OfflinePlayer employer;
-	private final ItemStack goal;
-	private final Reward reward;
+	private ItemStack goal;
+	private Reward reward;
 
 	public Job(OfflinePlayer employer, ItemStack goal, Reward reward) 
 	{
@@ -68,9 +66,14 @@ public class Job implements ConfigurationSerializable
 		return this.reward;
 	}
 	
-	public boolean hasFinished(Player player) 
+	public void setGoal(ItemStack goal) 
 	{
-		return InventoryUtils.containsAtLeast(player.getInventory(), this::isGoal, this.goal.getAmount());
+		this.goal = goal;
+	}
+	
+	public void setReward(Reward reward) 
+	{
+		this.reward = reward;
 	}
 	
 	public boolean isGoal(ItemStack item) 

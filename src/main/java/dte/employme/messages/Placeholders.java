@@ -6,14 +6,12 @@ public class Placeholders
 	private Placeholders(){}
 	
 	public static final String 
-	PLAYER_NAME = create("player"),
 	GOAL_SUBSCRIPTIONS = create("goal subscriptions"),
 	COMPLETER = create("completer"),
 	PLAYER_MONEY = create("player money"),
 	GOAL = create("goal"),
 	REWARDS = create("rewards"),
 	JOB_ADDED_NOTIFIER = create("job added notifier"),
-	JOB_ADDED_NOTIFIERS = create("job added notifiers"),
 	ENCHANTMENT = create("enchantment"),
 	ENCHANTMENT_MIN_LEVEL = create("enchantment min level"),
 	NEW_VERSION = create("new version"),

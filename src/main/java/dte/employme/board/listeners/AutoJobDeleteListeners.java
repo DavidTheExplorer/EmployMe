@@ -5,6 +5,7 @@ import java.time.Duration;
 import org.bukkit.entity.Player;
 
 import dte.employme.board.JobBoard;
+import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.board.listeners.addition.JobAddListener;
 import dte.employme.board.listeners.completion.JobCompleteListener;
 import dte.employme.board.listeners.removal.JobRemovalListener;
@@ -35,7 +36,7 @@ public class AutoJobDeleteListeners implements JobAddListener, JobRemovalListene
 	}
 	
 	@Override
-	public void onJobCompleted(JobBoard jobBoard, Job job, Player whoCompleted) 
+	public void onJobCompleted(Job job, Player whoCompleted, JobCompletionContext context)
 	{
 		this.jobService.stopAutoDelete(job);
 	}

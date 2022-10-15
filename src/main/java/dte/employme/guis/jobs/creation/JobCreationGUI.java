@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs.creation;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE;

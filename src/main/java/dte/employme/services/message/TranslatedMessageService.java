@@ -4,15 +4,15 @@ import static dte.employme.messages.MessageKey.*;
 
 import java.util.Map;
 
-import dte.employme.config.ConfigFile;
 import dte.employme.messages.MessageBuilder;
 import dte.employme.messages.MessageKey;
 import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.java.MapBuilder;
+import dte.spigotconfiguration.SpigotConfig;
 
 public class TranslatedMessageService implements MessageService
 {
-	private final ConfigFile languageConfig;
+	private final SpigotConfig languageConfig;
 
 	private static final Map<MessageKey, String> MESSAGE_KEY_PATHS = new MapBuilder<MessageKey, String>()
 
@@ -21,6 +21,7 @@ public class TranslatedMessageService implements MessageService
 			.put(MONEY_JOB_COMPLETED, "Jobs.Money Job Completed")
 			.put(ITEMS_JOB_COMPLETED, "Jobs.Item Job Completed")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "Jobs.Player Completed Your Job")
+			.put(PLAYER_PARTIALLY_COMPLETED_YOUR_JOB, "Jobs.Player Partially Completed Your Job")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "Jobs.You Have Too Many Jobs")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "Jobs.Cancelled")
 			.put(JOB_AUTO_REMOVED, "Jobs.Auto Removed")
@@ -71,6 +72,10 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_JOB_BOARD_TITLE, "GUIs.Job Board.Title")
 			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "GUIs.Job Board.Offer Completed")
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "GUIs.Job Board.Offer Not Completed")
+			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "GUIs.Job Board.Offer Partially Completed")
+			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "GUIs.Job Board.Offer Not Contained")
+			.put(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION, "GUIs.Job Board.Partial Goal Amount To Use Question")
+			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "GUIs.Job Board.Invalid Partial Goal Amount Error")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "GUIs.Job Board.Items.Your Jobs.Name")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "GUIs.Job Board.Items.Your Jobs.Lore")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "GUIs.Job Board.Items.Next Page.Name")
@@ -115,6 +120,10 @@ public class TranslatedMessageService implements MessageService
 			.put(ENTER_ENCHANTMENT_LEVEL, "GUIs.Goal Enchantment Selection.Enter Enchantment Level")
 			.put(ENCHANTMENT_LEVEL_NOT_A_NUMBER, "GUIs.Goal Enchantment Selection.Enchantment Level Not A Number")
 			.put(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS, "GUIs.Goal Enchantment Selection.Enchantment Level Out Of Bounds")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_NAME, "GUIs.Goal Enchantment Selection.Items.Previous Page.Name")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_LORE, "GUIs.Goal Enchantment Selection.Items.Previous Page.Lore")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME, "GUIs.Goal Enchantment Selection.Items.Next Page.Name")
+			.put(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE, "GUIs.Goal Enchantment Selection.Items.Next Page.Lore")
 
 			//Goal Customization GUI
 			.put(GUI_GOAL_CUSTOMIZATION_TITLE, "GUIs.Goal Customization.Title")
@@ -167,14 +176,14 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, "GUIs.Subscribe Item Palette.Items.Name")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, "GUIs.Subscribe Item Palette.Items.Lore")
 			
-			//Unsubscribe from Items Item Palette,
+			//Unsubscribe from Items Item Palette
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Unsubscribe From Items.Title")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "GUIs.Unsubscribe From Items.Unsubscribe Question")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "GUIs.Unsubscribe From Items.Items.Name")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "GUIs.Unsubscribe From Items.Items.Lore")
 			.build();
 
-	public TranslatedMessageService(ConfigFile languageConfig) 
+	public TranslatedMessageService(SpigotConfig languageConfig) 
 	{
 		this.languageConfig = languageConfig;
 	}
@@ -182,7 +191,7 @@ public class TranslatedMessageService implements MessageService
 	@Override
 	public MessageBuilder getMessage(MessageKey key) 
 	{
-		Object message = this.languageConfig.getConfig().get(getConfigPath(key));
+		Object message = this.languageConfig.get(getConfigPath(key));
 
 		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
 		
