@@ -12,7 +12,6 @@ import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_TITLE;
 import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
-import static dte.employme.services.job.JobService.FinishState.FULLY;
 import static dte.employme.services.job.JobService.FinishState.NEGATIVE;
 import static dte.employme.services.job.JobService.FinishState.PARTIALLY;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
@@ -151,11 +150,8 @@ public class JobBoardGUI extends ChestGui
 
 					this.player.closeInventory();
 
-					if(finishState == FULLY)
-						this.jobBoard.completeJob(job, this.player, JobCompletionContext.normal(job));
-					else 
-						//ask the player how much from the goal item in their inventory they want to complete with
-						askPartialGoalAmount(job).begin();
+					//ask the player how much from the goal item in their inventory they want to complete with
+					askGoalAmount(job).begin();
 				})
 				.build();
 	}
@@ -179,14 +175,14 @@ public class JobBoardGUI extends ChestGui
 
 	public MessageBuilder getJobStatusMessage(Job job, FinishState finishState) 
 	{
-		if(finishState == FinishState.NEGATIVE) 
+		if(finishState == NEGATIVE) 
 			return this.messageService.getMessage(GUI_JOB_BOARD_OFFER_NOT_COMPLETED);
 
 		return this.messageService.getMessage((finishState == PARTIALLY ? GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED : GUI_JOB_BOARD_OFFER_COMPLETED))
 				.inject(GOAL_AMOUNT, this.jobService.getGoalAmountInInventory(job, this.player.getInventory()));
 	}
 
-	private Conversation askPartialGoalAmount(Job job) 
+	private Conversation askGoalAmount(Job job) 
 	{
 		return Conversations.createFactory(this.messageService)
 				.withFirstPrompt(new JobPartialCompletionAmountPrompt(this.messageService, this.jobService, job, this.player))
@@ -196,12 +192,22 @@ public class JobBoardGUI extends ChestGui
 						return;
 					
 					int amountToUse = (int) abandonedEvent.getContext().getSessionData("Amount To Use");
-					JobCompletionContext context = JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse));
+					JobCompletionContext context = createCompletionContext(job, amountToUse);
 					
 					this.jobBoard.completeJob(job, this.player, context);
-					updatePartialJob(job, context.getPartialInfo());
+					
+					if(!context.isJobCompleted())
+						updatePartialJob(job, context.getPartialInfo());
 				})
 				.buildConversation(this.player);
+	}
+	
+	private JobCompletionContext createCompletionContext(Job job, int amountToUse) 
+	{
+		if(amountToUse == job.getGoal().getAmount())
+			return JobCompletionContext.normal(job);
+		
+		return JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse));
 	}
 
 	private void updatePartialJob(Job job, PartialCompletionInfo partialCompletionInfo) 

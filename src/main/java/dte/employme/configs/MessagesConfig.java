@@ -129,7 +129,7 @@ public class MessagesConfig extends SpigotConfig
 			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "&aYou can &2&lPartially complete &athis job!", "&aClick to continue")
 			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "&cUnable to complete the job because it's not offered anymore!")
 			.put(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION, "&fYour inventory has &a%goal amount% &fitems, how many of them should be used for completion?")
-			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "You either don't have enough of the required amount or it's <= 0!")
+			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "Invalid amount! Please use a positive amount that is is within 1 and the job's goal amount.")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE, "&fView or Edit the jobs that you posted.")
 			.put(GUI_JOB_BOARD_NEXT_PAGE_NAME, "&aNext")
