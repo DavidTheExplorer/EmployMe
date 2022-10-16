@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ import dte.employme.job.Job;
 
 public class SimpleJobBoard implements JobBoard
 {
-	private final Map<UUID, Job> jobByUUID = new HashMap<>();
+	private final Map<UUID, Job> jobByUUID = new LinkedHashMap<>();
 	
 	//listeners
 	private final Set<JobAddListener> addListeners = new LinkedHashSet<>();
