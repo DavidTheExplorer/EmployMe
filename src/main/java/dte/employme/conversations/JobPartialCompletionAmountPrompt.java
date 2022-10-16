@@ -41,7 +41,10 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	{
 		int amount = input.intValue();
 		
-		return amount > 0 && amount <= getGoalAmountInInventory();
+		if(amount < 0)
+			return false;
+		
+		return amount <= Math.min(getGoalAmountInInventory(), this.job.getGoal().getAmount());
 	}
 	
 	@Override
