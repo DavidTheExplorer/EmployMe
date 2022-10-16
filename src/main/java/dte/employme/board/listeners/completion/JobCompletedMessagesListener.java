@@ -39,7 +39,7 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 		//send a message to who completed
 		this.messageService.getMessage(getCompleterMessage(context)).sendTo(whoCompleted);
 		
-		//notify the employer if the completion percentage is above 20%
+		//notify the employer if the completion percentage is above the required
 		if(context.isJobCompleted() || context.getPartialInfo().getPercentage() > this.percentageToNotifyFrom) 
 		{
 			OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
