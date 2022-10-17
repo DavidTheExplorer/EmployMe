@@ -24,4 +24,9 @@ public class MainConfig extends SpigotConfig
 		
 		return notifier;
 	}
+	
+	public int getMaxAllowedJobs(String groupName, int defaultAmount) 
+	{
+		return getSection("Maximum Allowed Jobs").getInt(groupName.toLowerCase(), defaultAmount);
+	}
 }

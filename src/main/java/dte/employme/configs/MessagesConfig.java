@@ -76,7 +76,7 @@ public class MessagesConfig extends SpigotConfig
 			.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment mycontainers\"")
 			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs! &nHover for more info.")
 			.put(PLAYER_PARTIALLY_COMPLETED_YOUR_JOB, "&b%completer% &djust partially completed one of your Jobs! &nHover for more info.")
-			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou have offered too many Jobs! You must delete one to proceed.")
+			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou can only offer up to %max jobs allowed% Jobs! Delete one to proceed.")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
 			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
 

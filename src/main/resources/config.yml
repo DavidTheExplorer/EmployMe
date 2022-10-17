@@ -34,3 +34,10 @@ Default Job Add Notifier: All Jobs
 # For example: If we have a job of getting 1000 glass that pays $100, a player can complete it with 100 glass and receive $10 as a reward.
 Partial Job Completions:
     Notify Employers Above Percentage: 20
+    
+    
+# This section determines how many offered jobs a player can have, based on the group they belong to.
+# All famous permission plugins are supported(e.g. LuckPerms).
+# The format is: groupNameLowercase: max jobs allowed
+# * The default value is 3 if not set otherwise!
+Maximum Allowed Jobs: {}

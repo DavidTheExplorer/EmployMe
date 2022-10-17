@@ -23,7 +23,8 @@ public class Placeholders
 	CURRENCY_SYMBOL = create("currency symbol"),
 	RELOAD_TIME = create("reload time"),
 	ITEM = create("item"),
-	REWARD = create("reward");
+	REWARD = create("reward"),
+	MAX_JOBS_ALLOWED = create("max jobs allowed");
 
 	private static String create(String value) 
 	{

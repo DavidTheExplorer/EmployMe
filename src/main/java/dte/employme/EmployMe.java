@@ -49,10 +49,12 @@ import dte.modernjavaplugin.ModernJavaPlugin;
 import dte.spigotconfiguration.SpigotConfig;
 import dte.spigotconfiguration.exceptions.ConfigLoadException;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class EmployMe extends ModernJavaPlugin
 {
 	private Economy economy;
+	private Permission permission;
 	private JobBoard globalJobBoard;
 	private JobService jobService;
 	private JobRewardService jobRewardService;
@@ -72,10 +74,12 @@ public class EmployMe extends ModernJavaPlugin
 	{
 		INSTANCE = this;
 
-		//init economy
+		//init vault services
 		try 
 		{
+			verifyVaultPresent();
 			this.economy = loadEconomy();
+			this.permission = loadPermission();
 		}
 		catch(RuntimeException exception) 
 		{
@@ -144,7 +148,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
 
 		//register commands, listeners, metrics
-		new ACF(this.globalJobBoard, this.economy, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier).setup();
+		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, mainConfig).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 
@@ -170,16 +174,32 @@ public class EmployMe extends ModernJavaPlugin
 		return INSTANCE;
 	}
 
-	private Economy loadEconomy() 
+	private void verifyVaultPresent() 
 	{
 		if(Bukkit.getPluginManager().getPlugin("Vault") == null)
 			throw new RuntimeException("Vault must be installed on the server");
-		
+	}
+
+	private Economy loadEconomy() 
+	{
 		RegisteredServiceProvider<Economy> provider = Bukkit.getServicesManager().getRegistration(Economy.class);
 
 		if(provider == null)
 			throw new RuntimeException("No economy plugin is installed on the server(e.g. EssentialsX)");
 
+		return provider.getProvider();
+	}
+	
+	private Permission loadPermission()
+	{
+		RegisteredServiceProvider<Permission> provider = Bukkit.getServicesManager().getRegistration(Permission.class);
+
+		if(provider == null)
+			throw new RuntimeException("No permission plugin is installed on the server(e.g. LuckPerms)");
+		
+		System.out.println(provider.getProvider().getName());
+		System.out.println(provider.getProvider().getClass().getSimpleName());
+		
 		return provider.getProvider();
 	}
 	

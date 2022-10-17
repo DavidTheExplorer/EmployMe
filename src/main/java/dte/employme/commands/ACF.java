@@ -2,6 +2,7 @@ package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
+import static dte.employme.messages.Placeholders.MAX_JOBS_ALLOWED;
 
 import java.util.List;
 
@@ -13,35 +14,40 @@ import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.EmployMe;
 import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.board.JobBoard;
+import dte.employme.configs.MainConfig;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
-import dte.employme.utils.PermissionUtils;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class ACF
 {
 	private final JobBoard globalJobBoard;
 	private final Economy economy;
+	private final Permission permission;
 	private final JobService jobService;
 	private final MessageService messageService;
 	private final JobAddedNotifierService jobAddedNotifierService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final JobAddedNotifier defaultNotifier;
+	private final MainConfig mainConfig;
 	
-	public ACF(JobBoard globalJobBoard, Economy economy, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier) 
+	public ACF(JobBoard globalJobBoard, Economy economy, Permission permission, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier, MainConfig mainConfig) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.economy = economy;
+		this.permission = permission;
 		this.jobService = jobService;
 		this.messageService = messageService;
 		this.jobAddedNotifierService = jobAddedNotifierService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.playerContainerService = playerContainerService;
 		this.defaultNotifier = defaultNotifier;
+		this.mainConfig = mainConfig;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -78,22 +84,21 @@ public class ACF
 		
 		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
 		{
-			int jobsOffered = this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).size();
+			if(player.isOp())
+				return;
 			
-			if(jobsOffered >= getAllowedJobsAmount(player))
-				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS).first());
+			int jobsOffered = this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).size();
+			int maxJobsAllowed = this.mainConfig.getMaxAllowedJobs(this.permission.getPrimaryGroup(player), 3);
+			
+			if(jobsOffered >= maxJobsAllowed)
+				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS)
+						.inject(MAX_JOBS_ALLOWED, maxJobsAllowed)
+						.first());
 		});
 	}
 	
 	private void registerCommands(BukkitCommandManager commandManager) 
 	{
 		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, this.defaultNotifier));
-	}
-	
-	private int getAllowedJobsAmount(Player player) 
-	{
-		String jobPermission = PermissionUtils.findPermission(player, permission -> permission.startsWith("employme.jobs.allowed.")).orElse("employme.jobs.allowed.3");
-		
-		return Integer.parseInt(jobPermission.split("\\.")[jobPermission.split("\\.").length-1]);
 	}
 }
