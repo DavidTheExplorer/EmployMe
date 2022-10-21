@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -165,7 +166,7 @@ public class EmployMe extends ModernJavaPlugin
 
 		AutoUpdater.forPlugin(this, 105476)
 		.onNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
-		.onFailedRequest(exception -> disableWithError(RED + "There was an internet error while checking for an update!"))
+		.onFailedRequest(exception -> logToConsole(RED + "There was an internet error while checking for an update: " + ExceptionUtils.getMessage(exception)))
 		.check();
 	}
 
