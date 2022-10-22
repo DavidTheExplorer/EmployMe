@@ -71,7 +71,7 @@ public class SimpleJobService implements JobService
 		if(InventoryUtils.containsAtLeast(playerInventory, job::isGoal, job.getGoal().getAmount()))
 			return FULLY;
 		
-		return PARTIALLY;
+		return job.getReward() instanceof PartialReward ? PARTIALLY : NEGATIVE;
 	}
 	
 	@Override

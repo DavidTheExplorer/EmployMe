@@ -65,7 +65,6 @@ public class JobBoardGUI extends ChestGui
 	private final JobBoard jobBoard;
 	private final JobService jobService;
 	private final MessageService messageService;
-	
 	private final PaginatedPane jobsPane;
 
 	public JobBoardGUI(Player player, JobBoard jobBoard, JobService jobService, MessageService messageService)
@@ -143,15 +142,15 @@ public class JobBoardGUI extends ChestGui
 					}
 
 					//the user wants to finish the job
-					FinishState finishState = this.jobService.getFinishState(this.player, job);
-
-					if(finishState == NEGATIVE)
+					if(!this.jobService.getFinishState(this.player, job).hasFinished())
 						return;
 
 					this.player.closeInventory();
 
-					//ask the player how much from the goal item in their inventory they want to complete with
-					askGoalAmount(job).begin();
+					if(!(reward instanceof PartialReward))
+						completeJob(job, JobCompletionContext.normal(job));
+					else
+						askGoalAmount(job).begin();
 				})
 				.build();
 	}
@@ -192,22 +191,17 @@ public class JobBoardGUI extends ChestGui
 						return;
 					
 					int amountToUse = (int) abandonedEvent.getContext().getSessionData("Amount To Use");
-					JobCompletionContext context = createCompletionContext(job, amountToUse);
-					
-					this.jobBoard.completeJob(job, this.player, context);
-					
-					if(!context.isJobCompleted())
-						updatePartialJob(job, context.getPartialInfo());
+					completeJob(job, (amountToUse == job.getGoal().getAmount()) ? JobCompletionContext.normal(job) : JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse)));
 				})
 				.buildConversation(this.player);
 	}
 	
-	private JobCompletionContext createCompletionContext(Job job, int amountToUse) 
+	private void completeJob(Job job, JobCompletionContext context) 
 	{
-		if(amountToUse == job.getGoal().getAmount())
-			return JobCompletionContext.normal(job);
+		this.jobBoard.completeJob(job, this.player, context);
 		
-		return JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse));
+		if(!context.isJobCompleted())
+			updatePartialJob(job, context.getPartialInfo());
 	}
 
 	private void updatePartialJob(Job job, PartialCompletionInfo partialCompletionInfo) 
