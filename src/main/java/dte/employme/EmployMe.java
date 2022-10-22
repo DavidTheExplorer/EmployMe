@@ -198,9 +198,6 @@ public class EmployMe extends ModernJavaPlugin
 		if(provider == null)
 			throw new RuntimeException("No permission plugin is installed on the server(e.g. LuckPerms)");
 		
-		System.out.println(provider.getProvider().getName());
-		System.out.println(provider.getProvider().getClass().getSimpleName());
-		
 		return provider.getProvider();
 	}
 	
