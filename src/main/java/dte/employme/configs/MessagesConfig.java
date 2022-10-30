@@ -119,7 +119,7 @@ public class MessagesConfig extends SpigotConfig
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
 			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal%&f.")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
-			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%money payment%%currency symbol%")
+			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%currency symbol%%money payment%")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")
 
 			//Job Board GUI
@@ -154,7 +154,7 @@ public class MessagesConfig extends SpigotConfig
 			.put(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE, "&fClick to offer a Job for which", "&fyou will pay a certain amount of money.")
 			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME, "&bItems Job")
 			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE, "&fClick to offer a Job for which", "&fyou will pay with resources.")
-			.put(MONEY_PAYMENT_AMOUNT_QUESTION, "&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%player money%&6%currency symbol%&f)")
+			.put(MONEY_PAYMENT_AMOUNT_QUESTION, "&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%currency symbol%%player money%&6&f)")
 			.put(MONEY_REWARD_ERROR_NEGATIVE, "&cCan't create a Money Reward that pays nothing or less!")
 			.put(MONEY_REWARD_NOT_ENOUGH, "&cYou can't offer an amount of money that you don't have!")
 			.put(MONEY_REWARD_NOT_A_NUMBER, "&cPayment has to be a Positive Integer!")
