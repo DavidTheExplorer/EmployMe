@@ -29,6 +29,7 @@ import dte.employme.configs.MessagesConfig;
 import dte.employme.configs.PlayerContainerConfig;
 import dte.employme.job.Job;
 import dte.employme.listeners.AutoUpdateListeners;
+import dte.employme.messages.MessageProvider;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
@@ -102,7 +103,7 @@ public class EmployMe extends ModernJavaPlugin
 			this.jobAddNotifiersConfig = SpigotConfig.byPath(this, "job add notifiers");
 			this.itemsContainersConfig = new PlayerContainerConfig(this, "items");
 			this.rewardsContainersConfig = new PlayerContainerConfig(this, "rewards");
-			this.messagesConfig = new MessagesConfig(this, MessagesConfig.ENGLISH);
+			this.messagesConfig = new MessagesConfig(this, MessageProvider.ENGLISH);
 		}
 		catch(ConfigLoadException exception) 
 		{
