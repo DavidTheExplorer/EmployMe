@@ -22,12 +22,14 @@ import static dte.employme.utils.EnchantmentUtils.removeEnchantment;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
+import static dte.employme.utils.java.Predicates.negate;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -38,7 +40,6 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import com.google.common.base.Predicates;
 
 import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
@@ -46,6 +47,7 @@ import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.guis.ItemPaletteGUI;
 import dte.employme.job.Job;
 import dte.employme.rewards.Reward;
+import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
@@ -57,6 +59,7 @@ public class GoalCustomizationGUI extends ChestGui
 {
 	private final MessageService messageService;
 	private final JobSubscriptionService jobSubscriptionService;
+	private final JobService jobService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
 
@@ -68,12 +71,13 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobService jobService, JobBoard jobBoard, Reward reward)
 	{
 		super(6, messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.jobSubscriptionService = jobSubscriptionService;
+		this.jobService = jobService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
 		
@@ -298,7 +302,7 @@ public class GoalCustomizationGUI extends ChestGui
 					HumanEntity player = event.getWhoClicked();
 
 					closeWithoutRefund(player);
-					new TypeItemPaletteGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+					new TypeItemPaletteGUI(player.getWorld(), this.jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
 				})
 				.build();
 	}
@@ -325,7 +329,7 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		private boolean showGoalCustomizationGUIOnClose = true;
 
-		public TypeItemPaletteGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
+		public TypeItemPaletteGUI(World world, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 		{
 			super(messageService.getMessage(GUI_ITEM_PALETTE_TITLE).first(),
 					messageService,
@@ -339,10 +343,10 @@ public class GoalCustomizationGUI extends ChestGui
 					})
 					.build(),
 					
-					Predicates.alwaysTrue(),
+					negate(material -> jobService.isBlacklistedAt(world, material)),
 
 					Conversations.createFactory(messageService)
-					.withFirstPrompt(new JobGoalPrompt(messageService, messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
+					.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
 					.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
 					.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(messageService, JOB_SUCCESSFULLY_CANCELLED))
 					.addConversationAbandonedListener(event -> 

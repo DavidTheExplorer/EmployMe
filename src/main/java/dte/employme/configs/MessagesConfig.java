@@ -192,6 +192,7 @@ public class MessagesConfig extends SpigotConfig
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "&fClick to add an enchantment that", "&fthe goal must have on it.")
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
 			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
+			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "&cYou cannot ask for this item in your world!")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "Select the Goal Item:")

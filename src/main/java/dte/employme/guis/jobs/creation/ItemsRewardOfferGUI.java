@@ -22,6 +22,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.rewards.ItemsReward;
+import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
@@ -34,11 +35,12 @@ public class ItemsRewardOfferGUI extends ChestGui
 	private final MessageService messageService;
 	private final PlayerContainerService playerContainerService;
 	private final JobSubscriptionService jobSubscriptionService;
+	private final JobService jobService;
 	private final JobBoard jobBoard;
 
 	private ItemStack confirmationButton;
 
-	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService) 
+	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, PlayerContainerService playerContainerService, JobSubscriptionService jobSubscriptionService, JobService jobService) 
 	{
 		super(6, messageService.getMessage(GUI_ITEMS_REWARD_OFFER_TITLE).first());
 
@@ -46,6 +48,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
+		this.jobService = jobService;
 
 		setOnClose(event -> 
 		{
@@ -106,7 +109,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 					//open the Goal Customization GUI
 					ItemsReward itemsReward = new ItemsReward(offeredItems, this.playerContainerService);
-					GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.jobSubscriptionService, this.jobBoard, itemsReward);
+					GoalCustomizationGUI goalCustomizationGUI = new GoalCustomizationGUI(this.messageService, this.jobSubscriptionService, this.jobService, this.jobBoard, itemsReward);
 
 					Bukkit.getScheduler().runTask(EmployMe.getInstance(), () -> goalCustomizationGUI.show(player));
 				})

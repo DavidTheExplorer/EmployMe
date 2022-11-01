@@ -2,6 +2,8 @@ package dte.employme.services.job;
 
 import java.time.Duration;
 
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -12,6 +14,7 @@ import dte.employme.services.rewards.PartialCompletionInfo;
 public interface JobService 
 {
 	FinishState getFinishState(Player player, Job job);
+	boolean isBlacklistedAt(World world, Material material);
 	
 	String describeCompletionInGame(Job job, JobCompletionContext context);
 	String describeInGame(Job job);

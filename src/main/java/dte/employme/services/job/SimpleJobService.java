@@ -17,7 +17,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -28,6 +30,7 @@ import org.bukkit.scheduler.BukkitTask;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.board.JobBoard.JobCompletionContext;
+import dte.employme.configs.BlacklistedItemsConfig;
 import dte.employme.job.Job;
 import dte.employme.rewards.PartialReward;
 import dte.employme.services.message.MessageService;
@@ -50,30 +53,38 @@ public class SimpleJobService implements JobService
 	private final JobRewardService jobRewardService;
 	private final Map<Job, JobDeletionInfo> autoDeletion = new HashMap<>();
 	private final SpigotConfig jobsConfig, autoDeletionConfig;
+	private final BlacklistedItemsConfig blacklistedItemsConfig;
 
-	public SimpleJobService(JobBoard globalJobBoard, JobRewardService jobRewardService, SpigotConfig jobsConfig, SpigotConfig autoDeletionConfig, MessageService messageService) 
+	public SimpleJobService(JobBoard globalJobBoard, JobRewardService jobRewardService, SpigotConfig jobsConfig, SpigotConfig autoDeletionConfig, BlacklistedItemsConfig blacklistedItemsConfig, MessageService messageService) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.jobsConfig = jobsConfig;
 		this.autoDeletionConfig = autoDeletionConfig;
+		this.blacklistedItemsConfig = blacklistedItemsConfig;
 		this.messageService = messageService;
 		this.jobRewardService = jobRewardService;
 	}
-	
+
 	@Override
 	public FinishState getFinishState(Player player, Job job) 
 	{
 		PlayerInventory playerInventory = player.getInventory();
-		
+
 		if(!InventoryUtils.containsAtLeast(playerInventory, job::isGoal, 1))
 			return NEGATIVE;
-		
+
 		if(InventoryUtils.containsAtLeast(playerInventory, job::isGoal, job.getGoal().getAmount()))
 			return FULLY;
-		
+
 		return job.getReward() instanceof PartialReward ? PARTIALLY : NEGATIVE;
 	}
-	
+
+	@Override
+	public boolean isBlacklistedAt(World world, Material material)
+	{
+		return this.blacklistedItemsConfig.isBlacklistedAt(world, material);
+	}
+
 	@Override
 	public String describeInGame(Job job) 
 	{
@@ -83,13 +94,13 @@ public class SimpleJobService implements JobService
 				this.messageService.getMessage(REWARD).first(),
 				this.jobRewardService.describe(job.getReward()));
 	}
-	
+
 	@Override
 	public String describeCompletionInGame(Job job, JobCompletionContext context) 
 	{
 		if(context.isJobCompleted()) 
 			return describeInGame(job);
-		
+
 		return String.format(colorize("&6%s: &f%s (&6%.1f%% done&f) &8&l| &6%s: &f%s"),
 				this.messageService.getMessage(GOAL).first(),
 				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(context.getGoal()),
@@ -97,21 +108,21 @@ public class SimpleJobService implements JobService
 				this.messageService.getMessage(REWARD).first(),
 				this.jobRewardService.describe(context.getReward()));
 	}
-	
+
 	@Override
 	public PartialCompletionInfo getPartialCompletionInfo(Player player, Job job, int maxGoalAmount)
 	{
 		if(!(job.getReward() instanceof PartialReward))
 			throw new IllegalArgumentException("Cannot calculate completion percentage for a job whose reward is not partial!");
-		
+
 		int goalAmount = Math.min(getGoalAmountInInventory(job, player.getInventory()), maxGoalAmount);
 		double completionPercentage = Percentages.of(goalAmount, job.getGoal().getAmount());
 		PartialReward partialReward = ((PartialReward) job.getReward()).afterPartialCompletion(100 - completionPercentage);
-		
+
 		ItemStack partialGoal = new ItemBuilder(job.getGoal())
 				.amounted(goalAmount)
 				.createCopy();
-		
+
 		return new PartialCompletionInfo(completionPercentage, partialGoal, partialReward);
 	}
 
@@ -128,12 +139,12 @@ public class SimpleJobService implements JobService
 	{
 		this.jobsConfig.getList("Jobs", Job.class).forEach(this.globalJobBoard::addJob);
 	}
-	
+
 	@Override
 	public void saveJobs() 
 	{
 		this.jobsConfig.set("Jobs", this.globalJobBoard.getOfferedJobs());
-		
+
 		try 
 		{
 			this.jobsConfig.save();
@@ -148,7 +159,7 @@ public class SimpleJobService implements JobService
 	public void deleteAfter(Job job, Duration delay) 
 	{
 		BukkitTask deletionTask = createDeletionTask(job, delay);
-		
+
 		this.autoDeletion.put(job, new JobDeletionInfo(delay, deletionTask));
 	}
 
@@ -165,9 +176,9 @@ public class SimpleJobService implements JobService
 		{
 			Job job = this.globalJobBoard.getJobByUUID(UUID.fromString(jobUUID))
 					.orElseThrow(() -> new RuntimeException("Could not find a job with the UUID of: " + jobUUID));
-			
+
 			LocalDateTime deletionTime = LocalDateTime.parse((String) deletionTimeString);
-			
+
 			if(LocalDateTime.now().isAfter(deletionTime)) 
 			{
 				this.globalJobBoard.removeJob(job);
@@ -182,7 +193,7 @@ public class SimpleJobService implements JobService
 	public void saveAutoDeletionData() 
 	{
 		this.autoDeletionConfig.delete("Auto Deletion");
-		
+
 		ConfigurationSection section = this.autoDeletionConfig.getSection("Auto Deletion");
 		this.autoDeletion.forEach((job, data) -> section.set(job.getUUID().toString(), data.getDeletionDate().toString()));
 
@@ -201,11 +212,11 @@ public class SimpleJobService implements JobService
 		return Bukkit.getScheduler().runTaskLater(EmployMe.getInstance(), () ->
 		{
 			OfflinePlayer employer = job.getEmployer();
-			
+
 			//remove the job from the board
 			this.globalJobBoard.removeJob(job);
 			job.getReward().giveTo(employer);
-			
+
 			//notify the employer
 			OfflinePlayerUtils.ifOnline(employer, employerPlayer -> 
 			{
@@ -214,9 +225,9 @@ public class SimpleJobService implements JobService
 				.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(describeInGame(job)).create())).create())
 				.forEach(employerPlayer.spigot()::sendMessage);
 			});
-			
+
 			this.autoDeletion.remove(job);
-			
+
 		}, delay.getSeconds() * 20);
 	}
 }

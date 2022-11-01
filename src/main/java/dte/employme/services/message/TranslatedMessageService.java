@@ -138,6 +138,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "GUIs.Goal Customization.Items.Enchantments Item.Lore")
 			.put(ITEM_GOAL_FORMAT_QUESTION, "GUIs.Goal Customization.Item Goal Format Question")
 			.put(ITEM_GOAL_INVALID, "GUIs.Goal Customization.Invalid Goal Item")
+			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "GUIs.Goal Customization.Item Goal Blocked In Your World")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "GUIs.Item Palette.Title")

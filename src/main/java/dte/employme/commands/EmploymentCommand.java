@@ -75,7 +75,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService, this.jobService).show(employer);
 	}
 
 	@Subcommand("delete")
@@ -106,7 +106,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.mysubscriptions")
 	public void showPersonalSubscriptions(Player player) 
 	{
-		new PlayerSubscriptionsGUI(this.messageService, this.jobSubscriptionService).show(player);
+		new PlayerSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
 	}
 
 	@Subcommand("reload")
