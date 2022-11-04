@@ -78,7 +78,7 @@ public class EmploymentCommand extends BaseCommand
 		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService, this.jobService).show(employer);
 	}
 
-	@Subcommand("delete")
+	@Subcommand("delete|del")
 	@Description("Delete a job.")
 	@CommandPermission("employme.jobs.delete")
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
@@ -87,7 +87,7 @@ public class EmploymentCommand extends BaseCommand
 		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
-	@Subcommand("mycontainers")
+	@Subcommand("mycontainers|myconts")
 	@Description("Claim the items that either people gathered for you OR from completed jobs.")
 	@CommandPermission("employme.mycontainers")
 	public void showPersonalContainers(Player player) 
@@ -102,7 +102,7 @@ public class EmploymentCommand extends BaseCommand
 		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
 	}
 
-	@Subcommand("mysubscriptions")
+	@Subcommand("mysubscriptions|mysubs")
 	@CommandPermission("employme.mysubscriptions")
 	public void showPersonalSubscriptions(Player player) 
 	{
