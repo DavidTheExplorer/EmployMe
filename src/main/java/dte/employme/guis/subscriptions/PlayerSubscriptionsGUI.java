@@ -37,6 +37,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.guis.ItemPaletteGUI;
+import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
@@ -45,13 +46,15 @@ import dte.employme.utils.java.EnumUtils;
 
 public class PlayerSubscriptionsGUI extends ChestGui
 {
+	private final JobService jobService;
 	private final MessageService messageService;
 	private final JobSubscriptionService jobSubscriptionService;
 
-	public PlayerSubscriptionsGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService) 
+	public PlayerSubscriptionsGUI(JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService) 
 	{
 		super(3, messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_TITLE).first());
-
+		
+		this.jobService = jobService;
 		this.messageService = messageService;
 		this.jobSubscriptionService = jobSubscriptionService;
 
@@ -115,7 +118,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 					.transform(toSubscribeItem())
 					.filter(material -> !this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
 					.withInitialTypeConversationFactory(Conversations.createFactory(this.messageService)
-							.withFirstPrompt(new JobGoalPrompt(this.messageService, this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION).first()))
+							.withFirstPrompt(new JobGoalPrompt(this.jobService, this.messageService, this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION).first()))
 							.addConversationAbandonedListener(abandonedEvent -> 
 							{
 								if(!abandonedEvent.gracefulExit())
@@ -142,7 +145,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 				{
 					Player player = (Player) event.getWhoClicked();
 					
-					UnsubscribeFromItemGUI gui = new UnsubscribeFromItemGUI(player, this.messageService, this.jobSubscriptionService);
+					UnsubscribeFromItemGUI gui = new UnsubscribeFromItemGUI(player, this.jobService, this.messageService, this.jobSubscriptionService);
 					gui.setOnClose(closeEvent -> show(player));
 					gui.show(event.getWhoClicked());
 				})

@@ -24,6 +24,7 @@ import dte.employme.board.listeners.completion.JobCompletedMessagesListener;
 import dte.employme.board.listeners.completion.JobGoalTransferListener;
 import dte.employme.board.listeners.completion.JobRewardGiveListener;
 import dte.employme.commands.ACF;
+import dte.employme.configs.BlacklistedItemsConfig;
 import dte.employme.configs.MainConfig;
 import dte.employme.configs.MessagesConfig;
 import dte.employme.configs.PlayerContainerConfig;
@@ -67,6 +68,7 @@ public class EmployMe extends ModernJavaPlugin
 	private AutoJobDeleteListeners autoJobDeleteListeners;
 	
 	private MainConfig mainConfig;
+	private BlacklistedItemsConfig blacklistedItemsConfig;
 	private SpigotConfig jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
 	
 	private static EmployMe INSTANCE;
@@ -75,7 +77,7 @@ public class EmployMe extends ModernJavaPlugin
 	public void onEnable()
 	{
 		INSTANCE = this;
-
+		
 		//init vault services
 		try 
 		{
@@ -101,13 +103,14 @@ public class EmployMe extends ModernJavaPlugin
 			this.jobsAutoDeletionConfig = SpigotConfig.byPath(this, "boards/global/auto deletion");
 			this.subscriptionsConfig = SpigotConfig.byPath(this, "subscriptions");
 			this.jobAddNotifiersConfig = SpigotConfig.byPath(this, "job add notifiers");
+			this.blacklistedItemsConfig = new BlacklistedItemsConfig();
 			this.itemsContainersConfig = new PlayerContainerConfig(this, "items");
 			this.rewardsContainersConfig = new PlayerContainerConfig(this, "rewards");
 			this.messagesConfig = new MessagesConfig(this, MessageProvider.ENGLISH);
 		}
 		catch(ConfigLoadException exception) 
 		{
-			disableWithError(RED + String.format("Error while saving %s: %s", exception.getPath(), exception.getMessage()));
+			disableWithError(RED + exception.getMessage());
 			return;
 		}
 
@@ -125,7 +128,7 @@ public class EmployMe extends ModernJavaPlugin
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
 		
 		this.jobRewardService = new SimpleJobRewardService(this.messageService);
-		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.messageService);
+		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.blacklistedItemsConfig, this.messageService);
 		this.jobService.loadJobs();
 		
 		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);

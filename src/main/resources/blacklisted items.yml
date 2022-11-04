@@ -1,0 +1,7 @@
+# This section contains globally blacklisted items.
+# Items listed here cannot be requested by employers, regardless of the world they're at.
+Blacklisted Items: []
+
+# This section allows you to blacklist items per world.
+Worlds:
+    world: []

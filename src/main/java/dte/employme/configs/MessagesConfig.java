@@ -40,4 +40,5 @@ public class MessagesConfig extends SpigotConfig
 
 		return lines.length == 1 ? lines[0] : Arrays.asList(lines);
 	}
+  
 }
