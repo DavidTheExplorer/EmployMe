@@ -184,7 +184,7 @@ public class JobBoardGUI extends ChestGui
 	private Conversation askGoalAmount(Job job) 
 	{
 		return Conversations.createFactory(this.messageService)
-				.withFirstPrompt(new JobPartialCompletionAmountPrompt(this.messageService, this.jobService, job, this.player))
+				.withFirstPrompt(new JobPartialCompletionAmountPrompt(this.messageService, this.jobService, job))
 				.addConversationAbandonedListener(abandonedEvent -> 
 				{
 					if(!abandonedEvent.gracefulExit())
