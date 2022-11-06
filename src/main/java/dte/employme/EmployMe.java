@@ -78,7 +78,7 @@ public class EmployMe extends ModernJavaPlugin
 	{
 		INSTANCE = this;
 		
-		//init vault services
+		//init bukkit services
 		try 
 		{
 			verifyVaultPresent();
@@ -94,6 +94,7 @@ public class EmployMe extends ModernJavaPlugin
 		
 		
 		
+		//init configs
 		try 
 		{
 			SpigotConfig.register(Job.class, MoneyReward.class, ItemsReward.class);
@@ -113,6 +114,8 @@ public class EmployMe extends ModernJavaPlugin
 			disableWithError(RED + exception.getMessage());
 			return;
 		}
+		
+		
 
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
@@ -137,23 +140,15 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
 		this.jobAddedNotifierService.loadPlayersNotifiers();
 		
-		JobAddedNotifier defaultJobAddNotifier;
-		
-		try
-		{
-			defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddedNotifierService);
-		}
-		catch(RuntimeException exception) 
-		{
-			disableWithError(RED + exception.getMessage(), RED + "Shutting down...");
-			return;
-		}
+		JobAddedNotifier defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddedNotifierService);
 
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
 
+		
+		
 		//register commands, listeners, metrics
-		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, mainConfig).setup();
+		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 
