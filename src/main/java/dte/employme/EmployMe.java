@@ -151,15 +151,6 @@ public class EmployMe extends ModernJavaPlugin
 		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
-
-		setDisableListener(() -> 
-		{
-			this.jobService.saveJobs();
-			this.jobService.saveAutoDeletionData();
-			this.playerContainerService.saveContainers();
-			this.jobSubscriptionService.saveSubscriptions();
-			this.jobAddedNotifierService.savePlayersNotifiers();
-		});
 		
 		new Metrics(this, 16573);
 
@@ -167,6 +158,16 @@ public class EmployMe extends ModernJavaPlugin
 		.onNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
 		.onFailedRequest(exception -> logToConsole(RED + "There was an internet error while checking for an update: " + ExceptionUtils.getMessage(exception)))
 		.check();
+	}
+	
+	@Override
+	public void onDisable()
+	{
+		this.jobService.saveJobs();
+		this.jobService.saveAutoDeletionData();
+		this.playerContainerService.saveContainers();
+		this.jobSubscriptionService.saveSubscriptions();
+		this.jobAddedNotifierService.savePlayersNotifiers();
 	}
 
 	public static EmployMe getInstance()
