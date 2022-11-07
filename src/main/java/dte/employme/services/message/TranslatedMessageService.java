@@ -25,6 +25,7 @@ public class TranslatedMessageService implements MessageService
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "Jobs.You Have Too Many Jobs")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "Jobs.Cancelled")
 			.put(JOB_AUTO_REMOVED, "Jobs.Auto Removed")
+			.put(CONVERSATION_ESCAPE_TITLE, "Jobs.Conversation Escape Title")
 			
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "Job Add Notifiers.Your New Notifier Is")

@@ -1,5 +1,6 @@
 package dte.employme.conversations;
 
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION;
 import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
@@ -18,30 +19,34 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	private final MessageService messageService;
 	private final JobService jobService;
 	private final Job job;
-	private final Player player;
 	
-	public JobPartialCompletionAmountPrompt(MessageService messageService, JobService jobService, Job job, Player player) 
+	public JobPartialCompletionAmountPrompt(MessageService messageService, JobService jobService, Job job) 
 	{
 		this.messageService = messageService;
 		this.jobService = jobService;
 		this.job = job;
-		this.player = player;
 	}
 	
 	@Override
 	public String getPromptText(ConversationContext context)
 	{
+		Player player = (Player) context.getForWhom();
+		
+		//send the escape hint title
+		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(player);
+				
 		return this.messageService.getMessage(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION)
-				.inject(GOAL_AMOUNT, getGoalAmountInInventory())
+				.inject(GOAL_AMOUNT, getGoalAmountInInventory(player))
 				.first();
 	}
 	
 	@Override
 	protected boolean isNumberValid(ConversationContext context, Number input) 
 	{
+		Player player = (Player) context.getForWhom();
 		int amount = input.intValue();
 		
-		return amount > 0 && amount <= Math.min(getGoalAmountInInventory(), this.job.getGoal().getAmount());
+		return amount > 0 && amount <= Math.min(getGoalAmountInInventory(player), this.job.getGoal().getAmount());
 	}
 	
 	@Override
@@ -58,8 +63,8 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 		return Prompt.END_OF_CONVERSATION;
 	}
 	
-	private int getGoalAmountInInventory() 
+	private int getGoalAmountInInventory(Player player) 
 	{
-		return this.jobService.getGoalAmountInInventory(this.job, this.player.getInventory());
+		return this.jobService.getGoalAmountInInventory(this.job, player.getInventory());
 	}
 }

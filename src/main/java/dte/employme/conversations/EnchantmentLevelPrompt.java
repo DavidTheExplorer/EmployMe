@@ -1,5 +1,6 @@
 package dte.employme.conversations;
 
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
 import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
@@ -10,6 +11,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
@@ -29,6 +31,11 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	public String getPromptText(ConversationContext context) 
 	{
+		Player player = (Player) context.getForWhom();
+
+		//send the escape hint title
+		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(player);
+
 		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL)
 				.inject(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment))
 				.first();

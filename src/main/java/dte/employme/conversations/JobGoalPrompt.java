@@ -1,5 +1,6 @@
 package dte.employme.conversations;
 
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_BLOCKED_IN_YOUR_WORLD;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
 import static dte.employme.utils.java.Predicates.negate;
@@ -35,6 +36,9 @@ public class JobGoalPrompt extends ValidatingPrompt
 	@Override
 	public String getPromptText(ConversationContext context)
 	{
+		//send the escape hint title
+		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo((Player) context.getForWhom());
+		
 		return this.question;
 	}
 

@@ -33,6 +33,7 @@ public class MessageProvider
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou can only offer up to %max jobs allowed% Jobs! Delete one to proceed.")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
 			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
+			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &ecancel &fto leave the conversation!")
 
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "&aYou will get notifications for &e%job added notifier%&a!")
@@ -146,6 +147,7 @@ public class MessageProvider
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE, "&fClick to add an enchantment that", "&fthe goal must have on it.")
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
 			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
+			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "&cThis item cannot be requested in your world!")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "Select the Goal Item:")

@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import dte.employme.services.message.MessageService;
 
@@ -84,6 +85,22 @@ public class MessageBuilder
 	public void sendTo(CommandSender sender) 
 	{
 		this.lines.forEach(sender::sendMessage);
+	}
+	
+	public void sendTitleTo(Player player) 
+	{
+		sendTitleTo(player, -1, -1, -1);
+	}
+	
+	public void sendTitleTo(Player player, int fadeIn, int stay, int fadeOut) 
+	{
+		if(this.lines.size() > 2)
+			throw new IllegalStateException("Cannot send a title whose size is more than 2 lines!");
+		
+		String title = this.lines.get(0);
+		String subtitle = this.lines.get(1);
+		
+		player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 	}
 
 	@Override
