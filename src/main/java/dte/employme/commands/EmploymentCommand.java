@@ -29,6 +29,7 @@ import dte.employme.guis.jobs.creation.JobCreationGUI;
 import dte.employme.guis.playercontainer.JobContainersGUI;
 import dte.employme.guis.subscriptions.PlayerSubscriptionsGUI;
 import dte.employme.job.Job;
+import dte.employme.job.JobType;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
@@ -48,6 +49,7 @@ public class EmploymentCommand extends BaseCommand
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
+	private final List<JobType> jobTypes;
 	private final JobAddedNotifier defaultNotifier;
 
 	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier) 
@@ -60,6 +62,8 @@ public class EmploymentCommand extends BaseCommand
 		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.defaultNotifier = defaultNotifier;
+		this.jobBoardDisplayer = jobBoardDisplayer;
+		this.jobTypes = jobTypes;
 	}
 	
 	@Subcommand("view")
@@ -75,7 +79,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService, this.jobService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.jobTypes, this.playerContainerService).show(employer);
 	}
 
 	@Subcommand("delete|del")

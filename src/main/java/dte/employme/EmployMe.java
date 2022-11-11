@@ -3,6 +3,10 @@ package dte.employme;
 import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bstats.bukkit.Metrics;
@@ -31,6 +35,7 @@ import dte.employme.configs.PlayerContainerConfig;
 import dte.employme.job.Job;
 import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.messages.MessageProvider;
+import dte.employme.job.JobType;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.addnotifiers.JobAddedNotifierService;
@@ -80,6 +85,13 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//init bukkit services
 		try 
+		List<JobType> possibleJobTypes = loadPossibleJobTypes();
+		
+		if(possibleJobTypes == null)
+			return;
+		
+		//init economy if money jobs are allowed
+		if(possibleJobTypes.contains(JobType.MONEY)) 
 		{
 			verifyVaultPresent();
 			this.economy = loadEconomy();
@@ -89,8 +101,9 @@ public class EmployMe extends ModernJavaPlugin
 		{
 			disableWithError(RED + exception.getMessage() + "!", RED + "Shutting down...");
 			return;
+			this.economy = getEconomy();
+			ServiceLocator.register(Economy.class, this.economy);
 		}
-		ServiceLocator.register(Economy.class, this.economy);
 		
 		
 		
@@ -235,5 +248,35 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerCompleteListener(this.autoJobDeleteListeners);
+	}
+
+	private List<JobType> loadPossibleJobTypes() 
+	{
+		List<JobType> types = new ArrayList<>();
+
+		for(Entry<String, Object> entry : this.mainConfig.getSection("Possible Job Types").getValues(false).entrySet()) 
+		{
+			JobType jobType = EnumUtils.getByName(entry.getKey(), JobType.class).orElse(null);
+			boolean enabled = (boolean) entry.getValue();
+			
+			if(!enabled) 
+				continue;
+			
+			if(jobType == null) 
+			{
+				disableWithError(String.format(RED + "Job type '%s' doesn't exist!", entry.getKey()));
+				return null;
+			}
+
+			if(!jobType.canBeUsed())
+			{
+				disableWithError(String.format(RED + "%s in order for EmployMe to have %s Jobs!", jobType.getErrorMessage(), EnumUtils.fixEnumName(jobType)));
+				return null;
+			}
+			
+			types.add(jobType);
+		}
+
+		return types;
 	}
 }

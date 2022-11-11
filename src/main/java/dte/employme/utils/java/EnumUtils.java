@@ -3,6 +3,7 @@ package dte.employme.utils.java;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class EnumUtils
@@ -33,6 +34,13 @@ public class EnumUtils
 	public static String fixEnumName(Enum<?> enumInstance) 
 	{
 		return fixEnumName(enumInstance.name());
+	}
+	
+	public static <E extends Enum<E>> Optional<E> getByName(String name, Class<E> enumClass)
+	{
+		return Arrays.stream(enumClass.getEnumConstants())
+				.filter(instance -> instance.name().equalsIgnoreCase(name))
+				.findFirst();
 	}
 	
 	private static String uppercaseFirstLetter(String word) 
