@@ -1,6 +1,7 @@
 package dte.employme.services.job;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,6 +16,9 @@ public interface JobService
 {
 	FinishState getFinishState(Player player, Job job);
 	boolean isBlacklistedAt(World world, Material material);
+	
+	void setWebhookMessageID(Job job, long id);
+	Optional<Long> getWebhookMessageID(Job job);
 	
 	String describeCompletionInGame(Job job, JobCompletionContext context);
 	String describeInGame(Job job);

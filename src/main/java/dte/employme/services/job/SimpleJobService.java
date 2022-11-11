@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -51,9 +52,11 @@ public class SimpleJobService implements JobService
 	private final JobBoard globalJobBoard;
 	private final MessageService messageService;
 	private final JobRewardService jobRewardService;
+	private final SpigotConfig jobsConfig, autoDeletionConfig;
 	private final Map<Job, JobDeletionInfo> autoDeletion = new HashMap<>();
 	private final SpigotConfig jobsConfig, autoDeletionConfig;
 	private final BlacklistedItemsConfig blacklistedItemsConfig;
+	private final Map<Job, Long> webhookIDs = new HashMap<>();
 
 	public SimpleJobService(JobBoard globalJobBoard, JobRewardService jobRewardService, SpigotConfig jobsConfig, SpigotConfig autoDeletionConfig, BlacklistedItemsConfig blacklistedItemsConfig, MessageService messageService) 
 	{
@@ -79,6 +82,18 @@ public class SimpleJobService implements JobService
 		return job.getReward() instanceof PartialReward ? PARTIALLY : NEGATIVE;
 	}
 
+	@Override
+	public Optional<Long> getWebhookMessageID(Job job) 
+	{
+		return Optional.ofNullable(this.webhookIDs.get(job));
+	}
+	
+	@Override
+	public void setWebhookMessageID(Job job, long id) 
+	{
+		this.webhookIDs.put(job, id);
+	}
+	
 	@Override
 	public boolean isBlacklistedAt(World world, Material material)
 	{

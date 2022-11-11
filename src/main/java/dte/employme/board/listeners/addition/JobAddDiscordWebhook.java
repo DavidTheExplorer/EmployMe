@@ -4,45 +4,46 @@ import static dte.employme.messages.Placeholders.EMPLOYER;
 import static dte.employme.messages.Placeholders.GOAL;
 import static dte.employme.messages.Placeholders.REWARD;
 
-import java.io.IOException;
-
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.receive.ReadonlyMessage;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
+import dte.employme.services.job.JobService;
 import dte.employme.services.rewards.JobRewardService;
 import dte.employme.utils.ItemStackUtils;
-import dte.employme.utils.java.DiscordWebhook;
-import dte.employme.utils.java.DiscordWebhook.EmbedObject;
 
 public class JobAddDiscordWebhook implements JobAddListener
 {
 	private final String webhookURL, title, message;
 	private final JobRewardService jobRewardService;
+	private final JobService jobService;
 
-	public JobAddDiscordWebhook(String webhookURL, String title, String message, JobRewardService jobRewardService) 
+	public JobAddDiscordWebhook(String webhookURL, String title, String message, JobRewardService jobRewardService, JobService jobService) 
 	{
 		this.webhookURL = webhookURL;
 		this.title = title;
 		this.message = message;
 		this.jobRewardService = jobRewardService;
+		this.jobService = jobService;
 	}
 
 	@Override
 	public void onJobAdded(JobBoard jobBoard, Job job) 
 	{
-		DiscordWebhook webhook = new DiscordWebhook(this.webhookURL);
-		
-		webhook.addEmbed(new EmbedObject()
-				.setTitle(injectPlaceholders(this.title, job))
-				.setDescription(injectPlaceholders(this.message, job)));
-
-		try
+		try(WebhookClient client = WebhookClient.withUrl(this.webhookURL))
 		{
-			webhook.execute();
-		}
-		catch(IOException exception) 
-		{
-			exception.printStackTrace();
+			WebhookEmbed embed = new WebhookEmbedBuilder()
+					.setTitle(new EmbedTitle(injectPlaceholders(this.title, job), null))
+					.setDescription(injectPlaceholders(this.message, job))
+					.build();
+			
+			client.send(embed)
+			.thenApply(ReadonlyMessage::getId)
+			.thenAccept(messageID -> this.jobService.setWebhookMessageID(job, messageID));
 		}
 	}
 	

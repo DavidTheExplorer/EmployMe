@@ -21,6 +21,7 @@ import dte.employme.board.listeners.addition.EmployerNotificationListener;
 import dte.employme.board.listeners.addition.JobAddDiscordWebhook;
 import dte.employme.board.listeners.addition.JobAddNotificationListener;
 import dte.employme.board.listeners.completion.JobCompletedMessagesListener;
+import dte.employme.board.listeners.completion.JobCompletedWebhookListener;
 import dte.employme.board.listeners.completion.JobGoalTransferListener;
 import dte.employme.board.listeners.completion.JobRewardGiveListener;
 import dte.employme.commands.ACF;
@@ -212,7 +213,8 @@ public class EmployMe extends ModernJavaPlugin
 		String title = section.getString("Title");
 		String message = section.getString("Message");
 		
-		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService));		
+		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService, this.jobService));	
+		this.globalJobBoard.registerCompleteListener(new JobCompletedWebhookListener(url, this.jobService));
 	}
 	
 	private void setupAutoJobDeletion()

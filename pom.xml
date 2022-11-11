@@ -81,6 +81,11 @@
 							<shadedPattern>${shade.base}.spigotconfiguration</shadedPattern>
 						</relocation>
 
+						<relocation>
+							<pattern>club.minnced.discord</pattern>
+							<shadedPattern>${shade.base}.discord_webhooks</shadedPattern>
+						</relocation>
+
 					</relocations>
 
 					<filters>
@@ -199,6 +204,13 @@
 			<groupId>dte</groupId>
 			<artifactId>spigotconfiguration</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- JDA's Discord Webhooks -->
+		<dependency>
+			<groupId>club.minnced</groupId>
+			<artifactId>discord-webhooks</artifactId>
+			<version>0.8.2</version>
 		</dependency>
 
 	</dependencies>
