@@ -1,4 +1,4 @@
-package dte.employme.addnotifiers;
+package dte.employme.job.addnotifiers;
 
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static org.bukkit.ChatColor.GRAY;

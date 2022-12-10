@@ -1,4 +1,4 @@
-package dte.employme.addnotifiers;
+package dte.employme.job.addnotifiers;
 
 import java.util.Objects;
 

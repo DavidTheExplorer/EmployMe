@@ -2,8 +2,8 @@ package dte.employme.configs;
 
 import org.bukkit.plugin.Plugin;
 
-import dte.employme.addnotifiers.JobAddNotifier;
-import dte.employme.services.addnotifiers.JobAddNotifierService;
+import dte.employme.job.addnotifiers.JobAddNotifier;
+import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 import dte.spigotconfiguration.SpigotConfig;
 import dte.spigotconfiguration.exceptions.ConfigLoadException;
 

@@ -26,9 +26,9 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.google.common.collect.Lists;
 
-import dte.employme.addnotifiers.JobAddNotifier;
+import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.messages.MessageKey;
-import dte.employme.services.addnotifiers.JobAddNotifierService;
+import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;

@@ -1,4 +1,4 @@
-package dte.employme.services.addnotifiers;
+package dte.employme.services.job.addnotifiers;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import dte.employme.addnotifiers.JobAddNotifier;
+import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.spigotconfiguration.SpigotConfig;
 
 public class SimpleJobAddNotifierService implements JobAddNotifierService

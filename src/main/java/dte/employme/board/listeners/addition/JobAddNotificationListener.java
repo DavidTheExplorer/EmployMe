@@ -5,10 +5,10 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import dte.employme.addnotifiers.JobAddNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
-import dte.employme.services.addnotifiers.JobAddNotifierService;
+import dte.employme.job.addnotifiers.JobAddNotifier;
+import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 
 public class JobAddNotificationListener implements JobAddListener
 {
