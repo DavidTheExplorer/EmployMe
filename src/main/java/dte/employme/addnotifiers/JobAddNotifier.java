@@ -1,4 +1,4 @@
-package dte.employme.addednotifiers;
+package dte.employme.addnotifiers;
 
 import java.util.Objects;
 
@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 
 import dte.employme.job.Job;
 
-public abstract class JobAddedNotifier
+public abstract class JobAddNotifier
 {
 	private final String name;
 	
-	protected JobAddedNotifier(String name) 
+	protected JobAddNotifier(String name) 
 	{
 		this.name = name;
 	}
@@ -31,10 +31,10 @@ public abstract class JobAddedNotifier
 		if(this == object)
 			return true;
 		
-		if(!(object instanceof JobAddedNotifier))
+		if(!(object instanceof JobAddNotifier))
 			return false;
 		
-		JobAddedNotifier other = (JobAddedNotifier) object;
+		JobAddNotifier other = (JobAddNotifier) object;
 		
 		return Objects.equals(this.name, other.name);
 	}

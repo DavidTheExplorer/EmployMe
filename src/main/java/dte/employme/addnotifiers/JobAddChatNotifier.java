@@ -1,4 +1,4 @@
-package dte.employme.addednotifiers;
+package dte.employme.addnotifiers;
 
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
 import static org.bukkit.ChatColor.GRAY;
@@ -11,11 +11,11 @@ import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
 import dte.employme.services.message.MessageService;
 
-public abstract class JobAddedChatNotifier extends JobAddedNotifier
+public abstract class JobAddChatNotifier extends JobAddNotifier
 {
 	protected final MessageService messageService;
 
-	protected JobAddedChatNotifier(String name, MessageService messageService) 
+	protected JobAddChatNotifier(String name, MessageService messageService) 
 	{
 		super(name);
 		

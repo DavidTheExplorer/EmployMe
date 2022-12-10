@@ -20,7 +20,7 @@ import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
-import dte.employme.addednotifiers.JobAddedNotifier;
+import dte.employme.addnotifiers.JobAddNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.guis.JobAddNotifiersGUI;
 import dte.employme.guis.JobBoardGUI;
@@ -29,7 +29,7 @@ import dte.employme.guis.jobs.creation.JobCreationGUI;
 import dte.employme.guis.playercontainer.JobContainersGUI;
 import dte.employme.guis.subscriptions.PlayerSubscriptionsGUI;
 import dte.employme.job.Job;
-import dte.employme.services.addnotifiers.JobAddedNotifierService;
+import dte.employme.services.addnotifiers.JobAddNotifierService;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
@@ -44,19 +44,19 @@ public class EmploymentCommand extends BaseCommand
 	private final Economy economy;
 	private final JobBoard globalJobBoard;
 	private final JobService jobService;
-	private final JobAddedNotifierService jobAddedNotifierService;
+	private final JobAddNotifierService jobAddNotifierService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
-	private final JobAddedNotifier defaultNotifier;
+	private final JobAddNotifier defaultNotifier;
 
-	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier) 
+	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, JobService jobService, MessageService messageService, JobAddNotifierService jobAddNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddNotifier defaultNotifier) 
 	{
 		this.economy = economy;
 		this.globalJobBoard = globalJobBoard;
 		this.jobService = jobService;
 		this.messageService = messageService;
-		this.jobAddedNotifierService = jobAddedNotifierService;
+		this.jobAddNotifierService = jobAddNotifierService;
 		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.defaultNotifier = defaultNotifier;
@@ -99,7 +99,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.addnotifiers")
 	public void showNotifiers(Player player) 
 	{
-		new JobAddNotifiersGUI(this.jobAddedNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
+		new JobAddNotifiersGUI(this.jobAddNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
 	}
 
 	@Subcommand("mysubscriptions|mysubs")

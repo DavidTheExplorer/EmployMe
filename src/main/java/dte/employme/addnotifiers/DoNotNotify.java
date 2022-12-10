@@ -1,10 +1,10 @@
-package dte.employme.addednotifiers;
+package dte.employme.addnotifiers;
 
 import org.bukkit.entity.Player;
 
 import dte.employme.job.Job;
 
-public class DoNotNotify extends JobAddedNotifier
+public class DoNotNotify extends JobAddNotifier
 {
 	public static final DoNotNotify INSTANCE = new DoNotNotify();
 	

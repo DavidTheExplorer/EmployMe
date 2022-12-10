@@ -10,10 +10,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import dte.employme.addednotifiers.AllJobsNotifier;
-import dte.employme.addednotifiers.DoNotNotify;
-import dte.employme.addednotifiers.JobAddedNotifier;
-import dte.employme.addednotifiers.MaterialSubscriptionNotifier;
+import dte.employme.addnotifiers.AllJobsNotifier;
+import dte.employme.addnotifiers.DoNotNotify;
+import dte.employme.addnotifiers.JobAddNotifier;
+import dte.employme.addnotifiers.MaterialSubscriptionNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.listeners.AutoJobDeleteListeners;
@@ -33,8 +33,8 @@ import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.messages.MessageProvider;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
-import dte.employme.services.addnotifiers.JobAddedNotifierService;
-import dte.employme.services.addnotifiers.SimpleJobAddedNotifierService;
+import dte.employme.services.addnotifiers.JobAddNotifierService;
+import dte.employme.services.addnotifiers.SimpleJobAddNotifierService;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.SimpleJobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
@@ -63,7 +63,7 @@ public class EmployMe extends ModernJavaPlugin
 	private JobRewardService jobRewardService;
 	private PlayerContainerService playerContainerService;
 	private JobSubscriptionService jobSubscriptionService;
-	private JobAddedNotifierService jobAddedNotifierService;
+	private JobAddNotifierService jobAddNotifierService;
 	private MessageService messageService;
 	private AutoJobDeleteListeners autoJobDeleteListeners;
 	
@@ -134,21 +134,21 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.blacklistedItemsConfig, this.messageService);
 		this.jobService.loadJobs();
 		
-		this.jobAddedNotifierService = new SimpleJobAddedNotifierService(this.jobAddNotifiersConfig);
-		this.jobAddedNotifierService.register(new DoNotNotify());
-		this.jobAddedNotifierService.register(new AllJobsNotifier(this.messageService));
-		this.jobAddedNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
-		this.jobAddedNotifierService.loadPlayersNotifiers();
+		this.jobAddNotifierService = new SimpleJobAddNotifierService(this.jobAddNotifiersConfig);
+		this.jobAddNotifierService.register(new DoNotNotify());
+		this.jobAddNotifierService.register(new AllJobsNotifier(this.messageService));
+		this.jobAddNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
+		this.jobAddNotifierService.loadPlayersNotifiers();
 		
-		JobAddedNotifier defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddedNotifierService);
+		JobAddNotifier defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddNotifierService);
 
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
-		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddedNotifierService, defaultJobAddNotifier));
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddNotifierService, defaultJobAddNotifier));
 
 		
 		
 		//register commands, listeners, metrics
-		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
+		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
 		setupWebhooks();
 		setupAutoJobDeletion();
 		
@@ -167,7 +167,7 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobService.saveAutoDeletionData();
 		this.playerContainerService.saveContainers();
 		this.jobSubscriptionService.saveSubscriptions();
-		this.jobAddedNotifierService.savePlayersNotifiers();
+		this.jobAddNotifierService.savePlayersNotifiers();
 	}
 
 	public static EmployMe getInstance()
