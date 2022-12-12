@@ -47,6 +47,10 @@ public class TranslatedMessageService implements MessageService
 			.put(NEW_UPDATE_AVAILABLE, "General.New Update Available")
 			.put(CURRENCY_SYMBOL, "General.Currency Symbol")
 			.put(PLUGIN_RELOADED, "General.Plugin Reloaded")
+			
+			//Custom Items
+			.put(INVALID_CUSTOM_ITEM_FORMAT, "Custom Items.Invalid Format")
+			.put(CUSTOM_ITEM_NOT_FOUND, "Custom Items.Not Found Error")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "GUIs.Player Containers.Title")

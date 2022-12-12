@@ -24,8 +24,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.10.1</version>
 				<configuration>
-					<target>1.8</target>
-					<source>1.8</source>
+					<target>17</target>
+					<source>17</source>
 					<encoding>UTF-8</encoding>
 					<compilerArgs>
 						<arg>-parameters</arg>
@@ -131,6 +131,17 @@
 			<layout>default</layout>
 		</repository>
 
+		<repository>
+			<id>phoenix</id>
+			<url>https://nexus.phoenixdvpt.fr/repository/maven-public/</url>
+		</repository>
+
+		<repository>
+			<id>nexus</id>
+			<name>Lumine Releases</name>
+			<url>https://mvn.lumine.io/repository/maven-public/</url>
+		</repository>
+
 	</repositories>
 
 
@@ -199,6 +210,22 @@
 			<groupId>dte</groupId>
 			<artifactId>spigotconfiguration</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- MMOItems -->
+		<dependency>
+			<groupId>net.Indyuce</groupId>
+			<artifactId>MMOItems-API</artifactId>
+			<version>6.8.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- MythicLib - Required by MMOItems -->
+		<dependency>
+			<groupId>io.lumine</groupId>
+			<artifactId>MythicLib-dist</artifactId>
+			<version>1.4.2-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>

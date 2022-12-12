@@ -26,8 +26,8 @@ import static dte.employme.utils.java.Predicates.negate;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.Map;
-import java.util.function.UnaryOperator;
 
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
@@ -118,53 +118,55 @@ public class GoalCustomizationGUI extends ChestGui
 		return this.amount;
 	}
 
+	public void setItem(ItemStack item) 
+	{
+		this.currentItem = new GuiItem(item);
+		this.itemPane.addItem(this.currentItem, 1, 1);
+		update();
+	}
+
 	public void setType(Material material)
 	{
 		if(getType() == NO_ITEM_TYPE)
 			this.optionsPane.addItem(createAmountItem(), 6, 2);
 		
-		updateCurrentItem(item -> 
-		{
-			Map<Enchantment, Integer> enchantments = EnchantmentUtils.getAllEnchantments(item);
-			
-			ItemStack updatedItem = new ItemBuilder(item)
-					.ofType(material) //set the new material
-					.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
-					.withItemFlags(HIDE_ATTRIBUTES)
-					.createCopy();
-			
-			//remove all enchantments, and return only the valid ones
-			enchantments.keySet().stream()
-			.peek(enchantment -> removeEnchantment(updatedItem, enchantment))
-			.filter(enchantment -> canEnchantItem(enchantment, updatedItem))
-			.forEach(enchantment -> enchant(updatedItem, enchantment, enchantments.get(enchantment)));
-			
-			return updatedItem;
-		});
+		ItemStack updatedItem = new ItemBuilder(this.currentItem.getItem())
+				.ofType(material)
+				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
+				.withItemFlags(HIDE_ATTRIBUTES)
+				.createCopy();
 		
-		setEnchantmentsItemVisibility(isEnchantable(getCurrentItem()));
+		//remove all enchantments, and return only the valid ones
+		Map<Enchantment, Integer> enchantments = EnchantmentUtils.getAllEnchantments(updatedItem);
+		
+		enchantments.keySet().stream()
+		.peek(enchantment -> removeEnchantment(updatedItem, enchantment))
+		.filter(enchantment -> canEnchantItem(enchantment, updatedItem))
+		.forEach(enchantment -> enchant(updatedItem, enchantment, enchantments.get(enchantment)));
+
+		//Must use Reflection until InventoryFramework 0.10.8 is out with GuiItem#setItem
+		try 
+		{
+			FieldUtils.writeDeclaredField(this.currentItem, "item", updatedItem, true);
+		} 
+		catch(IllegalAccessException exception) 
+		{
+			exception.printStackTrace();
+		}
+
+		setEnchantmentsItemVisibility(isEnchantable(updatedItem));
 	}
 
 	public void addEnchantment(Enchantment enchantment, int level) 
 	{
-		updateCurrentItem(item -> 
-		{
-			enchant(item, enchantment, level);
-			return item;
-		});
+		enchant(this.currentItem.getItem(), enchantment, level);
 	}
 
 	public void setAmount(int amount) 
 	{
 		this.amount = amount;
 		this.optionsPane.addItem(createAmountItem(), 6, 2);
-		
-		updateCurrentItem(item -> 
-		{
-			item.setAmount(amount);
-			return item;
-		});
-
+		this.currentItem.getItem().setAmount(amount);
 		update();
 	}
 	
@@ -300,20 +302,15 @@ public class GoalCustomizationGUI extends ChestGui
 				.whenClicked(event -> 
 				{
 					HumanEntity player = event.getWhoClicked();
-
 					closeWithoutRefund(player);
-					new TypeItemPaletteGUI(player.getWorld(), this.jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+
+					if(event.getClick().isLeftClick()) 
+						new TypeItemPaletteGUI(player.getWorld(), jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+
+					else if(event.getClick().isRightClick()) 
+						new CustomItemSelectionGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
 				})
 				.build();
-	}
-	
-	private void updateCurrentItem(UnaryOperator<ItemStack> update) 
-	{
-		GuiItem updatedItem = new GuiItem(update.apply(getCurrentItem()));
-
-		this.itemPane.addItem(this.currentItem = updatedItem, 1, 1);
-		
-		update();
 	}
 
 	private void setEnchantmentsItemVisibility(boolean visible) 

@@ -33,6 +33,10 @@ public enum MessageKey
 	NEW_UPDATE_AVAILABLE(true),
 	CURRENCY_SYMBOL,
 	PLUGIN_RELOADED(true),
+	
+	//Custom Items
+	INVALID_CUSTOM_ITEM_FORMAT,
+	CUSTOM_ITEM_NOT_FOUND,
 
 	
 	

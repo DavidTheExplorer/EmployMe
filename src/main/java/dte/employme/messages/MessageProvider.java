@@ -55,6 +55,10 @@ public class MessageProvider
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
 			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
+			
+			//Custom Items
+			.put(INVALID_CUSTOM_ITEM_FORMAT, "&cInvalid item format!")
+			.put(CUSTOM_ITEM_NOT_FOUND, "Cannot find the specified item!")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "Personal Job Containers")
@@ -140,7 +144,7 @@ public class MessageProvider
 			.put(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME, "&c&lCurrent Goal: None")
 			.put(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "&a&lFinish")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "&aType")
-			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.", "", "&f→ &eLeft Click for a Vanilla Item", "&f→ &eRight Click for a Custom Item (from another plugin)")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "&6Amount")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "&fClick to set the amount of the goal.")
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "&dEnchantments")
