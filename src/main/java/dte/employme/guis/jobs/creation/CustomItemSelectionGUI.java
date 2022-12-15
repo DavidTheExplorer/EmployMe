@@ -63,21 +63,28 @@ public class CustomItemSelectionGUI extends ChestGui
 					Player player = (Player) event.getWhoClicked();
 					player.closeInventory();
 
-					Conversations.createFactory(this.messageService)
-					.withFirstPrompt(new CustomItemNamePrompt(customItemProvider))
-					.addConversationAbandonedListener(abandonedEvent -> 
-					{
-						if(!abandonedEvent.gracefulExit())
-							return;
-
-						ItemStack customItem = (ItemStack) abandonedEvent.getContext().getSessionData("custom item");
-
-						this.goalCustomizationGUI.setItem(customItem);
-						this.goalCustomizationGUI.show(player);
-					})
-					.buildConversation(player)
-					.begin();
+					startCustomItemNameConversation(player, customItemProvider);
 				})
 				.build();
+	}
+	
+	private void startCustomItemNameConversation(Player player, CustomItemProvider customItemProvider) 
+	{
+		Conversations.createFactory(this.messageService)
+		.withFirstPrompt(new CustomItemNamePrompt(customItemProvider))
+		.addConversationAbandonedListener(abandonedEvent -> 
+		{
+			if(!abandonedEvent.gracefulExit())
+				return;
+
+			ItemStack customItem = (ItemStack) abandonedEvent.getContext().getSessionData("custom item");
+			
+			System.out.println("test:" + customItem.equals(new MMOItemsProvider().parse("axe:executioner_axe")));
+
+			this.goalCustomizationGUI.setItem(customItem);
+			this.goalCustomizationGUI.show(player);
+		})
+		.buildConversation(player)
+		.begin();
 	}
 }

@@ -50,7 +50,7 @@ public class JobAddDiscordWebhook implements JobAddListener
 	{
 		return new MessageBuilder(text)
 				.inject(EMPLOYER, job.getEmployer().getName())
-				.inject(GOAL, ItemStackUtils.describe(job.getGoal()))
+				.inject(GOAL, ItemStackUtils.describe(job.getGoal().getItemStack()))
 				.inject(REWARD, this.jobRewardService.describe(job.getReward()))
 				.first();
 	}

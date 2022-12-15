@@ -5,8 +5,6 @@ import static dte.employme.messages.MessageKey.INVALID_CUSTOM_ITEM_FORMAT;
 
 import java.util.regex.Pattern;
 
-import org.bukkit.inventory.ItemStack;
-
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
@@ -30,7 +28,7 @@ public class MMOItemsProvider extends CustomItemProvider
 	}
 
 	@Override
-	public ItemStack parse(String requestFormat) 
+	public MMOItemsItem parse(String requestFormat) 
 	{
 		validateRequestFormat(requestFormat);
 		
@@ -46,6 +44,6 @@ public class MMOItemsProvider extends CustomItemProvider
 		if(mmoItem == null)
 			throw new CustomItemParseException(CUSTOM_ITEM_NOT_FOUND);
 		
-		return mmoItem.newBuilder().build();
+		return new MMOItemsItem(mmoItem.newBuilder().build());
 	}
 }

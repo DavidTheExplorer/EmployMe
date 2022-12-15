@@ -46,7 +46,7 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 		Player player = (Player) context.getForWhom();
 		int amount = input.intValue();
 		
-		return amount > 0 && amount <= Math.min(getGoalAmountInInventory(player), this.job.getGoal().getAmount());
+		return amount > 0 && amount <= Math.min(getGoalAmountInInventory(player), this.job.getGoal().getItemStack().getAmount());
 	}
 	
 	@Override
