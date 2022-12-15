@@ -191,7 +191,7 @@ public class JobBoardGUI extends ChestGui
 						return;
 					
 					int amountToUse = (int) abandonedEvent.getContext().getSessionData("Amount To Use");
-					completeJob(job, (amountToUse == job.getGoal().getItemStack().getAmount()) ? JobCompletionContext.normal(job) : JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse)));
+					completeJob(job, (amountToUse == job.getGoal().getAmount()) ? JobCompletionContext.normal(job) : JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse)));
 				})
 				.buildConversation(this.player);
 	}
@@ -206,9 +206,13 @@ public class JobBoardGUI extends ChestGui
 
 	private void updatePartialJob(Job job, PartialCompletionInfo partialCompletionInfo) 
 	{
+		ItemStack newGoal = new ItemBuilder(job.getGoal())
+				.amounted(job.getGoal().getAmount() - partialCompletionInfo.getGoal().getAmount())
+				.createCopy();
+
 		PartialReward newReward = ((PartialReward) job.getReward()).afterPartialCompletion(partialCompletionInfo.getPercentage());
 
-		job.getGoal().getItemStack().setAmount(job.getGoal().getItemStack().getAmount() - partialCompletionInfo.getGoal().getAmount());
+		job.setGoal(newGoal);
 		job.setReward(newReward);
 	}
 

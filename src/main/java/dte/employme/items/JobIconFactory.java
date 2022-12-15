@@ -38,15 +38,15 @@ public class JobIconFactory
 		List<String> lore = new ArrayList<>();
 		
 		lore.addAll(messageService.getMessage(JOB_ICON_GOAL_INSTRUCTIONS)
-				.inject(GOAL, ItemStackUtils.describe(job.getGoal().getItemStack()))
+				.inject(GOAL, ItemStackUtils.describe(job.getGoal()))
 				.toList());
 		
-		lore.addAll(getGoalEnchantmentsLore(job.getGoal().getItemStack(), messageService));
+		lore.addAll(getGoalEnchantmentsLore(job.getGoal(), messageService));
 		lore.add(" ");
 		lore.add(describe(job.getReward(), messageService));
 		lore.add(" ");
 
-		return new ItemBuilder(job.getGoal().getItemStack().getType())
+		return new ItemBuilder(job.getGoal().getType())
 				.named(messageService.getMessage(JOB_ICON_NAME).inject(EMPLOYER, job.getEmployer().getName()).first())
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.withLore(lore.toArray(new String[0]))

@@ -50,7 +50,7 @@ public interface JobBoard extends Iterable<Job>
 		 */
 		public static JobCompletionContext normal(Job job)
 		{
-			return new JobCompletionContext(job.getGoal().getItemStack(), job.getReward(), null);
+			return new JobCompletionContext(job.getGoal(), job.getReward(), null);
 		}
 		
 		/**

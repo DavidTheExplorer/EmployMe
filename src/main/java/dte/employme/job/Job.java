@@ -12,9 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 import de.tr7zw.nbtapi.NBTItem;
-import dte.employme.items.custom.CustomItem;
-import dte.employme.items.custom.MMOItemsItem;
-import dte.employme.items.custom.VanillaItem;
 import dte.employme.rewards.Reward;
 import dte.employme.utils.java.MapBuilder;
 
@@ -23,10 +20,10 @@ public class Job implements ConfigurationSerializable
 {
 	private final UUID uuid;
 	private final OfflinePlayer employer;
-	private CustomItem goal;
+	private ItemStack goal;
 	private Reward reward;
 
-	public Job(OfflinePlayer employer, CustomItem goal, Reward reward) 
+	public Job(OfflinePlayer employer, ItemStack goal, Reward reward) 
 	{
 		this(UUID.randomUUID(), employer, goal, reward);
 	}
@@ -36,12 +33,12 @@ public class Job implements ConfigurationSerializable
 		this(
 				UUID.fromString((String) serialized.get("UUID")),
 				Bukkit.getOfflinePlayer(UUID.fromString((String) serialized.get("Employer UUID"))), 
-				parseGoal(serialized),
+				(ItemStack) serialized.get("Goal"), 
 				(Reward) serialized.get("Reward")
 				);
 	}
 	
-	private Job(UUID uuid, OfflinePlayer employer, CustomItem goal, Reward reward) 
+	private Job(UUID uuid, OfflinePlayer employer, ItemStack goal, Reward reward) 
 	{
 		this.uuid = uuid;
 		this.employer = employer;
@@ -59,9 +56,9 @@ public class Job implements ConfigurationSerializable
 		return this.employer;
 	}
 
-	public CustomItem getGoal() 
+	public ItemStack getGoal() 
 	{
-		return this.goal;
+		return new ItemStack(this.goal);
 	}
 
 	public Reward getReward() 
@@ -69,7 +66,7 @@ public class Job implements ConfigurationSerializable
 		return this.reward;
 	}
 	
-	public void setGoal(CustomItem goal) 
+	public void setGoal(ItemStack goal) 
 	{
 		this.goal = goal;
 	}
@@ -86,7 +83,7 @@ public class Job implements ConfigurationSerializable
 		ItemStack finalItem = nbtItem.getItem();
 		
 		//basic check that the item is the required goal
-		if(!this.goal.equals(finalItem))
+		if(!finalItem.isSimilar(this.goal))
 			return false;
 		
 		//damaged goals are unacceptable
@@ -131,26 +128,5 @@ public class Job implements ConfigurationSerializable
 		Job other = (Job) object;
 		
 		return Objects.equals(this.uuid, other.uuid);
-	}
-
-	private static CustomItem parseGoal(Map<String, Object> serialized) 
-	{
-		ItemStack goal = (ItemStack) serialized.get("Goal");
-		
-		//if the goal item if it's vanilla
-		if(!serialized.containsKey("Goal Provider"))
-			return new VanillaItem(goal);
-		
-		//return the correct implementation of the goal based on the provider(e.g. MMOItems)
-		String goalProvider = (String) serialized.get("Goal Provider");
-
-		switch(goalProvider)
-		{
-		case "MMOItems":
-			return new MMOItemsItem(goal);
-			
-		default:
-			throw new IllegalArgumentException("Cannot find a goal provider named '%s'".formatted(goalProvider));
-		}
 	}
 }

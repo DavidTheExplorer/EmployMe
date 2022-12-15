@@ -73,7 +73,7 @@ public class SimpleJobService implements JobService
 		if(!InventoryUtils.containsAtLeast(playerInventory, job::isGoal, 1))
 			return NEGATIVE;
 
-		if(InventoryUtils.containsAtLeast(playerInventory, job::isGoal, job.getGoal().getItemStack().getAmount()))
+		if(InventoryUtils.containsAtLeast(playerInventory, job::isGoal, job.getGoal().getAmount()))
 			return FULLY;
 
 		return job.getReward() instanceof PartialReward ? PARTIALLY : NEGATIVE;
@@ -90,7 +90,7 @@ public class SimpleJobService implements JobService
 	{
 		return String.format(colorize("&6%s: &f%s &8&l| &6%s: &f%s"), 
 				this.messageService.getMessage(GOAL).first(),
-				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(job.getGoal().getItemStack()),
+				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(job.getGoal()),
 				this.messageService.getMessage(REWARD).first(),
 				this.jobRewardService.describe(job.getReward()));
 	}
@@ -116,10 +116,10 @@ public class SimpleJobService implements JobService
 			throw new IllegalArgumentException("Cannot calculate completion percentage for a job whose reward is not partial!");
 
 		int goalAmount = Math.min(getGoalAmountInInventory(job, player.getInventory()), maxGoalAmount);
-		double completionPercentage = Percentages.of(goalAmount, job.getGoal().getItemStack().getAmount());
+		double completionPercentage = Percentages.of(goalAmount, job.getGoal().getAmount());
 		PartialReward partialReward = ((PartialReward) job.getReward()).afterPartialCompletion(100 - completionPercentage);
 
-		ItemStack partialGoal = new ItemBuilder(job.getGoal().getItemStack())
+		ItemStack partialGoal = new ItemBuilder(job.getGoal())
 				.amounted(goalAmount)
 				.createCopy();
 

@@ -4,6 +4,8 @@ import static dte.employme.messages.MessageKey.INVALID_CUSTOM_ITEM_FORMAT;
 
 import java.util.function.Predicate;
 
+import org.bukkit.inventory.ItemStack;
+
 public abstract class CustomItemProvider 
 {
 	private final String requestFormat;
@@ -26,5 +28,5 @@ public abstract class CustomItemProvider
 			throw new CustomItemParseException(INVALID_CUSTOM_ITEM_FORMAT);
 	}
 	
-	public abstract CustomItem parse(String requestFormat) throws CustomItemParseException;
+	public abstract ItemStack parse(String requestFormat) throws CustomItemParseException;
 }
