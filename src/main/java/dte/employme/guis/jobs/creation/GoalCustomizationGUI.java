@@ -55,7 +55,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private final JobService jobService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
-	private ItemStack currentItem = createNoItemIcon();
+	private ItemStack currentItem;
 	private ItemProvider provider;
 	private boolean refundRewardOnClose = true;
 	private StaticPane itemPane, optionsPane;
@@ -71,6 +71,7 @@ public class GoalCustomizationGUI extends ChestGui
 		this.jobService = jobService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
+		this.currentItem = createNoItemIcon();
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		
