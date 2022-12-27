@@ -152,10 +152,7 @@ public class Job implements ConfigurationSerializable
 	{
 		//backwards compatibility: if goalProvider is not specified, the goal is vanilla
 		if(goalProvider == null) 
-		{
-			EmployMe.getInstance().logToConsole(RED + "Unable to find a goal provider named '%s'! Using Vanilla!".formatted(goalProvider));
 			return VanillaProvider.INSTANCE;
-		}
 
 		ItemProvider parsedProvider;
 
