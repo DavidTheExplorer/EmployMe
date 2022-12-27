@@ -24,6 +24,7 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
+import dte.employme.guis.jobs.JobBoardGUI;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;

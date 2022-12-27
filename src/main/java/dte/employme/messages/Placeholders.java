@@ -24,7 +24,8 @@ public class Placeholders
 	RELOAD_TIME = create("reload time"),
 	ITEM = create("item"),
 	REWARD = create("reward"),
-	MAX_JOBS_ALLOWED = create("max jobs allowed");
+	MAX_JOBS_ALLOWED = create("max jobs allowed"),
+	ITEM_PROVIDER = create("item provider");
 
 	private static String create(String value) 
 	{

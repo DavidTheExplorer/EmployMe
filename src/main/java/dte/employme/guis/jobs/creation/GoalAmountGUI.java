@@ -9,6 +9,7 @@ import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.crea
 import static org.bukkit.ChatColor.BLACK;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
@@ -46,8 +47,10 @@ public class GoalAmountGUI extends AnvilGui
 	
 	private GuiItem createGoalItem() 
 	{
-		return new GuiItem(new ItemBuilder(this.goalCustomizationGUI.getType())
-				.named(BLACK.toString() + this.goalCustomizationGUI.getAmount())
+		ItemStack currentItem = this.goalCustomizationGUI.getCurrentItem();
+		
+		return new GuiItem(new ItemBuilder(currentItem.getType())
+				.named(BLACK.toString() + currentItem.getAmount())
 				.createCopy());
 	}
 

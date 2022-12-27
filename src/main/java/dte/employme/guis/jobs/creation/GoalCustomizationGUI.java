@@ -10,8 +10,6 @@ import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_NO_CURRENT
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TITLE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_TITLE;
-import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
 import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
@@ -22,14 +20,11 @@ import static dte.employme.utils.EnchantmentUtils.removeEnchantment;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
-import static dte.employme.utils.java.Predicates.negate;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
 import java.util.Map;
 
-import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -42,9 +37,8 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.board.JobBoard;
-import dte.employme.conversations.Conversations;
-import dte.employme.conversations.JobGoalPrompt;
-import dte.employme.guis.ItemPaletteGUI;
+import dte.employme.items.providers.ItemProvider;
+import dte.employme.items.providers.VanillaProvider;
 import dte.employme.job.Job;
 import dte.employme.rewards.Reward;
 import dte.employme.services.job.JobService;
@@ -53,7 +47,6 @@ import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
-import dte.employme.utils.java.MapBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
 {
@@ -62,13 +55,11 @@ public class GoalCustomizationGUI extends ChestGui
 	private final JobService jobService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
-
-	//temp data(items, panes, etc)
-	private StaticPane itemPane, optionsPane;
-	private GuiItem currentItem;
-	private int amount = 1;
+	private ItemStack currentItem = createNoItemIcon();
+	private ItemProvider provider;
 	private boolean refundRewardOnClose = true;
-
+	private StaticPane itemPane, optionsPane;
+	
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
 	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobService jobService, JobBoard jobBoard, Reward reward)
@@ -105,68 +96,54 @@ public class GoalCustomizationGUI extends ChestGui
 
 	public ItemStack getCurrentItem() 
 	{
-		return new ItemStack(this.currentItem.getItem());
+		return new ItemStack(this.currentItem);
 	}
 
-	public Material getType() 
+	public void setCurrentItem(ItemStack item, ItemProvider provider) 
 	{
-		return this.currentItem.getItem().getType();
-	}
-	
-	public int getAmount() 
-	{
-		return this.amount;
-	}
+		//show the amount item after initially setting the item
+		if(this.currentItem.getType() == NO_ITEM_TYPE)
+			this.optionsPane.addItem(createAmountItem(), 6, 2);
 
-	public void setItem(ItemStack item) 
-	{
-		this.currentItem = new GuiItem(item);
-		this.itemPane.addItem(this.currentItem, 1, 1);
+		this.currentItem = item;
+		this.provider = provider;
+		this.itemPane.addItem(new GuiItem(item), 1, 1);
+
+		//if the item is custom, its possible enchantments, etc(except for amount) cannot be modified
+		setEnchantmentsItemVisibility(provider instanceof VanillaProvider ? isEnchantable(item) : false);
+
 		update();
 	}
 
 	public void setType(Material material)
 	{
-		if(getType() == NO_ITEM_TYPE)
-			this.optionsPane.addItem(createAmountItem(), 6, 2);
-		
-		ItemStack updatedItem = new ItemBuilder(this.currentItem.getItem())
-				.ofType(material)
+		ItemStack item = new ItemBuilder(material)
 				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.createCopy();
 		
 		//remove all enchantments, and return only the valid ones
-		Map<Enchantment, Integer> enchantments = EnchantmentUtils.getAllEnchantments(updatedItem);
-		
+		Map<Enchantment, Integer> enchantments = EnchantmentUtils.getAllEnchantments(item);
+
 		enchantments.keySet().stream()
-		.peek(enchantment -> removeEnchantment(updatedItem, enchantment))
-		.filter(enchantment -> canEnchantItem(enchantment, updatedItem))
-		.forEach(enchantment -> enchant(updatedItem, enchantment, enchantments.get(enchantment)));
+		.peek(enchantment -> removeEnchantment(item, enchantment))
+		.filter(enchantment -> canEnchantItem(enchantment, item))
+		.forEach(enchantment -> enchant(item, enchantment, enchantments.get(enchantment)));
 
-		//Must use Reflection until InventoryFramework 0.10.8 is out with GuiItem#setItem
-		try 
-		{
-			FieldUtils.writeDeclaredField(this.currentItem, "item", updatedItem, true);
-		} 
-		catch(IllegalAccessException exception) 
-		{
-			exception.printStackTrace();
-		}
-
-		setEnchantmentsItemVisibility(isEnchantable(updatedItem));
+		setCurrentItem(item, VanillaProvider.INSTANCE);
+		update();
 	}
 
 	public void addEnchantment(Enchantment enchantment, int level) 
 	{
-		enchant(this.currentItem.getItem(), enchantment, level);
+		enchant(this.currentItem, enchantment, level);
+		update();
 	}
 
 	public void setAmount(int amount) 
 	{
-		this.amount = amount;
 		this.optionsPane.addItem(createAmountItem(), 6, 2);
-		this.currentItem.getItem().setAmount(amount);
+		this.currentItem.setAmount(amount);
 		update();
 	}
 	
@@ -180,15 +157,15 @@ public class GoalCustomizationGUI extends ChestGui
 		setRefundRewardOnClose(false);
 		human.closeInventory();
 	}
-
-	private ItemStack createGoal()
-	{
-		return new ItemBuilder(getType())
-				.amounted(this.amount)
-				.withEnchantments(getEnchantments(getCurrentItem()))
-				.createCopy();
-	}
 	
+	private void setEnchantmentsItemVisibility(boolean visible) 
+	{
+		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
+
+		this.optionsPane.addItem(updatedItem, 6, 3);
+		update();
+	}
+
 	
 	
 	/*
@@ -197,8 +174,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private Pane createItemPane() 
 	{
 		StaticPane pane = new StaticPane(0, 0, 6, 9, Priority.NORMAL);
-
-		pane.addItem(this.currentItem = createNoItemIcon(), 1, 1);
+		pane.addItem(new GuiItem(this.currentItem), 1, 1);
 		pane.addItem(createFinishItem(), 1, 4);
 
 		this.itemPane = pane;
@@ -229,8 +205,8 @@ public class GoalCustomizationGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
-					Material type = this.currentItem.getItem().getType();
-
+					Material type = this.currentItem.getType();
+					
 					//the user didn't select an item
 					if(type == NO_ITEM_TYPE)
 						return;
@@ -241,17 +217,17 @@ public class GoalCustomizationGUI extends ChestGui
 
 					Player player = (Player) event.getWhoClicked();
 					closeWithoutRefund(player);
-
-					this.jobBoard.addJob(new Job(player, createGoal(), this.reward));
+					
+					this.jobBoard.addJob(new Job(player, createFinalItem(), this.provider, this.reward));
 				})
 				.build();
 	}
 
-	private GuiItem createNoItemIcon() 
+	private ItemStack createNoItemIcon() 
 	{
-		return new GuiItem(new ItemBuilder(NO_ITEM_TYPE)
+		return new ItemBuilder(NO_ITEM_TYPE)
 				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
-				.createCopy());
+				.createCopy();
 	}
 
 	private GuiItem createEnchantmentsItem() 
@@ -264,7 +240,7 @@ public class GoalCustomizationGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
-					if(getType() == NO_ITEM_TYPE)
+					if(this.currentItem.getType() == NO_ITEM_TYPE)
 						return;
 
 					closeWithoutRefund(event.getWhoClicked());
@@ -277,7 +253,7 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ARROW)
-						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, this.amount).first())
+						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, this.currentItem.getAmount()).first())
 						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 						.glowing()
 						.createCopy())
@@ -305,7 +281,7 @@ public class GoalCustomizationGUI extends ChestGui
 					closeWithoutRefund(player);
 
 					if(event.getClick().isLeftClick()) 
-						new TypeItemPaletteGUI(player.getWorld(), jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+						new ItemPaletteGoalGUI(player.getWorld(), jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
 
 					else if(event.getClick().isRightClick()) 
 						new CustomItemSelectionGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
@@ -313,64 +289,15 @@ public class GoalCustomizationGUI extends ChestGui
 				.build();
 	}
 
-	private void setEnchantmentsItemVisibility(boolean visible) 
+	private ItemStack createFinalItem() 
 	{
-		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
-		
-		this.optionsPane.addItem(updatedItem, 6, 3);
+		if(!(this.provider instanceof VanillaProvider))
+			return this.currentItem;
+
+		return new ItemBuilder(this.currentItem.getType())
+				.amounted(this.currentItem.getAmount())
+				.withEnchantments(getEnchantments(this.currentItem))
+				.createCopy();
 	}
 
-
-
-	private class TypeItemPaletteGUI extends ItemPaletteGUI
-	{
-		private boolean showGoalCustomizationGUIOnClose = true;
-
-		public TypeItemPaletteGUI(World world, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
-		{
-			super(messageService.getMessage(GUI_ITEM_PALETTE_TITLE).first(),
-					messageService,
-
-					item -> new GuiItemBuilder()
-					.forItem(new ItemStack(item))
-					.whenClicked(event -> 
-					{
-						goalCustomizationGUI.setType(item);
-						event.getWhoClicked().closeInventory();
-					})
-					.build(),
-					
-					negate(material -> jobService.isBlacklistedAt(world, material)),
-
-					Conversations.createFactory(messageService)
-					.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
-					.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-					.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(messageService, JOB_SUCCESSFULLY_CANCELLED))
-					.addConversationAbandonedListener(event -> 
-					{
-						if(!event.gracefulExit())
-							return;
-
-						//re-open the goal customization gui
-						Player player = (Player) event.getContext().getForWhom();
-						Material material = (Material) event.getContext().getSessionData("material");
-
-						goalCustomizationGUI.setRefundRewardOnClose(true);
-						goalCustomizationGUI.setType(material);
-						goalCustomizationGUI.show(player);
-					}));
-
-
-			setEnglishItemClickHandler(event -> this.showGoalCustomizationGUIOnClose = false);
-
-			setOnClose(event -> 
-			{
-				if(!this.showGoalCustomizationGUIOnClose)
-					return;
-
-				goalCustomizationGUI.setRefundRewardOnClose(true);
-				goalCustomizationGUI.show(event.getPlayer());
-			});
-		}
-	}
 }

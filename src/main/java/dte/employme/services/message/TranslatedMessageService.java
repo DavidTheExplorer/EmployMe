@@ -69,6 +69,7 @@ public class TranslatedMessageService implements MessageService
 			//Job Icon
 			.put(JOB_ICON_NAME, "Items.Job Icon.Name")
 			.put(JOB_ICON_GOAL_INSTRUCTIONS, "Items.Job Icon.Goal Instructions")
+			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "Items.Job Icon.Custom Goal Instructions")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "Items.Job Icon.Enchant Description")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "Items.Job Icon.Money Payment Description")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "Items.Job Icon.Items Payment Description")

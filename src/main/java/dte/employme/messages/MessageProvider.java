@@ -77,6 +77,7 @@ public class MessageProvider
 			//Job Icon
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
 			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal%&f.")
+			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal% &ffrom", "&fthe &e%item provider% &fplugin!")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%currency symbol%%money payment%")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")

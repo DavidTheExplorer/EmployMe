@@ -37,7 +37,6 @@ import dte.employme.services.message.MessageService;
 import dte.employme.services.rewards.JobRewardService;
 import dte.employme.services.rewards.PartialCompletionInfo;
 import dte.employme.utils.InventoryUtils;
-import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.OfflinePlayerUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.Percentages;
@@ -90,7 +89,7 @@ public class SimpleJobService implements JobService
 	{
 		return String.format(colorize("&6%s: &f%s &8&l| &6%s: &f%s"), 
 				this.messageService.getMessage(GOAL).first(),
-				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(job.getGoal()),
+				this.messageService.getMessage(GET).first() + " " + job.getGoalProvider().getDisplayName(job.getGoal()),
 				this.messageService.getMessage(REWARD).first(),
 				this.jobRewardService.describe(job.getReward()));
 	}
@@ -100,10 +99,10 @@ public class SimpleJobService implements JobService
 	{
 		if(context.isJobCompleted()) 
 			return describeInGame(job);
-
+		
 		return String.format(colorize("&6%s: &f%s (&6%.1f%% done&f) &8&l| &6%s: &f%s"),
 				this.messageService.getMessage(GOAL).first(),
-				this.messageService.getMessage(GET).first() + " " + ItemStackUtils.describe(context.getGoal()),
+				this.messageService.getMessage(GET).first() + " " + job.getGoalProvider().getDisplayName(context.getGoal()),
 				context.getPartialInfo().getPercentage(),
 				this.messageService.getMessage(REWARD).first(),
 				this.jobRewardService.describe(context.getReward()));
