@@ -244,7 +244,7 @@ public class InventoryFrameworkUtils
 	public static ItemStack toMinecraftItem(GuiItem guiItem) 
 	{
 		return new ItemBuilder(guiItem.getItem())
-				.withExtendedMeta(meta -> meta.getPersistentDataContainer().remove(GuiItem.KEY_UUID))
+				.withExtendedMeta(meta -> meta.getPersistentDataContainer().remove(guiItem.getKey()))
 				.createCopy();
 	}
 }
