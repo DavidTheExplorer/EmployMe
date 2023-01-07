@@ -153,18 +153,15 @@ public class MessageProvider
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
 			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
 			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "&cThis item cannot be requested in your world!")
+			.put(GOAL_AMOUNT_QUESTION, "&fEnter the amount you need:")
+			.put(GOAL_AMOUNT_MUST_BE_POSITIVE, "&cThe goal amount must be positive!")
+			.put(GOAL_AMOUNT_NOT_A_NUMBER, "&cThe goal amount must be a number!")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "Select the Goal Item:")
 			.put(GUI_ITEM_PALETTE_BACK_ITEM_NAME, "&cBack")
 			.put(GUI_ITEM_PALETTE_NEXT_ITEM_NAME, "&aNext")
 			.put(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name")
-
-			//Goal Amount GUI
-			.put(GUI_GOAL_AMOUNT_TITLE, "Specify the Amount:")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME, "&aContinue")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE, "&fClick to set the new amount.")
-			.put(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "&cEnter Numeric Amount:")
 
 			//Job Added Notifiers GUI
 			.put(GUI_JOB_ADDED_NOTIFIERS_TITLE, "Receive Notifications For:")

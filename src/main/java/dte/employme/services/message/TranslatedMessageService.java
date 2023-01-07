@@ -145,18 +145,15 @@ public class TranslatedMessageService implements MessageService
 			.put(ITEM_GOAL_FORMAT_QUESTION, "GUIs.Goal Customization.Item Goal Format Question")
 			.put(ITEM_GOAL_INVALID, "GUIs.Goal Customization.Invalid Goal Item")
 			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "GUIs.Goal Customization.Item Goal Blocked In Your World")
+			.put(GOAL_AMOUNT_QUESTION, "GUIs.Goal Customization.Goal Amount Question")
+			.put(GOAL_AMOUNT_MUST_BE_POSITIVE, "GUIs.Goal Customization.Goal Amount Must Be Positive")
+			.put(GOAL_AMOUNT_NOT_A_NUMBER, "GUIs.Goal Customization.Goal Amount Not A Number")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "GUIs.Item Palette.Title")
 			.put(GUI_ITEM_PALETTE_NEXT_ITEM_NAME, "GUIs.Item Palette.Items.Next Item.Name")
 			.put(GUI_ITEM_PALETTE_BACK_ITEM_NAME, "GUIs.Item Palette.Items.Back Item.Name")
 			.put(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "GUIs.Item Palette.Items.English Search Item.Name")
-
-			//Goal Amount GUI
-			.put(GUI_GOAL_AMOUNT_TITLE, "GUIs.Goal Amount.Title")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME, "GUIs.Goal Amount.Items.Finish Item.Name")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE, "GUIs.Goal Amount.Items.Finish Item.Lore")
-			.put(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "GUIs.Goal Amount.Numeric Amount Title")
 
 			//Job Added Notifiers GUI
 			.put(GUI_JOB_ADDED_NOTIFIERS_TITLE, "GUIs.Job Added Notifiers.Title")

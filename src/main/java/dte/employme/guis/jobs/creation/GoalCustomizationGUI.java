@@ -1,5 +1,6 @@
 package dte.employme.guis.jobs.creation;
 
+import static dte.employme.conversations.Conversations.refundRewardIfAbandoned;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
@@ -37,6 +38,8 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.board.JobBoard;
+import dte.employme.conversations.Conversations;
+import dte.employme.conversations.GoalAmountPrompt;
 import dte.employme.items.providers.ItemProvider;
 import dte.employme.items.providers.VanillaProvider;
 import dte.employme.job.Job;
@@ -260,10 +263,24 @@ public class GoalCustomizationGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
-					HumanEntity player = event.getWhoClicked();
+					Player player = (Player) event.getWhoClicked();
 
 					closeWithoutRefund(player);
-					new GoalAmountGUI(this, this.messageService).show(player);
+					
+					Conversations.createFactory(this.messageService)
+					.withFirstPrompt(new GoalAmountPrompt(this.messageService))
+					.addConversationAbandonedListener(refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
+					.addConversationAbandonedListener(abandonEvent -> 
+					{
+						if(!abandonEvent.gracefulExit())
+							return;
+						
+						setRefundRewardOnClose(true);
+						setAmount((int) abandonEvent.getContext().getSessionData("amount"));
+						show(player);
+					})
+					.buildConversation(player)
+					.begin();
 				})
 				.build();
 	}
