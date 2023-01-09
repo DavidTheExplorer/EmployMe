@@ -9,6 +9,7 @@ import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_ENCHANTMEN
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TITLE;
+import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
@@ -23,6 +24,7 @@ import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.crea
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Material;
@@ -33,9 +35,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
-import com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
@@ -298,22 +300,34 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private GuiItem createTypeChoosingItem() 
 	{
+		List<String> lore = this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toList();
+		
+		if(!ItemProvider.getAvailable().isEmpty())
+			lore.addAll(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT).toList());
+		
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ANVIL)
 						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toArray())
+						.withLore(lore.toArray(String[]::new))
 						.glowing()
 						.createCopy())
 				.whenClicked(event -> 
 				{
 					HumanEntity player = event.getWhoClicked();
-					closeWithoutRefund(player);
 
 					if(event.getClick().isLeftClick()) 
-						new ItemPaletteGoalGUI(player.getWorld(), jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
-
+					{
+						closeWithoutRefund(player);
+						new ItemPaletteGoalGUI(player.getWorld(), this.jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+					}
 					else if(event.getClick().isRightClick()) 
+					{
+						if(ItemProvider.getAvailable().isEmpty())
+							return;
+						
+						closeWithoutRefund(player);
 						new CustomItemSelectionGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+					}
 				})
 				.build();
 	}

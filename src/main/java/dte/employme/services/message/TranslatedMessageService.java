@@ -138,6 +138,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "GUIs.Goal Customization.Items.Finish Item.Name")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "GUIs.Goal Customization.Items.Type Item.Name")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "GUIs.Goal Customization.Items.Type Item.Lore")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT, "GUIs.Goal Customization.Items.Type Item.Custom Item Support")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "GUIs.Goal Customization.Items.Amount Item.Name")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "GUIs.Goal Customization.Items.Amount Item.Lore")
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "GUIs.Goal Customization.Items.Enchantments Item.Name")
@@ -173,6 +174,12 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Subscribe.Lore")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "GUIs.Player Subscriptions.Items.Unsubscribe.Name")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Unsubscribe.Lore")
+			
+			//Custom Goal Selection GUI
+			.put(GUI_CUSTOM_GOAL_SELECTION_TITLE, "GUIs.Custom Goal Selection.Title")
+			.put(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME, "GUIs.Custom Goal Selection.Items.More Plugins Soon.Name")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME, "GUIs.Custom Goal Selection.Items.Item Provider.Name")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE, "GUIs.Custom Goal Selection.Items.Item Provider.Lore")
 			
 			//Subscribe Item Palette
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Subscribe Item Palette.Title")

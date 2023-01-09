@@ -1,5 +1,10 @@
 package dte.employme.items.providers;
 
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Set;
+import java.util.stream.Stream;
+
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,6 +32,13 @@ public abstract class ItemProvider
 	public boolean isAvailable() 
 	{
 		return Bukkit.getPluginManager().isPluginEnabled(this.name);
+	}
+	
+	public static Set<ItemProvider> getAvailable()
+	{
+		return Stream.of(new MMOItemsProvider())
+				.filter(ItemProvider::isAvailable)
+				.collect(toSet());
 	}
 	
 	/**

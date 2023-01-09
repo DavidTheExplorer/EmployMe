@@ -1,9 +1,11 @@
 package dte.employme.guis.jobs.creation;
 
+import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE;
+import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_TITLE;
+import static dte.employme.messages.Placeholders.ITEM_PROVIDER;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
-import static org.bukkit.ChatColor.DARK_RED;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,7 +20,6 @@ import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.CustomItemNamePrompt;
 import dte.employme.items.providers.ItemProvider;
-import dte.employme.items.providers.MMOItemsProvider;
 import dte.employme.rewards.Reward;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
@@ -34,7 +35,7 @@ public class CustomItemSelectionGUI extends ChestGui
 
 	public CustomItemSelectionGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
-		super(1, "Where your item comes from?");
+		super(1, messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_TITLE).first());
 
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
@@ -46,7 +47,12 @@ public class CustomItemSelectionGUI extends ChestGui
 		});
 
 		setOnTopClick(event -> event.setCancelled(true));
-		addPane(createRectangle(Priority.LOW, 1, 0, 8, 1, new GuiItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).named(DARK_RED + "More Plugins Soon!").createCopy())));
+
+		addPane(createRectangle(Priority.LOW, 1, 0, 8, 1, new GuiItem(
+				new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
+				.named(messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME).first())
+				.createCopy())));
+
 		addPane(createCustomPluginsPane());
 		update();
 	}
@@ -54,19 +60,28 @@ public class CustomItemSelectionGUI extends ChestGui
 	private Pane createCustomPluginsPane() 
 	{
 		OutlinePane pane = new OutlinePane(0, 0, 8, 1, Priority.NORMAL);
-		pane.addItem(createPluginItem(new MMOItemsProvider()));
+
+		ItemProvider.getAvailable().stream()
+		.map(this::createPluginIcon)
+		.forEach(pane::addItem);
 
 		return pane;
 	}
 
-	private GuiItem createPluginItem(ItemProvider itemProvider) 
+	private GuiItem createPluginIcon(ItemProvider itemProvider) 
 	{
-		String providerName = itemProvider.getName();
+		String name = this.messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME)
+				.inject(ITEM_PROVIDER, itemProvider.getName())
+				.first();
 		
+		String lore = this.messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE)
+				.inject(ITEM_PROVIDER, itemProvider.getName())
+				.first();
+
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.NAME_TAG)
-						.named(RED + providerName)
-						.withLore(WHITE + "A custom item that comes from the " + providerName + WHITE + " plugin.")
+						.named(name)
+						.withLore(lore)
 						.createCopy())
 				.whenClicked(event -> 
 				{

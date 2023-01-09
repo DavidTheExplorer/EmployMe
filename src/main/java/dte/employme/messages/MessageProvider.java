@@ -145,7 +145,8 @@ public class MessageProvider
 			.put(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME, "&c&lCurrent Goal: None")
 			.put(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "&a&lFinish")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "&aType")
-			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.", "", "&f→ &eLeft Click for a Vanilla Item", "&f→ &eRight Click for a Custom Item (from another plugin)")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.", "", "&f→ &eLeft Click for a Vanilla Item")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT, "&f→ &eRight Click for a Custom Item (from another plugin)")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "&6Amount")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "&fClick to set the amount of the goal.")
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "&dEnchantments")
@@ -181,6 +182,12 @@ public class MessageProvider
 			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "&fGet an instant notification once an", "&fitem you need is offered as a reward", "&ffor a job, once that job is posted.")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "&cUnsubscribe")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "&fRemove your subscription from a certain item.")
+
+			//Custom Goal Selection GUI
+			.put(GUI_CUSTOM_GOAL_SELECTION_TITLE, "Where your item comes from?")
+			.put(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME, "&4More Plugins Soon!")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME, "&c%item provider%")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE, "&fA custom item that belongs to the %item provider% plugin.")
 
 			//Subscribe Item Palette
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE, "What item to subscribe for?")
