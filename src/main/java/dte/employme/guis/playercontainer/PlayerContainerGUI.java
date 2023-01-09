@@ -61,7 +61,7 @@ public class PlayerContainerGUI extends ChestGui
 		 * InventoryFramework can't handle big items, meaning ItemStack(Material.SNOWBALL, 40) would be shown with the amount of 16.
 		 * ItemStackUtils#divideBigItem offers a solution: it splits the item into multiple, each one with the max stack amount.
 		 */
-		for(ItemStack smallerItem : ItemStackUtils.divideBigItem(item))
+		for(ItemStack smallerItem : ItemStackUtils.divide(item))
 			InventoryFrameworkUtils.addItem(lastPage -> createStoredItem(smallerItem, lastPage), this.itemsPane, this);
 	}
 

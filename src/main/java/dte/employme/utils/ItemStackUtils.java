@@ -1,7 +1,9 @@
 package dte.employme.utils;
 
-import java.util.ArrayList;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -25,31 +27,41 @@ public class ItemStackUtils
 	}
 	
 	/**
-	 * If the provided {@code item}'s amount <= its stack size, this method returns a list of it.
-	 * Otherwise, it breaks it into smaller equivalent items whose amounts are the stack size.
+	 * Divides the provided {@code item} into smaller equivalent items, whose amounts are the max stack size. 
+	 * The method will return a list of just the provided item if no division is needed.
 	 * <p>
-	 * For example, if the item is <b>40 snowballs</b>, the returned list would be: <i>16 snowballs, 16 snowballs, 8 snowballs</i>.
+	 * Examples:
+	 * <ul>
+	 * 	<li>If the item is <b>40 snowballs</b> => the returned list is: <i>16 snowballs, 16 snowballs, 8 snowballs</i>.</li>
+	 *  <li>If the item is <b>70 emeralds</b> => the returned list is: <i>64 emeralds, 6 emeralds</i>.</li>
+	 * 	<li>If the item is <b>10 diamonds</b> => the returned list is just <i>10 diamonds</i>.</li>
+	 * </ul>
 	 * 
 	 * @param item The item to break into corresponding smaller items.
 	 * @return The smaller items.
 	 */
-	public static List<ItemStack> divideBigItem(ItemStack item)
+	public static List<ItemStack> divide(ItemStack item)
 	{
-		int sizeLeft = item.getAmount();
-		int maxSize = item.getType().getMaxStackSize();
+		int amount = item.getAmount();
+		int maxAmount = item.getMaxStackSize();
 		
-		List<ItemStack> items = new ArrayList<>();
+		List<ItemStack> result = IntStream.rangeClosed(1, amount / maxAmount)
+				.mapToObj(i -> changeAmount(item, maxAmount))
+				.collect(toList());
 		
-		while(sizeLeft > 0)
-		{
-			ItemStack newItem = item.clone();
-			int sizeToRemove = sizeLeft > maxSize ? maxSize : sizeLeft;
-			
-			newItem.setAmount(sizeToRemove);
-			sizeLeft -= sizeToRemove;
-			items.add(newItem);
-		}
+		int leftover = amount % maxAmount;
 		
-		return items;
+		if(leftover > 0)
+			result.add(changeAmount(item, leftover));
+		
+		return result;
+	}
+	
+	private static ItemStack changeAmount(ItemStack item, int newAmount) 
+	{
+		ItemStack copy = item.clone();
+		copy.setAmount(newAmount);
+
+		return copy;
 	}
 }
