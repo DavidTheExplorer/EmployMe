@@ -33,9 +33,10 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
+import com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.board.JobBoard;
 import dte.employme.conversations.Conversations;
@@ -61,7 +62,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private ItemStack currentItem;
 	private ItemProvider provider;
 	private boolean refundRewardOnClose = true;
-	private StaticPane itemPane, optionsPane;
+	private OutlinePane itemPane, optionsPane;
 	
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
@@ -106,15 +107,17 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setCurrentItem(ItemStack item, ItemProvider provider) 
 	{
 		//show the amount item after initially setting the item
-		if(this.currentItem.getType() == NO_ITEM_TYPE)
-			this.optionsPane.addItem(createAmountItem(), 6, 2);
-
+		if(this.currentItem.getType() == NO_ITEM_TYPE) 
+			this.optionsPane.addItem(createAmountItem());
+		
 		this.currentItem = item;
 		this.provider = provider;
-		this.itemPane.addItem(new GuiItem(item), 1, 1);
+		
+		this.itemPane.removeItem(this.itemPane.getItems().get(0));
+		this.itemPane.insertItem(new GuiItem(item), 0);
 
 		//if the item is custom, its possible enchantments, etc(except for amount) cannot be modified
-		setEnchantmentsItemVisibility(provider instanceof VanillaProvider ? isEnchantable(item) : false);
+		updateEnchantmentsItemVisibility();
 
 		update();
 	}
@@ -146,7 +149,8 @@ public class GoalCustomizationGUI extends ChestGui
 
 	public void setAmount(int amount) 
 	{
-		this.optionsPane.addItem(createAmountItem(), 6, 2);
+		this.optionsPane.removeItem(this.optionsPane.getItems().get(1));
+		this.optionsPane.insertItem(createAmountItem(), 1);
 		this.currentItem.setAmount(amount);
 		update();
 	}
@@ -162,11 +166,16 @@ public class GoalCustomizationGUI extends ChestGui
 		human.closeInventory();
 	}
 	
-	private void setEnchantmentsItemVisibility(boolean visible) 
+	private void updateEnchantmentsItemVisibility() 
 	{
+		boolean visible = this.provider instanceof VanillaProvider ? isEnchantable(this.currentItem) : false;
+		
 		GuiItem updatedItem = visible ? createEnchantmentsItem() : new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE));
 
-		this.optionsPane.addItem(updatedItem, 6, 3);
+		if(this.optionsPane.getItems().size() >= 3)
+			this.optionsPane.removeItem(this.optionsPane.getItems().get(2));
+		
+		this.optionsPane.insertItem(updatedItem, 2);
 		update();
 	}
 
@@ -177,9 +186,11 @@ public class GoalCustomizationGUI extends ChestGui
 	 */
 	private Pane createItemPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 6, 9, Priority.NORMAL);
-		pane.addItem(new GuiItem(this.currentItem), 1, 1);
-		pane.addItem(createFinishItem(), 1, 4);
+		OutlinePane pane = new OutlinePane(1, 1, 9, 6, Priority.NORMAL);
+		pane.setOrientation(Orientation.VERTICAL);
+		pane.setGap(2);
+		pane.addItem(new GuiItem(this.currentItem));
+		pane.addItem(createFinishItem());
 
 		this.itemPane = pane;
 
@@ -188,8 +199,8 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private Pane createOptionsPane() 
 	{
-		StaticPane pane = new StaticPane(0, 0, 9, 6, Priority.HIGH);
-		pane.addItem(createTypeChoosingItem(), 6, 1);
+		OutlinePane pane = new OutlinePane(6, 1, 1, 4, Priority.HIGH);
+		pane.addItem(createTypeChoosingItem());
 
 		this.optionsPane = pane;
 

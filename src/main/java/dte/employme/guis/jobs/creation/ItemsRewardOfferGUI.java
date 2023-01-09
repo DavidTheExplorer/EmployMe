@@ -15,9 +15,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
@@ -55,9 +55,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 			Player player = (Player) event.getPlayer();
 
 			if(getOfferedItems().isEmpty()) 
-			{
 				messageService.getMessage(GUI_ITEMS_JOB_NO_ITEMS_WARNING).sendTo(player);
-			}
 
 			player.closeInventory();
 			player.getInventory().addItem(getOfferedItems().toArray(new ItemStack[0]));
@@ -72,9 +70,9 @@ public class ItemsRewardOfferGUI extends ChestGui
 	 */
 	private Pane createConfirmationButtonPane() 
 	{
-		StaticPane pane = new StaticPane(0, 5, 1, 1, Priority.LOW);
+		OutlinePane pane = new OutlinePane(0, 5, 1, 1, Priority.LOW);
 		pane.setOnClick(event -> event.setCancelled(true));
-		pane.addItem(createConfirmationButton(), 0, 0);
+		pane.addItem(createConfirmationButton());
 
 		return pane;
 	}
