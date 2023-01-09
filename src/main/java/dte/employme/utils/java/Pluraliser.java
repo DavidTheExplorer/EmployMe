@@ -205,7 +205,10 @@ public class Pluraliser
 	
 	public static String pluralise(String str, int amount) 
 	{
-		return amount == 1 ? str : String.format("%d %s", amount, pluralise(str));
+		if(amount > 1)
+			str = pluralise(str);
+		
+		return String.format("%d %s", amount, str);
 	}
 
 	public static String pluralise(String str) {
