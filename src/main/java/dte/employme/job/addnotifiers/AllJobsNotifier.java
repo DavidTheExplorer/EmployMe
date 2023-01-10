@@ -1,4 +1,4 @@
-package dte.employme.addednotifiers;
+package dte.employme.job.addnotifiers;
 
 import static dte.employme.messages.MessageKey.NEW_JOB_POSTED;
 
@@ -11,7 +11,7 @@ import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
 import dte.employme.services.message.MessageService;
 
-public class AllJobsNotifier extends JobAddedChatNotifier
+public class AllJobsNotifier extends JobAddChatNotifier
 {
 	public AllJobsNotifier(MessageService messageService)
 	{

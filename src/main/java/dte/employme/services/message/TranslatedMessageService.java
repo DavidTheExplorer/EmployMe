@@ -47,6 +47,10 @@ public class TranslatedMessageService implements MessageService
 			.put(NEW_UPDATE_AVAILABLE, "General.New Update Available")
 			.put(CURRENCY_SYMBOL, "General.Currency Symbol")
 			.put(PLUGIN_RELOADED, "General.Plugin Reloaded")
+			
+			//Custom Items
+			.put(INVALID_CUSTOM_ITEM_FORMAT, "Custom Items.Invalid Format")
+			.put(CUSTOM_ITEM_NOT_FOUND, "Custom Items.Not Found Error")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "GUIs.Player Containers.Title")
@@ -65,6 +69,7 @@ public class TranslatedMessageService implements MessageService
 			//Job Icon
 			.put(JOB_ICON_NAME, "Items.Job Icon.Name")
 			.put(JOB_ICON_GOAL_INSTRUCTIONS, "Items.Job Icon.Goal Instructions")
+			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "Items.Job Icon.Custom Goal Instructions")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "Items.Job Icon.Enchant Description")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "Items.Job Icon.Money Payment Description")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "Items.Job Icon.Items Payment Description")
@@ -133,6 +138,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "GUIs.Goal Customization.Items.Finish Item.Name")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "GUIs.Goal Customization.Items.Type Item.Name")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "GUIs.Goal Customization.Items.Type Item.Lore")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT, "GUIs.Goal Customization.Items.Type Item.Custom Item Support")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "GUIs.Goal Customization.Items.Amount Item.Name")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "GUIs.Goal Customization.Items.Amount Item.Lore")
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "GUIs.Goal Customization.Items.Enchantments Item.Name")
@@ -140,18 +146,15 @@ public class TranslatedMessageService implements MessageService
 			.put(ITEM_GOAL_FORMAT_QUESTION, "GUIs.Goal Customization.Item Goal Format Question")
 			.put(ITEM_GOAL_INVALID, "GUIs.Goal Customization.Invalid Goal Item")
 			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "GUIs.Goal Customization.Item Goal Blocked In Your World")
+			.put(GOAL_AMOUNT_QUESTION, "GUIs.Goal Customization.Goal Amount Question")
+			.put(GOAL_AMOUNT_MUST_BE_POSITIVE, "GUIs.Goal Customization.Goal Amount Must Be Positive")
+			.put(GOAL_AMOUNT_NOT_A_NUMBER, "GUIs.Goal Customization.Goal Amount Not A Number")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "GUIs.Item Palette.Title")
 			.put(GUI_ITEM_PALETTE_NEXT_ITEM_NAME, "GUIs.Item Palette.Items.Next Item.Name")
 			.put(GUI_ITEM_PALETTE_BACK_ITEM_NAME, "GUIs.Item Palette.Items.Back Item.Name")
 			.put(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "GUIs.Item Palette.Items.English Search Item.Name")
-
-			//Goal Amount GUI
-			.put(GUI_GOAL_AMOUNT_TITLE, "GUIs.Goal Amount.Title")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME, "GUIs.Goal Amount.Items.Finish Item.Name")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE, "GUIs.Goal Amount.Items.Finish Item.Lore")
-			.put(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "GUIs.Goal Amount.Numeric Amount Title")
 
 			//Job Added Notifiers GUI
 			.put(GUI_JOB_ADDED_NOTIFIERS_TITLE, "GUIs.Job Added Notifiers.Title")
@@ -171,6 +174,12 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Subscribe.Lore")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "GUIs.Player Subscriptions.Items.Unsubscribe.Name")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Unsubscribe.Lore")
+			
+			//Custom Goal Selection GUI
+			.put(GUI_CUSTOM_GOAL_SELECTION_TITLE, "GUIs.Custom Goal Selection.Title")
+			.put(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME, "GUIs.Custom Goal Selection.Items.More Plugins Soon.Name")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME, "GUIs.Custom Goal Selection.Items.Item Provider.Name")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE, "GUIs.Custom Goal Selection.Items.Item Provider.Lore")
 			
 			//Subscribe Item Palette
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Subscribe Item Palette.Title")

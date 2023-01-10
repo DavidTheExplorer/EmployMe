@@ -55,6 +55,10 @@ public class MessageProvider
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
 			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
+			
+			//Custom Items
+			.put(INVALID_CUSTOM_ITEM_FORMAT, "&cInvalid item format!")
+			.put(CUSTOM_ITEM_NOT_FOUND, "Cannot find the specified item!")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "Personal Job Containers")
@@ -73,6 +77,7 @@ public class MessageProvider
 			//Job Icon
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
 			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal%&f.")
+			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal% &ffrom", "&fthe &e%item provider% &fplugin!")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%currency symbol%%money payment%")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")
@@ -140,7 +145,8 @@ public class MessageProvider
 			.put(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME, "&c&lCurrent Goal: None")
 			.put(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME, "&a&lFinish")
 			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME, "&aType")
-			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE, "&fClick to set the type of the goal.", "", "&f→ &eLeft Click for a Vanilla Item")
+			.put(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT, "&f→ &eRight Click for a Custom Item (from another plugin)")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME, "&6Amount")
 			.put(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE, "&fClick to set the amount of the goal.")
 			.put(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME, "&dEnchantments")
@@ -148,18 +154,15 @@ public class MessageProvider
 			.put(ITEM_GOAL_FORMAT_QUESTION, "&fWhich &aitem &fdo you need? Reply with the name of it!")
 			.put(ITEM_GOAL_INVALID, "&cThe specified goal is either incorrectly formatted or unachievable!")
 			.put(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD, "&cThis item cannot be requested in your world!")
+			.put(GOAL_AMOUNT_QUESTION, "&fEnter the amount you need:")
+			.put(GOAL_AMOUNT_MUST_BE_POSITIVE, "&cThe goal amount must be positive!")
+			.put(GOAL_AMOUNT_NOT_A_NUMBER, "&cThe goal amount must be a number!")
 
 			//Item Palette GUI
 			.put(GUI_ITEM_PALETTE_TITLE, "Select the Goal Item:")
 			.put(GUI_ITEM_PALETTE_BACK_ITEM_NAME, "&cBack")
 			.put(GUI_ITEM_PALETTE_NEXT_ITEM_NAME, "&aNext")
 			.put(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME, "&aSearch By English Name")
-
-			//Goal Amount GUI
-			.put(GUI_GOAL_AMOUNT_TITLE, "Specify the Amount:")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_NAME, "&aContinue")
-			.put(GUI_GOAL_AMOUNT_FINISH_ITEM_LORE, "&fClick to set the new amount.")
-			.put(GUI_GOAL_AMOUNT_NUMERIC_AMOUNT_TITLE, "&cEnter Numeric Amount:")
 
 			//Job Added Notifiers GUI
 			.put(GUI_JOB_ADDED_NOTIFIERS_TITLE, "Receive Notifications For:")
@@ -179,6 +182,12 @@ public class MessageProvider
 			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "&fGet an instant notification once an", "&fitem you need is offered as a reward", "&ffor a job, once that job is posted.")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "&cUnsubscribe")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "&fRemove your subscription from a certain item.")
+
+			//Custom Goal Selection GUI
+			.put(GUI_CUSTOM_GOAL_SELECTION_TITLE, "Where your item comes from?")
+			.put(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME, "&4More Plugins Soon!")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME, "&c%item provider%")
+			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE, "&fA custom item that belongs to the %item provider% plugin.")
 
 			//Subscribe Item Palette
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE, "What item to subscribe for?")

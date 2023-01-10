@@ -2,6 +2,6 @@ name: EmployMe
 main: dte.employme.EmployMe
 version: ${project.version}
 description: Automate resources gathering by employing players.
-softdepend: [Vault]
+softdepend: [Vault, MMOItems]
 api-version: 1.14
 author: DavidTheExplorer

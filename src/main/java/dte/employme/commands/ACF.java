@@ -12,11 +12,11 @@ import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.EmployMe;
-import dte.employme.addednotifiers.JobAddedNotifier;
 import dte.employme.board.JobBoard;
 import dte.employme.configs.MainConfig;
-import dte.employme.services.addnotifiers.JobAddedNotifierService;
+import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.services.job.JobService;
+import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
@@ -30,20 +30,20 @@ public class ACF
 	private final Permission permission;
 	private final JobService jobService;
 	private final MessageService messageService;
-	private final JobAddedNotifierService jobAddedNotifierService;
+	private final JobAddNotifierService jobAddNotifierService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
-	private final JobAddedNotifier defaultNotifier;
+	private final JobAddNotifier defaultNotifier;
 	private final MainConfig mainConfig;
 	
-	public ACF(JobBoard globalJobBoard, Economy economy, Permission permission, JobService jobService, MessageService messageService, JobAddedNotifierService jobAddedNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddedNotifier defaultNotifier, MainConfig mainConfig) 
+	public ACF(JobBoard globalJobBoard, Economy economy, Permission permission, JobService jobService, MessageService messageService, JobAddNotifierService jobAddNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddNotifier defaultNotifier, MainConfig mainConfig) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.economy = economy;
 		this.permission = permission;
 		this.jobService = jobService;
 		this.messageService = messageService;
-		this.jobAddedNotifierService = jobAddedNotifierService;
+		this.jobAddNotifierService = jobAddNotifierService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.playerContainerService = playerContainerService;
 		this.defaultNotifier = defaultNotifier;
@@ -99,6 +99,6 @@ public class ACF
 	
 	private void registerCommands(BukkitCommandManager commandManager) 
 	{
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddedNotifierService, this.jobSubscriptionService, this.playerContainerService, this.defaultNotifier));
+		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, this.defaultNotifier));
 	}
 }

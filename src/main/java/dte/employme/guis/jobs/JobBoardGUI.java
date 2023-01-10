@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_JOB_NOT_CONTAINED;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_LORE;
@@ -44,6 +44,8 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPartialCompletionAmountPrompt;
+import dte.employme.guis.ItemsRewardPreviewGUI;
+import dte.employme.guis.PlayerJobsGUI;
 import dte.employme.items.JobIconFactory;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
@@ -212,7 +214,7 @@ public class JobBoardGUI extends ChestGui
 
 		PartialReward newReward = ((PartialReward) job.getReward()).afterPartialCompletion(partialCompletionInfo.getPercentage());
 
-		job.setGoal(newGoal);
+		job.setGoal(newGoal, job.getGoalProvider());
 		job.setReward(newReward);
 	}
 

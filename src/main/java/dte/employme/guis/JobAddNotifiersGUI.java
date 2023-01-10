@@ -26,24 +26,24 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 import com.google.common.collect.Lists;
 
-import dte.employme.addednotifiers.JobAddedNotifier;
+import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.messages.MessageKey;
-import dte.employme.services.addnotifiers.JobAddedNotifierService;
+import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 
 public class JobAddNotifiersGUI extends ChestGui
 {
-	private final JobAddedNotifierService jobAddedNotifierService;
+	private final JobAddNotifierService jobAddNotifierService;
 	private final MessageService messageService;
-	private final JobAddedNotifier defaultNotifier;
+	private final JobAddNotifier defaultNotifier;
 
-	public JobAddNotifiersGUI(JobAddedNotifierService jobAddedNotifierService, MessageService messageService, UUID playerUUID, JobAddedNotifier defaultNotifier)
+	public JobAddNotifiersGUI(JobAddNotifierService jobAddNotifierService, MessageService messageService, UUID playerUUID, JobAddNotifier defaultNotifier)
 	{
 		super(3, messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_TITLE).first());
 
-		this.jobAddedNotifierService = jobAddedNotifierService;
+		this.jobAddNotifierService = jobAddNotifierService;
 		this.messageService = messageService;
 		this.defaultNotifier = defaultNotifier;
 
@@ -69,10 +69,10 @@ public class JobAddNotifiersGUI extends ChestGui
 		OutlinePane pane = new OutlinePane(2, 1, 5, 1, Priority.LOW);
 		pane.setGap(1);
 
-		JobAddedNotifier 
-		allJobsNotifier = this.jobAddedNotifierService.getByName("All Jobs"),
-		subscriptionsNotifier = this.jobAddedNotifierService.getByName("Material Subscriptions"),
-		noneNotifier = this.jobAddedNotifierService.getByName("None");
+		JobAddNotifier 
+		allJobsNotifier = this.jobAddNotifierService.getByName("All Jobs"),
+		subscriptionsNotifier = this.jobAddNotifierService.getByName("Material Subscriptions"),
+		noneNotifier = this.jobAddNotifierService.getByName("None");
 
 		pane.addItem(createNotifierIcon(allJobsNotifier, GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, playerUUID, Material.NETHER_STAR, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE).toArray()));
 		pane.addItem(createNotifierIcon(subscriptionsNotifier, GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, playerUUID, Material.PAPER, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE).toArray()));
@@ -81,11 +81,11 @@ public class JobAddNotifiersGUI extends ChestGui
 		return pane;
 	}
 	
-	private GuiItem createNotifierIcon(JobAddedNotifier notifier, MessageKey notifierItemNameKey, UUID playerUUID, Material material, String... description)
+	private GuiItem createNotifierIcon(JobAddNotifier notifier, MessageKey notifierItemNameKey, UUID playerUUID, Material material, String... description)
 	{
 		List<String> nicerDescription = Lists.newArrayList(description);
 
-		if(this.jobAddedNotifierService.getPlayerNotifier(playerUUID, this.defaultNotifier).equals(notifier)) 
+		if(this.jobAddNotifierService.getPlayerNotifier(playerUUID, this.defaultNotifier).equals(notifier)) 
 			nicerDescription.addAll(Arrays.asList(" ", this.messageService.getMessage(MessageKey.GUI_JOB_ADDED_NOTIFIERS_SELECTED).first()));
 
 		return new GuiItemBuilder()
@@ -98,7 +98,7 @@ public class JobAddNotifiersGUI extends ChestGui
 					Player player = (Player) event.getWhoClicked();
 					player.closeInventory();
 
-					this.jobAddedNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
+					this.jobAddNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
 
 					this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
 					.inject(JOB_ADDED_NOTIFIER, notifier.getName())

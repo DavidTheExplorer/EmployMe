@@ -1,4 +1,4 @@
-package dte.employme.addednotifiers;
+package dte.employme.job.addnotifiers;
 
 import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
 import static dte.employme.messages.Placeholders.REWARDS;
@@ -17,7 +17,7 @@ import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.java.EnumUtils;
 
-public class MaterialSubscriptionNotifier extends JobAddedChatNotifier
+public class MaterialSubscriptionNotifier extends JobAddChatNotifier
 {
 	private final JobSubscriptionService jobSubscriptionService;
 

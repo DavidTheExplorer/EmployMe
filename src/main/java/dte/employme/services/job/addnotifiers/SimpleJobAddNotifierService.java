@@ -1,4 +1,4 @@
-package dte.employme.services.addnotifiers;
+package dte.employme.services.job.addnotifiers;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,46 +7,46 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import dte.employme.addednotifiers.JobAddedNotifier;
+import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.spigotconfiguration.SpigotConfig;
 
-public class SimpleJobAddedNotifierService implements JobAddedNotifierService
+public class SimpleJobAddNotifierService implements JobAddNotifierService
 {
-	private final Map<String, JobAddedNotifier> notifierByName = new HashMap<>();
-	private final Map<UUID, JobAddedNotifier> playersNotifiers = new HashMap<>();
+	private final Map<String, JobAddNotifier> notifierByName = new HashMap<>();
+	private final Map<UUID, JobAddNotifier> playersNotifiers = new HashMap<>();
 	private final SpigotConfig notifiersConfig;
 	
-	public SimpleJobAddedNotifierService(SpigotConfig notifiersConfig) 
+	public SimpleJobAddNotifierService(SpigotConfig notifiersConfig) 
 	{
 		this.notifiersConfig = notifiersConfig;
 	}
 	
 	@Override
-	public JobAddedNotifier getByName(String name) 
+	public JobAddNotifier getByName(String name) 
 	{
 		return this.notifierByName.get(name.toLowerCase());
 	}
 	
 	@Override
-	public void register(JobAddedNotifier notifier) 
+	public void register(JobAddNotifier notifier) 
 	{
 		this.notifierByName.put(notifier.getName().toLowerCase(), notifier);
 	}
 	
 	@Override
-	public Set<JobAddedNotifier> getNotifiers() 
+	public Set<JobAddNotifier> getNotifiers() 
 	{
 		return new HashSet<>(this.notifierByName.values());
 	}
 
 	@Override
-	public JobAddedNotifier getPlayerNotifier(UUID playerUUID, JobAddedNotifier defaultNotifier) 
+	public JobAddNotifier getPlayerNotifier(UUID playerUUID, JobAddNotifier defaultNotifier) 
 	{
 		return this.playersNotifiers.getOrDefault(playerUUID, defaultNotifier);
 	}
 
 	@Override
-	public void setPlayerNotifier(UUID playerUUID, JobAddedNotifier notifier) 
+	public void setPlayerNotifier(UUID playerUUID, JobAddNotifier notifier) 
 	{
 		this.playersNotifiers.put(playerUUID, notifier);
 	}
@@ -57,7 +57,7 @@ public class SimpleJobAddedNotifierService implements JobAddedNotifierService
 		this.notifiersConfig.getValues(false).forEach((uuidString, policyName) -> 
 		{
 			UUID playerUUID = UUID.fromString(uuidString);
-			JobAddedNotifier playerNotifier = getByName((String) policyName);
+			JobAddNotifier playerNotifier = getByName((String) policyName);
 			
 			setPlayerNotifier(playerUUID, playerNotifier);
 		});
