@@ -33,7 +33,7 @@ public class MessageProvider
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou can only offer up to %max jobs allowed% Jobs! Delete one to proceed.")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
 			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
-			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &ecancel &fto leave the conversation!")
+			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &e%escape word% &fto leave the conversation!")
 
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "&aYou will get notifications for &e%job added notifier%&a!")
@@ -55,6 +55,7 @@ public class MessageProvider
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
 			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
+			.put(CONVERSATION_ESCAPE_WORD, "cancel")
 			
 			//Custom Items
 			.put(INVALID_CUSTOM_ITEM_FORMAT, "&cInvalid item format!")

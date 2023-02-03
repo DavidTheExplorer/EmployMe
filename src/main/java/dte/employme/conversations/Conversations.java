@@ -18,7 +18,7 @@ public class Conversations
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)
 				.withModality(false)
-				.withEscapeSequence("cancel")
+				.withEscapeSequence(messageService.getMessage(MessageKey.CONVERSATION_ESCAPE_WORD).first())
 				.withPrefix(context -> messageService.getMessage(PREFIX).first());
 	}
 

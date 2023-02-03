@@ -1,6 +1,7 @@
 package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
 import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
@@ -38,7 +39,9 @@ public class JobPaymentPrompt extends NumericPrompt
 		Double employerMoney = NumberUtils.limit(this.economy.getBalance(employer), 2);
 		
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(employer);
+		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		.sendTitleTo(employer);
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
 				.inject("player money", employerMoney)

@@ -1,6 +1,7 @@
 package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION;
 
@@ -32,7 +33,9 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 		Player player = (Player) context.getForWhom();
 		
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(player);
+		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		.sendTitleTo(player);
 				
 		return this.messageService.getMessage(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION)
 				.inject("goal amount", getGoalAmountInInventory(player))

@@ -47,6 +47,7 @@ public class TranslatedMessageService implements MessageService
 			.put(NEW_UPDATE_AVAILABLE, "General.New Update Available")
 			.put(CURRENCY_SYMBOL, "General.Currency Symbol")
 			.put(PLUGIN_RELOADED, "General.Plugin Reloaded")
+			.put(CONVERSATION_ESCAPE_WORD, "General.Conversation Escape Word")
 			
 			//Custom Items
 			.put(INVALID_CUSTOM_ITEM_FORMAT, "Custom Items.Invalid Format")
