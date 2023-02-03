@@ -1,7 +1,6 @@
 package dte.employme.job.addnotifiers;
 
 import static dte.employme.messages.MessageKey.SUBSCRIBED_TO_GOALS_NOTIFICATION;
-import static dte.employme.messages.Placeholders.REWARDS;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class MaterialSubscriptionNotifier extends JobAddChatNotifier
 	{
 		String itemsNames = getSubscribedToItemsNames(player, (ItemsReward) job.getReward());
 
-		return Arrays.asList(this.messageService.getMessage(SUBSCRIBED_TO_GOALS_NOTIFICATION).inject(REWARDS, itemsNames));
+		return Arrays.asList(this.messageService.getMessage(SUBSCRIBED_TO_GOALS_NOTIFICATION).inject("rewards", itemsNames));
 	}
 
 	private String getSubscribedToItemsNames(Player player, ItemsReward itemsReward) 

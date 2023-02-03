@@ -4,8 +4,6 @@ import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
 import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
-import static dte.employme.messages.Placeholders.ENCHANTMENT;
-import static dte.employme.messages.Placeholders.ENCHANTMENT_MIN_LEVEL;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -37,7 +35,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(player);
 
 		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL)
-				.inject(ENCHANTMENT, EnchantmentUtils.getDisplayName(this.enchantment))
+				.inject("enchantment", EnchantmentUtils.getDisplayName(this.enchantment))
 				.first();
 	}
 
@@ -67,7 +65,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
 		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
-				.inject(ENCHANTMENT_MIN_LEVEL, this.enchantment.getStartLevel())
+				.inject("enchantment min level", this.enchantment.getStartLevel())
 				.first();
 	}
 

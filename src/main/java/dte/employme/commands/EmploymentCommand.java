@@ -1,7 +1,6 @@
 package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
-import static dte.employme.messages.Placeholders.RELOAD_TIME;
 
 import java.time.Duration;
 import java.util.List;
@@ -120,7 +119,7 @@ public class EmploymentCommand extends BaseCommand
 		});
 
 		this.messageService.getMessage(PLUGIN_RELOADED)
-		.inject(RELOAD_TIME, reloadTime.toMillis())
+		.inject("reload time", reloadTime.toMillis())
 		.sendTo(sender);
 	}
 	

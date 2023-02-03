@@ -14,9 +14,6 @@ import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
-import static dte.employme.messages.Placeholders.ITEM;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static java.util.stream.Collectors.joining;
@@ -97,7 +94,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 					subscriptionsNames += WHITE + ".";
 
 					this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
-					.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
+					.inject("goal subscriptions", subscriptionsNames)
 					.sendTo(player);
 				})
 				.build();
@@ -157,7 +154,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 		return material -> 
 		{
 			String name = this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME)
-					.inject(ITEM, EnumUtils.fixEnumName(material))
+					.inject("item", EnumUtils.fixEnumName(material))
 					.first();
 
 			return new GuiItemBuilder()
@@ -175,7 +172,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
 
 		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
-		.inject(GOAL, EnumUtils.fixEnumName(material))
+		.inject("goal", EnumUtils.fixEnumName(material))
 		.sendTo(player);
 
 		player.closeInventory();

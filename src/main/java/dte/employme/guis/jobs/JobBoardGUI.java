@@ -11,7 +11,6 @@ import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_TITLE;
-import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.services.job.JobService.FinishState.NEGATIVE;
 import static dte.employme.services.job.JobService.FinishState.PARTIALLY;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
@@ -180,7 +179,7 @@ public class JobBoardGUI extends ChestGui
 			return this.messageService.getMessage(GUI_JOB_BOARD_OFFER_NOT_COMPLETED);
 
 		return this.messageService.getMessage((finishState == PARTIALLY ? GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED : GUI_JOB_BOARD_OFFER_COMPLETED))
-				.inject(GOAL_AMOUNT, this.jobService.getGoalAmountInInventory(job, this.player.getInventory()));
+				.inject("goal amount", this.jobService.getGoalAmountInInventory(job, this.player.getInventory()));
 	}
 
 	private Conversation askGoalAmount(Job job) 

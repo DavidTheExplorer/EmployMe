@@ -6,14 +6,12 @@ import static dte.employme.messages.MessageKey.MONEY_PAYMENT_AMOUNT_QUESTION;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_ERROR_NEGATIVE;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.MONEY_REWARD_NOT_ENOUGH;
-import static dte.employme.messages.Placeholders.PLAYER_MONEY;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-import dte.employme.messages.Placeholders;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.rewards.Reward;
@@ -43,8 +41,8 @@ public class JobPaymentPrompt extends NumericPrompt
 		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(employer);
 		
 		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
-				.inject(PLAYER_MONEY, employerMoney)
-				.inject(Placeholders.CURRENCY_SYMBOL, this.messageService.getMessage(CURRENCY_SYMBOL).first())
+				.inject("player money", employerMoney)
+				.inject("currency symbol", this.messageService.getMessage(CURRENCY_SYMBOL).first())
 				.first();
 	}
 

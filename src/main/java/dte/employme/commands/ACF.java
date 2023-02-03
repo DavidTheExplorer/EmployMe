@@ -2,7 +2,6 @@ package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
-import static dte.employme.messages.Placeholders.MAX_JOBS_ALLOWED;
 
 import java.util.List;
 
@@ -92,7 +91,7 @@ public class ACF
 			
 			if(jobsOffered >= maxJobsAllowed)
 				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS)
-						.inject(MAX_JOBS_ALLOWED, maxJobsAllowed)
+						.inject("max jobs allowed", maxJobsAllowed)
 						.first());
 		});
 	}

@@ -54,7 +54,7 @@ public class MessageBuilder
 	
 	public MessageBuilder inject(String placeholder, Object value) 
 	{
-		return map(line -> line.replace(placeholder, value.toString()));
+		return map(line -> line.replace('%' + placeholder + '%', value.toString()));
 	}
 	
 	

@@ -5,8 +5,6 @@ import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSU
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.ITEM;
 
 import java.util.function.Function;
 
@@ -53,7 +51,7 @@ public class UnsubscribeFromItemGUI extends ItemPaletteGUI
 		return material -> 
 		{
 			String name = messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME)
-					.inject(ITEM, EnumUtils.fixEnumName(material))
+					.inject("item", EnumUtils.fixEnumName(material))
 					.first();
 			
 			return new GuiItemBuilder()
@@ -71,7 +69,7 @@ public class UnsubscribeFromItemGUI extends ItemPaletteGUI
 		jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
 
 		messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
-		.inject(GOAL, EnumUtils.fixEnumName(material))
+		.inject("goal", EnumUtils.fixEnumName(material))
 		.sendTo(player);
 
 		player.closeInventory();
