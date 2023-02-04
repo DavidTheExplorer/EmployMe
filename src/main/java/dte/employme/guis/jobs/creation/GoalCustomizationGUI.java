@@ -1,6 +1,6 @@
 package dte.employme.guis.jobs.creation;
 
-import static dte.employme.conversations.Conversations.refundRewardIfAbandoned;
+import static dte.employme.conversations.Conversations.refundReward;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
@@ -284,7 +284,7 @@ public class GoalCustomizationGUI extends ChestGui
 					
 					Conversations.createFactory(this.messageService)
 					.withFirstPrompt(new GoalAmountPrompt(this.messageService))
-					.addConversationAbandonedListener(refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
+					.addConversationAbandonedListener(refundReward(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
 					.addConversationAbandonedListener(abandonEvent -> 
 					{
 						if(!abandonEvent.gracefulExit())

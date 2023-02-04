@@ -1,6 +1,6 @@
 package dte.employme.guis.jobs.creation;
 
-import static dte.employme.conversations.Conversations.refundRewardIfAbandoned;
+import static dte.employme.conversations.Conversations.refundReward;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME;
@@ -136,7 +136,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 		Conversations.createFactory(this.messageService)
 		.withFirstPrompt(new EnchantmentLevelPrompt(enchantment, this.messageService))
 		.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
-		.addConversationAbandonedListener(refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
+		.addConversationAbandonedListener(refundReward(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
 		.addConversationAbandonedListener(abandonedEvent -> 
 		{
 			if(!abandonedEvent.gracefulExit())

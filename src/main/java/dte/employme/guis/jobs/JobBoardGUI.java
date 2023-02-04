@@ -45,7 +45,7 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPartialCompletionAmountPrompt;
 import dte.employme.guis.ItemsRewardPreviewGUI;
 import dte.employme.guis.PlayerJobsGUI;
-import dte.employme.items.JobIconFactory;
+import dte.employme.items.JobIcon;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
 import dte.employme.rewards.ItemsReward;
@@ -219,7 +219,7 @@ public class JobBoardGUI extends ChestGui
 
 	private ItemStack createOfferIconItem(Job job) 
 	{
-		ItemStack basicIcon = JobIconFactory.create(job, this.messageService);
+		ItemStack basicIcon = JobIcon.create(job, this.messageService);
 		FinishState currentState = this.jobService.getFinishState(this.player, job);
 
 		//add the status and ID to the lore

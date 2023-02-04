@@ -22,7 +22,7 @@ public class Conversations
 				.withPrefix(context -> messageService.getMessage(PREFIX).first());
 	}
 
-	public static ConversationAbandonedListener refundRewardIfAbandoned(MessageService messageService, MessageKey messageToSend) 
+	public static ConversationAbandonedListener refundReward(MessageService messageService, MessageKey messageToSend) 
 	{
 		return event ->
 		{

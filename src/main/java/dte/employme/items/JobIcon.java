@@ -28,7 +28,7 @@ import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.RomanNumeralsConverter;
 
-public class JobIconFactory
+public class JobIcon
 {
 	public static ItemStack create(Job job, MessageService messageService) 
 	{

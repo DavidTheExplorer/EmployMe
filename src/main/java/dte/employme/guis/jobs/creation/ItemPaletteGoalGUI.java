@@ -1,5 +1,6 @@
 package dte.employme.guis.jobs.creation;
 
+import static dte.employme.conversations.Conversations.refundReward;
 import static dte.employme.messages.MessageKey.GUI_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.ITEM_GOAL_FORMAT_QUESTION;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
@@ -66,7 +67,7 @@ public class ItemPaletteGoalGUI extends ItemPaletteGUI
 		return Conversations.createFactory(messageService)
 				.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
 				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
-				.addConversationAbandonedListener(Conversations.refundRewardIfAbandoned(messageService, JOB_SUCCESSFULLY_CANCELLED))
+				.addConversationAbandonedListener(refundReward(messageService, JOB_SUCCESSFULLY_CANCELLED))
 				.addConversationAbandonedListener(event -> 
 				{
 					if(!event.gracefulExit())
