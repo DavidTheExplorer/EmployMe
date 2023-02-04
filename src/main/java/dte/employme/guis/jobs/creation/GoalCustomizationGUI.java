@@ -111,6 +111,9 @@ public class GoalCustomizationGUI extends ChestGui
 		if(this.currentItem.getType() == NO_ITEM_TYPE) 
 			this.optionsPane.addItem(createAmountItem());
 		
+		//Keep the item's amount
+		item.setAmount(this.currentItem.getAmount());
+		
 		this.currentItem = item;
 		this.provider = provider;
 		
