@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME;
@@ -24,7 +24,6 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
-import dte.employme.guis.jobs.JobBoardGUI;
 import dte.employme.items.JobIcon;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;

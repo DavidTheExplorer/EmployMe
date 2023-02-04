@@ -43,8 +43,6 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPartialCompletionAmountPrompt;
-import dte.employme.guis.ItemsRewardPreviewGUI;
-import dte.employme.guis.PlayerJobsGUI;
 import dte.employme.items.JobIcon;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;

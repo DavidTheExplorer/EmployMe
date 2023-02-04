@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME;
