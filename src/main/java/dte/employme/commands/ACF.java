@@ -1,5 +1,21 @@
 package dte.employme.commands;
 
+import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_DELETE_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_DELETE_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_HELP_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_HELP_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_MYCONTAINERS_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_MYCONTAINERS_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_MYSUBSCRIPTIONS_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_MYSUBSCRIPTIONS_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_OFFER_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_OFFER_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_RELOAD_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_RELOAD_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_VIEW_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_VIEW_NAME;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 
@@ -57,6 +73,7 @@ public class ACF
 		
 		registerContexts(commandManager);
 		registerConditions(commandManager);
+		registerReplacements(commandManager);
 		registerCommands(commandManager);
 	}
 	
@@ -94,6 +111,34 @@ public class ACF
 						.inject("max jobs allowed", maxJobsAllowed)
 						.first());
 		});
+	}
+	
+	private void registerReplacements(BukkitCommandManager commandManager) 
+	{
+		//Commands Names & Descriptions
+		commandManager.getCommandReplacements().addReplacement("View Name", this.messageService.getMessage(COMMAND_VIEW_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("View Description", this.messageService.getMessage(COMMAND_VIEW_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("Offer Name", this.messageService.getMessage(COMMAND_OFFER_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Offer Description", this.messageService.getMessage(COMMAND_OFFER_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("Delete Name", this.messageService.getMessage(COMMAND_DELETE_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Delete Description", this.messageService.getMessage(COMMAND_DELETE_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("MyContainers Name", this.messageService.getMessage(COMMAND_MYCONTAINERS_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("MyContainers Description", this.messageService.getMessage(COMMAND_MYCONTAINERS_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("AddNotifiers Name", this.messageService.getMessage(COMMAND_ADDNOTIFIERS_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("AddNotifiers Description", this.messageService.getMessage(COMMAND_ADDNOTIFIERS_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("MySubscriptions Name", this.messageService.getMessage(COMMAND_MYSUBSCRIPTIONS_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("MySubscriptions Description", this.messageService.getMessage(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("Reload Name", this.messageService.getMessage(COMMAND_RELOAD_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Reload Description", this.messageService.getMessage(COMMAND_RELOAD_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("Help Name", this.messageService.getMessage(COMMAND_HELP_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Help Description", this.messageService.getMessage(COMMAND_HELP_DESCRIPTION).first());
 	}
 	
 	private void registerCommands(BukkitCommandManager commandManager) 

@@ -200,5 +200,23 @@ public class MessageProvider
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "Notifications Removal")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "&fWhat item you want to unsubscribe from?")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "&f%item%")
-			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "&cClick to stop getting notifications for this item.");
+			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "&cClick to stop getting notifications for this item.")
+	
+			//Commands
+			.put(COMMAND_VIEW_NAME, "view")
+			.put(COMMAND_VIEW_DESCRIPTION, "Search through the Available Jobs.")
+			.put(COMMAND_OFFER_NAME, "offer")
+			.put(COMMAND_OFFER_DESCRIPTION, "Offer a new job to the public.")
+			.put(COMMAND_DELETE_NAME, "delete")
+			.put(COMMAND_DELETE_DESCRIPTION, "Delete a job.")
+			.put(COMMAND_MYCONTAINERS_NAME, "mycontainers")
+			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Obtain items from your containers.")
+			.put(COMMAND_ADDNOTIFIERS_NAME, "addnotifiers")
+			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Choose what kind of jobs you want to be notified about.")
+			.put(COMMAND_MYSUBSCRIPTIONS_NAME, "mysubscriptions")
+			.put(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION, "Subscribe to rewards you need.")
+			.put(COMMAND_RELOAD_NAME, "reload")
+			.put(COMMAND_RELOAD_DESCRIPTION, "Reload the plugin.")
+			.put(COMMAND_HELP_NAME, "help")
+			.put(COMMAND_HELP_DESCRIPTION, "Get help about the plugin.");
 }

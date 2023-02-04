@@ -193,6 +193,31 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "GUIs.Unsubscribe From Items.Unsubscribe Question")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "GUIs.Unsubscribe From Items.Items.Name")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "GUIs.Unsubscribe From Items.Items.Lore")
+			
+			//Commands
+			.put(COMMAND_VIEW_NAME, "Commands.View.Name")
+			.put(COMMAND_VIEW_DESCRIPTION, "Commands.View.Description")
+			
+			.put(COMMAND_OFFER_NAME, "Commands.Offer.Name")
+			.put(COMMAND_OFFER_DESCRIPTION, "Commands.Offer.Description")
+			
+			.put(COMMAND_DELETE_NAME, "Commands.Delete.Name")
+			.put(COMMAND_DELETE_DESCRIPTION, "Commands.Delete.Description")
+			
+			.put(COMMAND_MYCONTAINERS_NAME, "Commands.My Containers.Name")
+			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Commands.My Containers.Description")
+			
+			.put(COMMAND_ADDNOTIFIERS_NAME, "Commands.Add Notifiers.Name")
+			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Commands.Add Notifiers.Description")
+			
+			.put(COMMAND_MYSUBSCRIPTIONS_NAME, "Commands.My Subscriptions.Name")
+			.put(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION, "Commands.My Subscriptions.Description")
+			
+			.put(COMMAND_RELOAD_NAME, "Commands.Reload.Name")
+			.put(COMMAND_RELOAD_DESCRIPTION, "Commands.Reload.Description")
+			
+			.put(COMMAND_HELP_NAME, "Commands.Help.Name")
+			.put(COMMAND_HELP_DESCRIPTION, "Commands.Help.Description")
 			.build();
 
 	public TranslatedMessageService(SpigotConfig languageConfig) 
