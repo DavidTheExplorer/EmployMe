@@ -41,13 +41,13 @@ import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.EnumUtils;
 
-public class PlayerSubscriptionsGUI extends ChestGui
+public class ItemSubscriptionsGUI extends ChestGui
 {
 	private final JobService jobService;
 	private final MessageService messageService;
 	private final JobSubscriptionService jobSubscriptionService;
 
-	public PlayerSubscriptionsGUI(JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService) 
+	public ItemSubscriptionsGUI(JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService) 
 	{
 		super(3, messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_TITLE).first());
 		
@@ -142,7 +142,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 				{
 					Player player = (Player) event.getWhoClicked();
 					
-					UnsubscribeFromItemGUI gui = new UnsubscribeFromItemGUI(player, this.jobService, this.messageService, this.jobSubscriptionService);
+					ItemUnsubscriptionGUI gui = new ItemUnsubscriptionGUI(player, this.jobService, this.messageService, this.jobSubscriptionService);
 					gui.setOnClose(closeEvent -> show(player));
 					gui.show(event.getWhoClicked());
 				})

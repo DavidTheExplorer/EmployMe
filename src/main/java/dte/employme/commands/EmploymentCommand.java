@@ -25,7 +25,7 @@ import dte.employme.guis.jobs.JobBoardGUI;
 import dte.employme.guis.jobs.JobDeletionGUI;
 import dte.employme.guis.jobs.creation.JobCreationGUI;
 import dte.employme.guis.playercontainer.JobContainersGUI;
-import dte.employme.guis.subscriptions.PlayerSubscriptionsGUI;
+import dte.employme.guis.subscriptions.ItemSubscriptionsGUI;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.services.job.JobService;
@@ -107,7 +107,7 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.mysubscriptions")
 	public void showPersonalSubscriptions(Player player) 
 	{
-		new PlayerSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
+		new ItemSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
 	}
 
 	@Subcommand("%Reload Name")

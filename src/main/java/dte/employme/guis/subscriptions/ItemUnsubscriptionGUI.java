@@ -23,9 +23,9 @@ import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.EnumUtils;
 
-public class UnsubscribeFromItemGUI extends ItemPaletteGUI
+public class ItemUnsubscriptionGUI extends ItemPaletteGUI
 {
-	public UnsubscribeFromItemGUI(Player player, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService)
+	public ItemUnsubscriptionGUI(Player player, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService)
 	{
 		super(messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE).first(), 
 				messageService,
