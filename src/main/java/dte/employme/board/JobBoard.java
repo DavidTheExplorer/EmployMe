@@ -27,12 +27,13 @@ public interface JobBoard extends Iterable<Job>
 	List<Job> getOfferedJobs();
 
 	//listeners
-	void registerAddListener(JobAddListener... listeners);
-	void registerCompleteListener(JobCompleteListener... listeners);
-	void registerRemovalListener(JobRemovalListener... listeners);
-	void removeAddListener(JobAddListener... listeners);
-	void removeCompleteListener(JobCompleteListener... listeners);
-	void removeRemovalListener(JobRemovalListener... listeners);
+	void registerAddListener(JobAddListener listener);
+	void registerCompleteListener(JobCompleteListener listener);
+	void registerRemovalListener(JobRemovalListener listener);
+	
+	void removeAddListener(JobAddListener listener);
+	void removeCompleteListener(JobCompleteListener listener);
+	void removeRemovalListener(JobRemovalListener listener);
 	
 	
 	

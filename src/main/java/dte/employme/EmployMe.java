@@ -142,10 +142,11 @@ public class EmployMe extends ModernJavaPlugin
 		
 		JobAddNotifier defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddNotifierService);
 
-		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener(), new JobGoalTransferListener(this.playerContainerService), new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
-		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService), new JobAddNotificationListener(this.jobAddNotifierService, defaultJobAddNotifier));
-
-		
+		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener());
+		this.globalJobBoard.registerCompleteListener(new JobGoalTransferListener(this.playerContainerService));
+		this.globalJobBoard.registerCompleteListener(new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
+		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService));
+		this.globalJobBoard.registerAddListener(new JobAddNotificationListener(this.jobAddNotifierService, defaultJobAddNotifier));
 		
 		//register commands, listeners, metrics
 		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
