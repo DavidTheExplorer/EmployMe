@@ -52,6 +52,7 @@ import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.MapBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
 {
@@ -284,6 +285,7 @@ public class GoalCustomizationGUI extends ChestGui
 					
 					Conversations.createFactory(this.messageService)
 					.withFirstPrompt(new GoalAmountPrompt(this.messageService))
+					.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
 					.addConversationAbandonedListener(refundReward(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
 					.addConversationAbandonedListener(abandonEvent -> 
 					{
