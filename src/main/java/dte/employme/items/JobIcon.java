@@ -86,7 +86,7 @@ public class JobIcon
 	{
 		if(reward instanceof MoneyReward moneyReward)
 			return messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
-					.inject("money payment", String.format("%.2f", moneyReward.getPayment()))
+					.inject("money payment", MoneyReward.formatPayment(moneyReward))
 					.inject("currency symbol", messageService.getMessage(CURRENCY_SYMBOL).first())
 					.first();
 

@@ -2,6 +2,7 @@ package dte.employme.rewards;
 
 import static dte.employme.utils.java.Percentages.toFraction;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import org.bukkit.OfflinePlayer;
@@ -17,6 +18,8 @@ public class MoneyReward implements PartialReward
 	private final Economy economy;
 	private final double payment;
 
+	private static final DecimalFormat PAYMENT_FORMATTER = new DecimalFormat("#.##");
+
 	public MoneyReward(Economy economy, double payment) 
 	{
 		this.economy = economy;
@@ -29,6 +32,11 @@ public class MoneyReward implements PartialReward
 		double payment = (double) serialized.get("Payment");
 		
 		return new MoneyReward(economy, payment);
+	}
+	
+	public static String formatPayment(MoneyReward moneyReward) 
+	{
+		return PAYMENT_FORMATTER.format(moneyReward.payment);
 	}
 
 	@Override
