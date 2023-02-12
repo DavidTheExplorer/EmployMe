@@ -20,27 +20,22 @@ import dte.employme.utils.java.ServiceLocator;
 public class ItemsReward implements Reward, Iterable<ItemStack>
 {
 	private final Collection<ItemStack> items;
-	private final PlayerContainerService playerContainerService;
 	
-	public ItemsReward(Collection<ItemStack> items, PlayerContainerService playerContainerService) 
+	public ItemsReward(Collection<ItemStack> items) 
 	{
 		this.items = items;
-		this.playerContainerService = playerContainerService;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static ItemsReward deserialize(Map<String, Object> serialized) 
 	{
-		List<ItemStack> items = (List<ItemStack>) serialized.get("Items");
-		PlayerContainerService playerContainerService = ServiceLocator.getInstance(PlayerContainerService.class);
-		
-		return new ItemsReward(items, playerContainerService);
+		return new ItemsReward((List<ItemStack>) serialized.get("Items"));
 	}
 	
 	@Override
 	public void giveTo(OfflinePlayer offlinePlayer)
 	{
-		PlayerContainerGUI rewardsContainer = this.playerContainerService.getRewardsContainer(offlinePlayer.getUniqueId());
+		PlayerContainerGUI rewardsContainer = ServiceLocator.getInstance(PlayerContainerService.class).getRewardsContainer(offlinePlayer.getUniqueId());
 		this.items.forEach(rewardsContainer::addItem);
 	}
 	
