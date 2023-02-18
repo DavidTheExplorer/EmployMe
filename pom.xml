@@ -174,7 +174,7 @@
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- ModernJavaPlugin -->
@@ -216,7 +216,7 @@
 		<dependency>
 			<groupId>net.Indyuce</groupId>
 			<artifactId>MMOItems-API</artifactId>
-			<version>6.9.1-SNAPSHOT</version>
+			<version>6.9.2-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
