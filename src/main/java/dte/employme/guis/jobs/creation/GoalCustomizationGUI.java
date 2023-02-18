@@ -312,7 +312,7 @@ public class GoalCustomizationGUI extends ChestGui
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ANVIL)
 						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
-						.withLore(lore.toArray(String[]::new))
+						.withLore(lore.toArray(new String[0]))
 						.glowing()
 						.createCopy())
 				.whenClicked(event -> 

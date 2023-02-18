@@ -82,15 +82,15 @@ public class JobIcon
 
 	private static String describeReward(Reward reward, MessageService messageService)
 	{
-		if(reward instanceof MoneyReward moneyReward)
+		if(reward instanceof MoneyReward)
 			return messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
-					.inject("money payment", MoneyReward.formatPayment(moneyReward))
+					.inject("money payment", MoneyReward.formatPayment((MoneyReward) reward))
 					.inject("currency symbol", messageService.getMessage(CURRENCY_SYMBOL).first())
 					.first();
 
-		else if(reward instanceof ItemsReward itemsReward)
+		else if(reward instanceof ItemsReward)
 			return messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
-					.inject("items amount", itemsReward.getItems().size())
+					.inject("items amount", ((ItemsReward) reward).getItems().size())
 					.first();
 
 		else

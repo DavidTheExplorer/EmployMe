@@ -14,6 +14,7 @@ import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.ItemStackUtils;
 import dte.employme.utils.java.Percentages;
+import dte.employme.utils.java.StringUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class JobLiveUpdateTask extends BukkitRunnable
@@ -53,8 +54,8 @@ public class JobLiveUpdateTask extends BukkitRunnable
 		return this.messageService.getMessage(LIVE_UPDATES_TRACKER_ACTIONBAR)
 				.inject("get", this.messageService.getMessage(GET).first())
 				.inject("goal", ItemStackUtils.describe(job.getGoal()))
-				.inject("progression", "|".repeat(aquaLines))
-				.inject("amount left", "|".repeat(20 - aquaLines))
+				.inject("progression", StringUtils.repeat("|", aquaLines))
+				.inject("amount left", StringUtils.repeat("|", 20 - aquaLines))
 				.inject("completion percentage", (int) progressionPercentage)
 				.toTextComponent();
 	}
