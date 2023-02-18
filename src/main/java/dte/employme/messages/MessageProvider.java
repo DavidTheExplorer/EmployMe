@@ -60,6 +60,10 @@ public class MessageProvider
 			//Custom Items
 			.put(INVALID_CUSTOM_ITEM_FORMAT, "&cInvalid item format!")
 			.put(CUSTOM_ITEM_NOT_FOUND, "Cannot find the specified item!")
+			
+			//Live Updates
+			.put(LIVE_UPDATES_JOB_COMPLETED, "&aYou collected all items! Finish the job by &e/emp view")
+			.put(LIVE_UPDATES_TRACKER_ACTIONBAR, "&bJob Tracker &f» &e%get% %goal%&f &f[&b&l%progression%&7&l%amount left%&f] (&b%completion percentage%%&f)")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "Personal Job Containers")
@@ -77,11 +81,12 @@ public class MessageProvider
 
 			//Job Icon
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
-			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal%&f.")
-			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal% &ffrom", "&fthe &e%item provider% &fplugin!")
+			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal&b: &fI need &b%goal%&f.")
+			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "&b&lGoal&b: &fI need &b%goal% &ffrom", "&fthe &e%item provider% &fplugin!")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
-			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%currency symbol%%money payment%")
-			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")
+			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&lPayment&6: &fI will pay &6&l%currency symbol%%money payment%")
+			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&lPayment&6: &fI will pay a list of items(Size: &6&l%items amount%&f)")
+			.put(JOB_ICON_VIEW_ACTIONS_DESCRIPTION, "&a&l> &f&lClick&r &fto View Actions &ffor this job.")
 
 			//Job Board GUI
 			.put(GUI_JOB_BOARD_TITLE, "Available Jobs")
@@ -201,6 +206,17 @@ public class MessageProvider
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "&fWhat item you want to unsubscribe from?")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "&f%item%")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "&cClick to stop getting notifications for this item.")
+			
+			//Job Actions GUI
+			.put(GUI_JOB_ACTIONS_TITLE, "Available Actions")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME, "&aTrack Progression")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "&fGet live notifications about your progression", "&ftowards completing this job.")
+			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "&aItems Reward Preview")
+			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION, "&fSee the items that you would get", "&ffor completing this job.")
+			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME, "&a&lComplete ✓")
+			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION, "&fClick to complete this job!")
+			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME, "&c&lCan't Complete ❌")
+			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION, "&7You are unable to complete this job.")
 	
 			//Commands
 			.put(COMMAND_VIEW_NAME, "view")

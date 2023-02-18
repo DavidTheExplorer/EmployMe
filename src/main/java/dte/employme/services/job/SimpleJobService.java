@@ -12,7 +12,9 @@ import static dte.employme.utils.ChatColorUtils.colorize;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -32,7 +35,9 @@ import dte.employme.board.JobBoard;
 import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.configs.BlacklistedItemsConfig;
 import dte.employme.job.Job;
+import dte.employme.listeners.JobLiveUpdatesListener;
 import dte.employme.rewards.PartialReward;
+import dte.employme.runnables.JobLiveUpdateTask;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.rewards.JobRewardService;
 import dte.employme.services.rewards.PartialCompletionInfo;
@@ -45,14 +50,16 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 
-public class SimpleJobService implements JobService
+public class SimpleJobService implements JobService, Listener
 {
 	private final JobBoard globalJobBoard;
 	private final MessageService messageService;
 	private final JobRewardService jobRewardService;
-	private final Map<Job, JobDeletionInfo> autoDeletion = new HashMap<>();
 	private final SpigotConfig jobsConfig, autoDeletionConfig;
 	private final BlacklistedItemsConfig blacklistedItemsConfig;
+
+	private final Map<Job, JobDeletionInfo> autoDeletion = new HashMap<>();
+	private final Map<Job, List<Player>> liveUpdates = new HashMap<>();
 
 	public SimpleJobService(JobBoard globalJobBoard, JobRewardService jobRewardService, SpigotConfig jobsConfig, SpigotConfig autoDeletionConfig, BlacklistedItemsConfig blacklistedItemsConfig, MessageService messageService) 
 	{
@@ -62,6 +69,9 @@ public class SimpleJobService implements JobService
 		this.blacklistedItemsConfig = blacklistedItemsConfig;
 		this.messageService = messageService;
 		this.jobRewardService = jobRewardService;
+		
+		new JobLiveUpdateTask(this, this.messageService).runTaskTimer(EmployMe.getInstance(), 0, 5);
+		EmployMe.getInstance().registerListeners(new JobLiveUpdatesListener(this));
 	}
 
 	@Override
@@ -152,6 +162,32 @@ public class SimpleJobService implements JobService
 		{
 			exception.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void startLiveUpdates(Player player, Job job) 
+	{
+		stopLiveUpdates(player);
+		
+		this.liveUpdates.computeIfAbsent(job, l -> new ArrayList<>()).add(player);
+	}
+	
+	@Override
+	public void stopLiveUpdates(Job job) 
+	{
+		this.liveUpdates.remove(job);
+	}
+	
+	@Override
+	public void stopLiveUpdates(Player player) 
+	{
+		this.liveUpdates.values().forEach(players -> players.remove(player));
+	}
+	
+	@Override
+	public Map<Job, List<Player>> getLiveUpdatesInfo() 
+	{
+		return new HashMap<>(this.liveUpdates);
 	}
 
 	@Override

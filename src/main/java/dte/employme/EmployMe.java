@@ -13,6 +13,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import dte.employme.board.JobBoard;
 import dte.employme.board.SimpleJobBoard;
 import dte.employme.board.listeners.AutoJobDeleteListeners;
+import dte.employme.board.listeners.StopJobLiveUpdatesListener;
 import dte.employme.board.listeners.addition.EmployerNotificationListener;
 import dte.employme.board.listeners.addition.JobAddDiscordWebhook;
 import dte.employme.board.listeners.addition.JobAddNotificationListener;
@@ -141,20 +142,27 @@ public class EmployMe extends ModernJavaPlugin
 		this.jobAddNotifierService.loadPlayersNotifiers();
 		
 		JobAddNotifier defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddNotifierService);
+		StopJobLiveUpdatesListener stopJobLiveUpdatesListener = new StopJobLiveUpdatesListener(this.jobService);
 
 		this.globalJobBoard.registerCompleteListener(new JobRewardGiveListener());
 		this.globalJobBoard.registerCompleteListener(new JobGoalTransferListener(this.playerContainerService));
 		this.globalJobBoard.registerCompleteListener(new JobCompletedMessagesListener(this.messageService, this.jobService, this.mainConfig.getDouble("Partial Job Completions.Notify Employers Above Percentage")));
+		this.globalJobBoard.registerCompleteListener(stopJobLiveUpdatesListener);
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService));
 		this.globalJobBoard.registerAddListener(new JobAddNotificationListener(this.jobAddNotifierService, defaultJobAddNotifier));
+		this.globalJobBoard.registerRemovalListener(stopJobLiveUpdatesListener);
 		
-		//register commands, listeners, metrics
+		//register commands
 		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
+		
+		//setup config features
 		setupWebhooks();
 		setupAutoJobDeletion();
 		
+		//start metrics
 		new Metrics(this, 16573);
 
+		//check for updates
 		AutoUpdater.forPlugin(this, 105476)
 		.onNewUpdate(newVersion -> registerListeners(new AutoUpdateListeners(this.messageService, newVersion)))
 		.onFailedRequest(exception -> logToConsole(RED + "There was an internet error while checking for an update: " + ExceptionUtils.getMessage(exception)))

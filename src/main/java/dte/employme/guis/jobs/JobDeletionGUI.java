@@ -65,6 +65,7 @@ public class JobDeletionGUI extends ChestGui
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(JobIcon.create(job, this.messageService))
 						.addToLore(true,
+								" ",
 								createSeparationLine(GRAY, 23),
 								this.messageService.getMessage(GUI_JOB_DELETION_DELETE_INSTRUCTION).first(),
 								createSeparationLine(GRAY, 23))

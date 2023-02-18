@@ -38,10 +38,8 @@ public class JobIcon
 		
 		List<String> lore = new ArrayList<>();
 		lore.addAll(getGoalInstructions(messageService, job));
-		lore.addAll(getGoalEnchantmentsLore(job.getGoal(), messageService));
-		lore.add(" ");
 		lore.add(describeReward(job.getReward(), messageService));
-		lore.add(" ");
+		lore.addAll(getGoalEnchantmentsLore(job.getGoal(), messageService));
 
 		return new ItemBuilder(job.getGoal().getType())
 				.named(name)

@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import dte.employme.services.message.MessageService;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * This class along with {@link MessageService}, allows implementing multi-line messages in an encapsulated and clean way.
@@ -75,6 +76,14 @@ public class MessageBuilder
 	public String[] toArray() 
 	{
 		return this.lines.toArray(new String[0]);
+	}
+	
+	public TextComponent toTextComponent() 
+	{
+		if(this.lines.size() > 1)
+			throw new IllegalStateException("Cannot convert a multi-line message into a TextComponent!");
+		
+		return new TextComponent(this.lines.get(0));
 	}
 	
 	public Stream<String> stream()
