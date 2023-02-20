@@ -33,7 +33,7 @@ public class MessageProvider
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou can only offer up to %max jobs allowed% Jobs! Delete one to proceed.")
 			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
 			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
-			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &ecancel &fto leave the conversation!")
+			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &e%escape word% &fto leave the conversation!")
 
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "&aYou will get notifications for &e%job added notifier%&a!")
@@ -55,10 +55,15 @@ public class MessageProvider
 			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
 			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
+			.put(CONVERSATION_ESCAPE_WORD, "cancel")
 			
 			//Custom Items
 			.put(INVALID_CUSTOM_ITEM_FORMAT, "&cInvalid item format!")
 			.put(CUSTOM_ITEM_NOT_FOUND, "Cannot find the specified item!")
+			
+			//Live Updates
+			.put(LIVE_UPDATES_JOB_COMPLETED, "&aYou collected all items! Finish the job by &e/emp view")
+			.put(LIVE_UPDATES_TRACKER_ACTIONBAR, "&bJob Tracker &f» &e%get% %goal%&f &f[&b&l%progression%&7&l%amount left%&f] (&b%completion percentage%%&f)")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "Personal Job Containers")
@@ -76,11 +81,12 @@ public class MessageProvider
 
 			//Job Icon
 			.put(JOB_ICON_NAME, "&a%employer%'s Offer")
-			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal%&f.")
-			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "&b&lGoal: &fI need &b%goal% &ffrom", "&fthe &e%item provider% &fplugin!")
+			.put(JOB_ICON_GOAL_INSTRUCTIONS, "&b&lGoal&b: &fI need &b%goal%&f.")
+			.put(JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS, "&b&lGoal&b: &fI need &b%goal% &ffrom", "&fthe &e%item provider% &fplugin!")
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "&dEnchanted &fwith:")
-			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &f%currency symbol%%money payment%")
-			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&n&lPayment&6: &fRight Click to preview items(%items amount%)")
+			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "&6&lPayment&6: &fI will pay &6&l%currency symbol%%money payment%")
+			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "&6&lPayment&6: &fI will pay a list of items(Size: &6&l%items amount%&f)")
+			.put(JOB_ICON_VIEW_ACTIONS_DESCRIPTION, "&a&l> &f&lClick&r &fto View Actions &ffor this job.")
 
 			//Job Board GUI
 			.put(GUI_JOB_BOARD_TITLE, "Available Jobs")
@@ -199,5 +205,34 @@ public class MessageProvider
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "Notifications Removal")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "&fWhat item you want to unsubscribe from?")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "&f%item%")
-			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "&cClick to stop getting notifications for this item.");
+			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "&cClick to stop getting notifications for this item.")
+			
+			//Job Actions GUI
+			.put(GUI_JOB_ACTIONS_TITLE, "Available Actions")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME, "&aTrack Progression")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "&fGet live notifications about your progression", "&ftowards completing this job.")
+			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "&aItems Reward Preview")
+			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION, "&fSee the items that you would get", "&ffor completing this job.")
+			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME, "&a&lComplete ✓")
+			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION, "&fClick to complete this job!")
+			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME, "&c&lCan't Complete ❌")
+			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION, "&7You are unable to complete this job.")
+	
+			//Commands
+			.put(COMMAND_VIEW_NAME, "view")
+			.put(COMMAND_VIEW_DESCRIPTION, "Search through the Available Jobs.")
+			.put(COMMAND_OFFER_NAME, "offer")
+			.put(COMMAND_OFFER_DESCRIPTION, "Offer a new job to the public.")
+			.put(COMMAND_DELETE_NAME, "delete")
+			.put(COMMAND_DELETE_DESCRIPTION, "Delete a job.")
+			.put(COMMAND_MYCONTAINERS_NAME, "mycontainers")
+			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Obtain items from your containers.")
+			.put(COMMAND_ADDNOTIFIERS_NAME, "addnotifiers")
+			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Choose what kind of jobs you want to be notified about.")
+			.put(COMMAND_MYSUBSCRIPTIONS_NAME, "mysubscriptions")
+			.put(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION, "Subscribe to rewards you need.")
+			.put(COMMAND_RELOAD_NAME, "reload")
+			.put(COMMAND_RELOAD_DESCRIPTION, "Reload the plugin.")
+			.put(COMMAND_HELP_NAME, "help")
+			.put(COMMAND_HELP_DESCRIPTION, "Get help about the plugin.");
 }

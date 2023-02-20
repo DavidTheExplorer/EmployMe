@@ -1,7 +1,6 @@
 package dte.employme.services.playercontainer;
 
 import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
-import static dte.employme.messages.Placeholders.CONTAINER_SUBJECT;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -63,7 +62,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	private String createContainerTitle(String subject) 
 	{
 		return this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
-				.inject(CONTAINER_SUBJECT, subject)
+				.inject("container subject", subject)
 				.first();
 	}
 	

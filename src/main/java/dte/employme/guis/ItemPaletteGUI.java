@@ -45,7 +45,7 @@ public class ItemPaletteGUI extends ChestGui
 	private final Predicate<Material> itemFilter;
 	private final Function<Material, GuiItem> itemTransformer;
 	private final ConversationFactory typeConversationFactory;
-	private Consumer<InventoryClickEvent> englishItemClickListener;
+	private Consumer<InventoryClickEvent> englishItemClickListener = (event) -> {};
 	private PaginatedPane itemsPane;
 
 	private static final List<Material> ALL_MATERIALS = Arrays.stream(Material.values())

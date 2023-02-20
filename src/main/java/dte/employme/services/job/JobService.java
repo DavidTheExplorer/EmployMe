@@ -1,6 +1,8 @@
 package dte.employme.services.job;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -24,6 +26,11 @@ public interface JobService
 	
 	void loadJobs();
 	void saveJobs();
+	
+	void startLiveUpdates(Player player, Job job);
+	void stopLiveUpdates(Job job);
+	void stopLiveUpdates(Player player);
+	Map<Job, List<Player>> getLiveUpdatesInfo();
 	
 	void deleteAfter(Job job, Duration delay);
 	void stopAutoDelete(Job job);

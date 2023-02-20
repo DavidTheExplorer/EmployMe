@@ -99,7 +99,7 @@ public class Job implements ConfigurationSerializable
 		ItemStack finalItem = nbtItem.getItem();
 
 		//damaged goals are unacceptable
-		if(finalItem.getItemMeta() instanceof Damageable damageable && damageable.hasDamage())
+		if(finalItem.getItemMeta() instanceof Damageable && ((Damageable) finalItem.getItemMeta()).hasDamage())
 			return false;
 		
 		return this.goalProvider.equals(this.goal, finalItem);

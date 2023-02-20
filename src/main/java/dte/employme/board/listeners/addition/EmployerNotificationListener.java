@@ -5,6 +5,7 @@ import static dte.employme.messages.MessageKey.JOB_ADDED_TO_BOARD;
 import dte.employme.board.JobBoard;
 import dte.employme.job.Job;
 import dte.employme.services.message.MessageService;
+import dte.employme.utils.OfflinePlayerUtils;
 
 public class EmployerNotificationListener implements JobAddListener
 {
@@ -18,6 +19,6 @@ public class EmployerNotificationListener implements JobAddListener
 	@Override
 	public void onJobAdded(JobBoard jobBoard, Job job) 
 	{
-		this.messageService.getMessage(JOB_ADDED_TO_BOARD).sendTo(job.getEmployer().getPlayer());
+		OfflinePlayerUtils.ifOnline(job.getEmployer(), this.messageService.getMessage(JOB_ADDED_TO_BOARD)::sendTo);
 	}
 }

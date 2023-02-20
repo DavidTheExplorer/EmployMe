@@ -1,8 +1,8 @@
 package dte.employme.services.rewards;
 
+import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static java.util.stream.Collectors.joining;
 
-import dte.employme.messages.MessageKey;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.rewards.Reward;
@@ -23,9 +23,9 @@ public class SimpleJobRewardService implements JobRewardService
 	{
 		if(reward instanceof MoneyReward) 
 		{
-			String currencySymbol = this.messageService.getMessage(MessageKey.CURRENCY_SYMBOL).first();
-			
-			return String.format("%.2f%s", ((MoneyReward) reward).getPayment(), currencySymbol);
+			return String.format("%s%s", 
+					MoneyReward.formatPayment(((MoneyReward) reward)), 
+					this.messageService.getMessage(CURRENCY_SYMBOL).first());
 		}
 		else if(reward instanceof ItemsReward) 
 		{

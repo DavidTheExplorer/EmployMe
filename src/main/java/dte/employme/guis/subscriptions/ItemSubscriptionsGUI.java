@@ -14,9 +14,6 @@ import static dte.employme.messages.MessageKey.GUI_SUBSCRIBE_ITEM_PALETTE_TITLE;
 import static dte.employme.messages.MessageKey.NONE;
 import static dte.employme.messages.MessageKey.SUCCESSFULLY_SUBSCRIBED_TO_GOAL;
 import static dte.employme.messages.MessageKey.YOUR_SUBSCRIPTIONS_ARE;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.GOAL_SUBSCRIPTIONS;
-import static dte.employme.messages.Placeholders.ITEM;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static java.util.stream.Collectors.joining;
@@ -44,13 +41,13 @@ import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.EnumUtils;
 
-public class PlayerSubscriptionsGUI extends ChestGui
+public class ItemSubscriptionsGUI extends ChestGui
 {
 	private final JobService jobService;
 	private final MessageService messageService;
 	private final JobSubscriptionService jobSubscriptionService;
 
-	public PlayerSubscriptionsGUI(JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService) 
+	public ItemSubscriptionsGUI(JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService) 
 	{
 		super(3, messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_TITLE).first());
 		
@@ -97,7 +94,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 					subscriptionsNames += WHITE + ".";
 
 					this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
-					.inject(GOAL_SUBSCRIPTIONS, subscriptionsNames)
+					.inject("goal subscriptions", subscriptionsNames)
 					.sendTo(player);
 				})
 				.build();
@@ -145,9 +142,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 				{
 					Player player = (Player) event.getWhoClicked();
 					
-					UnsubscribeFromItemGUI gui = new UnsubscribeFromItemGUI(player, this.jobService, this.messageService, this.jobSubscriptionService);
-					gui.setOnClose(closeEvent -> show(player));
-					gui.show(event.getWhoClicked());
+					new ItemUnsubscriptionGUI(player, this.jobService, this.messageService, this.jobSubscriptionService).show(player);
 				})
 				.build();
 	}
@@ -157,7 +152,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 		return material -> 
 		{
 			String name = this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME)
-					.inject(ITEM, EnumUtils.fixEnumName(material))
+					.inject("item", EnumUtils.fixEnumName(material))
 					.first();
 
 			return new GuiItemBuilder()
@@ -175,7 +170,7 @@ public class PlayerSubscriptionsGUI extends ChestGui
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
 
 		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
-		.inject(GOAL, EnumUtils.fixEnumName(material))
+		.inject("goal", EnumUtils.fixEnumName(material))
 		.sendTo(player);
 
 		player.closeInventory();

@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
 import static dte.employme.messages.MessageKey.GUI_JOB_DELETION_DELETE_INSTRUCTION;
@@ -21,7 +21,7 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
-import dte.employme.items.JobIconFactory;
+import dte.employme.items.JobIcon;
 import dte.employme.job.Job;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.services.message.MessageService;
@@ -63,8 +63,9 @@ public class JobDeletionGUI extends ChestGui
 	private GuiItem createDeletionIcon(Job job) 
 	{
 		return new GuiItemBuilder()
-				.forItem(new ItemBuilder(JobIconFactory.create(job, this.messageService))
+				.forItem(new ItemBuilder(JobIcon.create(job, this.messageService))
 						.addToLore(true,
+								" ",
 								createSeparationLine(GRAY, 23),
 								this.messageService.getMessage(GUI_JOB_DELETION_DELETE_INSTRUCTION).first(),
 								createSeparationLine(GRAY, 23))

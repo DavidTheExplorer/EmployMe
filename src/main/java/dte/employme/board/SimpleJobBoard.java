@@ -3,7 +3,6 @@ package dte.employme.board;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -81,39 +80,39 @@ public class SimpleJobBoard implements JobBoard
 	}
 	
 	@Override
-	public void registerAddListener(JobAddListener... listeners) 
+	public void registerAddListener(JobAddListener listener) 
 	{
-		Arrays.stream(listeners).forEach(this.addListeners::add);
+		this.addListeners.add(listener);
 	}
 
 	@Override
-	public void registerCompleteListener(JobCompleteListener... listeners) 
+	public void registerCompleteListener(JobCompleteListener listener) 
 	{
-		Arrays.stream(listeners).forEach(this.completeListeners::add);
+		this.completeListeners.add(listener);
 	}
 
 	@Override
-	public void registerRemovalListener(JobRemovalListener... listeners) 
+	public void registerRemovalListener(JobRemovalListener listener) 
 	{
-		Arrays.stream(listeners).forEach(this.removalListeners::add);
+		this.removalListeners.add(listener);
 	}
 	
 	@Override
-	public void removeAddListener(JobAddListener... listeners) 
+	public void removeAddListener(JobAddListener listener) 
 	{
-		Arrays.stream(listeners).forEach(this.addListeners::remove);
+		this.addListeners.remove(listener);
 	}
 	
 	@Override
-	public void removeCompleteListener(JobCompleteListener... listeners) 
+	public void removeCompleteListener(JobCompleteListener listener) 
 	{
-		Arrays.stream(listeners).forEach(this.completeListeners::remove);
+		this.completeListeners.remove(listener);
 	}
 	
 	@Override
-	public void removeRemovalListener(JobRemovalListener... listeners) 
+	public void removeRemovalListener(JobRemovalListener listener) 
 	{
-		Arrays.stream(listeners).forEach(this.removalListeners::remove);
+		this.removalListeners.remove(listener);
 	}
 	
 	@Override

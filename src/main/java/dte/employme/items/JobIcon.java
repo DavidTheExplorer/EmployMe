@@ -7,11 +7,6 @@ import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
 import static dte.employme.messages.MessageKey.JOB_ICON_ITEMS_PAYMENT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_MONEY_PAYMENT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_NAME;
-import static dte.employme.messages.Placeholders.EMPLOYER;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.ITEMS_AMOUNT;
-import static dte.employme.messages.Placeholders.ITEM_PROVIDER;
-import static dte.employme.messages.Placeholders.MONEY_PAYMENT;
 import static dte.employme.utils.ChatColorUtils.colorize;
 import static org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES;
 
@@ -25,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.items.providers.ItemProvider;
 import dte.employme.items.providers.VanillaProvider;
 import dte.employme.job.Job;
-import dte.employme.messages.Placeholders;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.rewards.Reward;
@@ -34,20 +28,18 @@ import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.items.ItemBuilder;
 import dte.employme.utils.java.RomanNumeralsConverter;
 
-public class JobIconFactory
+public class JobIcon
 {
 	public static ItemStack create(Job job, MessageService messageService) 
 	{
 		String name = messageService.getMessage(JOB_ICON_NAME)
-				.inject(EMPLOYER, job.getEmployer().getName())
+				.inject("employer", job.getEmployer().getName())
 				.first();
 		
 		List<String> lore = new ArrayList<>();
 		lore.addAll(getGoalInstructions(messageService, job));
-		lore.addAll(getGoalEnchantmentsLore(job.getGoal(), messageService));
-		lore.add(" ");
 		lore.add(describeReward(job.getReward(), messageService));
-		lore.add(" ");
+		lore.addAll(getGoalEnchantmentsLore(job.getGoal(), messageService));
 
 		return new ItemBuilder(job.getGoal().getType())
 				.named(name)
@@ -61,8 +53,8 @@ public class JobIconFactory
 		ItemProvider goalProvider = job.getGoalProvider();
 
 		return messageService.getMessage(goalProvider instanceof VanillaProvider ? JOB_ICON_GOAL_INSTRUCTIONS : JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS)
-				.inject(GOAL, goalProvider.getDisplayName(job.getGoal()))
-				.inject(ITEM_PROVIDER, goalProvider.getName())
+				.inject("goal", goalProvider.getDisplayName(job.getGoal()))
+				.inject("item provider", goalProvider.getName())
 				.toList();
 	}
 
@@ -90,15 +82,15 @@ public class JobIconFactory
 
 	private static String describeReward(Reward reward, MessageService messageService)
 	{
-		if(reward instanceof MoneyReward moneyReward)
+		if(reward instanceof MoneyReward)
 			return messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
-					.inject(MONEY_PAYMENT, String.format("%.2f", moneyReward.getPayment()))
-					.inject(Placeholders.CURRENCY_SYMBOL, messageService.getMessage(CURRENCY_SYMBOL).first())
+					.inject("money payment", MoneyReward.formatPayment((MoneyReward) reward))
+					.inject("currency symbol", messageService.getMessage(CURRENCY_SYMBOL).first())
 					.first();
 
-		else if(reward instanceof ItemsReward itemsReward)
+		else if(reward instanceof ItemsReward)
 			return messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
-					.inject(ITEMS_AMOUNT, itemsReward.getItems().size())
+					.inject("items amount", ((ItemsReward) reward).getItems().size())
 					.first();
 
 		else

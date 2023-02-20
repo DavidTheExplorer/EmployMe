@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_ITEM_PR
 import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_CUSTOM_GOAL_SELECTION_TITLE;
-import static dte.employme.messages.Placeholders.ITEM_PROVIDER;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 
 import org.bukkit.Material;
@@ -71,11 +70,11 @@ public class CustomItemSelectionGUI extends ChestGui
 	private GuiItem createPluginIcon(ItemProvider itemProvider) 
 	{
 		String name = this.messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME)
-				.inject(ITEM_PROVIDER, itemProvider.getName())
+				.inject("item provider", itemProvider.getName())
 				.first();
 		
 		String lore = this.messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE)
-				.inject(ITEM_PROVIDER, itemProvider.getName())
+				.inject("item provider", itemProvider.getName())
 				.first();
 
 		return new GuiItemBuilder()

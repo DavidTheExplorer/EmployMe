@@ -26,7 +26,7 @@ public class TranslatedMessageService implements MessageService
 			.put(JOB_SUCCESSFULLY_CANCELLED, "Jobs.Cancelled")
 			.put(JOB_AUTO_REMOVED, "Jobs.Auto Removed")
 			.put(CONVERSATION_ESCAPE_TITLE, "Jobs.Conversation Escape Title")
-			
+
 			//Job Added Notifiers
 			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "Job Add Notifiers.Your New Notifier Is")
 			.put(NEW_JOB_POSTED, "Job Add Notifiers.New Job Posted")
@@ -47,10 +47,15 @@ public class TranslatedMessageService implements MessageService
 			.put(NEW_UPDATE_AVAILABLE, "General.New Update Available")
 			.put(CURRENCY_SYMBOL, "General.Currency Symbol")
 			.put(PLUGIN_RELOADED, "General.Plugin Reloaded")
-			
+			.put(CONVERSATION_ESCAPE_WORD, "General.Conversation Escape Word")
+
 			//Custom Items
 			.put(INVALID_CUSTOM_ITEM_FORMAT, "Custom Items.Invalid Format")
 			.put(CUSTOM_ITEM_NOT_FOUND, "Custom Items.Not Found Error")
+
+			//Live Updates
+			.put(LIVE_UPDATES_JOB_COMPLETED, "Live Updates.Job Completed")
+			.put(LIVE_UPDATES_TRACKER_ACTIONBAR, "Live Updates.Tracker Action Bar")
 
 			//Job Containers GUI
 			.put(GUI_JOB_CONTAINERS_TITLE, "GUIs.Player Containers.Title")
@@ -73,6 +78,7 @@ public class TranslatedMessageService implements MessageService
 			.put(JOB_ICON_ENCHANT_DESCRIPTION, "Items.Job Icon.Enchant Description")
 			.put(JOB_ICON_MONEY_PAYMENT_DESCRIPTION, "Items.Job Icon.Money Payment Description")
 			.put(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION, "Items.Job Icon.Items Payment Description")
+			.put(JOB_ICON_VIEW_ACTIONS_DESCRIPTION, "Items.Job Icon.View Actions Description")
 
 			//Job Board GUI
 			.put(GUI_JOB_BOARD_TITLE, "GUIs.Job Board.Title")
@@ -165,7 +171,7 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, "GUIs.Job Added Notifiers.Items.No Jobs.Name")
 			.put(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE, "GUIs.Job Added Notifiers.Items.No Jobs.Lore")
 			.put(GUI_JOB_ADDED_NOTIFIERS_SELECTED, "GUIs.Job Added Notifiers.Currently Selected")
-			
+
 			//Player Subscriptions GUI
 			.put(GUI_PLAYER_SUBSCRIPTIONS_TITLE, "GUIs.Player Subscriptions.Title")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME, "GUIs.Player Subscriptions.Items.Your Subscriptions.Name")
@@ -174,24 +180,60 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Subscribe.Lore")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME, "GUIs.Player Subscriptions.Items.Unsubscribe.Name")
 			.put(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE, "GUIs.Player Subscriptions.Items.Unsubscribe.Lore")
-			
+
 			//Custom Goal Selection GUI
 			.put(GUI_CUSTOM_GOAL_SELECTION_TITLE, "GUIs.Custom Goal Selection.Title")
 			.put(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME, "GUIs.Custom Goal Selection.Items.More Plugins Soon.Name")
 			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME, "GUIs.Custom Goal Selection.Items.Item Provider.Name")
 			.put(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE, "GUIs.Custom Goal Selection.Items.Item Provider.Lore")
-			
+
 			//Subscribe Item Palette
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Subscribe Item Palette.Title")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION, "GUIs.Subscribe Item Palette.Subscribe Question")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME, "GUIs.Subscribe Item Palette.Items.Name")
 			.put(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE, "GUIs.Subscribe Item Palette.Items.Lore")
-			
+
 			//Unsubscribe from Items Item Palette
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE, "GUIs.Unsubscribe From Items.Title")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION, "GUIs.Unsubscribe From Items.Unsubscribe Question")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME, "GUIs.Unsubscribe From Items.Items.Name")
 			.put(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE, "GUIs.Unsubscribe From Items.Items.Lore")
+
+			//Job Actions GUI
+			.put(GUI_JOB_ACTIONS_TITLE, "GUIs.Job Actions.Title")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME, "GUIs.Job Actions.Items.Tracker.Name")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Tracker.Description")
+			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "GUIs.Job Actions.Items.Items Reward Preview.Name")
+			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Items Reward Preview.Description")
+			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME, "GUIs.Job Actions.Items.Job Completion.Name")
+			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Job Completion.Description")
+			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME, "GUIs.Job Actions.Items.Job Not Completed.Name")
+			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Job Not Completed.Description")
+
+			//Commands
+			.put(COMMAND_VIEW_NAME, "Commands.View.Name")
+			.put(COMMAND_VIEW_DESCRIPTION, "Commands.View.Description")
+
+			.put(COMMAND_OFFER_NAME, "Commands.Offer.Name")
+			.put(COMMAND_OFFER_DESCRIPTION, "Commands.Offer.Description")
+
+			.put(COMMAND_DELETE_NAME, "Commands.Delete.Name")
+			.put(COMMAND_DELETE_DESCRIPTION, "Commands.Delete.Description")
+
+			.put(COMMAND_MYCONTAINERS_NAME, "Commands.My Containers.Name")
+			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Commands.My Containers.Description")
+
+			.put(COMMAND_ADDNOTIFIERS_NAME, "Commands.Add Notifiers.Name")
+			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Commands.Add Notifiers.Description")
+
+			.put(COMMAND_MYSUBSCRIPTIONS_NAME, "Commands.My Subscriptions.Name")
+			.put(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION, "Commands.My Subscriptions.Description")
+
+			.put(COMMAND_RELOAD_NAME, "Commands.Reload.Name")
+			.put(COMMAND_RELOAD_DESCRIPTION, "Commands.Reload.Description")
+
+			.put(COMMAND_HELP_NAME, "Commands.Help.Name")
+			.put(COMMAND_HELP_DESCRIPTION, "Commands.Help.Description")
 			.build();
 
 	public TranslatedMessageService(SpigotConfig languageConfig) 
@@ -205,10 +247,10 @@ public class TranslatedMessageService implements MessageService
 		Object message = this.languageConfig.get(getConfigPath(key));
 
 		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
-		
+
 		if(key.shouldBePrefixed())
 			messageBuilder.prefixed(getMessage(PREFIX).first());
-		
+
 		return messageBuilder;
 	}
 

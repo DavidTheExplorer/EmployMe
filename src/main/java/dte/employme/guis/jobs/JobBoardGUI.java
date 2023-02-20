@@ -1,6 +1,5 @@
 package dte.employme.guis.jobs;
 
-import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_JOB_NOT_CONTAINED;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_NEXT_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_OFFER_COMPLETED;
@@ -11,7 +10,6 @@ import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PREVIOUS_PAGE_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_TITLE;
-import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.services.job.JobService.FinishState.NEGATIVE;
 import static dte.employme.services.job.JobService.FinishState.PARTIALLY;
 import static dte.employme.utils.ChatColorUtils.createSeparationLine;
@@ -28,7 +26,6 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.conversations.Conversation;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -41,21 +38,13 @@ import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
 import dte.employme.board.JobBoard;
-import dte.employme.board.JobBoard.JobCompletionContext;
-import dte.employme.conversations.Conversations;
-import dte.employme.conversations.JobPartialCompletionAmountPrompt;
-import dte.employme.guis.ItemsRewardPreviewGUI;
-import dte.employme.guis.PlayerJobsGUI;
-import dte.employme.items.JobIconFactory;
+import dte.employme.items.JobIcon;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageBuilder;
-import dte.employme.rewards.ItemsReward;
-import dte.employme.rewards.PartialReward;
-import dte.employme.rewards.Reward;
+import dte.employme.messages.MessageKey;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.JobService.FinishState;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.rewards.PartialCompletionInfo;
 import dte.employme.utils.CenteredMessage;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
@@ -124,36 +113,7 @@ public class JobBoardGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(createOfferIconItem(job))
-				.whenClicked(event -> 
-				{
-					//fix dangerous exploit where if 2 players have the board open, both can complete the same job - in order to dupe the reward
-					if(!this.jobBoard.containsJob(job)) 
-					{
-						this.messageService.getMessage(GUI_JOB_BOARD_JOB_NOT_CONTAINED).sendTo(this.player);
-						this.player.closeInventory();
-						return;
-					}
-					
-					Reward reward = job.getReward();
-					
-					//Right click = preview mode for jobs that offer items
-					if(event.isRightClick() && reward instanceof ItemsReward)
-					{
-						new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) reward, this.messageService).show(this.player);
-						return;
-					}
-
-					//the user wants to finish the job
-					if(!this.jobService.getFinishState(this.player, job).hasFinished())
-						return;
-
-					this.player.closeInventory();
-
-					if(!(reward instanceof PartialReward))
-						completeJob(job, JobCompletionContext.normal(job));
-					else
-						askGoalAmount(job).begin();
-				})
+				.whenClicked(event -> new JobActionsGUI(job, this.jobBoard, this.player, this, this.messageService, this.jobService).show(this.player))
 				.build();
 	}
 
@@ -180,47 +140,12 @@ public class JobBoardGUI extends ChestGui
 			return this.messageService.getMessage(GUI_JOB_BOARD_OFFER_NOT_COMPLETED);
 
 		return this.messageService.getMessage((finishState == PARTIALLY ? GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED : GUI_JOB_BOARD_OFFER_COMPLETED))
-				.inject(GOAL_AMOUNT, this.jobService.getGoalAmountInInventory(job, this.player.getInventory()));
-	}
-
-	private Conversation askGoalAmount(Job job) 
-	{
-		return Conversations.createFactory(this.messageService)
-				.withFirstPrompt(new JobPartialCompletionAmountPrompt(this.messageService, this.jobService, job))
-				.addConversationAbandonedListener(abandonedEvent -> 
-				{
-					if(!abandonedEvent.gracefulExit())
-						return;
-					
-					int amountToUse = (int) abandonedEvent.getContext().getSessionData("Amount To Use");
-					completeJob(job, (amountToUse == job.getGoal().getAmount()) ? JobCompletionContext.normal(job) : JobCompletionContext.partial(this.jobService.getPartialCompletionInfo(this.player, job, amountToUse)));
-				})
-				.buildConversation(this.player);
-	}
-	
-	private void completeJob(Job job, JobCompletionContext context) 
-	{
-		this.jobBoard.completeJob(job, this.player, context);
-		
-		if(!context.isJobCompleted())
-			updatePartialJob(job, context.getPartialInfo());
-	}
-
-	private void updatePartialJob(Job job, PartialCompletionInfo partialCompletionInfo) 
-	{
-		ItemStack newGoal = new ItemBuilder(job.getGoal())
-				.amounted(job.getGoal().getAmount() - partialCompletionInfo.getGoal().getAmount())
-				.createCopy();
-
-		PartialReward newReward = ((PartialReward) job.getReward()).afterPartialCompletion(partialCompletionInfo.getPercentage());
-
-		job.setGoal(newGoal, job.getGoalProvider());
-		job.setReward(newReward);
+				.inject("goal amount", this.jobService.getGoalAmountInInventory(job, this.player.getInventory()));
 	}
 
 	private ItemStack createOfferIconItem(Job job) 
 	{
-		ItemStack basicIcon = JobIconFactory.create(job, this.messageService);
+		ItemStack basicIcon = JobIcon.create(job, this.messageService);
 		FinishState currentState = this.jobService.getFinishState(this.player, job);
 
 		//add the status and ID to the lore
@@ -235,6 +160,9 @@ public class JobBoardGUI extends ChestGui
 		String separator = createSeparationLine(currentState.hasFinished() ? WHITE : DARK_RED, separatorLength);
 
 		List<String> lore = basicIcon.getItemMeta().getLore();
+		lore.add(" ");
+		lore.addAll(this.messageService.getMessage(MessageKey.JOB_ICON_VIEW_ACTIONS_DESCRIPTION).toList());
+		lore.add(" ");
 		lore.add(separator);
 		statusMessage.stream().map(line -> CenteredMessage.of(line, separator)).forEach(lore::add);
 		lore.add(separator);

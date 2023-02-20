@@ -18,11 +18,11 @@ public class Conversations
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)
 				.withModality(false)
-				.withEscapeSequence("cancel")
+				.withEscapeSequence(messageService.getMessage(MessageKey.CONVERSATION_ESCAPE_WORD).first())
 				.withPrefix(context -> messageService.getMessage(PREFIX).first());
 	}
 
-	public static ConversationAbandonedListener refundRewardIfAbandoned(MessageService messageService, MessageKey messageToSend) 
+	public static ConversationAbandonedListener refundReward(MessageService messageService, MessageKey messageToSend) 
 	{
 		return event ->
 		{

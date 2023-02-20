@@ -1,6 +1,7 @@
 package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
 import static dte.employme.messages.MessageKey.GOAL_AMOUNT_MUST_BE_POSITIVE;
 import static dte.employme.messages.MessageKey.GOAL_AMOUNT_NOT_A_NUMBER;
 import static dte.employme.messages.MessageKey.GOAL_AMOUNT_QUESTION;
@@ -28,7 +29,9 @@ public class GoalAmountPrompt extends NumericPrompt
 		Player player = (Player) context.getForWhom();
 
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE).sendTitleTo(player);
+		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		.sendTitleTo(player);
 
 		return this.messageService.getMessage(GOAL_AMOUNT_QUESTION).first();
 	}

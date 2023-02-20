@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME;
@@ -8,7 +8,6 @@ import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPT
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_TITLE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
-import static dte.employme.messages.Placeholders.JOB_ADDED_NOTIFIER;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createWalls;
 
@@ -101,7 +100,7 @@ public class JobAddNotifiersGUI extends ChestGui
 					this.jobAddNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
 
 					this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
-					.inject(JOB_ADDED_NOTIFIER, notifier.getName())
+					.inject("job added notifier", notifier.getName())
 					.sendTo(player);
 				})
 				.build();

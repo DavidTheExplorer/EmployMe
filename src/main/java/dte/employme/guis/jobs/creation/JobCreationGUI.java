@@ -26,7 +26,6 @@ import dte.employme.rewards.MoneyReward;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
 import net.milkbowl.vault.economy.Economy;
@@ -35,18 +34,16 @@ public class JobCreationGUI extends ChestGui
 {
 	private final JobBoard jobBoard;
 	private final MessageService messageService;
-	private final PlayerContainerService playerContainerService;
 	private final JobSubscriptionService jobSubscriptionService;
 	private final ConversationFactory moneyJobConversationFactory;
 	private final JobService jobService;
 	
-	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, Economy economy, PlayerContainerService playerContainerService, JobService jobService)
+	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, Economy economy, JobService jobService)
 	{
 		super(3, messageService.getMessage(GUI_JOB_CREATION_TITLE).first());
 		
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
-		this.playerContainerService = playerContainerService;
 		this.jobSubscriptionService = jobSubscriptionService;
 		this.jobService = jobService;
 		
@@ -98,7 +95,7 @@ public class JobCreationGUI extends ChestGui
 						.named(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
 						.withLore(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
 						.createCopy())
-				.whenClicked(event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.playerContainerService, this.jobSubscriptionService, this.jobService).show(event.getWhoClicked()))
+				.whenClicked(event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.jobSubscriptionService, this.jobService).show(event.getWhoClicked()))
 				.build());
 
 		return pane;

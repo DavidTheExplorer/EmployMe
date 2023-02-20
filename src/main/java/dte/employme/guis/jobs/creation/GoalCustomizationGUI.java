@@ -1,6 +1,6 @@
 package dte.employme.guis.jobs.creation;
 
-import static dte.employme.conversations.Conversations.refundRewardIfAbandoned;
+import static dte.employme.conversations.Conversations.refundReward;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME;
@@ -13,7 +13,6 @@ import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME;
 import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
-import static dte.employme.messages.Placeholders.GOAL_AMOUNT;
 import static dte.employme.utils.EnchantmentUtils.canEnchantItem;
 import static dte.employme.utils.EnchantmentUtils.enchant;
 import static dte.employme.utils.EnchantmentUtils.getEnchantments;
@@ -53,6 +52,7 @@ import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
+import dte.employme.utils.java.MapBuilder;
 
 public class GoalCustomizationGUI extends ChestGui
 {
@@ -111,6 +111,9 @@ public class GoalCustomizationGUI extends ChestGui
 		//show the amount item after initially setting the item
 		if(this.currentItem.getType() == NO_ITEM_TYPE) 
 			this.optionsPane.addItem(createAmountItem());
+		
+		//Keep the item's amount
+		item.setAmount(this.currentItem.getAmount());
 		
 		this.currentItem = item;
 		this.provider = provider;
@@ -270,7 +273,7 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ARROW)
-						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject(GOAL_AMOUNT, this.currentItem.getAmount()).first())
+						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject("goal amount", this.currentItem.getAmount()).first())
 						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 						.glowing()
 						.createCopy())
@@ -282,7 +285,8 @@ public class GoalCustomizationGUI extends ChestGui
 					
 					Conversations.createFactory(this.messageService)
 					.withFirstPrompt(new GoalAmountPrompt(this.messageService))
-					.addConversationAbandonedListener(refundRewardIfAbandoned(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
+					.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", this.reward).build())
+					.addConversationAbandonedListener(refundReward(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
 					.addConversationAbandonedListener(abandonEvent -> 
 					{
 						if(!abandonEvent.gracefulExit())
@@ -308,7 +312,7 @@ public class GoalCustomizationGUI extends ChestGui
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ANVIL)
 						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
-						.withLore(lore.toArray(String[]::new))
+						.withLore(lore.toArray(new String[0]))
 						.glowing()
 						.createCopy())
 				.whenClicked(event -> 

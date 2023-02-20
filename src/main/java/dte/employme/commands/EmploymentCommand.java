@@ -1,7 +1,6 @@
 package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
-import static dte.employme.messages.Placeholders.RELOAD_TIME;
 
 import java.time.Duration;
 import java.util.List;
@@ -21,12 +20,12 @@ import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.guis.JobAddNotifiersGUI;
-import dte.employme.guis.JobDeletionGUI;
+import dte.employme.guis.jobs.JobAddNotifiersGUI;
 import dte.employme.guis.jobs.JobBoardGUI;
+import dte.employme.guis.jobs.JobDeletionGUI;
 import dte.employme.guis.jobs.creation.JobCreationGUI;
 import dte.employme.guis.playercontainer.JobContainersGUI;
-import dte.employme.guis.subscriptions.PlayerSubscriptionsGUI;
+import dte.employme.guis.subscriptions.ItemSubscriptionsGUI;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.services.job.JobService;
@@ -62,24 +61,24 @@ public class EmploymentCommand extends BaseCommand
 		this.defaultNotifier = defaultNotifier;
 	}
 	
-	@Subcommand("view")
-	@Description("Search through all the Available Jobs.")
+	@Subcommand("%View Name")
+	@Description("%View Description")
 	@CommandPermission("employme.jobs.view")
 	public void view(Player player)
 	{
 		new JobBoardGUI(player, this.globalJobBoard, this.jobService, this.messageService).show(player);
 	}
 	
-	@Subcommand("offer")
-	@Description("Offer a new Job to the public.")
+	@Subcommand("%Offer Name")
+	@Description("%Offer Description")
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.playerContainerService, this.jobService).show(employer);
+		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.jobService).show(employer);
 	}
 
-	@Subcommand("delete|del")
-	@Description("Delete a job.")
+	@Subcommand("%Delete Name")
+	@Description("%Delete Description")
 	@CommandPermission("employme.jobs.delete")
 	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
 	{
@@ -87,29 +86,39 @@ public class EmploymentCommand extends BaseCommand
 		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
-	@Subcommand("mycontainers|myconts")
-	@Description("Claim the items that either people gathered for you OR from completed jobs.")
+	@Subcommand("%MyContainers Name")
+	@Description("%MyContainers Description")
 	@CommandPermission("employme.mycontainers")
 	public void showPersonalContainers(Player player) 
 	{
 		new JobContainersGUI(this.messageService, this.playerContainerService).show(player);
 	}
 	
-	@Subcommand("addnotifiers")
+	@Subcommand("%AddNotifiers Name")
+	@Description("%AddNotifiers Description")
 	@CommandPermission("employme.addnotifiers")
 	public void showNotifiers(Player player) 
 	{
 		new JobAddNotifiersGUI(this.jobAddNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
 	}
 
-	@Subcommand("mysubscriptions|mysubs")
+	@Subcommand("%MySubscriptions Name")
+	@Description("%MySubscriptions Description")
 	@CommandPermission("employme.mysubscriptions")
 	public void showPersonalSubscriptions(Player player) 
 	{
-		new PlayerSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
+		new ItemSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
+	}
+	
+	@Subcommand("stopliveupdates")
+	@Description("Stop getting live updates for a job.")
+	public void stopLiveUpdates(Player player) 
+	{
+		this.jobService.stopLiveUpdates(player);
 	}
 
-	@Subcommand("reload")
+	@Subcommand("%Reload Name")
+	@Description("%Reload Description")
 	@CommandPermission("employme.reload")
 	public void reload(CommandSender sender)
 	{
@@ -120,13 +129,15 @@ public class EmploymentCommand extends BaseCommand
 		});
 
 		this.messageService.getMessage(PLUGIN_RELOADED)
-		.inject(RELOAD_TIME, reloadTime.toMillis())
+		.inject("reload time", reloadTime.toMillis())
 		.sendTo(sender);
 	}
 	
+	@Subcommand("%Help Name")
+	@Description("%Help Description")
 	@HelpCommand
 	@CatchUnknown
-	public void sendHelp(CommandHelp help) 
+	public void sendHelp(CommandSender sender, CommandHelp help) 
 	{
 		help.showHelp();
 	}

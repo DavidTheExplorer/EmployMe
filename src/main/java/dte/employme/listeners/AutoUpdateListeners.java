@@ -1,7 +1,6 @@
 package dte.employme.listeners;
 
 import static dte.employme.messages.MessageKey.NEW_UPDATE_AVAILABLE;
-import static dte.employme.messages.Placeholders.NEW_VERSION;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,7 +29,7 @@ public class AutoUpdateListeners implements Listener
 			return;
 		
 		this.messageService.getMessage(NEW_UPDATE_AVAILABLE)
-		.inject(NEW_VERSION, this.newVersion)
+		.inject("new version", this.newVersion)
 		.sendTo(player);
 	}
 }

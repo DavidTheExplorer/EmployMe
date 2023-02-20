@@ -1,9 +1,5 @@
 package dte.employme.board.listeners.addition;
 
-import static dte.employme.messages.Placeholders.EMPLOYER;
-import static dte.employme.messages.Placeholders.GOAL;
-import static dte.employme.messages.Placeholders.REWARD;
-
 import java.io.IOException;
 
 import dte.employme.board.JobBoard;
@@ -49,9 +45,9 @@ public class JobAddDiscordWebhook implements JobAddListener
 	private String injectPlaceholders(String text, Job job) 
 	{
 		return new MessageBuilder(text)
-				.inject(EMPLOYER, job.getEmployer().getName())
-				.inject(GOAL, ItemStackUtils.describe(job.getGoal()))
-				.inject(REWARD, this.jobRewardService.describe(job.getReward()))
+				.inject("employer", job.getEmployer().getName())
+				.inject("goal", ItemStackUtils.describe(job.getGoal()))
+				.inject("reward", this.jobRewardService.describe(job.getReward()))
 				.first();
 	}
 }

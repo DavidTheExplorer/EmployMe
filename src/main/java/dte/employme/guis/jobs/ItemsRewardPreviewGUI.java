@@ -1,4 +1,4 @@
-package dte.employme.guis;
+package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_ITEMS_REWARD_PREVIEW_TITLE;
 

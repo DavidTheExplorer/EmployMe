@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.MONEY_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.MessageKey.PLAYER_PARTIALLY_COMPLETED_YOUR_JOB;
-import static dte.employme.messages.Placeholders.COMPLETER;
 
 import org.bukkit.entity.Player;
 
@@ -45,7 +44,7 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 			OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
 			{
 				this.messageService.getMessage(getEmployerMessage(context))
-				.inject(COMPLETER, whoCompleted.getName())
+				.inject("completer", whoCompleted.getName())
 				.stream()
 				.map(message -> displayHoverDescription(message, job, context))
 				.forEach(employer.spigot()::sendMessage);
