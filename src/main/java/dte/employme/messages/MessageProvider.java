@@ -231,6 +231,8 @@ public class MessageProvider
 			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Choose what kind of jobs you want to be notified about.")
 			.put(COMMAND_MYSUBSCRIPTIONS_NAME, "mysubscriptions")
 			.put(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION, "Subscribe to rewards you need.")
+			.put(COMMAND_STOPLIVEUPDATES_NAME, "stopliveupdates")
+			.put(COMMAND_STOPLIVEUPDATES_DESCRIPTION, "Stop getting live updates for a job.")
 			.put(COMMAND_RELOAD_NAME, "reload")
 			.put(COMMAND_RELOAD_DESCRIPTION, "Reload the plugin.")
 			.put(COMMAND_HELP_NAME, "help")

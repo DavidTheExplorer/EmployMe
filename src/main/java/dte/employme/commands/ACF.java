@@ -14,6 +14,8 @@ import static dte.employme.messages.MessageKey.COMMAND_OFFER_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_OFFER_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_RELOAD_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_RELOAD_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_STOPLIVEUPDATES_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_STOPLIVEUPDATES_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_VIEW_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_VIEW_NAME;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
@@ -133,6 +135,9 @@ public class ACF
 		
 		commandManager.getCommandReplacements().addReplacement("MySubscriptions Name", this.messageService.getMessage(COMMAND_MYSUBSCRIPTIONS_NAME).first());
 		commandManager.getCommandReplacements().addReplacement("MySubscriptions Description", this.messageService.getMessage(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION).first());
+		
+		commandManager.getCommandReplacements().addReplacement("StopLiveUpdates Name", this.messageService.getMessage(COMMAND_STOPLIVEUPDATES_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("StopLiveUpdates Description", this.messageService.getMessage(COMMAND_STOPLIVEUPDATES_DESCRIPTION).first());
 		
 		commandManager.getCommandReplacements().addReplacement("Reload Name", this.messageService.getMessage(COMMAND_RELOAD_NAME).first());
 		commandManager.getCommandReplacements().addReplacement("Reload Description", this.messageService.getMessage(COMMAND_RELOAD_DESCRIPTION).first());

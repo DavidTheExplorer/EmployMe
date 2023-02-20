@@ -110,8 +110,8 @@ public class EmploymentCommand extends BaseCommand
 		new ItemSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
 	}
 	
-	@Subcommand("stopliveupdates")
-	@Description("Stop getting live updates for a job.")
+	@Subcommand("%StopLiveUpdates Name")
+	@Description("%StopLiveUpdates Description")
 	public void stopLiveUpdates(Player player) 
 	{
 		this.jobService.stopLiveUpdates(player);

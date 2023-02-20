@@ -213,25 +213,20 @@ public class TranslatedMessageService implements MessageService
 			//Commands
 			.put(COMMAND_VIEW_NAME, "Commands.View.Name")
 			.put(COMMAND_VIEW_DESCRIPTION, "Commands.View.Description")
-
 			.put(COMMAND_OFFER_NAME, "Commands.Offer.Name")
 			.put(COMMAND_OFFER_DESCRIPTION, "Commands.Offer.Description")
-
 			.put(COMMAND_DELETE_NAME, "Commands.Delete.Name")
 			.put(COMMAND_DELETE_DESCRIPTION, "Commands.Delete.Description")
-
 			.put(COMMAND_MYCONTAINERS_NAME, "Commands.My Containers.Name")
 			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Commands.My Containers.Description")
-
 			.put(COMMAND_ADDNOTIFIERS_NAME, "Commands.Add Notifiers.Name")
 			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Commands.Add Notifiers.Description")
-
 			.put(COMMAND_MYSUBSCRIPTIONS_NAME, "Commands.My Subscriptions.Name")
 			.put(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION, "Commands.My Subscriptions.Description")
-
+			.put(COMMAND_STOPLIVEUPDATES_NAME, "Commands.Stop Live Updates.Name")
+			.put(COMMAND_STOPLIVEUPDATES_DESCRIPTION, "Commands.Stop Live Updates.Description")
 			.put(COMMAND_RELOAD_NAME, "Commands.Reload.Name")
 			.put(COMMAND_RELOAD_DESCRIPTION, "Commands.Reload.Description")
-
 			.put(COMMAND_HELP_NAME, "Commands.Help.Name")
 			.put(COMMAND_HELP_DESCRIPTION, "Commands.Help.Description")
 			.build();
