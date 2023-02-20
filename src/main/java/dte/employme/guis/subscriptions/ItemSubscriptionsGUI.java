@@ -142,9 +142,7 @@ public class ItemSubscriptionsGUI extends ChestGui
 				{
 					Player player = (Player) event.getWhoClicked();
 					
-					ItemUnsubscriptionGUI gui = new ItemUnsubscriptionGUI(player, this.jobService, this.messageService, this.jobSubscriptionService);
-					gui.setOnClose(closeEvent -> show(player));
-					gui.show(event.getWhoClicked());
+					new ItemUnsubscriptionGUI(player, this.jobService, this.messageService, this.jobSubscriptionService).show(player);
 				})
 				.build();
 	}
