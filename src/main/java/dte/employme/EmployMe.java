@@ -157,7 +157,6 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//setup config features
 		setupWebhooks();
-		setupAutoJobDeletion();
 		
 		//start metrics
 		new Metrics(this, 16573);
@@ -224,9 +223,10 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService));		
 	}
 	
+	@SuppressWarnings("unused")
 	private void setupAutoJobDeletion()
 	{
-		//if "/emp reload" was executed after auto deletion was changed to false - remove the listeners
+		//When running "/emp reload", the listener should be removed & re-added if the config enables it
 		this.globalJobBoard.removeAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.removeCompleteListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
