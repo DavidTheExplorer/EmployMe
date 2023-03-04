@@ -3,7 +3,6 @@ package dte.employme.commands;
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
 
 import java.time.Duration;
-import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,18 +14,15 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.guis.jobs.JobAddNotifiersGUI;
 import dte.employme.guis.jobs.JobBoardGUI;
-import dte.employme.guis.jobs.JobDeletionGUI;
 import dte.employme.guis.jobs.creation.JobCreationGUI;
 import dte.employme.guis.playercontainer.JobContainersGUI;
 import dte.employme.guis.subscriptions.ItemSubscriptionsGUI;
-import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.addnotifiers.JobAddNotifierService;
@@ -75,15 +71,6 @@ public class EmploymentCommand extends BaseCommand
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
 		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.jobService).show(employer);
-	}
-
-	@Subcommand("%Delete Name")
-	@Description("%Delete Description")
-	@CommandPermission("employme.jobs.delete")
-	public void deleteJob(Player player, @Flags("Jobs Able To Delete") List<Job> jobsToDisplay) 
-	{
-		//TODO: send a MessageKey.NO_JOBS_TO_DISPLAY instead of opening an empty inventory
-		new JobDeletionGUI(this.globalJobBoard, jobsToDisplay, this.messageService).show(player);
 	}
 
 	@Subcommand("%MyContainers Name")

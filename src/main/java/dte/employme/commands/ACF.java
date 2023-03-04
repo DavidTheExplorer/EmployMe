@@ -2,8 +2,6 @@ package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_NAME;
-import static dte.employme.messages.MessageKey.COMMAND_DELETE_DESCRIPTION;
-import static dte.employme.messages.MessageKey.COMMAND_DELETE_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_HELP_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_HELP_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_MYCONTAINERS_DESCRIPTION;
@@ -20,8 +18,6 @@ import static dte.employme.messages.MessageKey.COMMAND_VIEW_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_VIEW_NAME;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
 import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
-
-import java.util.List;
 
 import org.bukkit.entity.Player;
 
@@ -73,23 +69,9 @@ public class ACF
 		BukkitCommandManager commandManager = new BukkitCommandManager(EmployMe.getInstance());
 		commandManager.enableUnstableAPI("help");
 		
-		registerContexts(commandManager);
 		registerConditions(commandManager);
 		registerReplacements(commandManager);
 		registerCommands(commandManager);
-	}
-	
-	private void registerContexts(BukkitCommandManager commandManager) 
-	{
-		commandManager.getCommandContexts().registerIssuerOnlyContext(List.class, context -> 
-		{
-			if(!context.hasFlag("Jobs Able To Delete"))
-				return null;
-			
-			Player player = context.getPlayer();
-			
-			return player.hasPermission("employme.admin.delete") ? this.globalJobBoard.getOfferedJobs() : this.globalJobBoard.getJobsOfferedBy(player.getUniqueId());
-		});
 	}
 	
 	private void registerConditions(BukkitCommandManager commandManager) 
@@ -123,9 +105,6 @@ public class ACF
 		
 		commandManager.getCommandReplacements().addReplacement("Offer Name", this.messageService.getMessage(COMMAND_OFFER_NAME).first());
 		commandManager.getCommandReplacements().addReplacement("Offer Description", this.messageService.getMessage(COMMAND_OFFER_DESCRIPTION).first());
-		
-		commandManager.getCommandReplacements().addReplacement("Delete Name", this.messageService.getMessage(COMMAND_DELETE_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("Delete Description", this.messageService.getMessage(COMMAND_DELETE_DESCRIPTION).first());
 		
 		commandManager.getCommandReplacements().addReplacement("MyContainers Name", this.messageService.getMessage(COMMAND_MYCONTAINERS_NAME).first());
 		commandManager.getCommandReplacements().addReplacement("MyContainers Description", this.messageService.getMessage(COMMAND_MYCONTAINERS_DESCRIPTION).first());

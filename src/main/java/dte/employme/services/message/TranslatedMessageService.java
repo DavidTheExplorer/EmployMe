@@ -85,7 +85,6 @@ public class TranslatedMessageService implements MessageService
 			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "GUIs.Job Board.Offer Completed")
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "GUIs.Job Board.Offer Not Completed")
 			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "GUIs.Job Board.Offer Partially Completed")
-			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "GUIs.Job Board.Offer Not Contained")
 			.put(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION, "GUIs.Job Board.Partial Goal Amount To Use Question")
 			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "GUIs.Job Board.Invalid Partial Goal Amount Error")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "GUIs.Job Board.Items.Your Jobs.Name")
@@ -201,6 +200,7 @@ public class TranslatedMessageService implements MessageService
 
 			//Job Actions GUI
 			.put(GUI_JOB_ACTIONS_TITLE, "GUIs.Job Actions.Title")
+			.put(GUI_JOB_ACTIONS_JOB_UNAVAILABLE, "GUIs.Job Actions.Job Not Available")
 			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME, "GUIs.Job Actions.Items.Tracker.Name")
 			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Tracker.Description")
 			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "GUIs.Job Actions.Items.Items Reward Preview.Name")
@@ -215,8 +215,6 @@ public class TranslatedMessageService implements MessageService
 			.put(COMMAND_VIEW_DESCRIPTION, "Commands.View.Description")
 			.put(COMMAND_OFFER_NAME, "Commands.Offer.Name")
 			.put(COMMAND_OFFER_DESCRIPTION, "Commands.Offer.Description")
-			.put(COMMAND_DELETE_NAME, "Commands.Delete.Name")
-			.put(COMMAND_DELETE_DESCRIPTION, "Commands.Delete.Description")
 			.put(COMMAND_MYCONTAINERS_NAME, "Commands.My Containers.Name")
 			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Commands.My Containers.Description")
 			.put(COMMAND_ADDNOTIFIERS_NAME, "Commands.Add Notifiers.Name")

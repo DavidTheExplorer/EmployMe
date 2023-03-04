@@ -93,7 +93,6 @@ public class MessageProvider
 			.put(GUI_JOB_BOARD_OFFER_COMPLETED, "&a&lClick to Finish!")
 			.put(GUI_JOB_BOARD_OFFER_NOT_COMPLETED, "&cYou didn't complete this Job.")
 			.put(GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED, "&aYou can &2&lPartially complete &athis job!", "&aClick to continue")
-			.put(GUI_JOB_BOARD_JOB_NOT_CONTAINED, "&cUnable to complete the job because it's not offered anymore!")
 			.put(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION, "&fYour inventory has &a%goal amount% &fitems, how many of them should be used for completion?")
 			.put(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR, "Invalid amount! Please use a positive amount that is is within 1 and the job's goal amount.")
 			.put(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME, "&aYour Jobs")
@@ -209,6 +208,7 @@ public class MessageProvider
 			
 			//Job Actions GUI
 			.put(GUI_JOB_ACTIONS_TITLE, "Available Actions")
+			.put(GUI_JOB_ACTIONS_JOB_UNAVAILABLE, "&cUnable to proceed because the job is not offered anymore!")
 			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME, "&aTrack Progression")
 			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "&fGet live notifications about your progression", "&ftowards completing this job.")
 			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "&aItems Reward Preview")
@@ -223,8 +223,6 @@ public class MessageProvider
 			.put(COMMAND_VIEW_DESCRIPTION, "Search through the Available Jobs.")
 			.put(COMMAND_OFFER_NAME, "offer")
 			.put(COMMAND_OFFER_DESCRIPTION, "Offer a new job to the public.")
-			.put(COMMAND_DELETE_NAME, "delete")
-			.put(COMMAND_DELETE_DESCRIPTION, "Delete a job.")
 			.put(COMMAND_MYCONTAINERS_NAME, "mycontainers")
 			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Obtain items from your containers.")
 			.put(COMMAND_ADDNOTIFIERS_NAME, "addnotifiers")
