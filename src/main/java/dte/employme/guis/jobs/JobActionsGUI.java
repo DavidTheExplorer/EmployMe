@@ -141,13 +141,6 @@ public class JobActionsGUI extends ChestGui
 					this.showJobBoardOnExit = false;
 					this.player.closeInventory();
 
-					//fix exploit where if 2 players have the board open, both can complete the same job - in order to duplicate the reward
-					if(!this.jobBoard.containsJob(this.job)) 
-					{
-						this.messageService.getMessage(GUI_JOB_BOARD_JOB_NOT_CONTAINED).sendTo(this.player);
-						return;
-					}
-
 					if(this.job.getReward() instanceof PartialReward)
 						askGoalAmount(this.job).begin();
 					else
@@ -173,6 +166,13 @@ public class JobActionsGUI extends ChestGui
 
 	private void completeJob(Job job, JobCompletionContext context) 
 	{
+		//fix exploit where if 2 players have the board open, both can complete the same job - in order to duplicate the reward
+		if(!this.jobBoard.containsJob(this.job)) 
+		{
+			this.messageService.getMessage(GUI_JOB_BOARD_JOB_NOT_CONTAINED).sendTo(this.player);
+			return;
+		}
+		
 		this.jobBoard.completeJob(job, this.player, context);
 
 		if(!context.isJobCompleted())
