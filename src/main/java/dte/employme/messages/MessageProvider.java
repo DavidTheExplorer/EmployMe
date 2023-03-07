@@ -25,36 +25,36 @@ public class MessageProvider
 	public static final MessageProvider ENGLISH = new MessageProvider()
 
 			//Jobs
-			.put(JOB_ADDED_TO_BOARD, "&aYour offer was added to the &eJobs Board&a!")
-			.put(MONEY_JOB_COMPLETED, "&aYou successfully completed this Job!")
-			.put(ITEMS_JOB_COMPLETED, "&aJob Completed. You can access your items via &b\"/employment mycontainers\"")
-			.put(PLAYER_COMPLETED_YOUR_JOB, "&b%completer% &djust completed one of your Jobs! &nHover for more info.")
-			.put(PLAYER_PARTIALLY_COMPLETED_YOUR_JOB, "&b%completer% &djust partially completed one of your Jobs! &nHover for more info.")
+			.put(JOB_ADDED_TO_BOARD, "%prefix% &aYour offer was added to the &eJobs Board&a!")
+			.put(MONEY_JOB_COMPLETED, "%prefix% &aYou successfully completed this Job!")
+			.put(ITEMS_JOB_COMPLETED, "%prefix% &aJob Completed. You can access your items via &b\"/employment mycontainers\"")
+			.put(PLAYER_COMPLETED_YOUR_JOB, "%prefix% &b%completer% &djust completed one of your Jobs! &nHover for more info.")
+			.put(PLAYER_PARTIALLY_COMPLETED_YOUR_JOB, "%prefix% &b%completer% &djust partially completed one of your Jobs! &nHover for more info.")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou can only offer up to %max jobs allowed% Jobs! Delete one to proceed.")
-			.put(JOB_SUCCESSFULLY_CANCELLED, "&aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
-			.put(JOB_AUTO_REMOVED, "&cYour job was &4auto-removed &cbecause no one completed it!")
+			.put(JOB_SUCCESSFULLY_CANCELLED, "%prefix% &aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
+			.put(JOB_AUTO_REMOVED, "%prefix% &cYour job was &4auto-removed &cbecause no one completed it!")
 			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &e%escape word% &fto leave the conversation!")
 
 			//Job Added Notifiers
-			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "&aYou will get notifications for &e%job added notifier%&a!")
-			.put(NEW_JOB_POSTED, "&fA new job was posted in the &aJobs Board&f!")
+			.put(YOUR_NEW_JOB_ADDED_NOTIFIER_IS, "%prefix% &aYou will get notifications for &e%job added notifier%&a!")
+			.put(NEW_JOB_POSTED, "%prefix% &fA new job was posted in the &aJobs Board&f!")
 
 			//Subscriptions
-			.put(SUCCESSFULLY_SUBSCRIBED_TO_GOAL, "&fYou just &asubscribed &fto &e%goal% &fJobs!")
-			.put(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, "&fSuccessfully &4unsubscribed &ffrom &e%goal% &fJobs.")
-			.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, "&fA player just posted a job that offers &b&l%rewards%&f!")
-			.put(YOUR_SUBSCRIPTIONS_ARE, "&fYou are subscribed to: &6%goal subscriptions%")
+			.put(SUCCESSFULLY_SUBSCRIBED_TO_GOAL, "%prefix% &fYou just &asubscribed &fto &e%goal% &fJobs!")
+			.put(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL, "%prefix% &fSuccessfully &4unsubscribed &ffrom &e%goal% &fJobs.")
+			.put(SUBSCRIBED_TO_GOALS_NOTIFICATION, "%prefix% &fA player just posted a job that offers &b&l%rewards%&f!")
+			.put(YOUR_SUBSCRIPTIONS_ARE, "%prefix% &fYou are subscribed to: &6%goal subscriptions%")
 
 			//General
-			.put(PREFIX, "&2[&aEmployMe&2] ")
+			.put(PREFIX, "&2[&aEmployMe&2]")
 			.put(NONE, "None")
 			.put(GET, "Get")
 			.put(GOAL, "Goal")
 			.put(REWARD, "Reward")
 			.put(MUST_NOT_BE_CONVERSING, "&cYou have to finish your current conversation.")
-			.put(NEW_UPDATE_AVAILABLE, "&fPlease update &fto the lastest version! (&e%new version%&f)")
+			.put(NEW_UPDATE_AVAILABLE, "%prefix% &fPlease update &fto the lastest version! (&e%new version%&f)")
 			.put(CURRENCY_SYMBOL, "$")
-			.put(PLUGIN_RELOADED, "&fReload completed in &a%reload time%ms&f!")
+			.put(PLUGIN_RELOADED, "%prefix% &fReload completed in &a%reload time%ms&f!")
 			.put(CONVERSATION_ESCAPE_WORD, "cancel")
 			
 			//Custom Items
@@ -129,7 +129,7 @@ public class MessageProvider
 
 			//Items Reward Offer GUI
 			.put(GUI_ITEMS_REWARD_OFFER_TITLE, "What would you like to offer?")
-			.put(GUI_ITEMS_JOB_NO_ITEMS_WARNING, "&cJob creation cancelled because you didn't offer any item.")
+			.put(GUI_ITEMS_JOB_NO_ITEMS_WARNING, "%prefix% &cJob creation cancelled because you didn't offer any item.")
 			.put(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME, "&aConfirm and Continue")
 			.put(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE, "&fClick to offer the items you added as the job's reward.", "&fExiting this inventory would cancel the job.")
 

@@ -1,6 +1,6 @@
 package dte.employme.conversations;
 
-import static dte.employme.messages.MessageKey.PREFIX;
+import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
 
 import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
@@ -18,8 +18,7 @@ public class Conversations
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)
 				.withModality(false)
-				.withEscapeSequence(messageService.loadMessage(MessageKey.CONVERSATION_ESCAPE_WORD).first())
-				.withPrefix(context -> messageService.loadMessage(PREFIX).first());
+				.withEscapeSequence(messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first());
 	}
 
 	public static ConversationAbandonedListener refundReward(MessageService messageService, MessageKey messageToSend) 
