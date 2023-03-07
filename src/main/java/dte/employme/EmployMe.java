@@ -41,7 +41,7 @@ import dte.employme.services.job.addnotifiers.SimpleJobAddNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.message.TranslatedMessageService;
+import dte.employme.services.message.ConfigMessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
@@ -121,7 +121,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
 		
-		this.messageService = new TranslatedMessageService(this.messagesConfig);
+		this.messageService = new ConfigMessageService(this.messagesConfig);
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();

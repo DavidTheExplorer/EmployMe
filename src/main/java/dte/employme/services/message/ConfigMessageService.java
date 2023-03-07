@@ -10,7 +10,7 @@ import dte.employme.utils.ChatColorUtils;
 import dte.employme.utils.java.MapBuilder;
 import dte.spigotconfiguration.SpigotConfig;
 
-public class TranslatedMessageService implements MessageService
+public class ConfigMessageService implements MessageService
 {
 	private final SpigotConfig languageConfig;
 
@@ -229,7 +229,7 @@ public class TranslatedMessageService implements MessageService
 			.put(COMMAND_HELP_DESCRIPTION, "Commands.Help.Description")
 			.build();
 
-	public TranslatedMessageService(SpigotConfig languageConfig) 
+	public ConfigMessageService(SpigotConfig languageConfig) 
 	{
 		this.languageConfig = languageConfig;
 	}

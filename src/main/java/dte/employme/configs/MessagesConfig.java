@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
 
 import dte.employme.messages.MessageKey;
 import dte.employme.messages.MessageProvider;
-import dte.employme.services.message.TranslatedMessageService;
+import dte.employme.services.message.ConfigMessageService;
 import dte.spigotconfiguration.SpigotConfig;
 import dte.spigotconfiguration.exceptions.ConfigLoadException;
 
@@ -24,14 +24,14 @@ public class MessagesConfig extends SpigotConfig
 					//regenerate the missing messages based on the provided defaults
 					return Arrays.stream(MessageKey.VALUES)
 							.filter(key -> isMissing(config, key))
-							.collect(toMap(TranslatedMessageService::getConfigPath, missingKey -> getDefaultMessage(missingKey, defaultMessages)));
+							.collect(toMap(ConfigMessageService::getConfigPath, missingKey -> getDefaultMessage(missingKey, defaultMessages)));
 				})
 				.loadDefaults());
 	}
 
 	private static boolean isMissing(YamlConfiguration config, MessageKey key) 
 	{
-		return !config.contains(TranslatedMessageService.getConfigPath(key));
+		return !config.contains(ConfigMessageService.getConfigPath(key));
 	}
 
 	private static Object getDefaultMessage(MessageKey missingKey, MessageProvider defaultMessages) 
