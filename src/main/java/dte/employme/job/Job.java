@@ -170,7 +170,7 @@ public class Job implements ConfigurationSerializable
 
 		if(!parsedProvider.isAvailable()) 
 		{
-			EmployMe.getInstance().logToConsole(RED + "One of your jobs uses '%s' as a Goal Provider, but it's not available! Using Vanilla!".formatted(goalProvider));
+			EmployMe.getInstance().logToConsole(RED + String.format("One of your jobs uses '%s' as a Goal Provider, but it's not available! Using Vanilla!", goalProvider));
 			return VanillaProvider.INSTANCE;
 		}
 

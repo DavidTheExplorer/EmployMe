@@ -4,16 +4,21 @@ import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_D
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_JOB_UNAVAILABLE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_TITLE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_TRACKER_ITEM_NAME;
-import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_JOB_NOT_CONTAINED;
+import static dte.employme.messages.MessageKey.JOB_SUCCESSFULLY_CANCELLED;
 import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createItemPane;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
+
+import java.util.stream.Stream;
 
 import org.bukkit.Material;
 import org.bukkit.conversations.Conversation;
@@ -81,10 +86,19 @@ public class JobActionsGUI extends ChestGui
 	private Pane createOptionsPane() 
 	{
 		boolean itemsReward = this.job.getReward() instanceof ItemsReward;
-		OutlinePane pane = new OutlinePane(itemsReward ? 6 : 7, 1, 9, 1);
+		boolean canDelete = this.player.hasPermission("employme.admin.delete") || this.job.getEmployer().equals(this.player);
+
+		int optionsAvailable = (int) Stream.of(itemsReward, canDelete)
+				.filter(option -> option)
+				.count();
+
+		OutlinePane pane = new OutlinePane(7 - optionsAvailable, 1, 9, 1);
 
 		if(itemsReward)
 			pane.addItem(createItemsRewardPreviewItem());
+
+		if(canDelete)
+			pane.addItem(createDeletionItem());
 
 		pane.addItem(createTrackingItem());
 
@@ -100,6 +114,9 @@ public class JobActionsGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
+					if(!checkJobAvailability())
+						return;
+					
 					this.showJobBoardOnExit = false;
 
 					this.player.closeInventory();
@@ -117,8 +134,33 @@ public class JobActionsGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
+					if(!checkJobAvailability())
+						return;
+					
 					this.showJobBoardOnExit = false;
 					new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) this.job.getReward(), this.messageService).show(this.player);
+				})
+				.build();
+	}
+
+	private GuiItem createDeletionItem() 
+	{
+		return new GuiItemBuilder()
+				.forItem(new ItemBuilder(Material.BARRIER)
+						.named(RED + "Delete")
+						.withLore(WHITE + "Click to delete this job from the board!")
+						.createCopy())
+				.whenClicked(event -> 
+				{
+					if(!checkJobAvailability())
+						return;
+					
+					this.showJobBoardOnExit = false;
+
+					this.player.closeInventory();
+					this.jobBoard.removeJob(this.job);
+					this.job.getReward().giveTo(this.job.getEmployer());
+					this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(this.player);
 				})
 				.build();
 	}
@@ -134,19 +176,15 @@ public class JobActionsGUI extends ChestGui
 						.createCopy())
 				.whenClicked(event -> 
 				{
+					if(!checkJobAvailability())
+						return;
+					
 					//do nothing if the player didn't finish the job
 					if(!finishedJob)
 						return;
 
 					this.showJobBoardOnExit = false;
 					this.player.closeInventory();
-
-					//fix exploit where if 2 players have the board open, both can complete the same job - in order to duplicate the reward
-					if(!this.jobBoard.containsJob(this.job)) 
-					{
-						this.messageService.getMessage(GUI_JOB_BOARD_JOB_NOT_CONTAINED).sendTo(this.player);
-						return;
-					}
 
 					if(this.job.getReward() instanceof PartialReward)
 						askGoalAmount(this.job).begin();
@@ -173,6 +211,9 @@ public class JobActionsGUI extends ChestGui
 
 	private void completeJob(Job job, JobCompletionContext context) 
 	{
+		if(!checkJobAvailability())
+			return;
+		
 		this.jobBoard.completeJob(job, this.player, context);
 
 		if(!context.isJobCompleted())
@@ -189,5 +230,16 @@ public class JobActionsGUI extends ChestGui
 
 		job.setGoal(newGoal, job.getGoalProvider());
 		job.setReward(newReward);
+	}
+
+	//fix exploit where if 2 players have the board open, both can complete the same job - in order to duplicate the reward
+	private boolean checkJobAvailability() 
+	{
+		if(this.jobBoard.containsJob(this.job)) 
+			return true;
+
+		this.player.closeInventory();
+		this.messageService.getMessage(GUI_JOB_ACTIONS_JOB_UNAVAILABLE).sendTo(this.player);
+		return false;
 	}
 }
