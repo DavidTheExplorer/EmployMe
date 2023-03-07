@@ -99,6 +99,7 @@ public class EmploymentCommand extends BaseCommand
 	
 	@Subcommand("%StopLiveUpdates Name")
 	@Description("%StopLiveUpdates Description")
+	@CommandPermission("employme.stopliveupdates")
 	public void stopLiveUpdates(Player player) 
 	{
 		this.jobService.stopLiveUpdates(player);
