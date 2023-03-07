@@ -56,7 +56,7 @@ public class JobActionsGUI extends ChestGui
 
 	public JobActionsGUI(Job job, JobBoard jobBoard, Player player, JobBoardGUI jobBoardGUI, MessageService messageService, JobService jobService)
 	{
-		super(3, messageService.getMessage(GUI_JOB_ACTIONS_TITLE).first());
+		super(3, messageService.loadMessage(GUI_JOB_ACTIONS_TITLE).first());
 		
 		this.job = job;
 		this.jobBoard = jobBoard;
@@ -109,8 +109,8 @@ public class JobActionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.COMPASS)
-						.named(this.messageService.getMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -129,8 +129,8 @@ public class JobActionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.getMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -160,7 +160,7 @@ public class JobActionsGUI extends ChestGui
 					this.player.closeInventory();
 					this.jobBoard.removeJob(this.job);
 					this.job.getReward().giveTo(this.job.getEmployer());
-					this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(this.player);
+					this.messageService.loadMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(this.player);
 				})
 				.build();
 	}
@@ -171,8 +171,8 @@ public class JobActionsGUI extends ChestGui
 		
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(finishedJob ? Material.LIME_TERRACOTTA : Material.RED_TERRACOTTA)
-						.named(this.messageService.getMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION).toArray())
+						.named(this.messageService.loadMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -239,7 +239,7 @@ public class JobActionsGUI extends ChestGui
 			return true;
 
 		this.player.closeInventory();
-		this.messageService.getMessage(GUI_JOB_ACTIONS_JOB_UNAVAILABLE).sendTo(this.player);
+		this.messageService.loadMessage(GUI_JOB_ACTIONS_JOB_UNAVAILABLE).sendTo(this.player);
 		return false;
 	}
 }

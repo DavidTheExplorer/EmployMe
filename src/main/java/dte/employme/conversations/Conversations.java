@@ -18,8 +18,8 @@ public class Conversations
 		return new ConversationFactory(EmployMe.getInstance())
 				.withLocalEcho(true)
 				.withModality(false)
-				.withEscapeSequence(messageService.getMessage(MessageKey.CONVERSATION_ESCAPE_WORD).first())
-				.withPrefix(context -> messageService.getMessage(PREFIX).first());
+				.withEscapeSequence(messageService.loadMessage(MessageKey.CONVERSATION_ESCAPE_WORD).first())
+				.withPrefix(context -> messageService.loadMessage(PREFIX).first());
 	}
 
 	public static ConversationAbandonedListener refundReward(MessageService messageService, MessageKey messageToSend) 
@@ -36,7 +36,7 @@ public class Conversations
 				return;
 			
 			reward.giveTo(player);
-			messageService.getMessage(messageToSend).sendTo(player);
+			messageService.loadMessage(messageToSend).sendTo(player);
 		};
 	}
 }

@@ -60,7 +60,7 @@ public class JobBoardGUI extends ChestGui
 
 	public JobBoardGUI(Player player, JobBoard jobBoard, JobService jobService, MessageService messageService)
 	{
-		super(6, messageService.getMessage(GUI_JOB_BOARD_TITLE).first());
+		super(6, messageService.loadMessage(GUI_JOB_BOARD_TITLE).first());
 
 		this.player = player;
 		this.jobBoard = jobBoard;
@@ -90,8 +90,8 @@ public class JobBoardGUI extends ChestGui
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(GUI_JOB_BOARD_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_BOARD_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_BOARD_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_BOARD_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.jobsPane))
 				.build());
@@ -100,8 +100,8 @@ public class JobBoardGUI extends ChestGui
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(GUI_JOB_BOARD_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_BOARD_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_BOARD_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_BOARD_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.jobsPane))
 				.build());
@@ -121,9 +121,9 @@ public class JobBoardGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.PLAYER_HEAD)
-						.named(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
+						.named(this.messageService.loadMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_NAME).first())
 						.withItemMeta(SkullMeta.class, meta -> meta.setOwningPlayer(this.player))
-						.withLore(this.messageService.getMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
+						.withLore(this.messageService.loadMessage(GUI_JOB_BOARD_PERSONAL_JOBS_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -137,9 +137,9 @@ public class JobBoardGUI extends ChestGui
 	public MessageBuilder getJobStatusMessage(Job job, FinishState finishState) 
 	{
 		if(finishState == NEGATIVE) 
-			return this.messageService.getMessage(GUI_JOB_BOARD_OFFER_NOT_COMPLETED);
+			return this.messageService.loadMessage(GUI_JOB_BOARD_OFFER_NOT_COMPLETED);
 
-		return this.messageService.getMessage((finishState == PARTIALLY ? GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED : GUI_JOB_BOARD_OFFER_COMPLETED))
+		return this.messageService.loadMessage((finishState == PARTIALLY ? GUI_JOB_BOARD_OFFER_PARTIALLY_COMPLETED : GUI_JOB_BOARD_OFFER_COMPLETED))
 				.inject("goal amount", this.jobService.getGoalAmountInInventory(job, this.player.getInventory()));
 	}
 
@@ -161,7 +161,7 @@ public class JobBoardGUI extends ChestGui
 
 		List<String> lore = basicIcon.getItemMeta().getLore();
 		lore.add(" ");
-		lore.addAll(this.messageService.getMessage(MessageKey.JOB_ICON_VIEW_ACTIONS_DESCRIPTION).toList());
+		lore.addAll(this.messageService.loadMessage(MessageKey.JOB_ICON_VIEW_ACTIONS_DESCRIPTION).toList());
 		lore.add(" ");
 		lore.add(separator);
 		statusMessage.stream().map(line -> CenteredMessage.of(line, separator)).forEach(lore::add);

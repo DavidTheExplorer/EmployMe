@@ -61,7 +61,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	
 	private String createContainerTitle(String subject) 
 	{
-		return this.messageService.getMessage(CONTAINER_CLAIM_INSTRUCTION)
+		return this.messageService.loadMessage(CONTAINER_CLAIM_INSTRUCTION)
 				.inject("container subject", subject)
 				.first();
 	}

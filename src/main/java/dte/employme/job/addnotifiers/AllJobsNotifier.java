@@ -27,6 +27,6 @@ public class AllJobsNotifier extends JobAddChatNotifier
 	@Override
 	protected List<MessageBuilder> createMessages(Player player, Job job) 
 	{
-		return Arrays.asList(this.messageService.getMessage(NEW_JOB_POSTED));
+		return Arrays.asList(this.messageService.loadMessage(NEW_JOB_POSTED));
 	}
 }

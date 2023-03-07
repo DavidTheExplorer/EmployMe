@@ -79,7 +79,7 @@ public class ACF
 		commandManager.getCommandConditions().addCondition(Player.class, "Not Conversing", (handler, context, payment) -> 
 		{
 			if(context.getPlayer().isConversing())
-				throw new InvalidCommandArgument(this.messageService.getMessage(MUST_NOT_BE_CONVERSING).first(), false);
+				throw new InvalidCommandArgument(this.messageService.loadMessage(MUST_NOT_BE_CONVERSING).first(), false);
 		});
 		
 		commandManager.getCommandConditions().addCondition(Player.class, "Can Offer More Jobs", (handler, context, player) -> 
@@ -91,7 +91,7 @@ public class ACF
 			int maxJobsAllowed = this.mainConfig.getMaxAllowedJobs(this.permission.getPrimaryGroup(player), 3);
 			
 			if(jobsOffered >= maxJobsAllowed)
-				throw new ConditionFailedException(this.messageService.getMessage(YOU_OFFERED_TOO_MANY_JOBS)
+				throw new ConditionFailedException(this.messageService.loadMessage(YOU_OFFERED_TOO_MANY_JOBS)
 						.inject("max jobs allowed", maxJobsAllowed)
 						.first());
 		});
@@ -100,29 +100,29 @@ public class ACF
 	private void registerReplacements(BukkitCommandManager commandManager) 
 	{
 		//Commands Names & Descriptions
-		commandManager.getCommandReplacements().addReplacement("View Name", this.messageService.getMessage(COMMAND_VIEW_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("View Description", this.messageService.getMessage(COMMAND_VIEW_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("View Name", this.messageService.loadMessage(COMMAND_VIEW_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("View Description", this.messageService.loadMessage(COMMAND_VIEW_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("Offer Name", this.messageService.getMessage(COMMAND_OFFER_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("Offer Description", this.messageService.getMessage(COMMAND_OFFER_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("Offer Name", this.messageService.loadMessage(COMMAND_OFFER_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Offer Description", this.messageService.loadMessage(COMMAND_OFFER_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("MyContainers Name", this.messageService.getMessage(COMMAND_MYCONTAINERS_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("MyContainers Description", this.messageService.getMessage(COMMAND_MYCONTAINERS_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("MyContainers Name", this.messageService.loadMessage(COMMAND_MYCONTAINERS_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("MyContainers Description", this.messageService.loadMessage(COMMAND_MYCONTAINERS_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("AddNotifiers Name", this.messageService.getMessage(COMMAND_ADDNOTIFIERS_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("AddNotifiers Description", this.messageService.getMessage(COMMAND_ADDNOTIFIERS_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("AddNotifiers Name", this.messageService.loadMessage(COMMAND_ADDNOTIFIERS_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("AddNotifiers Description", this.messageService.loadMessage(COMMAND_ADDNOTIFIERS_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("MySubscriptions Name", this.messageService.getMessage(COMMAND_MYSUBSCRIPTIONS_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("MySubscriptions Description", this.messageService.getMessage(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("MySubscriptions Name", this.messageService.loadMessage(COMMAND_MYSUBSCRIPTIONS_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("MySubscriptions Description", this.messageService.loadMessage(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("StopLiveUpdates Name", this.messageService.getMessage(COMMAND_STOPLIVEUPDATES_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("StopLiveUpdates Description", this.messageService.getMessage(COMMAND_STOPLIVEUPDATES_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("StopLiveUpdates Name", this.messageService.loadMessage(COMMAND_STOPLIVEUPDATES_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("StopLiveUpdates Description", this.messageService.loadMessage(COMMAND_STOPLIVEUPDATES_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("Reload Name", this.messageService.getMessage(COMMAND_RELOAD_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("Reload Description", this.messageService.getMessage(COMMAND_RELOAD_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("Reload Name", this.messageService.loadMessage(COMMAND_RELOAD_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Reload Description", this.messageService.loadMessage(COMMAND_RELOAD_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("Help Name", this.messageService.getMessage(COMMAND_HELP_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("Help Description", this.messageService.getMessage(COMMAND_HELP_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("Help Name", this.messageService.loadMessage(COMMAND_HELP_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Help Description", this.messageService.loadMessage(COMMAND_HELP_DESCRIPTION).first());
 	}
 	
 	private void registerCommands(BukkitCommandManager commandManager) 

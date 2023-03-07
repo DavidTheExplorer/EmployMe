@@ -49,7 +49,7 @@ public class ItemSubscriptionsGUI extends ChestGui
 
 	public ItemSubscriptionsGUI(JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService) 
 	{
-		super(3, messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_TITLE).first());
+		super(3, messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_TITLE).first());
 		
 		this.jobService = jobService;
 		this.messageService = messageService;
@@ -76,8 +76,8 @@ public class ItemSubscriptionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_YOUR_SUBSCRIPTIONS_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -89,11 +89,11 @@ public class ItemSubscriptionsGUI extends ChestGui
 							.collect(joining(WHITE + ", " + GOLD));
 
 					if(subscriptionsNames.isEmpty())
-						subscriptionsNames = this.messageService.getMessage(NONE).first();
+						subscriptionsNames = this.messageService.loadMessage(NONE).first();
 
 					subscriptionsNames += WHITE + ".";
 
-					this.messageService.getMessage(YOUR_SUBSCRIPTIONS_ARE)
+					this.messageService.loadMessage(YOUR_SUBSCRIPTIONS_ARE)
 					.inject("goal subscriptions", subscriptionsNames)
 					.sendTo(player);
 				})
@@ -104,18 +104,18 @@ public class ItemSubscriptionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.WRITABLE_BOOK)
-						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_SUBSCRIBE_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
 					Player player = (Player) event.getWhoClicked();
 
-					new ItemPaletteGUI.Builder(this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE).first(), this.messageService)
+					new ItemPaletteGUI.Builder(this.messageService.loadMessage(GUI_SUBSCRIBE_ITEM_PALETTE_TITLE).first(), this.messageService)
 					.transform(toSubscribeItem())
 					.filter(material -> !this.jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material))
 					.withInitialTypeConversationFactory(Conversations.createFactory(this.messageService)
-							.withFirstPrompt(new JobGoalPrompt(this.jobService, this.messageService, this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION).first()))
+							.withFirstPrompt(new JobGoalPrompt(this.jobService, this.messageService, this.messageService.loadMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_QUESTION).first()))
 							.addConversationAbandonedListener(abandonedEvent -> 
 							{
 								if(!abandonedEvent.gracefulExit())
@@ -135,8 +135,8 @@ public class ItemSubscriptionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.BARRIER)
-						.named(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_SUBSCRIPTIONS_UNSUBSCRIBE_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -151,14 +151,14 @@ public class ItemSubscriptionsGUI extends ChestGui
 	{
 		return material -> 
 		{
-			String name = this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME)
+			String name = this.messageService.loadMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_NAME)
 					.inject("item", EnumUtils.fixEnumName(material))
 					.first();
 
 			return new GuiItemBuilder()
 					.forItem(new ItemBuilder(material)
 							.named(name)
-							.withLore(this.messageService.getMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE).toArray())
+							.withLore(this.messageService.loadMessage(GUI_SUBSCRIBE_ITEM_PALETTE_SUBSCRIBE_ITEM_LORE).toArray())
 							.createCopy())
 					.whenClicked(event -> unsubscribe((Player) event.getWhoClicked(), material))
 					.build();
@@ -169,7 +169,7 @@ public class ItemSubscriptionsGUI extends ChestGui
 	{
 		this.jobSubscriptionService.subscribe(player.getUniqueId(), material);
 
-		this.messageService.getMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
+		this.messageService.loadMessage(SUCCESSFULLY_SUBSCRIBED_TO_GOAL)
 		.inject("goal", EnumUtils.fixEnumName(material))
 		.sendTo(player);
 

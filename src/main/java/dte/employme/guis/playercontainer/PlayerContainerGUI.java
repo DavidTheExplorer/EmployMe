@@ -79,16 +79,16 @@ public class PlayerContainerGUI extends ChestGui
 
 		panel.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.itemsPane))
 				.build());
 
 		panel.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.itemsPane))
 				.build());

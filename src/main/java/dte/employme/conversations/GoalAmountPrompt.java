@@ -29,11 +29,11 @@ public class GoalAmountPrompt extends NumericPrompt
 		Player player = (Player) context.getForWhom();
 
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
-		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		this.messageService.loadMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo(player);
 
-		return this.messageService.getMessage(GOAL_AMOUNT_QUESTION).first();
+		return this.messageService.loadMessage(GOAL_AMOUNT_QUESTION).first();
 	}
 
 	@Override
@@ -59,12 +59,12 @@ public class GoalAmountPrompt extends NumericPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return this.messageService.getMessage(GOAL_AMOUNT_MUST_BE_POSITIVE).first();
+		return this.messageService.loadMessage(GOAL_AMOUNT_MUST_BE_POSITIVE).first();
 	}
 
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.getMessage(GOAL_AMOUNT_NOT_A_NUMBER).first();
+		return this.messageService.loadMessage(GOAL_AMOUNT_NOT_A_NUMBER).first();
 	}
 }

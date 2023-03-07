@@ -12,5 +12,5 @@ public interface MessageService
 	 * @param key The key that identifies the message.
 	 * @return The message.
 	 */
-	MessageBuilder getMessage(MessageKey key);
+	MessageBuilder loadMessage(MessageKey key);
 }

@@ -70,7 +70,7 @@ public class GoalCustomizationGUI extends ChestGui
 
 	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobService jobService, JobBoard jobBoard, Reward reward)
 	{
-		super(6, messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TITLE).first());
+		super(6, messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.jobSubscriptionService = jobSubscriptionService;
@@ -88,7 +88,7 @@ public class GoalCustomizationGUI extends ChestGui
 				Player player = (Player) event.getPlayer();
 				
 				reward.giveTo(player);
-				this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(player);
+				this.messageService.loadMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(player);
 			}
 		});
 
@@ -130,7 +130,7 @@ public class GoalCustomizationGUI extends ChestGui
 	public void setType(Material material)
 	{
 		ItemStack item = new ItemBuilder(material)
-				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
+				.named(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_CURRENT_ITEM_NAME).first())
 				.withItemFlags(HIDE_ATTRIBUTES)
 				.createCopy();
 		
@@ -221,7 +221,7 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.GREEN_TERRACOTTA)
-						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
+						.named(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_FINISH_ITEM_NAME).first())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -246,7 +246,7 @@ public class GoalCustomizationGUI extends ChestGui
 	private ItemStack createNoItemIcon() 
 	{
 		return new ItemBuilder(NO_ITEM_TYPE)
-				.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
+				.named(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_NO_CURRENT_ITEM_NAME).first())
 				.createCopy();
 	}
 
@@ -254,8 +254,8 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ENCHANTED_BOOK)
-						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_ENCHANTMENTS_ITEM_LORE).toArray())
 						.glowing()
 						.createCopy())
 				.whenClicked(event -> 
@@ -273,8 +273,8 @@ public class GoalCustomizationGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ARROW)
-						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject("goal amount", this.currentItem.getAmount()).first())
-						.withLore(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_NAME).inject("goal amount", this.currentItem.getAmount()).first())
+						.withLore(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_AMOUNT_ITEM_LORE).toArray())
 						.glowing()
 						.createCopy())
 				.whenClicked(event -> 
@@ -304,14 +304,14 @@ public class GoalCustomizationGUI extends ChestGui
 
 	private GuiItem createTypeChoosingItem() 
 	{
-		List<String> lore = this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toList();
+		List<String> lore = this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_LORE).toList();
 		
 		if(!ItemProvider.getAvailable().isEmpty())
-			lore.addAll(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT).toList());
+			lore.addAll(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_CUSTOM_ITEM_SUPPORT).toList());
 		
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ANVIL)
-						.named(this.messageService.getMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
+						.named(this.messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_TYPE_ITEM_NAME).first())
 						.withLore(lore.toArray(new String[0]))
 						.glowing()
 						.createCopy())

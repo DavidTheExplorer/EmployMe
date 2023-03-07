@@ -47,12 +47,12 @@ public class JobLiveUpdateTask extends BukkitRunnable
 	private TextComponent getProgressionMessage(Job job, double progressionPercentage) 
 	{
 		if(progressionPercentage >= 100)
-			return this.messageService.getMessage(LIVE_UPDATES_JOB_COMPLETED).toTextComponent();
+			return this.messageService.loadMessage(LIVE_UPDATES_JOB_COMPLETED).toTextComponent();
 
 		int aquaLines = (int) (20 * toFraction(progressionPercentage));
 		
-		return this.messageService.getMessage(LIVE_UPDATES_TRACKER_ACTIONBAR)
-				.inject("get", this.messageService.getMessage(GET).first())
+		return this.messageService.loadMessage(LIVE_UPDATES_TRACKER_ACTIONBAR)
+				.inject("get", this.messageService.loadMessage(GET).first())
 				.inject("goal", ItemStackUtils.describe(job.getGoal()))
 				.inject("progression", StringUtils.repeat("|", aquaLines))
 				.inject("amount left", StringUtils.repeat("|", 20 - aquaLines))

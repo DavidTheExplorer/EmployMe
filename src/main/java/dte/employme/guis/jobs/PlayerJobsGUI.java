@@ -39,7 +39,7 @@ public class PlayerJobsGUI extends ChestGui
 	
 	public PlayerJobsGUI(JobBoardGUI jobBoardGUI, MessageService messageService, List<Job> jobsToDisplay)
 	{
-		super(6, messageService.getMessage(GUI_PLAYER_JOBS_TITLE).first());
+		super(6, messageService.loadMessage(GUI_PLAYER_JOBS_TITLE).first());
 		
 		this.jobsToDisplay = jobsToDisplay;
 		this.messageService = messageService;
@@ -75,16 +75,16 @@ public class PlayerJobsGUI extends ChestGui
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.jobsPane))
 				.build());
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.jobsPane))
 				.build());

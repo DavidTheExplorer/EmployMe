@@ -235,14 +235,14 @@ public class ConfigMessageService implements MessageService
 	}
 
 	@Override
-	public MessageBuilder getMessage(MessageKey key) 
+	public MessageBuilder loadMessage(MessageKey key) 
 	{
 		Object message = this.languageConfig.get(getConfigPath(key));
 
 		MessageBuilder messageBuilder = MessageBuilder.from(message).map(ChatColorUtils::colorize);
 
 		if(key.shouldBePrefixed())
-			messageBuilder.prefixed(getMessage(PREFIX).first());
+			messageBuilder.prefixed(loadMessage(PREFIX).first());
 
 		return messageBuilder;
 	}

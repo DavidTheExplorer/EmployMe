@@ -36,14 +36,14 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 	public void onJobCompleted(Job job, Player whoCompleted, JobCompletionContext context)
 	{
 		//send a message to who completed
-		this.messageService.getMessage(getCompleterMessage(context)).sendTo(whoCompleted);
+		this.messageService.loadMessage(getCompleterMessage(context)).sendTo(whoCompleted);
 		
 		//notify the employer if the completion percentage is above the required
 		if(context.isJobCompleted() || context.getPartialInfo().getPercentage() > this.percentageToNotifyFrom) 
 		{
 			OfflinePlayerUtils.ifOnline(job.getEmployer(), employer -> 
 			{
-				this.messageService.getMessage(getEmployerMessage(context))
+				this.messageService.loadMessage(getEmployerMessage(context))
 				.inject("completer", whoCompleted.getName())
 				.stream()
 				.map(message -> displayHoverDescription(message, job, context))

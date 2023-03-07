@@ -94,9 +94,9 @@ public class ItemPaletteGUI extends ChestGui
 		pane.setOrientation(HORIZONTAL);
 		pane.setGap(3);
 
-		pane.addItem(createController("MHF_ArrowLeft", this.messageService.getMessage(GUI_ITEM_PALETTE_BACK_ITEM_NAME).first(), currentPage -> currentPage > 0, currentPage -> --currentPage));
+		pane.addItem(createController("MHF_ArrowLeft", this.messageService.loadMessage(GUI_ITEM_PALETTE_BACK_ITEM_NAME).first(), currentPage -> currentPage > 0, currentPage -> --currentPage));
 		pane.addItem(createEnglishSearchItem());
-		pane.addItem(createController("MHF_ArrowRight", this.messageService.getMessage(GUI_ITEM_PALETTE_NEXT_ITEM_NAME).first(), currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
+		pane.addItem(createController("MHF_ArrowRight", this.messageService.loadMessage(GUI_ITEM_PALETTE_NEXT_ITEM_NAME).first(), currentPage -> currentPage < (this.itemsPane.getPages()-1), currentPage -> ++currentPage));
 
 		return pane;
 	}
@@ -164,7 +164,7 @@ public class ItemPaletteGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.NAME_TAG)
-						.named(this.messageService.getMessage(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
+						.named(this.messageService.loadMessage(GUI_ITEM_PALETTE_ENGLISH_SEARCH_ITEM_NAME).first())
 						.glowing()
 						.createCopy())
 				.whenClicked(event -> 

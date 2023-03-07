@@ -40,7 +40,7 @@ public class JobCreationGUI extends ChestGui
 	
 	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, Economy economy, JobService jobService)
 	{
-		super(3, messageService.getMessage(GUI_JOB_CREATION_TITLE).first());
+		super(3, messageService.loadMessage(GUI_JOB_CREATION_TITLE).first());
 		
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
@@ -77,8 +77,8 @@ public class JobCreationGUI extends ChestGui
 		//add the money job icon
 		pane.addItem(new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.GOLD_INGOT)
-						.named(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -92,8 +92,8 @@ public class JobCreationGUI extends ChestGui
 		//add the items job icon
 		pane.addItem(new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.jobSubscriptionService, this.jobService).show(event.getWhoClicked()))
 				.build());

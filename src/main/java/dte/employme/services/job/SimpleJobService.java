@@ -98,9 +98,9 @@ public class SimpleJobService implements JobService, Listener
 	public String describeInGame(Job job) 
 	{
 		return String.format(colorize("&6%s: &f%s &8&l| &6%s: &f%s"), 
-				this.messageService.getMessage(GOAL).first(),
-				this.messageService.getMessage(GET).first() + " " + job.getGoalProvider().getDisplayName(job.getGoal()),
-				this.messageService.getMessage(REWARD).first(),
+				this.messageService.loadMessage(GOAL).first(),
+				this.messageService.loadMessage(GET).first() + " " + job.getGoalProvider().getDisplayName(job.getGoal()),
+				this.messageService.loadMessage(REWARD).first(),
 				this.jobRewardService.describe(job.getReward()));
 	}
 
@@ -111,10 +111,10 @@ public class SimpleJobService implements JobService, Listener
 			return describeInGame(job);
 		
 		return String.format(colorize("&6%s: &f%s (&6%.1f%% done&f) &8&l| &6%s: &f%s"),
-				this.messageService.getMessage(GOAL).first(),
-				this.messageService.getMessage(GET).first() + " " + job.getGoalProvider().getDisplayName(context.getGoal()),
+				this.messageService.loadMessage(GOAL).first(),
+				this.messageService.loadMessage(GET).first() + " " + job.getGoalProvider().getDisplayName(context.getGoal()),
 				context.getPartialInfo().getPercentage(),
-				this.messageService.getMessage(REWARD).first(),
+				this.messageService.loadMessage(REWARD).first(),
 				this.jobRewardService.describe(context.getReward()));
 	}
 
@@ -255,7 +255,7 @@ public class SimpleJobService implements JobService, Listener
 			//notify the employer
 			OfflinePlayerUtils.ifOnline(employer, employerPlayer -> 
 			{
-				this.messageService.getMessage(JOB_AUTO_REMOVED)
+				this.messageService.loadMessage(JOB_AUTO_REMOVED)
 				.stream()
 				.map(line -> new ComponentBuilder(line).event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(describeInGame(job)).create())).create())
 				.forEach(employerPlayer.spigot()::sendMessage);

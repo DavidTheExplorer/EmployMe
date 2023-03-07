@@ -33,11 +33,11 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 		Player player = (Player) context.getForWhom();
 		
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
-		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		this.messageService.loadMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo(player);
 				
-		return this.messageService.getMessage(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION)
+		return this.messageService.loadMessage(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION)
 				.inject("goal amount", getGoalAmountInInventory(player))
 				.first();
 	}
@@ -54,7 +54,7 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return this.messageService.getMessage(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR).first();
+		return this.messageService.loadMessage(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR).first();
 	}
 
 	@Override
