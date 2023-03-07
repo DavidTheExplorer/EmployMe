@@ -116,9 +116,9 @@ public class MessageProvider
 			//Job Creation GUI
 			.put(GUI_JOB_CREATION_TITLE, "Create a new Job")
 			.put(GUI_JOB_CREATION_MONEY_JOB_ICON_NAME, "&6Money Job")
-			.put(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE, "&fClick to offer a Job for which", "&fyou will pay a certain amount of money.")
+			.put(GUI_JOB_CREATION_MONEY_JOB_ICON_LORE, "&fPublish a Job to everyone on the server", "&ffor which you will pay an &6amount of money&f.", " ", "&6• &fAnyone can find the job via &e/emp view")
 			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME, "&bItems Job")
-			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE, "&fClick to offer a Job for which", "&fyou will pay with resources.")
+			.put(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE, "&fPublish a Job to everyone on the server", "&ffor which you will pay with &bresources&f.", " ", "&b• &fAnyone can find the job via &e/emp view")
 			.put(MONEY_PAYMENT_AMOUNT_QUESTION, "&fHow much will you &e&lPay&f? &f(Current Balance: &e&l%currency symbol%%player money%&6&f)")
 			.put(MONEY_REWARD_ERROR_NEGATIVE, "&cCan't create a Money Reward that pays nothing or less!")
 			.put(MONEY_REWARD_NOT_ENOUGH, "&cYou can't offer an amount of money that you don't have!")
