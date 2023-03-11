@@ -26,6 +26,9 @@ public interface JobBoard extends Iterable<Job>
 	List<Job> getJobsOfferedBy(UUID employerUUID);
 	List<Job> getOfferedJobs();
 
+	//info
+	int size();
+
 	//listeners
 	void registerAddListener(JobAddListener listener);
 	void registerCompleteListener(JobCompleteListener listener);

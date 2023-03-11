@@ -32,6 +32,7 @@ import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.job.addnotifiers.MaterialSubscriptionNotifier;
 import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.messages.MessageProvider;
+import dte.employme.papi.EmployMePapiExpansion;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.job.JobService;
@@ -158,6 +159,9 @@ public class EmployMe extends ModernJavaPlugin
 		//setup config features
 		setupWebhooks();
 		
+		//register PlaceholderAPI's placeholders
+		registerPapiPlaceholders();
+		
 		//start metrics
 		new Metrics(this, 16573);
 
@@ -221,6 +225,14 @@ public class EmployMe extends ModernJavaPlugin
 		String message = section.getString("Message");
 		
 		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService));		
+	}
+	
+	private void registerPapiPlaceholders() 
+	{
+		if(!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
+			return;
+		
+		new EmployMePapiExpansion(this.globalJobBoard).register();
 	}
 	
 	@SuppressWarnings("unused")
