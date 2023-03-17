@@ -72,7 +72,6 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 		addPane(createRectangle(Priority.LOWEST, 0, 5, 9, 1, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(this.enchantmentsPane = getEnchantmentsPane());
 		addPane(getPanelPane());
-		update();
 	}
 
 	private PaginatedPane getEnchantmentsPane() 

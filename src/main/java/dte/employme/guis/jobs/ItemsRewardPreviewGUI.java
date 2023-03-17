@@ -28,7 +28,6 @@ public class ItemsRewardPreviewGUI extends ChestGui
 		setOnTopClick(event -> event.setCancelled(true));
 		setOnClose(event -> openOnClose.show(player));
 		addPane(createItemsPane());
-		update();
 	}
 	
 	private Pane createItemsPane() 

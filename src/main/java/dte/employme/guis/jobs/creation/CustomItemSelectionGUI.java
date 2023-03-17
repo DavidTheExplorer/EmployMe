@@ -53,7 +53,6 @@ public class CustomItemSelectionGUI extends ChestGui
 				.createCopy())));
 
 		addPane(createCustomPluginsPane());
-		update();
 	}
 
 	private Pane createCustomPluginsPane() 

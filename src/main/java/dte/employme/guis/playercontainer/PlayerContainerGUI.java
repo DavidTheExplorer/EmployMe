@@ -52,7 +52,6 @@ public class PlayerContainerGUI extends ChestGui
 		addPane(createControlPanel(this.itemsPane));
 		addPane(createRectangle(Priority.LOWEST, 0, 5, 9, 1, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
 		addPane(this.itemsPane);
-		update();
 	}
 
 	public void addItem(ItemStack item)

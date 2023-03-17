@@ -59,7 +59,6 @@ public class ItemsRewardOfferGUI extends ChestGui
 		});
 
 		addPane(createConfirmationButtonPane());
-		update();
 	}
 
 	/*

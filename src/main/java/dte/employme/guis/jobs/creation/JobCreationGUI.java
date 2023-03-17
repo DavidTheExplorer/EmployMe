@@ -65,7 +65,6 @@ public class JobCreationGUI extends ChestGui
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 3, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(createOptionsPane());
-		update();
 	}
 	
 	private Pane createOptionsPane() 

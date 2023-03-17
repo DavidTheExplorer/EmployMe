@@ -51,8 +51,6 @@ public class PlayerJobsGUI extends ChestGui
 		addPane(createPanel());
 		addPane(createPanelBackground());
 		addPane(this.jobsPane);
-		
-		update();
 	}
 	
 	private PaginatedPane createJobsPane() 

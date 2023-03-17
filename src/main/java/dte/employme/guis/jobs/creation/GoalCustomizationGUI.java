@@ -98,7 +98,6 @@ public class GoalCustomizationGUI extends ChestGui
 		addPane(createRectangle(Priority.LOW, 5, 1, 3, 4, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
 		addPane(createItemPane());
 		addPane(createOptionsPane());
-		update();
 	}
 
 	public ItemStack getCurrentItem() 

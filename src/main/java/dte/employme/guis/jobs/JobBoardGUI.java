@@ -75,7 +75,6 @@ public class JobBoardGUI extends ChestGui
 		addPane(createWalls(this, Priority.LOWEST));
 		addPane(createPanel());
 		addPane(this.jobsPane);
-		update();
 	}
 	
 	public void addJob(Job job) 

@@ -50,7 +50,6 @@ public class JobAddNotifiersGUI extends ChestGui
 		addPane(createWalls(this, Priority.LOWEST));
 		addPane(createBackground());
 		addPane(createNotifiersPane(playerUUID));
-		update();
 	}
 
 	private Pane createBackground()

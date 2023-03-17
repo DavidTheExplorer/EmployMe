@@ -69,7 +69,6 @@ public class ItemPaletteGUI extends ChestGui
 		addPane(createItemsPane());
 		addPane(createControlPane());
 		addPane(createRectangle(Priority.LOWEST, 1, 5, 7, 1, new GuiItem(new ItemStack(createWall(Material.BLACK_STAINED_GLASS_PANE)))));
-		update();
 	}
 	
 	private ItemPaletteGUI(Builder builder) 
