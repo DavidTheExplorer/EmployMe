@@ -2,6 +2,7 @@ package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_JOB_UNAVAILABLE;
@@ -15,8 +16,6 @@ import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createItemPane;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
 
 import java.util.stream.Stream;
 
@@ -36,6 +35,7 @@ import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPartialCompletionAmountPrompt;
 import dte.employme.job.Job;
+import dte.employme.messages.MessageKey;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.PartialReward;
 import dte.employme.services.job.JobService;
@@ -147,8 +147,8 @@ public class JobActionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.BARRIER)
-						.named(RED + "Delete")
-						.withLore(WHITE + "Click to delete this job from the board!")
+						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(MessageKey.GUI_JOB_ACTIONS_DELETE_JOB_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{

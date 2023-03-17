@@ -234,6 +234,8 @@ public class ConfigMessageService implements MessageService
 				.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Tracker.Description")
 				.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "GUIs.Job Actions.Items.Items Reward Preview.Name")
 				.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Items Reward Preview.Description")
+				.put(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME, "GUIs.Job Actions.Items.Delete.Name")
+				.put(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Delete.Description")
 				.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME, "GUIs.Job Actions.Items.Job Completion.Name")
 				.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION, "GUIs.Job Actions.Items.Job Completion.Description")
 				.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME, "GUIs.Job Actions.Items.Job Not Completed.Name")

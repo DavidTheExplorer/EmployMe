@@ -213,6 +213,8 @@ public class MessageProvider
 			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "&fGet live notifications about your progression", "&ftowards completing this job.")
 			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "&aItems Reward Preview")
 			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION, "&fSee the items that you would get", "&ffor completing this job.")
+			.put(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME, "&cDelete")
+			.put(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_DESCRIPTION, "&fClick to delete this job from the board!")
 			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME, "&a&lComplete ✓")
 			.put(GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION, "&fClick to complete this job!")
 			.put(GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME, "&c&lCan't Complete ❌")
