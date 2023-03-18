@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
@@ -52,9 +53,9 @@ public class JobActionsGUI extends ChestGui
 	private final JobService jobService;
 	private final MessageService messageService;
 
-	private boolean showJobBoardOnExit = true;
+	private boolean openParentOnExit;
 
-	public JobActionsGUI(Job job, JobBoard jobBoard, Player player, JobBoardGUI jobBoardGUI, MessageService messageService, JobService jobService)
+	public JobActionsGUI(Job job, JobBoard jobBoard, Player player, Gui openOnClose, MessageService messageService, JobService jobService)
 	{
 		super(3, messageService.loadMessage(GUI_JOB_ACTIONS_TITLE).first());
 		
@@ -63,6 +64,7 @@ public class JobActionsGUI extends ChestGui
 		this.player = player;
 		this.jobService = jobService;
 		this.messageService = messageService;
+		this.openParentOnExit = (openOnClose != null);
 
 		//add completion area
 		addPane(createSquare(Priority.LOWEST, 0, 0, 3, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
@@ -78,13 +80,14 @@ public class JobActionsGUI extends ChestGui
 
 		setOnClose(event ->
 		{
-			if(this.showJobBoardOnExit)
-				jobBoardGUI.show(this.player);
+			if(this.openParentOnExit)
+				openOnClose.show(this.player);
 		});
 	}
 
 	private Pane createOptionsPane() 
 	{
+		//TODO: refactor
 		boolean itemsReward = this.job.getReward() instanceof ItemsReward;
 		boolean canDelete = this.player.hasPermission("employme.admin.delete") || this.job.getEmployer().equals(this.player);
 
@@ -117,7 +120,7 @@ public class JobActionsGUI extends ChestGui
 					if(!checkJobAvailability())
 						return;
 					
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 
 					this.player.closeInventory();
 					this.jobService.startLiveUpdates(this.player, this.job);
@@ -137,7 +140,7 @@ public class JobActionsGUI extends ChestGui
 					if(!checkJobAvailability())
 						return;
 					
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 					new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) this.job.getReward(), this.messageService).show(this.player);
 				})
 				.build();
@@ -155,7 +158,7 @@ public class JobActionsGUI extends ChestGui
 					if(!checkJobAvailability())
 						return;
 					
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 
 					this.player.closeInventory();
 					this.jobBoard.removeJob(this.job);
@@ -183,7 +186,7 @@ public class JobActionsGUI extends ChestGui
 					if(!finishedJob)
 						return;
 
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 					this.player.closeInventory();
 
 					if(this.job.getReward() instanceof PartialReward)

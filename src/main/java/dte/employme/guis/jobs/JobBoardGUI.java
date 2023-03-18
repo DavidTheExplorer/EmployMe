@@ -128,7 +128,7 @@ public class JobBoardGUI extends ChestGui
 				{
 					List<Job> playerJobs = this.jobBoard.getJobsOfferedBy(this.player.getUniqueId());
 
-					new PlayerJobsGUI(this, this.messageService, playerJobs).show(this.player);
+					new PlayerJobsGUI(playerJobs, this.jobBoard, this.messageService, this.jobService).show(this.player);
 				})
 				.build();
 	}
