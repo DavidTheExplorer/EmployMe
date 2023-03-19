@@ -210,7 +210,7 @@ public class MessageProvider
 			.put(GUI_JOB_ACTIONS_TITLE, "Available Actions")
 			.put(GUI_JOB_ACTIONS_JOB_UNAVAILABLE, "&cUnable to proceed because the job is not offered anymore!")
 			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME, "&aTrack Progression")
-			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "&fGet live notifications about your progression", "&ftowards completing this job.")
+			.put(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION, "&fGet live notifications about your progression", "&ftowards completing this job.", "", "&a&l• &aImportant:", "&f&l1&f. This only counts items in your inventory.", "&f&l2&f. You can still &apartially complete &fthe job!")
 			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME, "&aItems Reward Preview")
 			.put(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION, "&fSee the items that you would get", "&ffor completing this job.")
 			.put(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME, "&cDelete")
