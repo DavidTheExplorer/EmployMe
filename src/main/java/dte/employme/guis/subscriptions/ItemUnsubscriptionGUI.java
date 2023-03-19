@@ -27,12 +27,12 @@ public class ItemUnsubscriptionGUI extends ItemPaletteGUI
 {
 	public ItemUnsubscriptionGUI(Player player, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService)
 	{
-		super(messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE).first(), 
+		super(messageService.loadMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_TITLE).first(), 
 				messageService,
 				toUnsubscribeItem(player, messageService, jobSubscriptionService),
 				material -> jobSubscriptionService.isSubscribedTo(player.getUniqueId(), material),
 				Conversations.createFactory(messageService)
-				.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION).first()))
+				.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.loadMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_QUESTION).first()))
 				.addConversationAbandonedListener(event -> 
 				{
 					if(!event.gracefulExit())
@@ -50,14 +50,14 @@ public class ItemUnsubscriptionGUI extends ItemPaletteGUI
 	{
 		return material -> 
 		{
-			String name = messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME)
+			String name = messageService.loadMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_NAME)
 					.inject("item", EnumUtils.fixEnumName(material))
 					.first();
 			
 			return new GuiItemBuilder()
 					.forItem(new ItemBuilder(material)
 							.named(name)
-							.withLore(messageService.getMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE).toArray())
+							.withLore(messageService.loadMessage(GUI_UNSUBSCRIBE_ITEM_PALETTE_UNSUBSCRIBE_ITEM_LORE).toArray())
 							.createCopy())
 					.whenClicked(event -> unsubscribe(player, material, messageService, jobSubscriptionService))
 					.build();
@@ -68,7 +68,7 @@ public class ItemUnsubscriptionGUI extends ItemPaletteGUI
 	{
 		jobSubscriptionService.unsubscribe(player.getUniqueId(), material);
 
-		messageService.getMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
+		messageService.loadMessage(SUCCESSFULLY_UNSUBSCRIBED_FROM_GOAL)
 		.inject("goal", EnumUtils.fixEnumName(material))
 		.sendTo(player);
 

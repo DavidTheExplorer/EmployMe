@@ -53,7 +53,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 	public GoalEnchantmentSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
-		super(6, messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
+		super(6, messageService.loadMessage(GUI_GOAL_ENCHANTMENT_SELECTION_TITLE).first());
 		
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
@@ -72,7 +72,6 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 		addPane(createRectangle(Priority.LOWEST, 0, 5, 9, 1, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(this.enchantmentsPane = getEnchantmentsPane());
 		addPane(getPanelPane());
-		update();
 	}
 
 	private PaginatedPane getEnchantmentsPane() 
@@ -95,16 +94,16 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 
 		pane.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_GOAL_ENCHANTMENT_SELECTION_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.enchantmentsPane))
 				.build());
 
 		pane.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_GOAL_ENCHANTMENT_SELECTION_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.enchantmentsPane))
 				.build());
@@ -117,7 +116,7 @@ public class GoalEnchantmentSelectionGUI extends ChestGui
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.ENCHANTED_BOOK)
 						.named(GREEN + EnchantmentUtils.getDisplayName(enchantment))
-						.withLore(this.messageService.getMessage(GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE).toArray())
+						.withLore(this.messageService.loadMessage(GUI_GOAL_ENCHANTMENT_SELECTION_ITEM_LORE).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{

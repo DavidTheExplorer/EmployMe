@@ -40,7 +40,7 @@ public class ItemsRewardOfferGUI extends ChestGui
 
 	public ItemsRewardOfferGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, JobService jobService) 
 	{
-		super(6, messageService.getMessage(GUI_ITEMS_REWARD_OFFER_TITLE).first());
+		super(6, messageService.loadMessage(GUI_ITEMS_REWARD_OFFER_TITLE).first());
 
 		this.jobBoard = jobBoard;
 		this.messageService = messageService;
@@ -52,14 +52,13 @@ public class ItemsRewardOfferGUI extends ChestGui
 			Player player = (Player) event.getPlayer();
 
 			if(getOfferedItems().isEmpty()) 
-				messageService.getMessage(GUI_ITEMS_JOB_NO_ITEMS_WARNING).sendTo(player);
+				messageService.loadMessage(GUI_ITEMS_JOB_NO_ITEMS_WARNING).sendTo(player);
 
 			player.closeInventory();
 			player.getInventory().addItem(getOfferedItems().toArray(new ItemStack[0]));
 		});
 
 		addPane(createConfirmationButtonPane());
-		update();
 	}
 
 	/*
@@ -82,8 +81,8 @@ public class ItemsRewardOfferGUI extends ChestGui
 	private GuiItem createConfirmationButton() 
 	{
 		ItemStack button = new ItemBuilder(Material.GREEN_TERRACOTTA)
-				.named(this.messageService.getMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME).first())
-				.withLore(this.messageService.getMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE).toArray())
+				.named(this.messageService.loadMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_NAME).first())
+				.withLore(this.messageService.loadMessage(GUI_ITEMS_REWARD_OFFER_CONFIRMATION_ITEM_LORE).toArray())
 				.createCopy();
 
 		this.confirmationButton = button;

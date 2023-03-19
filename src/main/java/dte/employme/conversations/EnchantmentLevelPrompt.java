@@ -33,11 +33,11 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 		Player player = (Player) context.getForWhom();
 
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
-		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		this.messageService.loadMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo(player);
 
-		return this.messageService.getMessage(ENTER_ENCHANTMENT_LEVEL)
+		return this.messageService.loadMessage(ENTER_ENCHANTMENT_LEVEL)
 				.inject("enchantment", EnchantmentUtils.getDisplayName(this.enchantment))
 				.first();
 	}
@@ -67,7 +67,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return this.messageService.getMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
+		return this.messageService.loadMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
 				.inject("enchantment min level", this.enchantment.getStartLevel())
 				.first();
 	}
@@ -75,6 +75,6 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.getMessage(ENCHANTMENT_LEVEL_NOT_A_NUMBER).first();
+		return this.messageService.loadMessage(ENCHANTMENT_LEVEL_NOT_A_NUMBER).first();
 	}
 }

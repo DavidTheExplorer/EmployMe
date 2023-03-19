@@ -21,14 +21,13 @@ public class ItemsRewardPreviewGUI extends ChestGui
 	
 	public ItemsRewardPreviewGUI(Player player, Gui openOnClose, ItemsReward itemsReward, MessageService messageService) 
 	{
-		super(6, messageService.getMessage(GUI_ITEMS_REWARD_PREVIEW_TITLE).first());
+		super(6, messageService.loadMessage(GUI_ITEMS_REWARD_PREVIEW_TITLE).first());
 		
 		this.itemsReward = itemsReward;
 		
 		setOnTopClick(event -> event.setCancelled(true));
 		setOnClose(event -> openOnClose.show(player));
 		addPane(createItemsPane());
-		update();
 	}
 	
 	private Pane createItemsPane() 

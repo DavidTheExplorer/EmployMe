@@ -39,13 +39,13 @@ public class JobPaymentPrompt extends NumericPrompt
 		Double employerMoney = NumberUtils.limit(this.economy.getBalance(employer), 2);
 		
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
-		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		this.messageService.loadMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo(employer);
 		
-		return this.messageService.getMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
+		return this.messageService.loadMessage(MONEY_PAYMENT_AMOUNT_QUESTION)
 				.inject("player money", employerMoney)
-				.inject("currency symbol", this.messageService.getMessage(CURRENCY_SYMBOL).first())
+				.inject("currency symbol", this.messageService.loadMessage(CURRENCY_SYMBOL).first())
 				.first();
 	}
 
@@ -76,10 +76,10 @@ public class JobPaymentPrompt extends NumericPrompt
 		double payment = invalidInput.doubleValue();
 		
 		if(payment <= 0)
-			return this.messageService.getMessage(MONEY_REWARD_ERROR_NEGATIVE).first();
+			return this.messageService.loadMessage(MONEY_REWARD_ERROR_NEGATIVE).first();
 		
 		else if(!this.economy.has((Player) context.getForWhom(), payment))
-			return this.messageService.getMessage(MONEY_REWARD_NOT_ENOUGH).first();
+			return this.messageService.loadMessage(MONEY_REWARD_NOT_ENOUGH).first();
 		
 		throw new IllegalStateException("Couldn't parse the provided input to an payment amount!");
 	}
@@ -87,7 +87,7 @@ public class JobPaymentPrompt extends NumericPrompt
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.getMessage(MONEY_REWARD_NOT_A_NUMBER).first();
+		return this.messageService.loadMessage(MONEY_REWARD_NOT_A_NUMBER).first();
 	}
 	
 	private void takeReward(Player player, Reward reward)

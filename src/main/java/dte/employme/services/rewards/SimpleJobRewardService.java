@@ -25,7 +25,7 @@ public class SimpleJobRewardService implements JobRewardService
 		{
 			return String.format("%s%s", 
 					MoneyReward.formatPayment(((MoneyReward) reward)), 
-					this.messageService.getMessage(CURRENCY_SYMBOL).first());
+					this.messageService.loadMessage(CURRENCY_SYMBOL).first());
 		}
 		else if(reward instanceof ItemsReward) 
 		{

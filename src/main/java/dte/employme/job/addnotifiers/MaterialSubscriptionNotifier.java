@@ -45,7 +45,7 @@ public class MaterialSubscriptionNotifier extends JobAddChatNotifier
 	{
 		String itemsNames = getSubscribedToItemsNames(player, (ItemsReward) job.getReward());
 
-		return Arrays.asList(this.messageService.getMessage(SUBSCRIBED_TO_GOALS_NOTIFICATION).inject("rewards", itemsNames));
+		return Arrays.asList(this.messageService.loadMessage(SUBSCRIBED_TO_GOALS_NOTIFICATION).inject("rewards", itemsNames));
 	}
 
 	private String getSubscribedToItemsNames(Player player, ItemsReward itemsReward) 

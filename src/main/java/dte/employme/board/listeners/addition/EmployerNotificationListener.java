@@ -19,6 +19,6 @@ public class EmployerNotificationListener implements JobAddListener
 	@Override
 	public void onJobAdded(JobBoard jobBoard, Job job) 
 	{
-		OfflinePlayerUtils.ifOnline(job.getEmployer(), this.messageService.getMessage(JOB_ADDED_TO_BOARD)::sendTo);
+		OfflinePlayerUtils.ifOnline(job.getEmployer(), this.messageService.loadMessage(JOB_ADDED_TO_BOARD)::sendTo);
 	}
 }

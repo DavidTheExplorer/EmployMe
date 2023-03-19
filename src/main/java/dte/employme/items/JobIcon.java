@@ -32,7 +32,7 @@ public class JobIcon
 {
 	public static ItemStack create(Job job, MessageService messageService) 
 	{
-		String name = messageService.getMessage(JOB_ICON_NAME)
+		String name = messageService.loadMessage(JOB_ICON_NAME)
 				.inject("employer", job.getEmployer().getName())
 				.first();
 		
@@ -52,7 +52,7 @@ public class JobIcon
 	{
 		ItemProvider goalProvider = job.getGoalProvider();
 
-		return messageService.getMessage(goalProvider instanceof VanillaProvider ? JOB_ICON_GOAL_INSTRUCTIONS : JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS)
+		return messageService.loadMessage(goalProvider instanceof VanillaProvider ? JOB_ICON_GOAL_INSTRUCTIONS : JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS)
 				.inject("goal", goalProvider.getDisplayName(job.getGoal()))
 				.inject("item provider", goalProvider.getName())
 				.toList();
@@ -67,7 +67,7 @@ public class JobIcon
 
 		List<String> lore = new ArrayList<>();
 		lore.add(" ");
-		lore.add(messageService.getMessage(JOB_ICON_ENCHANT_DESCRIPTION).first());
+		lore.add(messageService.loadMessage(JOB_ICON_ENCHANT_DESCRIPTION).first());
 
 		enchantments.forEach((enchantment, level) -> 
 		{
@@ -83,13 +83,13 @@ public class JobIcon
 	private static String describeReward(Reward reward, MessageService messageService)
 	{
 		if(reward instanceof MoneyReward)
-			return messageService.getMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
+			return messageService.loadMessage(JOB_ICON_MONEY_PAYMENT_DESCRIPTION)
 					.inject("money payment", MoneyReward.formatPayment((MoneyReward) reward))
-					.inject("currency symbol", messageService.getMessage(CURRENCY_SYMBOL).first())
+					.inject("currency symbol", messageService.loadMessage(CURRENCY_SYMBOL).first())
 					.first();
 
 		else if(reward instanceof ItemsReward)
-			return messageService.getMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
+			return messageService.loadMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
 					.inject("items amount", ((ItemsReward) reward).getItems().size())
 					.first();
 

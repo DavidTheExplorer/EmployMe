@@ -80,6 +80,12 @@ public class SimpleJobBoard implements JobBoard
 	}
 	
 	@Override
+	public int size() 
+	{
+		return this.jobByUUID.size();
+	}
+	
+	@Override
 	public void registerAddListener(JobAddListener listener) 
 	{
 		this.addListeners.add(listener);

@@ -34,7 +34,7 @@ public class CustomItemSelectionGUI extends ChestGui
 
 	public CustomItemSelectionGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
-		super(1, messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_TITLE).first());
+		super(1, messageService.loadMessage(GUI_CUSTOM_GOAL_SELECTION_TITLE).first());
 
 		this.messageService = messageService;
 		this.goalCustomizationGUI = goalCustomizationGUI;
@@ -49,11 +49,10 @@ public class CustomItemSelectionGUI extends ChestGui
 
 		addPane(createRectangle(Priority.LOW, 1, 0, 8, 1, new GuiItem(
 				new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
-				.named(messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME).first())
+				.named(messageService.loadMessage(GUI_CUSTOM_GOAL_SELECTION_MORE_PLUGINS_SOON_ITEM_NAME).first())
 				.createCopy())));
 
 		addPane(createCustomPluginsPane());
-		update();
 	}
 
 	private Pane createCustomPluginsPane() 
@@ -69,11 +68,11 @@ public class CustomItemSelectionGUI extends ChestGui
 
 	private GuiItem createPluginIcon(ItemProvider itemProvider) 
 	{
-		String name = this.messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME)
+		String name = this.messageService.loadMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_NAME)
 				.inject("item provider", itemProvider.getName())
 				.first();
 		
-		String lore = this.messageService.getMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE)
+		String lore = this.messageService.loadMessage(GUI_CUSTOM_GOAL_SELECTION_ITEM_PROVIDER_ITEM_LORE)
 				.inject("item provider", itemProvider.getName())
 				.first();
 

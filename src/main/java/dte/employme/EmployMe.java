@@ -32,6 +32,7 @@ import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.job.addnotifiers.MaterialSubscriptionNotifier;
 import dte.employme.listeners.AutoUpdateListeners;
 import dte.employme.messages.MessageProvider;
+import dte.employme.papi.EmployMePapiExpansion;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.job.JobService;
@@ -41,7 +42,7 @@ import dte.employme.services.job.addnotifiers.SimpleJobAddNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.job.subscription.SimpleJobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.message.TranslatedMessageService;
+import dte.employme.services.message.ConfigMessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
@@ -121,7 +122,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
 		
-		this.messageService = new TranslatedMessageService(this.messagesConfig);
+		this.messageService = new ConfigMessageService(this.messagesConfig);
 		
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
@@ -157,6 +158,9 @@ public class EmployMe extends ModernJavaPlugin
 		
 		//setup config features
 		setupWebhooks();
+		
+		//register PlaceholderAPI's placeholders
+		registerPapiPlaceholders();
 		
 		//start metrics
 		new Metrics(this, 16573);
@@ -221,6 +225,14 @@ public class EmployMe extends ModernJavaPlugin
 		String message = section.getString("Message");
 		
 		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService));		
+	}
+	
+	private void registerPapiPlaceholders() 
+	{
+		if(!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
+			return;
+		
+		new EmployMePapiExpansion(this.globalJobBoard).register();
 	}
 	
 	@SuppressWarnings("unused")

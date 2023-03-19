@@ -32,7 +32,7 @@ public class ItemPaletteGoalGUI extends ItemPaletteGUI
 
 	public ItemPaletteGoalGUI(World world, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
-		super(messageService.getMessage(GUI_ITEM_PALETTE_TITLE).first(), 
+		super(messageService.loadMessage(GUI_ITEM_PALETTE_TITLE).first(), 
 				messageService, 
 				getChooseableItem(goalCustomizationGUI), 
 				negate(material -> jobService.isBlacklistedAt(world, material)),
@@ -65,7 +65,7 @@ public class ItemPaletteGoalGUI extends ItemPaletteGUI
 	private static ConversationFactory createEnglishTypeConversationFactory(MessageService messageService, JobService jobService, Reward reward, GoalCustomizationGUI goalCustomizationGUI) 
 	{
 		return Conversations.createFactory(messageService)
-				.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.getMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
+				.withFirstPrompt(new JobGoalPrompt(jobService, messageService, messageService.loadMessage(ITEM_GOAL_FORMAT_QUESTION).first()))
 				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
 				.addConversationAbandonedListener(refundReward(messageService, JOB_SUCCESSFULLY_CANCELLED))
 				.addConversationAbandonedListener(event -> 

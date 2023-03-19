@@ -16,6 +16,7 @@ import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.next
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -24,8 +25,10 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
 
+import dte.employme.board.JobBoard;
 import dte.employme.items.JobIcon;
 import dte.employme.job.Job;
+import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
@@ -33,25 +36,39 @@ import dte.employme.utils.inventoryframework.InventoryFrameworkUtils;
 public class PlayerJobsGUI extends ChestGui
 {
 	private final List<Job> jobsToDisplay;
+	private final JobBoard jobBoard;
 	private final MessageService messageService;
+	private final JobService jobService;
 	
 	private final PaginatedPane jobsPane;
 	
-	public PlayerJobsGUI(JobBoardGUI jobBoardGUI, MessageService messageService, List<Job> jobsToDisplay)
+	private boolean exitedByESC = true;
+
+	public PlayerJobsGUI(List<Job> jobsToDisplay, JobBoard jobBoard, MessageService messageService, JobService jobService)
 	{
-		super(6, messageService.getMessage(GUI_PLAYER_JOBS_TITLE).first());
+		super(6, messageService.loadMessage(GUI_PLAYER_JOBS_TITLE).first());
 		
 		this.jobsToDisplay = jobsToDisplay;
+		this.jobBoard = jobBoard;
 		this.messageService = messageService;
-		
+		this.jobService = jobService;
 		this.jobsPane = createJobsPane();
 		
 		setOnTopClick(event -> event.setCancelled(true));
-		setOnClose(event -> jobBoardGUI.show(event.getPlayer()));
 		addPane(createPanel());
 		addPane(createPanelBackground());
 		addPane(this.jobsPane);
-		
+
+		setOnClose(event -> 
+		{
+			if(!this.exitedByESC)
+				return;
+			
+			Player player = (Player) event.getPlayer();
+			
+			new JobBoardGUI(player, jobBoard, jobService, messageService).show(player);
+		});
+
 		update();
 	}
 	
@@ -61,8 +78,7 @@ public class PlayerJobsGUI extends ChestGui
 		pages.addPane(0, createPage(pages));
 		
 		this.jobsToDisplay.stream()
-		.map(job -> JobIcon.create(job, this.messageService))
-		.map(GuiItem::new)
+		.map(this::createJobIcon)
 		.forEach(guiItem -> InventoryFrameworkUtils.addItem(guiItem, pages, this));
 
 		return pages;
@@ -75,16 +91,16 @@ public class PlayerJobsGUI extends ChestGui
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(backButtonBuilder()
-						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_PREVIOUS_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(backButtonListener(this, this.jobsPane))
 				.build());
 		
 		panel.addItem(new GuiItemBuilder()
 				.forItem(nextButtonBuilder()
-						.named(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
+						.named(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_PLAYER_CONTAINER_NEXT_PAGE_LORE).toArray())
 						.createCopy())
 				.whenClicked(nextButtonListener(this, this.jobsPane))
 				.build());
@@ -95,5 +111,19 @@ public class PlayerJobsGUI extends ChestGui
 	private Pane createPanelBackground() 
 	{
 		return createRectangle(Priority.LOWEST, 0, 5, 9, 1, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE)));
+	}
+
+	private GuiItem createJobIcon(Job job) 
+	{
+		return new GuiItemBuilder()
+				.forItem(JobIcon.create(job, this.messageService))
+				.whenClicked(event -> 
+				{
+					Player player = (Player) event.getWhoClicked();
+					this.exitedByESC = false;
+
+					new JobActionsGUI(job, this.jobBoard, player, this, this.messageService, this.jobService).show(player);
+				})
+				.build();
 	}
 }

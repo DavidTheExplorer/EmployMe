@@ -40,7 +40,7 @@ public class JobAddNotifiersGUI extends ChestGui
 
 	public JobAddNotifiersGUI(JobAddNotifierService jobAddNotifierService, MessageService messageService, UUID playerUUID, JobAddNotifier defaultNotifier)
 	{
-		super(3, messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_TITLE).first());
+		super(3, messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_TITLE).first());
 
 		this.jobAddNotifierService = jobAddNotifierService;
 		this.messageService = messageService;
@@ -50,7 +50,6 @@ public class JobAddNotifiersGUI extends ChestGui
 		addPane(createWalls(this, Priority.LOWEST));
 		addPane(createBackground());
 		addPane(createNotifiersPane(playerUUID));
-		update();
 	}
 
 	private Pane createBackground()
@@ -73,9 +72,9 @@ public class JobAddNotifiersGUI extends ChestGui
 		subscriptionsNotifier = this.jobAddNotifierService.getByName("Material Subscriptions"),
 		noneNotifier = this.jobAddNotifierService.getByName("None");
 
-		pane.addItem(createNotifierIcon(allJobsNotifier, GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, playerUUID, Material.NETHER_STAR, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE).toArray()));
-		pane.addItem(createNotifierIcon(subscriptionsNotifier, GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, playerUUID, Material.PAPER, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE).toArray()));
-		pane.addItem(createNotifierIcon(noneNotifier, GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, playerUUID, Material.BARRIER, this.messageService.getMessage(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE).toArray()));
+		pane.addItem(createNotifierIcon(allJobsNotifier, GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, playerUUID, Material.NETHER_STAR, this.messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE).toArray()));
+		pane.addItem(createNotifierIcon(subscriptionsNotifier, GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, playerUUID, Material.PAPER, this.messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE).toArray()));
+		pane.addItem(createNotifierIcon(noneNotifier, GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, playerUUID, Material.BARRIER, this.messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE).toArray()));
 		
 		return pane;
 	}
@@ -85,11 +84,11 @@ public class JobAddNotifiersGUI extends ChestGui
 		List<String> nicerDescription = Lists.newArrayList(description);
 
 		if(this.jobAddNotifierService.getPlayerNotifier(playerUUID, this.defaultNotifier).equals(notifier)) 
-			nicerDescription.addAll(Arrays.asList(" ", this.messageService.getMessage(MessageKey.GUI_JOB_ADDED_NOTIFIERS_SELECTED).first()));
+			nicerDescription.addAll(Arrays.asList(" ", this.messageService.loadMessage(MessageKey.GUI_JOB_ADDED_NOTIFIERS_SELECTED).first()));
 
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(material)
-						.named(this.messageService.getMessage(notifierItemNameKey).first())
+						.named(this.messageService.loadMessage(notifierItemNameKey).first())
 						.withLore(nicerDescription.toArray(new String[0]))
 						.createCopy())
 				.whenClicked(event -> 
@@ -99,7 +98,7 @@ public class JobAddNotifiersGUI extends ChestGui
 
 					this.jobAddNotifierService.setPlayerNotifier(player.getUniqueId(), notifier);
 
-					this.messageService.getMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
+					this.messageService.loadMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
 					.inject("job added notifier", notifier.getName())
 					.sendTo(player);
 				})

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dte</groupId>
 	<artifactId>employeme</artifactId>
-	<version>1.0.6</version>
+	<version>1.1.0</version>
 
 	<properties>
 		<shade.base>dte.employme.shaded</shade.base>
@@ -142,6 +142,11 @@
 			<url>https://mvn.lumine.io/repository/maven-public/</url>
 		</repository>
 
+		<repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+
 	</repositories>
 
 
@@ -227,6 +232,14 @@
 			<version>1.5.1-20230201.195713-8</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- PlaceholderAPI -->
+		<dependency>
+         <groupId>me.clip</groupId>
+          <artifactId>placeholderapi</artifactId>
+          <version>2.11.2</version>
+         <scope>provided</scope>
+        </dependency>
 
 	</dependencies>
 </project>

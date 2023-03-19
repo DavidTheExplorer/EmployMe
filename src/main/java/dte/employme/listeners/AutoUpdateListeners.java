@@ -28,7 +28,7 @@ public class AutoUpdateListeners implements Listener
 		if(!player.isOp())
 			return;
 		
-		this.messageService.getMessage(NEW_UPDATE_AVAILABLE)
+		this.messageService.loadMessage(NEW_UPDATE_AVAILABLE)
 		.inject("new version", this.newVersion)
 		.sendTo(player);
 	}

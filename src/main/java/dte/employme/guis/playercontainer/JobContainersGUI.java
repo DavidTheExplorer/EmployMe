@@ -32,7 +32,7 @@ public class JobContainersGUI extends ChestGui
 	
 	public JobContainersGUI(MessageService messageService, PlayerContainerService playerContainerService) 
 	{
-		super(1, messageService.getMessage(GUI_JOB_CONTAINERS_TITLE).first());
+		super(1, messageService.loadMessage(GUI_JOB_CONTAINERS_TITLE).first());
 		
 		this.messageService = messageService;
 		this.playerContainerService = playerContainerService;
@@ -40,7 +40,6 @@ public class JobContainersGUI extends ChestGui
 		setOnTopClick(event -> event.setCancelled(true));
 		addPane(createRectangle(Priority.LOWEST, 0, 0, 9, 1, new GuiItem(createWall(Material.BLACK_STAINED_GLASS_PANE))));
 		addPane(createContainersPane());
-		update();
 	}
 	
 	private Pane createContainersPane() 
@@ -48,8 +47,8 @@ public class JobContainersGUI extends ChestGui
 		OutlinePane pane = new OutlinePane(2, 0, 9, 1, Priority.LOW);
 		pane.setGap(3);
 		
-		pane.addItem(createContainerIcon(this.messageService.getMessage(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME).first(), this.playerContainerService::getItemsContainer, this.messageService.getMessage(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE).toArray()));
-		pane.addItem(createContainerIcon(this.messageService.getMessage(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_NAME).first(), this.playerContainerService::getRewardsContainer, this.messageService.getMessage(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_LORE).toArray()));
+		pane.addItem(createContainerIcon(this.messageService.loadMessage(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_NAME).first(), this.playerContainerService::getItemsContainer, this.messageService.loadMessage(GUI_JOB_CONTAINERS_ITEMS_CONTAINER_LORE).toArray()));
+		pane.addItem(createContainerIcon(this.messageService.loadMessage(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_NAME).first(), this.playerContainerService::getRewardsContainer, this.messageService.loadMessage(GUI_JOB_CONTAINERS_REWARDS_CONTAINER_LORE).toArray()));
 		
 		return pane;
 	}

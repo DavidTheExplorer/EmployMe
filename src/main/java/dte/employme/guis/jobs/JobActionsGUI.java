@@ -2,6 +2,7 @@ package dte.employme.guis.jobs;
 
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME;
+import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_JOB_UNAVAILABLE;
@@ -15,8 +16,6 @@ import static dte.employme.utils.InventoryUtils.createWall;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createItemPane;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createRectangle;
 import static dte.employme.utils.inventoryframework.InventoryFrameworkUtils.createSquare;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
 
 import java.util.stream.Stream;
 
@@ -27,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.Pane.Priority;
@@ -36,6 +36,7 @@ import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPartialCompletionAmountPrompt;
 import dte.employme.job.Job;
+import dte.employme.messages.MessageKey;
 import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.PartialReward;
 import dte.employme.services.job.JobService;
@@ -52,17 +53,18 @@ public class JobActionsGUI extends ChestGui
 	private final JobService jobService;
 	private final MessageService messageService;
 
-	private boolean showJobBoardOnExit = true;
+	private boolean openParentOnExit;
 
-	public JobActionsGUI(Job job, JobBoard jobBoard, Player player, JobBoardGUI jobBoardGUI, MessageService messageService, JobService jobService)
+	public JobActionsGUI(Job job, JobBoard jobBoard, Player player, Gui openOnClose, MessageService messageService, JobService jobService)
 	{
-		super(3, messageService.getMessage(GUI_JOB_ACTIONS_TITLE).first());
+		super(3, messageService.loadMessage(GUI_JOB_ACTIONS_TITLE).first());
 		
 		this.job = job;
 		this.jobBoard = jobBoard;
 		this.player = player;
 		this.jobService = jobService;
 		this.messageService = messageService;
+		this.openParentOnExit = (openOnClose != null);
 
 		//add completion area
 		addPane(createSquare(Priority.LOWEST, 0, 0, 3, new GuiItem(createWall(Material.WHITE_STAINED_GLASS_PANE))));
@@ -78,13 +80,14 @@ public class JobActionsGUI extends ChestGui
 
 		setOnClose(event ->
 		{
-			if(this.showJobBoardOnExit)
-				jobBoardGUI.show(this.player);
+			if(this.openParentOnExit)
+				openOnClose.show(this.player);
 		});
 	}
 
 	private Pane createOptionsPane() 
 	{
+		//TODO: refactor
 		boolean itemsReward = this.job.getReward() instanceof ItemsReward;
 		boolean canDelete = this.player.hasPermission("employme.admin.delete") || this.job.getEmployer().equals(this.player);
 
@@ -109,15 +112,15 @@ public class JobActionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.COMPASS)
-						.named(this.messageService.getMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_ACTIONS_TRACKER_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
 					if(!checkJobAvailability())
 						return;
 					
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 
 					this.player.closeInventory();
 					this.jobService.startLiveUpdates(this.player, this.job);
@@ -129,15 +132,15 @@ public class JobActionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.getMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION).toArray())
+						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
 					if(!checkJobAvailability())
 						return;
 					
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 					new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) this.job.getReward(), this.messageService).show(this.player);
 				})
 				.build();
@@ -147,20 +150,20 @@ public class JobActionsGUI extends ChestGui
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(Material.BARRIER)
-						.named(RED + "Delete")
-						.withLore(WHITE + "Click to delete this job from the board!")
+						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(MessageKey.GUI_JOB_ACTIONS_DELETE_JOB_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
 					if(!checkJobAvailability())
 						return;
 					
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 
 					this.player.closeInventory();
 					this.jobBoard.removeJob(this.job);
 					this.job.getReward().giveTo(this.job.getEmployer());
-					this.messageService.getMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(this.player);
+					this.messageService.loadMessage(JOB_SUCCESSFULLY_CANCELLED).sendTo(this.player);
 				})
 				.build();
 	}
@@ -171,8 +174,8 @@ public class JobActionsGUI extends ChestGui
 		
 		return new GuiItemBuilder()
 				.forItem(new ItemBuilder(finishedJob ? Material.LIME_TERRACOTTA : Material.RED_TERRACOTTA)
-						.named(this.messageService.getMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME).first())
-						.withLore(this.messageService.getMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION).toArray())
+						.named(this.messageService.loadMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME).first())
+						.withLore(this.messageService.loadMessage(finishedJob ? GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION : GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION).toArray())
 						.createCopy())
 				.whenClicked(event -> 
 				{
@@ -183,7 +186,7 @@ public class JobActionsGUI extends ChestGui
 					if(!finishedJob)
 						return;
 
-					this.showJobBoardOnExit = false;
+					this.openParentOnExit = false;
 					this.player.closeInventory();
 
 					if(this.job.getReward() instanceof PartialReward)
@@ -239,7 +242,7 @@ public class JobActionsGUI extends ChestGui
 			return true;
 
 		this.player.closeInventory();
-		this.messageService.getMessage(GUI_JOB_ACTIONS_JOB_UNAVAILABLE).sendTo(this.player);
+		this.messageService.loadMessage(GUI_JOB_ACTIONS_JOB_UNAVAILABLE).sendTo(this.player);
 		return false;
 	}
 }

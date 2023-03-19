@@ -116,7 +116,7 @@ public class EmploymentCommand extends BaseCommand
 			EmployMe.getInstance().onEnable();
 		});
 
-		this.messageService.getMessage(PLUGIN_RELOADED)
+		this.messageService.loadMessage(PLUGIN_RELOADED)
 		.inject("reload time", reloadTime.toMillis())
 		.sendTo(sender);
 	}

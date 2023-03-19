@@ -38,8 +38,8 @@ public class JobGoalPrompt extends ValidatingPrompt
 	public String getPromptText(ConversationContext context)
 	{
 		//send the escape hint title
-		this.messageService.getMessage(CONVERSATION_ESCAPE_TITLE)
-		.inject("escape word", this.messageService.getMessage(CONVERSATION_ESCAPE_WORD).first())
+		this.messageService.loadMessage(CONVERSATION_ESCAPE_TITLE)
+		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo((Player) context.getForWhom());
 		
 		return this.question;
@@ -73,9 +73,9 @@ public class JobGoalPrompt extends ValidatingPrompt
 		if(this.blockedItemSpecified) 
 		{
 			this.blockedItemSpecified = false;
-			return this.messageService.getMessage(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD).first();
+			return this.messageService.loadMessage(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD).first();
 		}
 		
-		return this.messageService.getMessage(ITEM_GOAL_INVALID).first();
+		return this.messageService.loadMessage(ITEM_GOAL_INVALID).first();
 	}
 }
