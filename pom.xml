@@ -212,9 +212,9 @@
 
 		<!-- Spigot Configuration -->
 		<dependency>
-			<groupId>dte</groupId>
-			<artifactId>spigotconfiguration</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>com.github.DavidTheExplorer</groupId>
+			<artifactId>Spigot-Configuration</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!-- MMOItems -->
@@ -229,7 +229,7 @@
 		<dependency>
 			<groupId>io.lumine</groupId>
 			<artifactId>MythicLib-dist</artifactId>
-			<version>1.5.1-20230201.195713-8</version>
+			<version>1.5.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		
