@@ -13,7 +13,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
-import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import dte.employme.EmployMe;
 import dte.employme.items.providers.ItemProvider;
 import dte.employme.items.providers.MMOItemsProvider;

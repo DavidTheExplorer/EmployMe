@@ -73,7 +73,7 @@ public class SimplePlayerContainerService implements PlayerContainerService
 				.collect(toMap(Function.identity(), playerUUID -> 
 				{
 					List<ItemStack> playerItems = containersConfig.getSection(playerUUID.toString()).getKeys(false).stream()
-							.map(slot -> containersConfig.getItemStack(playerUUID + "." + slot))
+							.map(slot -> containersConfig.getStorage().getItemStack(playerUUID + "." + slot))
 							.collect(toList());
 
 					PlayerContainerGUI container = new PlayerContainerGUI(subject, this.messageService);

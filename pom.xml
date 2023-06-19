@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dte</groupId>
 	<artifactId>employeme</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 
 	<properties>
 		<shade.base>dte.employme.shaded</shade.base>
@@ -79,6 +79,11 @@
 						<relocation>
 							<pattern>dte.spigotconfiguration</pattern>
 							<shadedPattern>${shade.base}.spigotconfiguration</shadedPattern>
+						</relocation>
+
+						<relocation>
+							<pattern>de.tr7zw.changeme.nbtapi</pattern>
+              				<shadedPattern>${shade.base}.nbtapi</shadedPattern>
 						</relocation>
 
 					</relocations>
@@ -193,28 +198,28 @@
 		<dependency>
 			<groupId>com.github.stefvanschie.inventoryframework</groupId>
 			<artifactId>IF</artifactId>
-			<version>0.10.8</version>
+			<version>0.10.10</version>
 		</dependency>
 
 		<!-- Item-NBT-API -->
 		<dependency>
 			<groupId>de.tr7zw</groupId>
-			<artifactId>item-nbt-api-plugin</artifactId>
-			<version>2.11.1</version>
+			<artifactId>item-nbt-api</artifactId>
+			<version>2.11.3</version>
 		</dependency>
 
 		<!-- XSeries -->
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>XSeries</artifactId>
-			<version>9.1.0</version>
+			<version>9.4.0</version>
 		</dependency>
 
 		<!-- Spigot Configuration -->
 		<dependency>
-			<groupId>dte</groupId>
-			<artifactId>spigotconfiguration</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>com.github.DavidTheExplorer</groupId>
+			<artifactId>Spigot-Configuration</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 
 		<!-- MMOItems -->
