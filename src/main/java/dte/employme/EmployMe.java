@@ -41,8 +41,8 @@ import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 import dte.employme.services.job.addnotifiers.SimpleJobAddNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.job.subscription.SimpleJobSubscriptionService;
-import dte.employme.services.message.MessageService;
 import dte.employme.services.message.ConfigMessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
@@ -53,6 +53,7 @@ import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
 import dte.spigotconfiguration.SpigotConfig;
 import dte.spigotconfiguration.exceptions.ConfigLoadException;
+import dte.spigotconfiguration.utils.YamlConfigurationUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -99,7 +100,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init configs
 		try 
 		{
-			SpigotConfig.register(Job.class, MoneyReward.class, ItemsReward.class);
+			YamlConfigurationUtils.register(Job.class, MoneyReward.class, ItemsReward.class);
 
 			this.mainConfig = new MainConfig(this);
 			this.jobsConfig = SpigotConfig.byPath(this, "boards/global/jobs");
