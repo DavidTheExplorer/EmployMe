@@ -217,9 +217,9 @@
 
 		<!-- Spigot Configuration -->
 		<dependency>
-			<groupId>com.github.DavidTheExplorer</groupId>
-			<artifactId>Spigot-Configuration</artifactId>
-			<version>1.2.1</version>
+			<groupId>dte</groupId>
+			<artifactId>spigotconfiguration</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- MMOItems -->

@@ -53,7 +53,6 @@ import dte.employme.utils.java.TimeUtils;
 import dte.modernjavaplugin.ModernJavaPlugin;
 import dte.spigotconfiguration.SpigotConfig;
 import dte.spigotconfiguration.exceptions.ConfigLoadException;
-import dte.spigotconfiguration.utils.YamlConfigurationUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -100,7 +99,7 @@ public class EmployMe extends ModernJavaPlugin
 		//init configs
 		try 
 		{
-			YamlConfigurationUtils.register(Job.class, MoneyReward.class, ItemsReward.class);
+			SpigotConfig.register(Job.class, MoneyReward.class, ItemsReward.class);
 
 			this.mainConfig = new MainConfig(this);
 			this.jobsConfig = SpigotConfig.byPath(this, "boards/global/jobs");
