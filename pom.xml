@@ -9,7 +9,7 @@
 	</properties>
 	
 	<build>
-		<finalName>EmployMe ${project.version}</finalName>
+		<finalName>EmployMe ${project.version} - Lunar Fork</finalName>
 
 		<resources>
 			<resource>
