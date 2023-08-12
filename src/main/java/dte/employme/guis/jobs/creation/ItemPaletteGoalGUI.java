@@ -21,7 +21,6 @@ import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.guis.ItemPaletteGUI;
 import dte.employme.rewards.Reward;
 import dte.employme.services.job.JobService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.java.MapBuilder;
@@ -30,7 +29,7 @@ public class ItemPaletteGoalGUI extends ItemPaletteGUI
 {
 	private boolean showGoalCustomizationGUIOnClose = true;
 
-	public ItemPaletteGoalGUI(World world, JobService jobService, MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
+	public ItemPaletteGoalGUI(World world, JobService jobService, MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
 		super(messageService.loadMessage(GUI_ITEM_PALETTE_TITLE).first(), 
 				messageService, 

@@ -20,7 +20,6 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.CustomItemNamePrompt;
 import dte.employme.items.providers.ItemProvider;
 import dte.employme.rewards.Reward;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
@@ -32,7 +31,7 @@ public class CustomItemSelectionGUI extends ChestGui
 
 	private boolean showGoalCustomizationGUIOnClose = true;
 
-	public CustomItemSelectionGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
+	public CustomItemSelectionGUI(MessageService messageService, GoalCustomizationGUI goalCustomizationGUI, Reward reward)
 	{
 		super(1, messageService.loadMessage(GUI_CUSTOM_GOAL_SELECTION_TITLE).first());
 

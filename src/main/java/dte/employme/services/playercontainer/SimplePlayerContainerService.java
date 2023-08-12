@@ -19,17 +19,14 @@ import dte.spigotconfiguration.SpigotConfig;
 
 public class SimplePlayerContainerService implements PlayerContainerService
 {
-	private final Map<UUID, PlayerContainerGUI>
-	itemsContainers = new HashMap<>(),
-	rewardsContainers = new HashMap<>();
+	private final Map<UUID, PlayerContainerGUI> itemsContainers = new HashMap<>();
 
-	private final SpigotConfig itemsContainersConfig, rewardsContainersConfig;
+	private final SpigotConfig itemsContainersConfig;
 	private final MessageService messageService;
 
-	public SimplePlayerContainerService(SpigotConfig itemsContainersConfig, SpigotConfig rewardsContainersConfig, MessageService messageService) 
+	public SimplePlayerContainerService(SpigotConfig itemsContainersConfig, MessageService messageService) 
 	{
 		this.itemsContainersConfig = itemsContainersConfig;
-		this.rewardsContainersConfig = rewardsContainersConfig;
 		this.messageService = messageService;
 	}
 	
@@ -40,23 +37,15 @@ public class SimplePlayerContainerService implements PlayerContainerService
 	}
 	
 	@Override
-	public PlayerContainerGUI getRewardsContainer(UUID playerUUID)
-	{
-		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(createContainerTitle("Rewards"), this.messageService));
-	}
-	
-	@Override
 	public void loadContainers() 
 	{
 		this.itemsContainers.putAll(loadContainers(this.itemsContainersConfig, "Items"));
-		this.rewardsContainers.putAll(loadContainers(this.rewardsContainersConfig, "Rewards"));
 	}
 	
 	@Override
 	public void saveContainers() 
 	{
 		saveContainers(this.itemsContainersConfig, this.itemsContainers);
-		saveContainers(this.rewardsContainersConfig, this.rewardsContainers);
 	}
 	
 	private String createContainerTitle(String subject) 

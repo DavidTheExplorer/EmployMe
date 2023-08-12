@@ -4,8 +4,6 @@ import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME;
-import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE;
-import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ADDED_NOTIFIERS_TITLE;
 import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 import static dte.employme.utils.InventoryUtils.createWall;
@@ -69,11 +67,9 @@ public class JobAddNotifiersGUI extends ChestGui
 
 		JobAddNotifier 
 		allJobsNotifier = this.jobAddNotifierService.getByName("All Jobs"),
-		subscriptionsNotifier = this.jobAddNotifierService.getByName("Material Subscriptions"),
 		noneNotifier = this.jobAddNotifierService.getByName("None");
 
 		pane.addItem(createNotifierIcon(allJobsNotifier, GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_NAME, playerUUID, Material.NETHER_STAR, this.messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_ALL_ITEM_LORE).toArray()));
-		pane.addItem(createNotifierIcon(subscriptionsNotifier, GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_NAME, playerUUID, Material.PAPER, this.messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_SUBSCRIPTIONS_ITEM_LORE).toArray()));
 		pane.addItem(createNotifierIcon(noneNotifier, GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_NAME, playerUUID, Material.BARRIER, this.messageService.loadMessage(GUI_JOB_ADDED_NOTIFIERS_NONE_ITEM_LORE).toArray()));
 		
 		return pane;

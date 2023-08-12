@@ -31,7 +31,7 @@ public class MessageProvider
 			.put(PLAYER_COMPLETED_YOUR_JOB, "%prefix% &b%completer% &djust completed one of your Jobs! &nHover for more info.")
 			.put(PLAYER_PARTIALLY_COMPLETED_YOUR_JOB, "%prefix% &b%completer% &djust partially completed one of your Jobs! &nHover for more info.")
 			.put(YOU_OFFERED_TOO_MANY_JOBS, "&cYou can only offer up to %max jobs allowed% Jobs! Delete one to proceed.")
-			.put(JOB_SUCCESSFULLY_CANCELLED, "%prefix% &aReward &frefunded due to cancelling the Job!", "&fItem rewards can be accessed via &b\"/employment mycontainers\"&f.")
+			.put(JOB_SUCCESSFULLY_CANCELLED, "%prefix% &aReward &frefunded due to cancelling the Job!")
 			.put(JOB_AUTO_REMOVED, "%prefix% &cYour job was &4auto-removed &cbecause no one completed it!")
 			.put(CONVERSATION_ESCAPE_TITLE, "&aImportant:", "&fSay &e%escape word% &fto leave the conversation!")
 
@@ -225,7 +225,7 @@ public class MessageProvider
 			.put(COMMAND_VIEW_DESCRIPTION, "Search through the Available Jobs.")
 			.put(COMMAND_OFFER_NAME, "offer")
 			.put(COMMAND_OFFER_DESCRIPTION, "Offer a new job to the public.")
-			.put(COMMAND_MYCONTAINERS_NAME, "mycontainers")
+			.put(COMMAND_MYCONTAINERS_NAME, "items")
 			.put(COMMAND_MYCONTAINERS_DESCRIPTION, "Obtain items from your containers.")
 			.put(COMMAND_ADDNOTIFIERS_NAME, "addnotifiers")
 			.put(COMMAND_ADDNOTIFIERS_DESCRIPTION, "Choose what kind of jobs you want to be notified about.")

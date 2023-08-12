@@ -1,6 +1,5 @@
 package dte.employme.board.listeners.completion;
 
-import static dte.employme.messages.MessageKey.ITEMS_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.MONEY_JOB_COMPLETED;
 import static dte.employme.messages.MessageKey.PLAYER_COMPLETED_YOUR_JOB;
 import static dte.employme.messages.MessageKey.PLAYER_PARTIALLY_COMPLETED_YOUR_JOB;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 import dte.employme.board.JobBoard.JobCompletionContext;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageKey;
-import dte.employme.rewards.ItemsReward;
 import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.OfflinePlayerUtils;
@@ -36,7 +34,7 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 	public void onJobCompleted(Job job, Player whoCompleted, JobCompletionContext context)
 	{
 		//send a message to who completed
-		this.messageService.loadMessage(getCompleterMessage(context)).sendTo(whoCompleted);
+		this.messageService.loadMessage(MONEY_JOB_COMPLETED).sendTo(whoCompleted);
 		
 		//notify the employer if the completion percentage is above the required
 		if(context.isJobCompleted() || context.getPartialInfo().getPercentage() > this.percentageToNotifyFrom) 
@@ -50,11 +48,6 @@ public class JobCompletedMessagesListener implements JobCompleteListener
 				.forEach(employer.spigot()::sendMessage);
 			});
 		}	
-	}
-	
-	private static MessageKey getCompleterMessage(JobCompletionContext context) 
-	{
-		return context.getReward() instanceof ItemsReward ? ITEMS_JOB_COMPLETED : MONEY_JOB_COMPLETED;
 	}
 	
 	private static MessageKey getEmployerMessage(JobCompletionContext context) 

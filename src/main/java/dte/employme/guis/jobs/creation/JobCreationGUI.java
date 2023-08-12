@@ -1,8 +1,6 @@
 package dte.employme.guis.jobs.creation;
 
 import static com.github.stefvanschie.inventoryframework.pane.Orientable.Orientation.HORIZONTAL;
-import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE;
-import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_MONEY_JOB_ICON_LORE;
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_MONEY_JOB_ICON_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_CREATION_TITLE;
@@ -24,7 +22,6 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPaymentPrompt;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.services.job.JobService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
 import dte.employme.utils.items.ItemBuilder;
@@ -32,20 +29,14 @@ import net.milkbowl.vault.economy.Economy;
 
 public class JobCreationGUI extends ChestGui
 {
-	private final JobBoard jobBoard;
 	private final MessageService messageService;
-	private final JobSubscriptionService jobSubscriptionService;
 	private final ConversationFactory moneyJobConversationFactory;
-	private final JobService jobService;
 	
-	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, JobSubscriptionService jobSubscriptionService, Economy economy, JobService jobService)
+	public JobCreationGUI(JobBoard jobBoard, MessageService messageService, Economy economy, JobService jobService)
 	{
 		super(3, messageService.loadMessage(GUI_JOB_CREATION_TITLE).first());
 		
-		this.jobBoard = jobBoard;
 		this.messageService = messageService;
-		this.jobSubscriptionService = jobSubscriptionService;
-		this.jobService = jobService;
 		
 		//init the goal's type conversation factory
 		this.moneyJobConversationFactory = Conversations.createFactory(messageService)
@@ -59,7 +50,7 @@ public class JobCreationGUI extends ChestGui
 					Player player = (Player) event.getContext().getForWhom();
 					MoneyReward moneyReward = (MoneyReward) event.getContext().getSessionData("reward");
 					
-					new GoalCustomizationGUI(messageService, jobSubscriptionService, jobService, jobBoard, moneyReward).show(player);
+					new GoalCustomizationGUI(messageService, jobService, jobBoard, moneyReward).show(player);
 				});
 		
 		setOnTopClick(event -> event.setCancelled(true));
@@ -69,9 +60,8 @@ public class JobCreationGUI extends ChestGui
 	
 	private Pane createOptionsPane() 
 	{
-		OutlinePane pane = new OutlinePane(2, 1, 6, 1, Priority.LOW);
+		OutlinePane pane = new OutlinePane(4, 1, 6, 1, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
-		pane.setGap(3);
 		
 		//add the money job icon
 		pane.addItem(new GuiItemBuilder()
@@ -86,15 +76,6 @@ public class JobCreationGUI extends ChestGui
 					player.closeInventory();
 					this.moneyJobConversationFactory.buildConversation(player).begin();
 				})
-				.build());
-
-		//add the items job icon
-		pane.addItem(new GuiItemBuilder()
-				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.loadMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_NAME).first())
-						.withLore(this.messageService.loadMessage(GUI_JOB_CREATION_ITEMS_JOB_ICON_LORE).toArray())
-						.createCopy())
-				.whenClicked(event -> new ItemsRewardOfferGUI(this.jobBoard, this.messageService, this.jobSubscriptionService, this.jobService).show(event.getWhoClicked()))
 				.build());
 
 		return pane;

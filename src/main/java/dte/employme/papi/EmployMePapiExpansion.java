@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 
 import dte.employme.board.JobBoard;
-import dte.employme.rewards.ItemsReward;
 
 public class EmployMePapiExpansion extends AbstractPlaceholderExpansion
 {
@@ -57,19 +56,6 @@ public class EmployMePapiExpansion extends AbstractPlaceholderExpansion
 						.filter(job -> job.getGoal().getType() == goalMaterial)
 						.count();
 			}
-		},
-
-		CONTAINS_REWARD
-		{
-			@Override
-			public long count(JobBoard jobBoard, Material rewardMaterial)
-			{
-				return jobBoard.getOfferedJobs().stream()
-						.filter(job -> job.getReward() instanceof ItemsReward)
-						.map(job -> (ItemsReward) job.getReward())
-						.filter(itemsReward -> itemsReward.getItems().stream().anyMatch(reward -> reward.getType() == rewardMaterial))
-						.count();
-			}
 		};
 
 		public abstract long count(JobBoard jobBoard, Material contextMaterial);
@@ -78,9 +64,6 @@ public class EmployMePapiExpansion extends AbstractPlaceholderExpansion
 		{
 			if(name.equalsIgnoreCase("byGoal"))
 				return BY_GOAL;
-
-			else if(name.equalsIgnoreCase("containsReward"))
-				return CONTAINS_REWARD;
 
 			throw new IllegalArgumentException(String.format("Cannot find a counter named '%s'!", name));
 		}

@@ -3,8 +3,6 @@ package dte.employme.guis.jobs;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_COMPLETION_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_DELETE_JOB_ITEM_NAME;
-import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION;
-import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_JOB_UNAVAILABLE;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_DESCRIPTION;
 import static dte.employme.messages.MessageKey.GUI_JOB_ACTIONS_NOT_COMPLETED_ITEM_NAME;
@@ -37,7 +35,6 @@ import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobPartialCompletionAmountPrompt;
 import dte.employme.job.Job;
 import dte.employme.messages.MessageKey;
-import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.PartialReward;
 import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
@@ -88,17 +85,13 @@ public class JobActionsGUI extends ChestGui
 	private Pane createOptionsPane() 
 	{
 		//TODO: refactor
-		boolean itemsReward = this.job.getReward() instanceof ItemsReward;
 		boolean canDelete = this.player.hasPermission("employme.admin.delete") || this.job.getEmployer().equals(this.player);
 
-		int optionsAvailable = (int) Stream.of(itemsReward, canDelete)
+		int optionsAvailable = (int) Stream.of(canDelete)
 				.filter(option -> option)
 				.count();
 
 		OutlinePane pane = new OutlinePane(7 - optionsAvailable, 1, 9, 1);
-
-		if(itemsReward)
-			pane.addItem(createItemsRewardPreviewItem());
 
 		if(canDelete)
 			pane.addItem(createDeletionItem());
@@ -124,24 +117,6 @@ public class JobActionsGUI extends ChestGui
 
 					this.player.closeInventory();
 					this.jobService.startLiveUpdates(this.player, this.job);
-				})
-				.build();
-	}
-
-	private GuiItem createItemsRewardPreviewItem() 
-	{
-		return new GuiItemBuilder()
-				.forItem(new ItemBuilder(Material.CHEST)
-						.named(this.messageService.loadMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_NAME).first())
-						.withLore(this.messageService.loadMessage(GUI_JOB_ACTIONS_ITEMS_REWARD_PREVIEW_ITEM_DESCRIPTION).toArray())
-						.createCopy())
-				.whenClicked(event -> 
-				{
-					if(!checkJobAvailability())
-						return;
-					
-					this.openParentOnExit = false;
-					new ItemsRewardPreviewGUI(this.player, this, (ItemsReward) this.job.getReward(), this.messageService).show(this.player);
 				})
 				.build();
 	}

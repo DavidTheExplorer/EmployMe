@@ -4,7 +4,6 @@ import static dte.employme.messages.MessageKey.CURRENCY_SYMBOL;
 import static dte.employme.messages.MessageKey.JOB_ICON_CUSTOM_GOAL_INSTRUCTIONS;
 import static dte.employme.messages.MessageKey.JOB_ICON_ENCHANT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_GOAL_INSTRUCTIONS;
-import static dte.employme.messages.MessageKey.JOB_ICON_ITEMS_PAYMENT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_MONEY_PAYMENT_DESCRIPTION;
 import static dte.employme.messages.MessageKey.JOB_ICON_NAME;
 import static dte.employme.utils.ChatColorUtils.colorize;
@@ -20,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import dte.employme.items.providers.ItemProvider;
 import dte.employme.items.providers.VanillaProvider;
 import dte.employme.job.Job;
-import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
@@ -88,12 +86,7 @@ public class JobIcon
 					.inject("currency symbol", messageService.loadMessage(CURRENCY_SYMBOL).first())
 					.first();
 
-		else if(reward instanceof ItemsReward)
-			return messageService.loadMessage(JOB_ICON_ITEMS_PAYMENT_DESCRIPTION)
-					.inject("items amount", ((ItemsReward) reward).getItems().size())
-					.first();
-
 		else
-			throw new IllegalStateException(String.format("The provided items reward cannot be described! (%s)", reward));
+			throw new IllegalStateException(String.format("The provided reward cannot be described! (%s)", reward));
 	}
 }

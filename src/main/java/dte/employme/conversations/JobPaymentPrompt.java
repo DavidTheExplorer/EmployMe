@@ -13,11 +13,9 @@ import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 
-import dte.employme.rewards.ItemsReward;
 import dte.employme.rewards.MoneyReward;
 import dte.employme.rewards.Reward;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.InventoryUtils;
 import dte.employme.utils.java.NumberUtils;
 import net.milkbowl.vault.economy.Economy;
 
@@ -94,9 +92,6 @@ public class JobPaymentPrompt extends NumericPrompt
 	{
 		if(reward instanceof MoneyReward) 
 			this.economy.withdrawPlayer(player, ((MoneyReward) reward).getPayment());
-		
-		else if(reward instanceof ItemsReward) 
-			((ItemsReward) reward).getItems().forEach(item -> InventoryUtils.remove(player.getInventory(), item));
 		
 		else
 			throw new IllegalArgumentException("Cannot take the provided reward!");

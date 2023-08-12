@@ -47,7 +47,6 @@ import dte.employme.items.providers.VanillaProvider;
 import dte.employme.job.Job;
 import dte.employme.rewards.Reward;
 import dte.employme.services.job.JobService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.utils.EnchantmentUtils;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
@@ -57,7 +56,6 @@ import dte.employme.utils.java.MapBuilder;
 public class GoalCustomizationGUI extends ChestGui
 {
 	private final MessageService messageService;
-	private final JobSubscriptionService jobSubscriptionService;
 	private final JobService jobService;
 	private final JobBoard jobBoard;
 	private final Reward reward;
@@ -68,12 +66,11 @@ public class GoalCustomizationGUI extends ChestGui
 	
 	private static final Material NO_ITEM_TYPE = Material.BARRIER;
 
-	public GoalCustomizationGUI(MessageService messageService, JobSubscriptionService jobSubscriptionService, JobService jobService, JobBoard jobBoard, Reward reward)
+	public GoalCustomizationGUI(MessageService messageService, JobService jobService, JobBoard jobBoard, Reward reward)
 	{
 		super(6, messageService.loadMessage(GUI_GOAL_CUSTOMIZATION_TITLE).first());
 		
 		this.messageService = messageService;
-		this.jobSubscriptionService = jobSubscriptionService;
 		this.jobService = jobService;
 		this.jobBoard = jobBoard;
 		this.reward = reward;
@@ -321,7 +318,7 @@ public class GoalCustomizationGUI extends ChestGui
 					if(event.getClick().isLeftClick()) 
 					{
 						closeWithoutRefund(player);
-						new ItemPaletteGoalGUI(player.getWorld(), this.jobService, this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+						new ItemPaletteGoalGUI(player.getWorld(), this.jobService, this.messageService, this, this.reward).show(player);
 					}
 					else if(event.getClick().isRightClick()) 
 					{
@@ -329,7 +326,7 @@ public class GoalCustomizationGUI extends ChestGui
 							return;
 						
 						closeWithoutRefund(player);
-						new CustomItemSelectionGUI(this.messageService, this.jobSubscriptionService, this, this.reward).show(player);
+						new CustomItemSelectionGUI(this.messageService, this, this.reward).show(player);
 					}
 				})
 				.build();

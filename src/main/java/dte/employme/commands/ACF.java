@@ -30,7 +30,6 @@ import dte.employme.configs.MainConfig;
 import dte.employme.job.addnotifiers.JobAddNotifier;
 import dte.employme.services.job.JobService;
 import dte.employme.services.job.addnotifiers.JobAddNotifierService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import net.milkbowl.vault.economy.Economy;
@@ -44,12 +43,11 @@ public class ACF
 	private final JobService jobService;
 	private final MessageService messageService;
 	private final JobAddNotifierService jobAddNotifierService;
-	private final JobSubscriptionService jobSubscriptionService;
 	private final PlayerContainerService playerContainerService;
 	private final JobAddNotifier defaultNotifier;
 	private final MainConfig mainConfig;
 	
-	public ACF(JobBoard globalJobBoard, Economy economy, Permission permission, JobService jobService, MessageService messageService, JobAddNotifierService jobAddNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddNotifier defaultNotifier, MainConfig mainConfig) 
+	public ACF(JobBoard globalJobBoard, Economy economy, Permission permission, JobService jobService, MessageService messageService, JobAddNotifierService jobAddNotifierService, PlayerContainerService playerContainerService, JobAddNotifier defaultNotifier, MainConfig mainConfig) 
 	{
 		this.globalJobBoard = globalJobBoard;
 		this.economy = economy;
@@ -57,7 +55,6 @@ public class ACF
 		this.jobService = jobService;
 		this.messageService = messageService;
 		this.jobAddNotifierService = jobAddNotifierService;
-		this.jobSubscriptionService = jobSubscriptionService;
 		this.playerContainerService = playerContainerService;
 		this.defaultNotifier = defaultNotifier;
 		this.mainConfig = mainConfig;
@@ -127,6 +124,6 @@ public class ACF
 	
 	private void registerCommands(BukkitCommandManager commandManager) 
 	{
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, this.defaultNotifier));
+		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddNotifierService, this.playerContainerService, this.defaultNotifier));
 	}
 }
