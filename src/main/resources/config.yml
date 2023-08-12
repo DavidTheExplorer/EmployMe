@@ -27,7 +27,7 @@ Auto Delete Jobs:
 # 'None' - Don't notify about any job.
 # 'All Jobs' - Notifications for all jobs by default.
 # 'Material Subscriptions' - Notify only if the created job's reward includes items that the player subscribed for.
-Default Job Add Notifier: All Jobs
+Default Job Add Notifier: None
 
 
 # This section is about the ability to complete jobs even if the player didn't collect enough of the job's goal.

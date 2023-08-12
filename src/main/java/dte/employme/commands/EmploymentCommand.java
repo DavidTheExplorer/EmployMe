@@ -1,6 +1,7 @@
 package dte.employme.commands;
 
 import static dte.employme.messages.MessageKey.PLUGIN_RELOADED;
+import static dte.employme.messages.MessageKey.YOUR_NEW_JOB_ADDED_NOTIFIER_IS;
 
 import java.time.Duration;
 
@@ -18,7 +19,6 @@ import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.guis.jobs.JobAddNotifiersGUI;
 import dte.employme.guis.jobs.JobBoardGUI;
 import dte.employme.guis.jobs.creation.JobCreationGUI;
 import dte.employme.job.addnotifiers.JobAddNotifier;
@@ -76,12 +76,19 @@ public class EmploymentCommand extends BaseCommand
 		this.playerContainerService.getItemsContainer(player.getUniqueId()).show(player);
 	}
 	
-	@Subcommand("%AddNotifiers Name")
-	@Description("%AddNotifiers Description")
+	@Subcommand("%Notify Name")
+	@Description("%Notify Description")
 	@CommandPermission("employme.addnotifiers")
 	public void showNotifiers(Player player) 
 	{
-		new JobAddNotifiersGUI(this.jobAddNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
+		JobAddNotifier currentNotifier = this.jobAddNotifierService.getPlayerNotifier(player.getUniqueId(), this.defaultNotifier);
+		JobAddNotifier newNotifier = this.jobAddNotifierService.getByName(currentNotifier.getName().equals("All Jobs") ? "None" : "All Jobs"); 
+		
+		this.jobAddNotifierService.setPlayerNotifier(player.getUniqueId(), newNotifier);
+		
+		this.messageService.loadMessage(YOUR_NEW_JOB_ADDED_NOTIFIER_IS)
+		.inject("job added notifier", newNotifier.getName())
+		.sendTo(player);
 	}
 	
 	@Subcommand("%StopLiveUpdates Name")

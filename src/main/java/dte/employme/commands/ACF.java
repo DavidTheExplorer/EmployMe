@@ -1,13 +1,13 @@
 package dte.employme.commands;
 
-import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_DESCRIPTION;
-import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_HELP_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_HELP_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_MYCONTAINERS_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_MYCONTAINERS_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_MYSUBSCRIPTIONS_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_MYSUBSCRIPTIONS_NAME;
+import static dte.employme.messages.MessageKey.COMMAND_NOTIFY_DESCRIPTION;
+import static dte.employme.messages.MessageKey.COMMAND_NOTIFY_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_OFFER_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_OFFER_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_RELOAD_DESCRIPTION;
@@ -106,8 +106,8 @@ public class ACF
 		commandManager.getCommandReplacements().addReplacement("MyContainers Name", this.messageService.loadMessage(COMMAND_MYCONTAINERS_NAME).first());
 		commandManager.getCommandReplacements().addReplacement("MyContainers Description", this.messageService.loadMessage(COMMAND_MYCONTAINERS_DESCRIPTION).first());
 		
-		commandManager.getCommandReplacements().addReplacement("AddNotifiers Name", this.messageService.loadMessage(COMMAND_ADDNOTIFIERS_NAME).first());
-		commandManager.getCommandReplacements().addReplacement("AddNotifiers Description", this.messageService.loadMessage(COMMAND_ADDNOTIFIERS_DESCRIPTION).first());
+		commandManager.getCommandReplacements().addReplacement("Notify Name", this.messageService.loadMessage(COMMAND_NOTIFY_NAME).first());
+		commandManager.getCommandReplacements().addReplacement("Notify Description", this.messageService.loadMessage(COMMAND_NOTIFY_DESCRIPTION).first());
 		
 		commandManager.getCommandReplacements().addReplacement("MySubscriptions Name", this.messageService.loadMessage(COMMAND_MYSUBSCRIPTIONS_NAME).first());
 		commandManager.getCommandReplacements().addReplacement("MySubscriptions Description", this.messageService.loadMessage(COMMAND_MYSUBSCRIPTIONS_DESCRIPTION).first());
