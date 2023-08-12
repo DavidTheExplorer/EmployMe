@@ -157,6 +157,9 @@ public class JobActionsGUI extends ChestGui
 					if(!checkJobAvailability())
 						return;
 					
+					if(this.job.getEmployer().getUniqueId().equals(this.player.getUniqueId()))
+						return;
+					
 					//do nothing if the player didn't finish the job
 					if(!finishedJob)
 						return;
