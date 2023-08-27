@@ -2,8 +2,8 @@ package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
-import static dte.employme.messages.MessageKey.ITEM_GOAL_BLOCKED_IN_YOUR_WORLD;
-import static dte.employme.messages.MessageKey.ITEM_GOAL_INVALID;
+import static dte.employme.messages.MessageKey.GOAL_BLOCKED_IN_YOUR_WORLD;
+import static dte.employme.messages.MessageKey.INVALID_GOAL;
 import static dte.employme.utils.java.Predicates.negate;
 
 import java.util.Optional;
@@ -73,9 +73,9 @@ public class JobGoalPrompt extends ValidatingPrompt
 		if(this.blockedItemSpecified) 
 		{
 			this.blockedItemSpecified = false;
-			return this.messageService.loadMessage(ITEM_GOAL_BLOCKED_IN_YOUR_WORLD).first();
+			return this.messageService.loadMessage(GOAL_BLOCKED_IN_YOUR_WORLD).first();
 		}
 		
-		return this.messageService.loadMessage(ITEM_GOAL_INVALID).first();
+		return this.messageService.loadMessage(INVALID_GOAL).first();
 	}
 }

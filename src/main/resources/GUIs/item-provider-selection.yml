@@ -1,0 +1,12 @@
+title: "Where your item comes from?"
+
+items:
+    more-plugins-soon:
+        type: "BLACK_STAINED_GLASS_PANE"
+        name: "&4More Plugins Soon!"
+        
+    item-provider:
+        type: "NAME_TAG"
+        name: "&c%item provider%"
+        lore:
+            - "&fA custom item that belongs to the &c%item provider% &fplugin."

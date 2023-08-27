@@ -1,0 +1,20 @@
+title: "Your Jobs"
+
+items:
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore:
+            - "&fClick to open the next page"
+        
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore:
+            - "&fClick to open the previous page"
+            
+    background:
+        type: "BLACK_STAINED_GLASS_PANE"
+        name: "&0"

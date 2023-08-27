@@ -2,12 +2,12 @@ package dte.employme.services.playercontainer;
 
 import java.util.UUID;
 
-import dte.employme.guis.playercontainer.PlayerContainerGUI;
+import dte.employme.utils.inventoryframework.itempalette.ItemPaletteGUI;
 
 public interface PlayerContainerService
 {
-	PlayerContainerGUI getItemsContainer(UUID playerUUID);
-	PlayerContainerGUI getRewardsContainer(UUID playerUUID);
+	ItemPaletteGUI getItemsContainer(UUID playerUUID);
+	ItemPaletteGUI getRewardsContainer(UUID playerUUID);
 	
 	void loadContainers();
 	void saveContainers();

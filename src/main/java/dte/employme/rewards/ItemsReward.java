@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Lists;
 
-import dte.employme.guis.playercontainer.PlayerContainerGUI;
 import dte.employme.services.playercontainer.PlayerContainerService;
+import dte.employme.utils.inventoryframework.itempalette.ItemPaletteGUI;
 import dte.employme.utils.java.MapBuilder;
 import dte.employme.utils.java.ServiceLocator;
 
@@ -35,7 +35,7 @@ public class ItemsReward implements Reward, Iterable<ItemStack>
 	@Override
 	public void giveTo(OfflinePlayer offlinePlayer)
 	{
-		PlayerContainerGUI rewardsContainer = ServiceLocator.getInstance(PlayerContainerService.class).getRewardsContainer(offlinePlayer.getUniqueId());
+		ItemPaletteGUI rewardsContainer = ServiceLocator.getInstance(PlayerContainerService.class).getRewardsContainer(offlinePlayer.getUniqueId());
 		this.items.forEach(rewardsContainer::addItem);
 	}
 	

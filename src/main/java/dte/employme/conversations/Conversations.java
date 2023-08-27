@@ -21,7 +21,7 @@ public class Conversations
 				.withEscapeSequence(messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first());
 	}
 
-	public static ConversationAbandonedListener refundReward(MessageService messageService, MessageKey messageToSend) 
+	public static ConversationAbandonedListener createRewardRefundListener(MessageService messageService, MessageKey messageToSend) 
 	{
 		return event ->
 		{

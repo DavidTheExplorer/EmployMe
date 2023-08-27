@@ -1,0 +1,23 @@
+title: "Select the Goal Item:"
+
+texts:
+    goal-question: "&fWhich &aitem &fdo you need? Reply with the name of it!"
+
+items:
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore: 
+            - "&fClick to open the previous page"
+        
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore:
+            - "&fClick to open the next page"
+            
+    search:
+        type: "NAME_TAG"
+        name: "&aSearch By English Name"

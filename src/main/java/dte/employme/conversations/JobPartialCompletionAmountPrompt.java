@@ -2,8 +2,8 @@ package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
-import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR;
-import static dte.employme.messages.MessageKey.GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION;
+import static dte.employme.messages.MessageKey.INVALID_PARTIAL_GOAL_AMOUNT;
+import static dte.employme.messages.MessageKey.PARTIAL_GOAL_AMOUNT_QUESTION;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -37,7 +37,7 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo(player);
 				
-		return this.messageService.loadMessage(GUI_JOB_BOARD_PARTIAL_GOAL_AMOUNT_TO_USE_QUESTION)
+		return this.messageService.loadMessage(PARTIAL_GOAL_AMOUNT_QUESTION)
 				.inject("goal amount", getGoalAmountInInventory(player))
 				.first();
 	}
@@ -54,7 +54,7 @@ public class JobPartialCompletionAmountPrompt extends NumericPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return this.messageService.loadMessage(GUI_JOB_BOARD_INVALID_PARTIAL_GOAL_AMOUNT_ERROR).first();
+		return this.messageService.loadMessage(INVALID_PARTIAL_GOAL_AMOUNT).first();
 	}
 
 	@Override

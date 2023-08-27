@@ -8,6 +8,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import dte.employme.board.JobBoard;
@@ -22,9 +23,26 @@ import dte.employme.board.listeners.completion.JobGoalTransferListener;
 import dte.employme.board.listeners.completion.JobRewardGiveListener;
 import dte.employme.commands.ACF;
 import dte.employme.configs.BlacklistedItemsConfig;
+import dte.employme.configs.GuiConfig;
 import dte.employme.configs.MainConfig;
 import dte.employme.configs.MessagesConfig;
 import dte.employme.configs.PlayerContainerConfig;
+import dte.employme.guis.addnotifiers.JobAddNotifiersGUIFactory;
+import dte.employme.guis.board.ItemsRewardPreviewGUIFactory;
+import dte.employme.guis.board.JobActionsGUIFactory;
+import dte.employme.guis.board.JobBoardGUIFactory;
+import dte.employme.guis.board.PlayerJobsGUIFactory;
+import dte.employme.guis.containers.JobContainersGUIFactory;
+import dte.employme.guis.containers.PlayerContainerGUIFactory;
+import dte.employme.guis.creation.CustomItemSelectionGUIFactory;
+import dte.employme.guis.creation.GoalCustomizationGUIFactory;
+import dte.employme.guis.creation.GoalEnchantmentSelectionGUIFactory;
+import dte.employme.guis.creation.GoalSelectionGUIFactory;
+import dte.employme.guis.creation.ItemsRewardOfferGUIFactory;
+import dte.employme.guis.creation.JobCreationGUIFactory;
+import dte.employme.guis.subscriptions.ItemSubscribeGUIFactory;
+import dte.employme.guis.subscriptions.ItemSubscriptionGUIFactory;
+import dte.employme.guis.subscriptions.ItemUnsubscribeGUIFactory;
 import dte.employme.job.Job;
 import dte.employme.job.addnotifiers.AllJobsNotifier;
 import dte.employme.job.addnotifiers.DoNotNotify;
@@ -41,8 +59,8 @@ import dte.employme.services.job.addnotifiers.JobAddNotifierService;
 import dte.employme.services.job.addnotifiers.SimpleJobAddNotifierService;
 import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.job.subscription.SimpleJobSubscriptionService;
-import dte.employme.services.message.MessageService;
 import dte.employme.services.message.ConfigMessageService;
+import dte.employme.services.message.MessageService;
 import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.services.playercontainer.SimplePlayerContainerService;
 import dte.employme.services.rewards.JobRewardService;
@@ -68,18 +86,18 @@ public class EmployMe extends ModernJavaPlugin
 	private JobAddNotifierService jobAddNotifierService;
 	private MessageService messageService;
 	private AutoJobDeleteListeners autoJobDeleteListeners;
-	
+
 	private MainConfig mainConfig;
 	private BlacklistedItemsConfig blacklistedItemsConfig;
 	private SpigotConfig jobsConfig, jobsAutoDeletionConfig, subscriptionsConfig, jobAddNotifiersConfig, itemsContainersConfig, rewardsContainersConfig, messagesConfig;
-	
+
 	private static EmployMe INSTANCE;
 
 	@Override
 	public void onEnable()
 	{
 		INSTANCE = this;
-		
+
 		//init bukkit services
 		try 
 		{
@@ -93,13 +111,15 @@ public class EmployMe extends ModernJavaPlugin
 			return;
 		}
 		ServiceLocator.register(Economy.class, this.economy);
-		
-		
-		
+
+
+
 		//init configs
 		try 
 		{
-			SpigotConfig.register(Job.class, MoneyReward.class, ItemsReward.class);
+			ConfigurationSerialization.registerClass(Job.class);
+			ConfigurationSerialization.registerClass(MoneyReward.class);
+			ConfigurationSerialization.registerClass(ItemsReward.class);
 
 			this.mainConfig = new MainConfig(this);
 			this.jobsConfig = SpigotConfig.byPath(this, "boards/global/jobs");
@@ -116,32 +136,32 @@ public class EmployMe extends ModernJavaPlugin
 			disableWithError(RED + exception.getMessage());
 			return;
 		}
-		
-		
+
+
 
 		//init the global job board, services, factories, etc.
 		this.globalJobBoard = new SimpleJobBoard();
-		
+
 		this.messageService = new ConfigMessageService(this.messagesConfig);
-		
+
 		this.jobSubscriptionService = new SimpleJobSubscriptionService(this.subscriptionsConfig);
 		this.jobSubscriptionService.loadSubscriptions();
 		ServiceLocator.register(JobSubscriptionService.class, this.jobSubscriptionService);
-		
-		this.playerContainerService = new SimplePlayerContainerService(this.itemsContainersConfig, this.rewardsContainersConfig, this.messageService);
+
+		this.playerContainerService = new SimplePlayerContainerService(this.rewardsContainersConfig, this.itemsContainersConfig, new PlayerContainerGUIFactory(new GuiConfig("player-container")));
 		this.playerContainerService.loadContainers();
 		ServiceLocator.register(PlayerContainerService.class, this.playerContainerService);
-		
+
 		this.jobRewardService = new SimpleJobRewardService(this.messageService);
 		this.jobService = new SimpleJobService(this.globalJobBoard, this.jobRewardService, this.jobsConfig, this.jobsAutoDeletionConfig, this.blacklistedItemsConfig, this.messageService);
 		this.jobService.loadJobs();
-		
+
 		this.jobAddNotifierService = new SimpleJobAddNotifierService(this.jobAddNotifiersConfig);
 		this.jobAddNotifierService.register(new DoNotNotify());
 		this.jobAddNotifierService.register(new AllJobsNotifier(this.messageService));
 		this.jobAddNotifierService.register(new MaterialSubscriptionNotifier(this.messageService, this.jobSubscriptionService));
 		this.jobAddNotifierService.loadPlayersNotifiers();
-		
+
 		JobAddNotifier defaultJobAddNotifier = this.mainConfig.parseDefaultAddNotifier(this.jobAddNotifierService);
 		StopJobLiveUpdatesListener stopJobLiveUpdatesListener = new StopJobLiveUpdatesListener(this.jobService);
 
@@ -152,16 +172,16 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.registerAddListener(new EmployerNotificationListener(this.messageService));
 		this.globalJobBoard.registerAddListener(new JobAddNotificationListener(this.jobAddNotifierService, defaultJobAddNotifier));
 		this.globalJobBoard.registerRemovalListener(stopJobLiveUpdatesListener);
-		
+
 		//register commands
-		new ACF(this.globalJobBoard, this.economy, this.permission, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, defaultJobAddNotifier, this.mainConfig).setup();
-		
+		registerCommands();
+
 		//setup config features
 		setupWebhooks();
-		
+
 		//register PlaceholderAPI's placeholders
 		registerPapiPlaceholders();
-		
+
 		//start metrics
 		new Metrics(this, 16573);
 
@@ -171,7 +191,7 @@ public class EmployMe extends ModernJavaPlugin
 		.onFailedRequest(exception -> logToConsole(RED + "There was an internet error while checking for an update: " + ExceptionUtils.getMessage(exception)))
 		.check();
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
@@ -202,39 +222,69 @@ public class EmployMe extends ModernJavaPlugin
 
 		return provider.getProvider();
 	}
-	
+
 	private Permission loadPermission()
 	{
 		RegisteredServiceProvider<Permission> provider = Bukkit.getServicesManager().getRegistration(Permission.class);
 
 		if(provider == null)
 			throw new RuntimeException("No permission plugin is installed on the server(e.g. LuckPerms)");
-		
+
 		return provider.getProvider();
 	}
-	
+
+	private void registerCommands() 
+	{
+		CustomItemSelectionGUIFactory customItemSelectionGUIFactory = new CustomItemSelectionGUIFactory(new GuiConfig("item-provider-selection"), this.messageService);
+		JobAddNotifiersGUIFactory jobAddNotifiersGUIFactory = new JobAddNotifiersGUIFactory(new GuiConfig("job-add-notifiers"), this.jobAddNotifierService.getByName("None"), this.jobAddNotifierService, this.messageService);
+		JobContainersGUIFactory jobContainersGUIFactory = new JobContainersGUIFactory(new GuiConfig("job-containers"), this.playerContainerService);
+		ItemsRewardPreviewGUIFactory itemsRewardPreviewGUIFactory = new ItemsRewardPreviewGUIFactory(new GuiConfig("items-reward-preview"));
+		JobActionsGUIFactory jobActionsGUIFactory = new JobActionsGUIFactory(new GuiConfig("job-actions"), this.globalJobBoard, this.jobService, this.messageService, itemsRewardPreviewGUIFactory);
+		PlayerJobsGUIFactory playerJobsGUIFactory = new PlayerJobsGUIFactory(new GuiConfig("player-jobs"), this.globalJobBoard, jobActionsGUIFactory, this.messageService);
+		JobBoardGUIFactory jobBoardGUIFactory = new JobBoardGUIFactory(new GuiConfig("job-board"), jobActionsGUIFactory, this.messageService, this.jobService);
+		GoalEnchantmentSelectionGUIFactory goalEnchantmentSelectionGUIFactory = new GoalEnchantmentSelectionGUIFactory(new GuiConfig("goal-enchantment-selection"), this.messageService);
+		GoalSelectionGUIFactory goalSelectionGUIFactory = new GoalSelectionGUIFactory(new GuiConfig("goal-selection"), this.jobService, this.messageService);
+		GoalCustomizationGUIFactory goalCustomizationGUIFactory = new GoalCustomizationGUIFactory(new GuiConfig("goal-customization"), this.messageService, goalSelectionGUIFactory, goalEnchantmentSelectionGUIFactory, customItemSelectionGUIFactory);
+		ItemsRewardOfferGUIFactory itemsRewardOfferGUIFactory = new ItemsRewardOfferGUIFactory(new GuiConfig("items-reward-offer"), this.messageService, goalCustomizationGUIFactory);
+		JobCreationGUIFactory jobCreationGUIFactory = new JobCreationGUIFactory(new GuiConfig("job-creation"), this.messageService, this.economy, itemsRewardOfferGUIFactory, goalCustomizationGUIFactory);
+		ItemSubscribeGUIFactory itemSubscribeGUIFactory = new ItemSubscribeGUIFactory(new GuiConfig("item-subscribe"), this.jobSubscriptionService, this.jobService, this.messageService);
+		ItemUnsubscribeGUIFactory itemUnsubscribeGUIFactory = new ItemUnsubscribeGUIFactory(new GuiConfig("item-unsubscribe"), this.jobSubscriptionService, this.jobService, this.messageService);
+		ItemSubscriptionGUIFactory itemSubscriptionGUIFactory = new ItemSubscriptionGUIFactory(new GuiConfig("item-subscription"), itemSubscribeGUIFactory, itemUnsubscribeGUIFactory, this.jobSubscriptionService, this.messageService);
+		
+		playerJobsGUIFactory.init(jobBoardGUIFactory);
+		jobBoardGUIFactory.init(playerJobsGUIFactory);
+		
+		new ACF(this.mainConfig, this.permission, this.globalJobBoard, this.jobService, this.messageService,
+				jobBoardGUIFactory,
+				jobCreationGUIFactory, 
+				jobContainersGUIFactory, 
+				jobAddNotifiersGUIFactory,
+				itemSubscriptionGUIFactory)
+		.setup();
+	}
+
 	private void setupWebhooks() 
 	{
 		ConfigurationSection section = this.mainConfig.getSection("Discord Webhooks.On Job Create");
-		
+
 		if(!section.getBoolean("Enabled"))
 			return;
-		
+
 		String url = section.getString("URL");
 		String title = section.getString("Title");
 		String message = section.getString("Message");
-		
+
 		this.globalJobBoard.registerAddListener(new JobAddDiscordWebhook(url, title, message, this.jobRewardService));		
 	}
-	
+
 	private void registerPapiPlaceholders() 
 	{
 		if(!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
 			return;
-		
+
 		new EmployMePapiExpansion(this.globalJobBoard).register();
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void setupAutoJobDeletion()
 	{
@@ -244,14 +294,14 @@ public class EmployMe extends ModernJavaPlugin
 		this.globalJobBoard.removeRemovalListener(this.autoJobDeleteListeners);
 
 		ConfigurationSection section = this.mainConfig.getSection("Auto Delete Jobs");
-		
+
 		if(!section.getBoolean("Enabled"))
 			return;
-		
+
 		Duration deleteAfter = TimeUtils.toDuration(section.getString("After"));
 
 		this.jobService.loadAutoDeletionData();
-		
+
 		this.autoJobDeleteListeners = new AutoJobDeleteListeners(deleteAfter, this.jobService);
 		this.globalJobBoard.registerAddListener(this.autoJobDeleteListeners);
 		this.globalJobBoard.registerRemovalListener(this.autoJobDeleteListeners);

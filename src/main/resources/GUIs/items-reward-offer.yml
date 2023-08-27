@@ -1,0 +1,12 @@
+title: "What would you like to offer?"
+
+texts:
+    no-items-offered-warning: "%prefix% &cJob creation cancelled because you didn't offer any items."
+
+items:
+    confirm-button:
+        type: "GREEN_TERRACOTTA"
+        name: "&aConfirm and Continue"
+        lore:
+            - "&fClick to offer the items you added as the job's reward."
+            - "&fExiting this inventory would cancel the job."

@@ -1,0 +1,26 @@
+title: Your Job Subscriptions
+
+items:
+  your-subscriptions:
+    type: CHEST
+    name: '&dYour Subscriptions'
+    lore:
+    - '&fSee what items you are subscribed for.'
+  
+  subscribe:
+    type: WRITABLE_BOOK
+    name: '&bSubscribe'
+    lore:
+    - '&fGet an instant notification once an'
+    - '&fitem you need is offered as a reward'
+    - '&ffor a job, once that job is posted.'
+  
+  unsubscribe:
+    type: BARRIER
+    name: '&cUnsubscribe'
+    lore:
+    - '&fRemove your subscription from a certain item.'
+  
+  background:
+    type: BLACK_STAINED_GLASS_PANE
+    name: '&0'

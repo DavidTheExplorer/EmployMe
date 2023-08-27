@@ -1,0 +1,26 @@
+title: "What item to subscribe for?"
+
+items:
+    item-template:
+        type: "BEDROCK"
+        name: "&f%item%"
+        lore: 
+            - "&aSend me a notification for this item."
+            
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore: 
+            - "&fClick to open the previous page"
+        
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore:
+            - "&fClick to open the next page"
+            
+    search:
+        type: "NAME_TAG"
+        name: "&aSearch by English Name"

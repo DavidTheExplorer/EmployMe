@@ -1,0 +1,24 @@
+title: "Create a new Job"
+
+items:
+    money-job:
+        type: "GOLD_INGOT"
+        name: "&6Money Job"
+        lore:
+            - "&fPublish a Job to everyone on the server"
+            - "&ffor which you will pay an &6amount of money&f."
+            - " "
+            - "&6• &fAnyone can find the job via &e/emp view"
+        
+    items-job:
+        type: "CHEST"
+        name: "&bItems Job"
+        lore:
+            - "&fPublish a Job to everyone on the server"
+            - "&ffor which you will pay with &bresources&f."
+            - " " 
+            - "&b• &fAnyone can find the job via &e/emp view"
+        
+    background:
+        type: "BLACK_STAINED_GLASS_PANE"
+        name: "&0"

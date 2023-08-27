@@ -1,0 +1,16 @@
+title: "Claim your %subject%:"
+
+items:
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore:
+            - "&fClick to open the next page"
+        
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore:
+            - "&fClick to open the previous page"

@@ -1,0 +1,28 @@
+title: "Receive Notifications For:"
+
+texts:
+    currently-selected: "&bCurrently Selected"
+
+items:
+    all-jobs:
+        type: "NETHER_STAR"
+        name: "&aAll Jobs"
+        lore:
+            - "&fAll jobs whenever they're posted."
+            
+    material-subscriptions:
+        type: "PAPER"
+        name: "&aSubscriptions"
+        lore: 
+            - "&fJobs that items for which"
+            - "&fYou were subscribed via &e/emp mysubscriptions&f."
+    
+    none:
+        type: "BARRIER"
+        name: "&aNone"
+        lore:
+            - "&cNo Jobs &f(Default)"
+            
+    background:
+        type: "BLACK_STAINED_GLASS_PANE"
+        name: "&0"

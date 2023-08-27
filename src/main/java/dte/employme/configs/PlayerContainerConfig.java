@@ -10,8 +10,7 @@ public class PlayerContainerConfig extends SpigotConfig
 	public PlayerContainerConfig(Plugin plugin, String containerName) throws ConfigLoadException
 	{
 		super(new Builder(plugin)
-				.withNamePattern("containers/%name% containers")
-				.byPath(containerName));
+				.byPath(String.format("containers/%s containers", containerName)));
 	}
 
 }

@@ -1,5 +1,6 @@
 package dte.employme.commands;
 
+import static dte.employme.messages.MessageKey.CANNOT_OFFER_MORE_JOBS;
 import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_ADDNOTIFIERS_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_HELP_DESCRIPTION;
@@ -17,7 +18,6 @@ import static dte.employme.messages.MessageKey.COMMAND_STOPLIVEUPDATES_NAME;
 import static dte.employme.messages.MessageKey.COMMAND_VIEW_DESCRIPTION;
 import static dte.employme.messages.MessageKey.COMMAND_VIEW_NAME;
 import static dte.employme.messages.MessageKey.MUST_NOT_BE_CONVERSING;
-import static dte.employme.messages.MessageKey.YOU_OFFERED_TOO_MANY_JOBS;
 
 import org.bukkit.entity.Player;
 
@@ -27,40 +27,40 @@ import co.aikar.commands.InvalidCommandArgument;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
 import dte.employme.configs.MainConfig;
-import dte.employme.job.addnotifiers.JobAddNotifier;
+import dte.employme.guis.addnotifiers.JobAddNotifiersGUIFactory;
+import dte.employme.guis.board.JobBoardGUIFactory;
+import dte.employme.guis.containers.JobContainersGUIFactory;
+import dte.employme.guis.creation.JobCreationGUIFactory;
+import dte.employme.guis.subscriptions.ItemSubscriptionGUIFactory;
 import dte.employme.services.job.JobService;
-import dte.employme.services.job.addnotifiers.JobAddNotifierService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.playercontainer.PlayerContainerService;
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class ACF
 {
-	private final JobBoard globalJobBoard;
-	private final Economy economy;
+	private final MainConfig mainConfig;
 	private final Permission permission;
+	private final JobBoard globalBoard;
 	private final JobService jobService;
 	private final MessageService messageService;
-	private final JobAddNotifierService jobAddNotifierService;
-	private final JobSubscriptionService jobSubscriptionService;
-	private final PlayerContainerService playerContainerService;
-	private final JobAddNotifier defaultNotifier;
-	private final MainConfig mainConfig;
+	private final JobBoardGUIFactory jobBoardGUIFactory;
+	private final JobCreationGUIFactory jobCreationGUIFactory;
+	private final JobContainersGUIFactory jobContainersGUIFactory;
+	private final JobAddNotifiersGUIFactory jobAddNotifiersGUIFactory;
+	private final ItemSubscriptionGUIFactory itemSubscriptionGUIFactory;
 	
-	public ACF(JobBoard globalJobBoard, Economy economy, Permission permission, JobService jobService, MessageService messageService, JobAddNotifierService jobAddNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddNotifier defaultNotifier, MainConfig mainConfig) 
+	public ACF(MainConfig mainConfig, Permission permission, JobBoard globalBoard, JobService jobService, MessageService messageService, JobBoardGUIFactory jobBoardGUIFactory, JobCreationGUIFactory jobCreationGUIFactory, JobContainersGUIFactory jobContainersGUIFactory, JobAddNotifiersGUIFactory jobAddNotifiersGUIFactory, ItemSubscriptionGUIFactory itemSubscriptionGUIFactory) 
 	{
-		this.globalJobBoard = globalJobBoard;
-		this.economy = economy;
+		this.mainConfig = mainConfig;
 		this.permission = permission;
+		this.globalBoard = globalBoard;
 		this.jobService = jobService;
 		this.messageService = messageService;
-		this.jobAddNotifierService = jobAddNotifierService;
-		this.jobSubscriptionService = jobSubscriptionService;
-		this.playerContainerService = playerContainerService;
-		this.defaultNotifier = defaultNotifier;
-		this.mainConfig = mainConfig;
+		this.jobBoardGUIFactory = jobBoardGUIFactory;
+		this.jobCreationGUIFactory = jobCreationGUIFactory;
+		this.jobContainersGUIFactory = jobContainersGUIFactory;
+		this.jobAddNotifiersGUIFactory = jobAddNotifiersGUIFactory;
+		this.itemSubscriptionGUIFactory = itemSubscriptionGUIFactory;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -87,11 +87,11 @@ public class ACF
 			if(player.isOp())
 				return;
 			
-			int jobsOffered = this.globalJobBoard.getJobsOfferedBy(player.getUniqueId()).size();
+			int jobsOffered = this.globalBoard.getJobsOfferedBy(player.getUniqueId()).size();
 			int maxJobsAllowed = this.mainConfig.getMaxAllowedJobs(this.permission.getPrimaryGroup(player), 3);
 			
 			if(jobsOffered >= maxJobsAllowed)
-				throw new ConditionFailedException(this.messageService.loadMessage(YOU_OFFERED_TOO_MANY_JOBS)
+				throw new ConditionFailedException(this.messageService.loadMessage(CANNOT_OFFER_MORE_JOBS)
 						.inject("max jobs allowed", maxJobsAllowed)
 						.first());
 		});
@@ -127,6 +127,6 @@ public class ACF
 	
 	private void registerCommands(BukkitCommandManager commandManager) 
 	{
-		commandManager.registerCommand(new EmploymentCommand(this.economy, this.globalJobBoard, this.jobService, this.messageService, this.jobAddNotifierService, this.jobSubscriptionService, this.playerContainerService, this.defaultNotifier));
+		commandManager.registerCommand(new EmploymentCommand(this.globalBoard, this.jobService, this.messageService, this.jobBoardGUIFactory, this.jobCreationGUIFactory, this.jobContainersGUIFactory, this.jobAddNotifiersGUIFactory, this.itemSubscriptionGUIFactory));
 	}
 }

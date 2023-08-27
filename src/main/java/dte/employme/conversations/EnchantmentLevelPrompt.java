@@ -2,9 +2,9 @@ package dte.employme.conversations;
 
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_TITLE;
 import static dte.employme.messages.MessageKey.CONVERSATION_ESCAPE_WORD;
-import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_NOT_A_NUMBER;
-import static dte.employme.messages.MessageKey.ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
-import static dte.employme.messages.MessageKey.ENTER_ENCHANTMENT_LEVEL;
+import static dte.employme.messages.MessageKey.GOAL_ENCHANTMENT_LEVEL_NOT_A_NUMBER;
+import static dte.employme.messages.MessageKey.GOAL_ENCHANTMENT_LEVEL_OUT_OF_BOUNDS;
+import static dte.employme.messages.MessageKey.GOAL_ENCHANTMENT_LEVEL_QUESTION;
 
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.NumericPrompt;
@@ -37,7 +37,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 		.inject("escape word", this.messageService.loadMessage(CONVERSATION_ESCAPE_WORD).first())
 		.sendTitleTo(player);
 
-		return this.messageService.loadMessage(ENTER_ENCHANTMENT_LEVEL)
+		return this.messageService.loadMessage(GOAL_ENCHANTMENT_LEVEL_QUESTION)
 				.inject("enchantment", EnchantmentUtils.getDisplayName(this.enchantment))
 				.first();
 	}
@@ -67,7 +67,7 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	protected String getFailedValidationText(ConversationContext context, Number invalidInput) 
 	{
-		return this.messageService.loadMessage(ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
+		return this.messageService.loadMessage(GOAL_ENCHANTMENT_LEVEL_OUT_OF_BOUNDS)
 				.inject("enchantment min level", this.enchantment.getStartLevel())
 				.first();
 	}
@@ -75,6 +75,6 @@ public class EnchantmentLevelPrompt extends NumericPrompt
 	@Override
 	protected String getInputNotNumericText(ConversationContext context, String invalidInput) 
 	{
-		return this.messageService.loadMessage(ENCHANTMENT_LEVEL_NOT_A_NUMBER).first();
+		return this.messageService.loadMessage(GOAL_ENCHANTMENT_LEVEL_NOT_A_NUMBER).first();
 	}
 }

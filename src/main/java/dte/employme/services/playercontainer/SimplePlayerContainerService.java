@@ -1,6 +1,5 @@
 package dte.employme.services.playercontainer;
 
-import static dte.employme.messages.MessageKey.CONTAINER_CLAIM_INSTRUCTION;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -13,36 +12,36 @@ import java.util.function.Function;
 
 import org.bukkit.inventory.ItemStack;
 
-import dte.employme.guis.playercontainer.PlayerContainerGUI;
-import dte.employme.services.message.MessageService;
+import dte.employme.guis.containers.PlayerContainerGUIFactory;
+import dte.employme.utils.inventoryframework.itempalette.ItemPaletteGUI;
 import dte.spigotconfiguration.SpigotConfig;
 
 public class SimplePlayerContainerService implements PlayerContainerService
 {
-	private final Map<UUID, PlayerContainerGUI>
+	private final Map<UUID, ItemPaletteGUI>
 	itemsContainers = new HashMap<>(),
 	rewardsContainers = new HashMap<>();
-
+	
 	private final SpigotConfig itemsContainersConfig, rewardsContainersConfig;
-	private final MessageService messageService;
+	private final PlayerContainerGUIFactory playerContainerGUIFactory;
 
-	public SimplePlayerContainerService(SpigotConfig itemsContainersConfig, SpigotConfig rewardsContainersConfig, MessageService messageService) 
+	public SimplePlayerContainerService(SpigotConfig itemsContainersConfig, SpigotConfig rewardsContainersConfig, PlayerContainerGUIFactory playerContainerGUIFactory) 
 	{
 		this.itemsContainersConfig = itemsContainersConfig;
 		this.rewardsContainersConfig = rewardsContainersConfig;
-		this.messageService = messageService;
+		this.playerContainerGUIFactory = playerContainerGUIFactory;
 	}
 	
 	@Override
-	public PlayerContainerGUI getItemsContainer(UUID playerUUID)
+	public ItemPaletteGUI getItemsContainer(UUID playerUUID)
 	{
-		return this.itemsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(createContainerTitle("Items"), this.messageService));
+		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> this.playerContainerGUIFactory.create("Items"));
 	}
 	
 	@Override
-	public PlayerContainerGUI getRewardsContainer(UUID playerUUID)
+	public ItemPaletteGUI getRewardsContainer(UUID playerUUID)
 	{
-		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> new PlayerContainerGUI(createContainerTitle("Rewards"), this.messageService));
+		return this.rewardsContainers.computeIfAbsent(playerUUID, u -> this.playerContainerGUIFactory.create("Rewards"));
 	}
 	
 	@Override
@@ -59,31 +58,24 @@ public class SimplePlayerContainerService implements PlayerContainerService
 		saveContainers(this.rewardsContainersConfig, this.rewardsContainers);
 	}
 	
-	private String createContainerTitle(String subject) 
-	{
-		return this.messageService.loadMessage(CONTAINER_CLAIM_INSTRUCTION)
-				.inject("container subject", subject)
-				.first();
-	}
-	
-	private Map<UUID, PlayerContainerGUI> loadContainers(SpigotConfig containersConfig, String subject) 
+	private Map<UUID, ItemPaletteGUI> loadContainers(SpigotConfig containersConfig, String subject) 
 	{
 		return containersConfig.getKeys(false).stream()
 				.map(UUID::fromString)
 				.collect(toMap(Function.identity(), playerUUID -> 
 				{
 					List<ItemStack> playerItems = containersConfig.getSection(playerUUID.toString()).getKeys(false).stream()
-							.map(slot -> containersConfig.getItemStack(playerUUID + "." + slot))
+							.map(slot -> containersConfig.parseItem(playerUUID + "." + slot))
 							.collect(toList());
 
-					PlayerContainerGUI container = new PlayerContainerGUI(subject, this.messageService);
+					ItemPaletteGUI container = this.playerContainerGUIFactory.create(subject);
 					playerItems.forEach(container::addItem);
 
 					return container;
 				}));
 	}
 	
-	private static void saveContainers(SpigotConfig containersConfig, Map<UUID, PlayerContainerGUI> containers) 
+	private static void saveContainers(SpigotConfig containersConfig, Map<UUID, ItemPaletteGUI> containers) 
 	{
 		try
 		{

@@ -18,43 +18,39 @@ import co.aikar.commands.annotation.HelpCommand;
 import co.aikar.commands.annotation.Subcommand;
 import dte.employme.EmployMe;
 import dte.employme.board.JobBoard;
-import dte.employme.guis.jobs.JobAddNotifiersGUI;
-import dte.employme.guis.jobs.JobBoardGUI;
-import dte.employme.guis.jobs.creation.JobCreationGUI;
-import dte.employme.guis.playercontainer.JobContainersGUI;
-import dte.employme.guis.subscriptions.ItemSubscriptionsGUI;
-import dte.employme.job.addnotifiers.JobAddNotifier;
+import dte.employme.guis.addnotifiers.JobAddNotifiersGUIFactory;
+import dte.employme.guis.board.JobBoardGUIFactory;
+import dte.employme.guis.containers.JobContainersGUIFactory;
+import dte.employme.guis.creation.JobCreationGUIFactory;
+import dte.employme.guis.subscriptions.ItemSubscriptionGUIFactory;
+import dte.employme.job.creation.JobCreationContext;
 import dte.employme.services.job.JobService;
-import dte.employme.services.job.addnotifiers.JobAddNotifierService;
-import dte.employme.services.job.subscription.JobSubscriptionService;
 import dte.employme.services.message.MessageService;
-import dte.employme.services.playercontainer.PlayerContainerService;
 import dte.employme.utils.java.TimeUtils;
-import net.milkbowl.vault.economy.Economy;
 
 @CommandAlias("employment|emp")
 @Description("The main entry of EmployMe commands.")
 public class EmploymentCommand extends BaseCommand
 {
-	private final Economy economy;
-	private final JobBoard globalJobBoard;
+	private final JobBoard globalBoard;
 	private final JobService jobService;
-	private final JobAddNotifierService jobAddNotifierService;
-	private final JobSubscriptionService jobSubscriptionService;
-	private final PlayerContainerService playerContainerService;
 	private final MessageService messageService;
-	private final JobAddNotifier defaultNotifier;
+	private final JobBoardGUIFactory jobBoardGUIFactory;
+	private final JobCreationGUIFactory jobCreationGUIFactory;
+	private final JobContainersGUIFactory jobContainersGUIFactory;
+	private final JobAddNotifiersGUIFactory jobAddNotifiersGUIFactory;
+	private final ItemSubscriptionGUIFactory itemSubscriptionGUIFactory;
 
-	public EmploymentCommand(Economy economy, JobBoard globalJobBoard, JobService jobService, MessageService messageService, JobAddNotifierService jobAddNotifierService, JobSubscriptionService jobSubscriptionService, PlayerContainerService playerContainerService, JobAddNotifier defaultNotifier) 
+	public EmploymentCommand(JobBoard globalBoard, JobService jobService, MessageService messageService, JobBoardGUIFactory jobBoardGUIFactory, JobCreationGUIFactory jobCreationGUIFactory, JobContainersGUIFactory jobContainersGUIFactory, JobAddNotifiersGUIFactory jobAddNotifiersGUIFactory, ItemSubscriptionGUIFactory itemSubscriptionGUIFactory) 
 	{
-		this.economy = economy;
-		this.globalJobBoard = globalJobBoard;
+		this.globalBoard = globalBoard;
 		this.jobService = jobService;
 		this.messageService = messageService;
-		this.jobAddNotifierService = jobAddNotifierService;
-		this.playerContainerService = playerContainerService;
-		this.jobSubscriptionService = jobSubscriptionService;
-		this.defaultNotifier = defaultNotifier;
+		this.jobBoardGUIFactory = jobBoardGUIFactory;
+		this.jobCreationGUIFactory = jobCreationGUIFactory;
+		this.jobContainersGUIFactory = jobContainersGUIFactory;
+		this.jobAddNotifiersGUIFactory = jobAddNotifiersGUIFactory;
+		this.itemSubscriptionGUIFactory = itemSubscriptionGUIFactory;
 	}
 	
 	@Subcommand("%View Name")
@@ -62,15 +58,19 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.jobs.view")
 	public void view(Player player)
 	{
-		new JobBoardGUI(player, this.globalJobBoard, this.jobService, this.messageService).show(player);
+		this.jobBoardGUIFactory.create(player, this.globalBoard).show(player);
 	}
-	
+
 	@Subcommand("%Offer Name")
 	@Description("%Offer Description")
 	@CommandPermission("employme.jobs.offer")
 	public void offerJob(@Conditions("Not Conversing|Can Offer More Jobs") Player employer)
 	{
-		new JobCreationGUI(this.globalJobBoard, this.messageService, this.jobSubscriptionService, this.economy, this.jobService).show(employer);
+		JobCreationContext context = new JobCreationContext();
+		context.setEmployer(employer);
+		context.setDestinationBoard(this.globalBoard);
+		
+		this.jobCreationGUIFactory.create(context).show(employer);
 	}
 
 	@Subcommand("%MyContainers Name")
@@ -78,15 +78,15 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.mycontainers")
 	public void showPersonalContainers(Player player) 
 	{
-		new JobContainersGUI(this.messageService, this.playerContainerService).show(player);
+		this.jobContainersGUIFactory.create(player).show(player);
 	}
-	
+
 	@Subcommand("%AddNotifiers Name")
 	@Description("%AddNotifiers Description")
 	@CommandPermission("employme.addnotifiers")
 	public void showNotifiers(Player player) 
 	{
-		new JobAddNotifiersGUI(this.jobAddNotifierService, this.messageService, player.getUniqueId(), this.defaultNotifier).show(player);
+		this.jobAddNotifiersGUIFactory.create(player).show(player);
 	}
 
 	@Subcommand("%MySubscriptions Name")
@@ -94,9 +94,9 @@ public class EmploymentCommand extends BaseCommand
 	@CommandPermission("employme.mysubscriptions")
 	public void showPersonalSubscriptions(Player player) 
 	{
-		new ItemSubscriptionsGUI(this.jobService, this.messageService, this.jobSubscriptionService).show(player);
+		this.itemSubscriptionGUIFactory.create(player).show(player);
 	}
-	
+
 	@Subcommand("%StopLiveUpdates Name")
 	@Description("%StopLiveUpdates Description")
 	@CommandPermission("employme.stopliveupdates")
@@ -120,7 +120,7 @@ public class EmploymentCommand extends BaseCommand
 		.inject("reload time", reloadTime.toMillis())
 		.sendTo(sender);
 	}
-	
+
 	@Subcommand("%Help Name")
 	@Description("%Help Description")
 	@HelpCommand

@@ -1,0 +1,20 @@
+title: "Personal Job Containers"
+
+items:
+    rewards-container:
+        type: "CHEST"
+        name: "&dRewards"
+        lore:
+            - "&fThis is where Reward Items are stored"
+            - "&fafter you complete a job that pays them."
+            
+    items-container:
+        type: "CHEST"
+        name: "&dItems"
+        lore: 
+            - "&fWhen someone completes one of your jobs,"
+            - "&fThe items they got for you are stored here."
+    
+    background:
+        type: "BLACK_STAINED_GLASS_PANE"
+        name: "&0"

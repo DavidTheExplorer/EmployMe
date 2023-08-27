@@ -1,0 +1,26 @@
+title: "Notifications Removal"
+
+items:
+    item-template:
+        type: "BEDROCK"
+        name: "&f%item%"
+        lore: 
+            - "&cClick to stop getting notifications for this item."
+            
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore: 
+            - "&fClick to open the previous page"
+        
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore:
+            - "&fClick to open the next page"
+            
+    search:
+        type: "NAME_TAG"
+        name: "&aSearch by English Name"

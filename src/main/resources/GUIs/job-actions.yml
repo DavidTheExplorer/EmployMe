@@ -1,0 +1,50 @@
+title: "Available Actions"
+
+items:
+    tracker:
+        type: "COMPASS"
+        name: "&aTrack Progression"
+        lore:
+            - "&fGet live notifications about your progression"
+            - "&ftowards completing this job."
+            - " "
+            - "&a&l• &aImportant:"
+            - "&f&l1&f. This only counts items in your inventory."
+            - "&f&l2&f.You can still &apartially complete &fthe job!"
+        
+    items-reward-preview:
+        type: "CHEST"
+        name: "&aItems Reward Preview"
+        lore:
+            - "&fSee the items that you would get"
+            - "&ffor completing this job."
+            
+    delete:
+        type: "BARRIER"
+        name: "&cDelete"
+        lore:
+            - "&fClick to delete this job from the board!"
+            
+    complete:
+        type: "LIME_TERRACOTTA"
+        name: "&a&lComplete ✓"
+        lore: 
+            - "&fClick to complete this job!"
+            
+    cannot-complete:
+        type: "RED_TERRACOTTA"
+        name: "&c&lCan't Complete ❌"
+        lore: 
+            - "&7You are unable to complete this job."
+        
+    completion-background:
+        type: "WHITE_STAINED_GLASS_PANE"
+        name: "&0"
+        
+    background:
+        type: "BLACK_STAINED_GLASS_PANE"
+        name: "&0"
+        
+    locked-action:
+        type: "WHITE_STAINED_GLASS_PANE"
+        name: "&0"

@@ -1,0 +1,22 @@
+title: "Choose an Enchantment:"
+
+items:
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore: 
+            - "&fClick to open the previous page"
+        
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore:
+            - "&fClick to open the next page"
+            
+    enchantment-book:
+        type: "ENCHANTED_BOOK"
+        name: "&a%enchantment%"
+        lore:
+            - "&fClick to add this Enchantment to the Goal."

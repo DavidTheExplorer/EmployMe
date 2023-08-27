@@ -69,6 +69,12 @@ public class ItemBuilder
 		return this;
 	}
 
+	public ItemBuilder withModelData(Integer data)
+	{
+		this.itemMeta.setCustomModelData(data);
+		return this;
+	}
+
 	public ItemBuilder amounted(int amount) 
 	{
 		this.item.setAmount(amount);

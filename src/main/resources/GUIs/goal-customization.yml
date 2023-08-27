@@ -1,0 +1,32 @@
+title: "What should the Goal Item be?"
+
+texts:
+    current-goal: "&aCurrent Goal"
+    no-current-goal: "&c&lCurrent Goal: None"
+    custom-item-support: "&f→ &eRight Click for a Custom Item (from another plugin)"
+
+items:
+    finish-item:
+        type: "GREEN_TERRACOTTA"
+        name: "&a&lFinish"
+        
+    type-chooser:
+        type: "ANVIL"
+        name: "&aType"
+        lore:
+            - "&fClick to set the type of the goal."
+            - " "
+            - "&f→ &eLeft Click for a Vanilla Item"
+            
+    amount:
+        type: "ARROW"
+        name: "&6Amount"
+        lore: 
+            - "&fClick to set the amount of the goal."
+            
+    enchantments:
+        type: "ENCHANTED_BOOK"
+        name: "&dEnchantments"
+        lore:
+            - "&fClick to add an enchantment that"
+            - "&fthe goal must have on it."

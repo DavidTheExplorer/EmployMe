@@ -1,0 +1,30 @@
+title: "Available Jobs"
+
+texts:
+    offer-completed: "&a&lClick to Finish!"
+    offer-not-completed: "&cYou didn't complete this Job."
+    offer-partially-completed: 
+        - "&aYou can &2&lPartially complete &athis job!"
+        - "&aClick to continue"
+        
+
+items:
+    your-jobs:
+        type: "PLAYER_HEAD"
+        name: "&aYour Jobs"
+        lore:
+            - "&fView or Edit the jobs that you posted."
+            
+    next:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowRight"
+        name: "&aNext"
+        lore: 
+            - "&fClick to open the next page"
+    
+    back:
+        type: "PLAYER_HEAD"
+        head-of: "MHF_ArrowLeft"
+        name: "&cBack"
+        lore: 
+            - "&fClick to open the previous page"
