@@ -17,11 +17,11 @@ import dte.employme.configs.GuiConfig;
 import dte.employme.conversations.Conversations;
 import dte.employme.conversations.JobGoalPrompt;
 import dte.employme.guis.creation.GoalCustomizationGUIFactory.GoalCustomizationGUI;
-import dte.employme.rewards.Reward;
+import dte.employme.job.creation.JobCreationContext;
 import dte.employme.services.job.JobService;
 import dte.employme.services.message.MessageService;
-import dte.employme.utils.forwarding.ForwardingChestGui;
 import dte.employme.utils.inventoryframework.GuiItemBuilder;
+import dte.employme.utils.inventoryframework.forwarding.ForwardingChestGui;
 import dte.employme.utils.inventoryframework.itempalette.ItemPaletteBuilder;
 import dte.employme.utils.inventoryframework.itempalette.ItemPaletteGUI;
 import dte.employme.utils.java.MapBuilder;
@@ -39,17 +39,16 @@ public class GoalSelectionGUIFactory
 		this.messageService = messageService;
 	}
 
-	public ChestGui create(Player viewer, GoalCustomizationGUI goalCustomizationGUI, Reward reward) 
+	public ChestGui create(Player viewer, GoalCustomizationGUI goalCustomizationGUI, JobCreationContext context) 
 	{
 		ItemPaletteGUI palette = ItemPaletteBuilder.withAllItems()
 				.named(this.config.getTitle())
 				.filter(negate(material -> this.jobService.isBlacklistedAt(viewer.getWorld(), material)))
-				.map(material -> toSelectableItem(viewer, material, goalCustomizationGUI))
+				.map(material -> toSelectableItem(viewer, material, goalSelectionGUI, goalCustomizationGUI))
 				.withControlButtons(parseBackItem(), parseNextItem())
-				.withSearchFeature(parseSearchItem(), createEnglishTypeConversationFactory(viewer, reward, goalCustomizationGUI))
+				.withSearchFeature(parseSearchItem(), createEnglishTypeConversationFactory(viewer, context, goalSelectionGUI, goalCustomizationGUI))
 				.build();
 		
-		//Due to the need for an Item Palette but with more methods(showsGoalCustomizationGUIOnClose()), a delegate is used and returned.
 		GoalSelectionGUI gui = new GoalSelectionGUI(palette);
 		
 		gui.setOnClose(event -> 
@@ -61,7 +60,7 @@ public class GoalSelectionGUIFactory
 			goalCustomizationGUI.show(viewer);
 		});
 		
-		return palette;
+		return gui;
 	}
 
 	private ItemStack parseSearchItem() 
@@ -79,23 +78,24 @@ public class GoalSelectionGUIFactory
 		return this.config.parseGuiItem("next").build().getItem();
 	}
 
-	private static GuiItem toSelectableItem(Player viewer, Material material, GoalCustomizationGUI goalCustomizationGUI)
+	private static GuiItem toSelectableItem(Player viewer, Material material, GoalSelectionGUI goalSelectionGUI, GoalCustomizationGUI goalCustomizationGUI)
 	{
 		return new GuiItemBuilder()
 				.forItem(new ItemStack(material))
 				.whenClicked(event -> 
 				{
+					goalSelectionGUI.showGoalCustomizationGUIOnClose(true);
 					goalCustomizationGUI.setType(material);
-					goalCustomizationGUI.show(viewer);
+					viewer.closeInventory();
 				})
 				.build();
 	}
 
-	private ConversationFactory createEnglishTypeConversationFactory(Player viewer, Reward reward, GoalCustomizationGUI goalCustomizationGUI) 
+	private ConversationFactory createEnglishTypeConversationFactory(Player viewer, JobCreationContext context, GoalSelectionGUI goalSelectionGUI, GoalCustomizationGUI goalCustomizationGUI) 
 	{
 		return Conversations.createFactory(this.messageService)
 				.withFirstPrompt(new JobGoalPrompt(this.jobService, this.messageService, this.messageService.loadMessage(GOAL_QUESTION).first()))
-				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", reward).build())
+				.withInitialSessionData(new MapBuilder<Object, Object>().put("Reward", context.getReward()).build())
 				.addConversationAbandonedListener(createRewardRefundListener(this.messageService, JOB_SUCCESSFULLY_CANCELLED))
 				.addConversationAbandonedListener(event -> 
 				{
@@ -115,7 +115,7 @@ public class GoalSelectionGUIFactory
 	
 	public class GoalSelectionGUI extends ForwardingChestGui
 	{
-		private boolean showGoalCustomizationGUIOnClose = true;
+		private boolean showGoalCustomizationGUIOnClose = false;
 		
 		public GoalSelectionGUI(ItemPaletteGUI goalSelectionGui)
 		{
@@ -125,6 +125,11 @@ public class GoalSelectionGUIFactory
 		public boolean showsGoalCustomizationGUIOnClose() 
 		{
 			return this.showGoalCustomizationGUIOnClose;
+		}
+		
+		public void showGoalCustomizationGUIOnClose(boolean status) 
+		{
+			this.showGoalCustomizationGUIOnClose = status;
 		}
 	}
 }

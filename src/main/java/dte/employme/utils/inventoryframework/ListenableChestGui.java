@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 
-import dte.employme.utils.forwarding.ForwardingChestGui;
+import dte.employme.utils.inventoryframework.forwarding.ForwardingChestGui;
 
 public class ListenableChestGui extends ForwardingChestGui
 {

@@ -254,13 +254,7 @@ public class EmployMe extends ModernJavaPlugin
 		playerJobsGUIFactory.init(jobBoardGUIFactory);
 		jobBoardGUIFactory.init(playerJobsGUIFactory);
 		
-		new ACF(this.mainConfig, this.permission, this.globalJobBoard, this.jobService, this.messageService,
-				jobBoardGUIFactory,
-				jobCreationGUIFactory, 
-				jobContainersGUIFactory, 
-				jobAddNotifiersGUIFactory,
-				itemSubscriptionGUIFactory)
-		.setup();
+		new ACF(this.mainConfig, this.permission, this.globalJobBoard, this.jobService, this.messageService, jobBoardGUIFactory, jobCreationGUIFactory, jobContainersGUIFactory, jobAddNotifiersGUIFactory, itemSubscriptionGUIFactory).setup();
 	}
 
 	private void setupWebhooks() 

@@ -221,7 +221,7 @@ public class GoalCustomizationGUIFactory
 					{
 						gui.closeWithoutRefund(viewer);
 
-						this.goalSelectionGUIFactory.create(viewer, gui, context.getReward()).show(viewer);
+						this.goalSelectionGUIFactory.create(viewer, gui, context).show(viewer);
 					}
 					else if(event.getClick().isRightClick()) 
 					{

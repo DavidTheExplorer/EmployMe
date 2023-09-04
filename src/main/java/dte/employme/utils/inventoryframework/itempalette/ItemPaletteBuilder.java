@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -44,7 +45,7 @@ public class ItemPaletteBuilder
 	//search feature data
 	private ItemStack searchButton;
 	private ConversationFactory searchConversationFactory;
-	private Consumer<InventoryClickEvent> searchItemListener = (event) -> {};
+	private BiConsumer<InventoryClickEvent, ItemPaletteGUI> searchItemListener = (event, itemPalette) -> {};
 
 	private static final List<GuiItem> OBTAINABLE_ITEMS = Arrays.stream(Material.values())
 			.filter(MaterialUtils::isObtainable)
@@ -165,6 +166,18 @@ public class ItemPaletteBuilder
 	 */
 	public ItemPaletteBuilder onSearchItemClicked(Consumer<InventoryClickEvent> listener) 
 	{
+		this.searchItemListener = (event, itemPalette) -> listener.accept(event);
+		return this;
+	}
+	
+	/**
+	 * Adds an optional listener that is called before a search conversation is started with the player.
+	 * 
+	 * @param listener The listener.
+	 * @return This object for chaining purpose.
+	 */
+	public ItemPaletteBuilder onSearchItemClicked(BiConsumer<InventoryClickEvent, ItemPaletteGUI> listener) 
+	{
 		this.searchItemListener = listener;
 		return this;
 	}
@@ -206,7 +219,7 @@ public class ItemPaletteBuilder
 	}
 
 
-	private OutlinePane createControlPane(ChestGui palette, PaginatedPane itemsPane)
+	private OutlinePane createControlPane(ItemPaletteGUI palette, PaginatedPane itemsPane)
 	{
 		OutlinePane pane = new OutlinePane(0, 5, 9, 1, Priority.LOW);
 		pane.setOrientation(HORIZONTAL);
@@ -216,7 +229,7 @@ public class ItemPaletteBuilder
 		pane.addItem(createBackButton(palette, itemsPane));
 
 		if(this.searchButton != null) 
-			pane.addItem(createSearchButton());
+			pane.addItem(createSearchButton(palette));
 
 		pane.addItem(createNextButton(palette, itemsPane));
 
@@ -239,13 +252,13 @@ public class ItemPaletteBuilder
 				.build();
 	}
 
-	private GuiItem createSearchButton() 
+	private GuiItem createSearchButton(ItemPaletteGUI itemPaletteGUI) 
 	{
 		return new GuiItemBuilder()
 				.forItem(this.searchButton)
 				.whenClicked(event ->
 				{
-					this.searchItemListener.accept(event);
+					this.searchItemListener.accept(event, itemPaletteGUI);
 
 					Player player = (Player) event.getWhoClicked();
 					player.closeInventory();

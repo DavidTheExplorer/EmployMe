@@ -1,4 +1,4 @@
-package dte.employme.utils.forwarding;
+package dte.employme.utils.inventoryframework.forwarding;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
