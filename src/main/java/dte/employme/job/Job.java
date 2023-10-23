@@ -1,5 +1,6 @@
 package dte.employme.job;
 
+import static com.cryptomorin.xseries.XMaterial.TADPOLE_BUCKET;
 import static org.bukkit.ChatColor.RED;
 
 import java.util.Map;
@@ -54,7 +55,7 @@ public class Job implements ConfigurationSerializable
 		this.goalProvider = goalProvider;
 		this.reward = reward;
 	}
-	
+
 	public UUID getUUID() 
 	{
 		return this.uuid;
@@ -69,7 +70,7 @@ public class Job implements ConfigurationSerializable
 	{
 		return new ItemStack(this.goal);
 	}
-	
+
 	public ItemProvider getGoalProvider()
 	{
 		return this.goalProvider;
@@ -79,32 +80,29 @@ public class Job implements ConfigurationSerializable
 	{
 		return this.reward;
 	}
-	
+
 	public void setGoal(ItemStack goal, ItemProvider goalProvider) 
 	{
 		this.goal = goal;
 		this.goalProvider = goalProvider;
 	}
-	
+
 	public void setReward(Reward reward) 
 	{
 		this.reward = reward;
 	}
-	
+
 	public boolean isGoal(ItemStack item) 
 	{
-		//if the item went through an anvil - ignore any additional tags
-		NBTItem nbtItem = new NBTItem(item);
-		nbtItem.removeKey("RepairCost");
-		ItemStack finalItem = nbtItem.getItem();
-
-		//damaged goals are unacceptable
-		if(finalItem.getItemMeta() instanceof Damageable && ((Damageable) finalItem.getItemMeta()).hasDamage())
-			return false;
+		item = removeAdditionalNBT(item);
 		
-		return this.goalProvider.equals(this.goal, finalItem);
+		//damaged goals are unacceptable
+		if(item.getItemMeta() instanceof Damageable && ((Damageable) item.getItemMeta()).hasDamage())
+			return false;
+
+		return this.goalProvider.equals(this.goal, item);
 	}
-	
+
 	@Override
 	public Map<String, Object> serialize()
 	{
@@ -158,14 +156,14 @@ public class Job implements ConfigurationSerializable
 
 		switch(goalProvider) 
 		{
-			case "MMOItems":
-				parsedProvider = new MMOItemsProvider();
-				break;
+		case "MMOItems":
+			parsedProvider = new MMOItemsProvider();
+			break;
 
-			case "Vanilla":
-			default:
-				parsedProvider = VanillaProvider.INSTANCE;
-				break;
+		case "Vanilla":
+		default:
+			parsedProvider = VanillaProvider.INSTANCE;
+			break;
 		}
 
 		if(!parsedProvider.isAvailable()) 
@@ -175,5 +173,23 @@ public class Job implements ConfigurationSerializable
 		}
 
 		return parsedProvider;
+	}
+
+	private static ItemStack removeAdditionalNBT(ItemStack item) 
+	{
+		NBTItem nbtItem = new NBTItem(item);
+		
+		//anvil tags
+		nbtItem.removeKey("RepairCost");
+
+		//tadpole bucket tags
+		if(TADPOLE_BUCKET.isSimilar(item)) 
+		{
+			nbtItem.removeKey("Age");
+			nbtItem.removeKey("AgeLocked");
+			nbtItem.removeKey("Health");
+		}
+
+		return nbtItem.getItem();
 	}
 }
