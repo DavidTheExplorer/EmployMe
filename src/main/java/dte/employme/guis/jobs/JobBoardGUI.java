@@ -71,7 +71,7 @@ public class JobBoardGUI extends ChestGui
 		this.jobsPane.addPane(0, createPage(this.jobsPane));
 		this.jobBoard.getOfferedJobs().forEach(this::addJob);
 
-		setOnTopClick(event -> event.setCancelled(true));
+		setAbuseListeners();
 		addPane(createWalls(this, Priority.LOWEST));
 		addPane(createPanel());
 		addPane(this.jobsPane);
@@ -169,5 +169,26 @@ public class JobBoardGUI extends ChestGui
 		return new ItemBuilder(basicIcon)
 				.withLore(lore.toArray(new String[0]))
 				.createCopy();
+	}
+	
+	private void setAbuseListeners() 
+	{
+		setOnTopClick(event -> event.setCancelled(true));
+
+		//shifting items into the inventory
+		setOnBottomClick(event ->
+		{
+			if(event.isShiftClick())
+				event.setCancelled(true);
+		});
+
+		//dragging items into the inventory
+		setOnTopDrag(event -> 
+		{
+			if(event.getOldCursor() == null)
+				return;
+
+			event.setCancelled(true);
+		});
 	}
 }
