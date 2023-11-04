@@ -1,5 +1,7 @@
 package dte.employme;
 
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
 import java.time.Duration;
@@ -94,7 +96,7 @@ public class EmployMe extends ModernJavaPlugin
 		}
 		ServiceLocator.register(Economy.class, this.economy);
 		
-		
+		logToConsole("Using " + GREEN + "Econonmy" + GRAY + ": " + GREEN + this.economy.getName());
 		
 		//init configs
 		try 
